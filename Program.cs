@@ -173,8 +173,7 @@ namespace E_Commerce
 			builder.Services.AddTransient<ISubCategoryLinkBuilder, SubCategoryLinkBuilder>();
             builder.Services.AddResponseCaching();
 			builder.Services.Configure<CloudinarySettings>(
-			builder.Configuration.GetSection("CloudinarySettings")
-		);
+			builder.Configuration.GetSection("CloudinarySettings"));
 			builder.Services.AddSingleton(sp =>
 			{
 				var config = builder.Configuration.GetSection("CloudinarySettings");
@@ -185,11 +184,24 @@ namespace E_Commerce
 				var account = new Account("dud4kxeix", "639515651354965", "hSR3PAJNAlRkGHHEk1GuH1rfD1U");
 				return new Cloudinary(account);
 			});
-			var redisUrl = builder.Configuration["REDIS_URL"] ?? "localhost:6379";
+
+
+			var redisUrl = "rediss://default:AbS_AAIncDE0MDc1NDlmMTI2OWU0YTdlOTU0MTA0MWJjMjExODQ0YXAxNDYyNzE@square-guinea-46271.upstash.io:6379";
+			var uri = new Uri(redisUrl);
+
+			var config = new ConfigurationOptions
+			{
+				EndPoints = { $"{uri.Host}:{uri.Port}" },
+				Password = uri.UserInfo.Split(':')[1], // extract password
+				Ssl = true,
+				AbortOnConnectFail = false
+			};
+
 
 			builder.Services.AddSingleton<IConnectionMultiplexer>(
-				ConnectionMultiplexer.Connect(redisUrl + ",abortConnect=false")
+				ConnectionMultiplexer.Connect(config)
 			);
+
 			builder.Services.AddSingleton<ICacheManager, CacheManager>();
             builder.Services.AddDbContext<AppDbContext>(
                 (provider, options) =>

@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "D:\\project_fashion\\E-Commerce-API-main\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\e-commers.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:e-commers.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\paymobservices\\paymobservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -50,7 +54,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -59,31 +63,45 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAEUBAAAAAAAAAAAgwFEBAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-15T14:52:09.003Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
               "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\appsettings.json",
               "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAACgAAAAAAAAAAAAAADQAAAB1AAAAAAAAAA==",
+              "ViewState": "AgIAACcAAAAAAAAAAADwvzkAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-08-15T14:47:42.85Z",
+              "WhenOpened": "2025-08-15T16:45:08.037Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
+              "Title": "E-Commers.http",
+              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\E-Commers.http",
+              "RelativeDocumentMoniker": "E-Commers.http",
+              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\E-Commers.http",
+              "RelativeToolTip": "E-Commers.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2025-08-15T16:45:06.406Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAALgAAAAAAAAAAADwv8YAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-15T14:52:09.003Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "PaymentServices.cs",
               "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\PaymentServices\\PaymentServices.cs",
               "RelativeDocumentMoniker": "Services\\PaymentServices\\PaymentServices.cs",
@@ -95,7 +113,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "PayMobServices.cs",
               "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\PayMobServices\\PayMobServices.cs",
               "RelativeDocumentMoniker": "Services\\PayMobServices\\PayMobServices.cs",
@@ -103,11 +121,12 @@
               "RelativeToolTip": "Services\\PayMobServices\\PayMobServices.cs",
               "ViewState": "AgIAAFQBAAAAAAAAAAAAwFwBAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-15T07:28:59.619Z"
+              "WhenOpened": "2025-08-15T07:28:59.619Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "OrderServices.cs",
               "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\OrderServices\\OrderServices.cs",
               "RelativeDocumentMoniker": "Services\\OrderServices\\OrderServices.cs",
@@ -119,7 +138,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "EnumsController.cs",
               "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Controllers\\EnumsController.cs",
               "RelativeDocumentMoniker": "Controllers\\EnumsController.cs",
@@ -131,7 +150,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "EnumDto.cs",
               "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\DtoModels\\EnumDtos\\EnumDto.cs",
               "RelativeDocumentMoniker": "DtoModels\\EnumDtos\\EnumDto.cs",
@@ -143,7 +162,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "EnumServices.cs",
               "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\EnumServices\\EnumServices.cs",
               "RelativeDocumentMoniker": "Services\\EnumServices\\EnumServices.cs",
@@ -155,7 +174,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "PaymentMethod.cs",
               "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Enums\\PaymentMethod.cs",
               "RelativeDocumentMoniker": "Enums\\PaymentMethod.cs",
@@ -167,7 +186,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "CategoryServices.cs",
               "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\CategoryServices\\CategoryServices.cs",
               "RelativeDocumentMoniker": "Services\\CategoryServices\\CategoryServices.cs",
@@ -175,7 +194,8 @@
               "RelativeToolTip": "Services\\CategoryServices\\CategoryServices.cs",
               "ViewState": "AgIAAEgAAAAAAAAAAAAowAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-14T12:34:36.066Z"
+              "WhenOpened": "2025-08-14T12:34:36.066Z",
+              "EditorCaption": ""
             }
           ]
         },

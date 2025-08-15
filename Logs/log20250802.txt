@@ -1,0 +1,70 @@
+2025-08-02 18:53:38.456 +03:00 [INF] DB tables already exist. Exit install
+2025-08-02 18:53:40.432 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-08-02 18:53:40.447 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-08-02 18:53:40.519 +03:00 [INF] Executed DbCommand (50ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-08-02 18:53:40.537 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-08-02 18:53:40.571 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-08-02 18:53:40.960 +03:00 [INF] Executed DbCommand (59ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-08-02 18:53:41.041 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-08-02 18:53:41.112 +03:00 [INF] Executed DbCommand (32ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-08-02 18:53:41.894 +03:00 [INF] Now listening on: http://localhost:5069
+2025-08-02 18:53:42.051 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-08-02 18:53:42.353 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-08-02 18:53:42.364 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-08-02 18:53:42.381 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-08-02 18:53:42.389 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-08-02 18:53:42.588 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-08-02 18:53:42.604 +03:00 [INF] Hosting environment: Development
+2025-08-02 18:53:42.617 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-08-02 18:53:42.621 +03:00 [INF] Server mrrobot:17412:763dc9c0 successfully announced in 17.8882 ms
+2025-08-02 18:53:42.652 +03:00 [INF] Server mrrobot:17412:763dc9c0 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-08-02 18:53:42.679 +03:00 [INF] 1 servers were removed due to timeout
+2025-08-02 18:53:42.746 +03:00 [INF] Server mrrobot:17412:763dc9c0 all the dispatchers started
+2025-08-02 18:53:43.873 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger - null null
+2025-08-02 18:53:44.322 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger - 301 0 null 450.1891ms
+2025-08-02 18:53:44.724 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-08-02 18:53:44.880 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 156.7846ms
+2025-08-02 18:53:44.977 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/swagger-ui-standalone-preset.js - null null
+2025-08-02 18:53:44.976 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-08-02 18:53:45.002 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-08-02 18:53:45.353 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/swagger-ui-bundle.js - null null
+2025-08-02 18:53:45.371 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 394.3518ms
+2025-08-02 18:53:45.381 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-08-02 18:53:45.383 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 380.8424ms
+2025-08-02 18:53:45.423 +03:00 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
+2025-08-02 18:53:45.498 +03:00 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
+2025-08-02 18:53:45.650 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/swagger-ui-standalone-preset.js - 200 229223 text/javascript 672.9491ms
+2025-08-02 18:53:45.695 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 313.6915ms
+2025-08-02 18:53:45.751 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/swagger-ui-bundle.js - 200 1466324 text/javascript 397.8544ms
+2025-08-02 18:53:45.921 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-08-02 18:53:47.141 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 1219.4765ms
+2025-08-02 18:53:52.834 +03:00 [INF] Executed DbCommand (17ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE `c`.`DeletedAt` IS NOT NULL

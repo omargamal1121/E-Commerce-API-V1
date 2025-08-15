@@ -1,0 +1,41 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\Projcet\\E-Commers\\E-Commers\\wwwroot\\CustomerPhotos\\110e3054-7efd-4ca5-91ff-fd4617a8736b.jpg",
+      "PackagePath": "staticwebassets\\CustomerPhotos\\110e3054-7efd-4ca5-91ff-fd4617a8736b.jpg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\Projcet\\E-Commers\\E-Commers\\wwwroot\\CustomerPhotos\\5d66d8c7-3efc-4bb4-9c61-c308a80ac6be.jpg",
+      "PackagePath": "staticwebassets\\CustomerPhotos\\5d66d8c7-3efc-4bb4-9c61-c308a80ac6be.jpg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\Projcet\\E-Commers\\E-Commers\\wwwroot\\CustomerPhotos\\98c333a7-bac5-47e1-9913-0c1283047518.jpg",
+      "PackagePath": "staticwebassets\\CustomerPhotos\\98c333a7-bac5-47e1-9913-0c1283047518.jpg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\Projcet\\E-Commers\\E-Commers\\wwwroot\\CustomerPhotos\\d92136ec-bfde-4cfc-b8ba-9e6f9b0ae4a8.jpg",
+      "PackagePath": "staticwebassets\\CustomerPhotos\\d92136ec-bfde-4cfc-b8ba-9e6f9b0ae4a8.jpg"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.E-Commerce.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.E-Commerce.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.build.E-Commerce.props",
+      "PackagePath": "build\\E-Commerce.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildMultiTargeting.E-Commerce.props",
+      "PackagePath": "buildMultiTargeting\\E-Commerce.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildTransitive.E-Commerce.props",
+      "PackagePath": "buildTransitive\\E-Commerce.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

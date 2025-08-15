@@ -1,0 +1,164 @@
+2025-08-09 00:00:36.221 +03:00 [INF] DB tables already exist. Exit install
+2025-08-09 00:00:38.427 +03:00 [WRN] The foreign key property 'Customer.ImageId1' was created in shadow state because a conflicting property with the simple name 'ImageId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-08-09 00:00:39.085 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-08-09 00:00:39.141 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-08-09 00:00:39.175 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-08-09 00:00:39.209 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-08-09 00:00:39.264 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-08-09 00:00:39.757 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-08-09 00:00:39.848 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-08-09 00:00:39.876 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-08-09 00:00:40.858 +03:00 [INF] Now listening on: http://localhost:5069
+2025-08-09 00:00:40.988 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-08-09 00:00:41.388 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-08-09 00:00:41.395 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-08-09 00:00:41.398 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-08-09 00:00:41.407 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-08-09 00:00:41.487 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-08-09 00:00:41.720 +03:00 [INF] Server mrrobot:20872:9b32b922 successfully announced in 207.7923 ms
+2025-08-09 00:00:42.203 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-08-09 00:00:43.537 +03:00 [INF] Hosting environment: Development
+2025-08-09 00:00:43.545 +03:00 [INF] Server mrrobot:20872:9b32b922 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-08-09 00:00:43.562 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-08-09 00:00:43.705 +03:00 [INF] Server mrrobot:20872:9b32b922 all the dispatchers started
+2025-08-09 00:00:44.062 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 1848.6948ms
+2025-08-09 00:00:44.146 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-08-09 00:00:44.146 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-08-09 00:00:44.194 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-08-09 00:00:44.195 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 48.2954ms
+2025-08-09 00:00:44.211 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 64.1959ms
+2025-08-09 00:00:44.623 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 428.9034ms
+2025-08-09 00:00:45.024 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-08-09 00:00:45.697 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 673.4783ms
+2025-08-09 00:00:54.946 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/Order/filter?page=1&pageSize=5 - null null
+2025-08-09 00:00:54.955 +03:00 [WRN] Failed to determine the https port for redirect.
+2025-08-09 00:00:55.236 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-08-09 00:00:55.313 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-08-09 00:00:55.340 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.OrderController.FilterOrders (E-Commerce)'
+2025-08-09 00:00:55.382 +03:00 [INF] Route matched with {action = "FilterOrders", controller = "Order"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[E_Commerce.DtoModels.OrderDtos.OrderListDto]]]] FilterOrders(System.String, System.Nullable`1[System.Boolean], Int32, Int32, System.Nullable`1[E_Commerce.Enums.OrderStatus]) on controller E_Commerce.Controllers.OrderController (E-Commerce).
+2025-08-09 00:00:55.840 +03:00 [INF] Executing FilterOrders: userId: , deleted: , page: 1, size: 5, status: 
+2025-08-09 00:00:55.844 +03:00 [INF] Filtering orders - UserId: , Deleted: , Page: 1, PageSize: 5, Status: 
+2025-08-09 00:00:55.847 +03:00 [INF] Getting cache for key: order_filter_user_all_deleted_all_page_1_size_5_status_all
+2025-08-09 00:00:55.859 +03:00 [WRN] Cache miss for key: order_filter_user_all_deleted_all_page_1_size_5_status_all
+2025-08-09 00:00:55.864 +03:00 [INF] Execute GetAll for entity Order
+2025-08-09 00:00:56.022 +03:00 [INF] Executed DbCommand (27ms) [Parameters=[@__p_1='?' (DbType = Int32), @__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`OrderNumber`, `t0`.`Name`, `t`.`Status`, `t`.`Total`, `t`.`CreatedAt`
+FROM (
+    SELECT `o`.`Id`, `o`.`CreatedAt`, `o`.`CustomerId`, `o`.`OrderNumber`, `o`.`Status`, `o`.`Total`
+    FROM `Orders` AS `o`
+    ORDER BY `o`.`CreatedAt` DESC
+    LIMIT @__p_1 OFFSET @__p_0
+) AS `t`
+INNER JOIN (
+    SELECT `a`.`Id`, `a`.`Name`
+    FROM `AspNetUsers` AS `a`
+    WHERE `a`.`Discriminator` = 'Customer'
+) AS `t0` ON `t`.`CustomerId` = `t0`.`Id`
+ORDER BY `t`.`CreatedAt` DESC
+2025-08-09 00:00:56.222 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[E_Commerce.DtoModels.OrderDtos.OrderListDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-08-09 00:00:56.270 +03:00 [INF] Executed action E_Commerce.Controllers.OrderController.FilterOrders (E-Commerce) in 873.3993ms
+2025-08-09 00:00:56.275 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.OrderController.FilterOrders (E-Commerce)'
+2025-08-09 00:00:56.281 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/Order/filter?page=1&pageSize=5 - 200 904 application/json; charset=utf-8 1334.5443ms
+2025-08-09 00:01:03.847 +03:00 [INF] Setting cache for key: order_filter_user_all_deleted_all_page_1_size_5_status_all
+2025-08-09 00:01:03.886 +03:00 [INF] Cache set successfully for key: order_filter_user_all_deleted_all_page_1_size_5_status_all with tags: [order]
+2025-08-09 00:01:03.889 +03:00 [INF] Successfully cached order list with key: order_filter_user_all_deleted_all_page_1_size_5_status_all
+2025-08-09 00:01:29.715 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/Order/33 - null null
+2025-08-09 00:01:29.729 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-08-09 00:01:29.741 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-08-09 00:01:29.749 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.OrderController.GetOrderById (E-Commerce)'
+2025-08-09 00:01:29.760 +03:00 [INF] Route matched with {action = "GetOrderById", controller = "Order"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.OrderDtos.OrderDto]]] GetOrderById(Int32) on controller E_Commerce.Controllers.OrderController (E-Commerce).
+2025-08-09 00:01:29.776 +03:00 [INF] Executing GetOrderById for ID: 33
+2025-08-09 00:01:29.782 +03:00 [INF] Getting order by ID: 33 for user: 1c431918-0061-41d2-a418-24bd6c056eda, IsAdmin: false
+2025-08-09 00:01:29.794 +03:00 [INF] Getting cache for key: order_id_33_user_1c431918-0061-41d2-a418-24bd6c056eda_admin_False
+2025-08-09 00:01:29.798 +03:00 [WRN] Cache miss for key: order_id_33_user_1c431918-0061-41d2-a418-24bd6c056eda_admin_False
+2025-08-09 00:01:29.808 +03:00 [INF] Checking if order 33 exists for user 1c431918-0061-41d2-a418-24bd6c056eda
+2025-08-09 00:01:29.825 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__orderid_0='?' (DbType = Int32), @__userid_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Orders` AS `o`
+    WHERE ((`o`.`Id` = @__orderid_0) AND (`o`.`CustomerId` = @__userid_1)) AND `o`.`DeletedAt` IS NULL)
+2025-08-09 00:01:29.832 +03:00 [INF] Getting order by ID: 33
+2025-08-09 00:01:30.141 +03:00 [INF] Executed DbCommand (96ms) [Parameters=[@__orderId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t0`.`Id`, `t0`.`CreatedAt`, `t0`.`ModifiedAt`, `t0`.`OrderNumber`, `t0`.`Status`, `t0`.`Subtotal`, `t0`.`TaxAmount`, `t0`.`ShippingCost`, `t0`.`DiscountAmount`, `t0`.`Total`, `t0`.`Notes`, `t0`.`ShippedAt`, `t0`.`DeliveredAt`, `t0`.`CancelledAt`, `t0`.`c`, `t0`.`Id0`, `t0`.`Name`, `t0`.`Email`, `t0`.`PhoneNumber`, `t0`.`Id1`, `t0`.`Id2`, `t0`.`Id3`, `t1`.`Id`, `t1`.`CreatedAt`, `t1`.`ModifiedAt`, `t1`.`Quantity`, `t1`.`UnitPrice`, `t1`.`TotalPrice`, `t1`.`OrderedAt`, `t1`.`Id0`, `t1`.`Name`, `t1`.`Price`, `t1`.`IsActive`, `t1`.`FinalPrice`, `t1`.`DiscountPrecentage`, `t1`.`MainImageUrl`, `t1`.`Id1`, `t1`.`Color`, `t1`.`CreatedAt0`, `t1`.`ModifiedAt0`, `t1`.`Size`, `t1`.`DeletedAt`, `t1`.`Length`, `t1`.`Waist`, `t1`.`Id2`, `t1`.`Id3`, `t0`.`c0`, `t0`.`CreatedAt0`, `t0`.`ModifiedAt0`, `t0`.`CustomerId`, `t0`.`PaymentMethodId`, `t0`.`c1`, `t0`.`CreatedAt1`, `t0`.`ModifiedAt1`, `t0`.`Name0`, `t0`.`PaymentProviderId`, `t0`.`c2`, `t0`.`CreatedAt2`, `t0`.`ModifiedAt2`, `t0`.`Name1`, `t0`.`Amount`, `t0`.`PaymentDate`, `t0`.`OrderId`, `t0`.`DeletedAt`
+FROM (
+    SELECT `o`.`Id`, `o`.`CreatedAt`, `o`.`ModifiedAt`, `o`.`OrderNumber`, `o`.`Status`, `o`.`Subtotal`, `o`.`TaxAmount`, `o`.`ShippingCost`, `o`.`DiscountAmount`, `o`.`Total`, `o`.`Notes`, `o`.`ShippedAt`, `o`.`DeliveredAt`, `o`.`CancelledAt`, FALSE AS `c`, `t`.`Id` AS `Id0`, `t`.`Name`, `t`.`Email`, `t`.`PhoneNumber`, `p`.`Id` IS NULL AS `c0`, `p`.`Id` AS `Id1`, `p`.`CreatedAt` AS `CreatedAt0`, `p`.`ModifiedAt` AS `ModifiedAt0`, `p`.`CustomerId`, `p`.`PaymentMethodId`, `p0`.`Id` IS NULL AS `c1`, `p0`.`Id` AS `Id2`, `p0`.`CreatedAt` AS `CreatedAt1`, `p0`.`ModifiedAt` AS `ModifiedAt1`, `p0`.`Name` AS `Name0`, `p`.`PaymentProviderId`, `p1`.`Id` IS NULL AS `c2`, `p1`.`Id` AS `Id3`, `p1`.`CreatedAt` AS `CreatedAt2`, `p1`.`ModifiedAt` AS `ModifiedAt2`, `p1`.`Name` AS `Name1`, `p`.`Amount`, `p`.`PaymentDate`, `p`.`OrderId`, `p`.`DeletedAt`
+    FROM `Orders` AS `o`
+    INNER JOIN (
+        SELECT `a`.`Id`, `a`.`Email`, `a`.`PhoneNumber`, `a`.`Name`
+        FROM `AspNetUsers` AS `a`
+        WHERE `a`.`Discriminator` = 'Customer'
+    ) AS `t` ON `o`.`CustomerId` = `t`.`Id`
+    LEFT JOIN `Payments` AS `p` ON `o`.`Id` = `p`.`OrderId`
+    LEFT JOIN `PaymentMethods` AS `p0` ON `p`.`PaymentMethodId` = `p0`.`Id`
+    LEFT JOIN `PaymentProviders` AS `p1` ON `p`.`PaymentProviderId` = `p1`.`Id`
+    WHERE `o`.`Id` = @__orderId_0
+    LIMIT 1
+) AS `t0`
+LEFT JOIN (
+    SELECT `o0`.`Id`, `o0`.`CreatedAt`, `o0`.`ModifiedAt`, `o0`.`Quantity`, `o0`.`UnitPrice`, `o0`.`TotalPrice`, `o0`.`OrderedAt`, `p2`.`Id` AS `Id0`, `p2`.`Name`, `p2`.`Price`, `p2`.`IsActive`, CASE
+        WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN ROUND(`p2`.`Price` - ((`d`.`DiscountPercent` / 100.0) * `p2`.`Price`))
+        ELSE `p2`.`Price`
+    END AS `FinalPrice`, CASE
+        WHEN (`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`DiscountPercent`
+        ELSE 0.0
+    END AS `DiscountPrecentage`, COALESCE((
+        SELECT `i`.`Url`
+        FROM `Images` AS `i`
+        WHERE (`p2`.`Id` = `i`.`ProductId`) AND `i`.`DeletedAt` IS NULL
+        LIMIT 1), '') AS `MainImageUrl`, `o0`.`ProductVariantId` AS `Id1`, `p3`.`Color`, COALESCE(`p3`.`CreatedAt`, TIMESTAMP '0001-01-01 00:00:00') AS `CreatedAt0`, COALESCE(`p3`.`ModifiedAt`, TIMESTAMP '0001-01-01 00:00:00') AS `ModifiedAt0`, `p3`.`Size`, `p3`.`DeletedAt`, COALESCE(`p3`.`Length`, 0) AS `Length`, COALESCE(`p3`.`Waist`, 0) AS `Waist`, `d`.`Id` AS `Id2`, `p3`.`Id` AS `Id3`, `o0`.`OrderId`
+    FROM `OrderItem` AS `o0`
+    INNER JOIN `Products` AS `p2` ON `o0`.`ProductId` = `p2`.`Id`
+    LEFT JOIN `Discount` AS `d` ON `p2`.`DiscountId` = `d`.`Id`
+    INNER JOIN `ProductVariants` AS `p3` ON `o0`.`ProductVariantId` = `p3`.`Id`
+) AS `t1` ON `t0`.`Id` = `t1`.`OrderId`
+ORDER BY `t0`.`Id`, `t0`.`Id0`, `t0`.`Id1`, `t0`.`Id2`, `t0`.`Id3`, `t1`.`Id`, `t1`.`Id0`, `t1`.`Id2`
+2025-08-09 00:01:30.398 +03:00 [INF] Order 33 retrieved successfully for user 1c431918-0061-41d2-a418-24bd6c056eda
+2025-08-09 00:01:30.401 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.OrderDtos.OrderDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-08-09 00:01:30.512 +03:00 [INF] Executed action E_Commerce.Controllers.OrderController.GetOrderById (E-Commerce) in 746.6623ms
+2025-08-09 00:01:30.516 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.OrderController.GetOrderById (E-Commerce)'
+2025-08-09 00:01:30.524 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/Order/33 - 200 1931 application/json; charset=utf-8 808.2821ms
+2025-08-09 00:01:33.823 +03:00 [INF] Setting cache for key: order_id_33_user_1c431918-0061-41d2-a418-24bd6c056eda_admin_False
+2025-08-09 00:01:33.872 +03:00 [INF] Cache set successfully for key: order_id_33_user_1c431918-0061-41d2-a418-24bd6c056eda_admin_False with tags: [order]
+2025-08-09 00:01:33.875 +03:00 [INF] Successfully cached order with key: order_id_33_user_1c431918-0061-41d2-a418-24bd6c056eda_admin_False
+2025-08-09 00:05:43.605 +03:00 [INF] 1 servers were removed due to timeout
+2025-08-09 02:11:07.770 +03:00 [WRN] Stopping the server due to DomainUnload or ProcessExit event...
+2025-08-09 02:11:07.801 +03:00 [INF] Server mrrobot:20872:9b32b922 caught stopping signal...
+2025-08-09 02:11:07.865 +03:00 [INF] Server mrrobot:20872:9b32b922 caught stopped signal...
+2025-08-09 02:11:07.905 +03:00 [INF] Server mrrobot:20872:9b32b922 All dispatchers stopped
+2025-08-09 02:11:07.911 +03:00 [WRN] Server mrrobot:20872:9b32b922 caught shutdown signal...
+2025-08-09 02:11:07.989 +03:00 [INF] Server mrrobot:20872:9b32b922 successfully reported itself as stopped in 33.8121 ms
+2025-08-09 02:11:07.990 +03:00 [INF] Server mrrobot:20872:9b32b922 has been stopped in total 125.5425 ms

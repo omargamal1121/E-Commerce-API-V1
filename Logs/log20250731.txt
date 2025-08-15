@@ -1,0 +1,576 @@
+2025-07-31 00:24:07.780 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:08.763 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:08.915 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 1135.2813ms
+2025-07-31 00:24:10.964 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:11.545 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:11.573 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 608.9024ms
+2025-07-31 00:24:13.591 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:13.596 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:13.610 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 19.7804ms
+2025-07-31 00:24:15.624 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:15.630 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:15.671 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 46.944ms
+2025-07-31 00:24:17.688 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:17.697 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:17.706 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 17.6217ms
+2025-07-31 00:24:19.713 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:19.720 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:19.729 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 16.0225ms
+2025-07-31 00:24:21.740 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:21.747 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:21.755 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 15.0345ms
+2025-07-31 00:24:23.773 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:23.781 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:23.788 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.8372ms
+2025-07-31 00:24:25.805 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:25.810 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:25.826 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 20.6048ms
+2025-07-31 00:24:27.840 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:27.849 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:27.856 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 15.1195ms
+2025-07-31 00:24:29.873 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:29.884 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:29.904 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 31.0396ms
+2025-07-31 00:24:31.924 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:31.931 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:31.938 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.7097ms
+2025-07-31 00:24:33.957 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:33.965 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:33.973 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 16.229ms
+2025-07-31 00:24:35.983 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:35.987 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:35.993 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 10.7342ms
+2025-07-31 00:24:38.000 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:38.009 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:38.016 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 16.4559ms
+2025-07-31 00:24:40.023 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:40.030 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:40.035 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 11.9549ms
+2025-07-31 00:24:42.043 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:42.049 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:42.060 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 17.6808ms
+2025-07-31 00:24:44.076 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:44.082 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:44.087 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 11.0708ms
+2025-07-31 00:24:46.105 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:46.113 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:46.119 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.1107ms
+2025-07-31 00:24:48.132 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:48.173 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:48.183 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 50.0571ms
+2025-07-31 00:24:50.200 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:50.212 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:50.220 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 19.5953ms
+2025-07-31 00:24:52.241 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:52.246 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:52.252 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 11.7877ms
+2025-07-31 00:24:54.259 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:54.266 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:54.273 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.2144ms
+2025-07-31 00:24:56.290 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:56.297 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:56.304 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.2101ms
+2025-07-31 00:24:58.313 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:24:58.319 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:24:58.328 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 15.6118ms
+2025-07-31 00:25:00.341 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:00.347 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:00.353 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 12.2693ms
+2025-07-31 00:25:02.373 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:02.380 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:02.386 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.7178ms
+2025-07-31 00:25:04.407 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:04.414 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:04.420 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.2246ms
+2025-07-31 00:25:06.441 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:06.448 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:06.455 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.6804ms
+2025-07-31 00:25:08.474 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:08.481 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:08.488 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.5687ms
+2025-07-31 00:25:10.508 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:10.514 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:10.521 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.108ms
+2025-07-31 00:25:12.539 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:12.547 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:12.553 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.9439ms
+2025-07-31 00:25:14.560 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:14.566 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:14.574 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.55ms
+2025-07-31 00:25:16.593 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:16.606 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:16.614 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 21.0729ms
+2025-07-31 00:25:18.623 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:18.632 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:18.642 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 18.7339ms
+2025-07-31 00:25:20.658 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:20.666 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:20.673 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.814ms
+2025-07-31 00:25:22.692 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:22.698 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:22.703 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 11.1163ms
+2025-07-31 00:25:24.730 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:24.738 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:24.750 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 19.2874ms
+2025-07-31 00:25:26.758 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:26.766 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:26.772 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.1368ms
+2025-07-31 00:25:28.792 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:28.800 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:28.808 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 16.4237ms
+2025-07-31 00:25:30.826 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:30.832 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:30.839 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.1025ms
+2025-07-31 00:25:32.855 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:32.860 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:32.866 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 11.2787ms
+2025-07-31 00:25:34.876 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:34.880 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:34.886 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 10.5624ms
+2025-07-31 00:25:36.907 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:36.914 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:36.920 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.205ms
+2025-07-31 00:25:38.927 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:38.934 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:38.940 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.3312ms
+2025-07-31 00:25:40.959 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:40.966 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:40.974 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.9744ms
+2025-07-31 00:25:42.995 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:43.014 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:43.037 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 42.5796ms
+2025-07-31 00:25:45.046 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:45.059 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:45.071 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 25.429ms
+2025-07-31 00:25:47.092 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:47.098 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:47.106 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.504ms
+2025-07-31 00:25:49.127 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:49.134 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:49.141 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.8963ms
+2025-07-31 00:25:51.159 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:51.167 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:51.174 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 15.0833ms
+2025-07-31 00:25:53.195 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:53.211 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:53.223 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 28.0982ms
+2025-07-31 00:25:55.246 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:55.253 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:55.263 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 17.1843ms
+2025-07-31 00:25:57.276 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:57.282 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:57.291 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 15.4171ms
+2025-07-31 00:25:59.308 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:25:59.316 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:25:59.323 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.5768ms
+2025-07-31 00:26:01.339 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:01.346 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:01.352 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 12.6497ms
+2025-07-31 00:26:03.359 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:03.364 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:03.371 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 11.9729ms
+2025-07-31 00:26:05.392 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:05.398 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:05.403 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 11.2608ms
+2025-07-31 00:26:07.411 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:07.417 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:07.424 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.0154ms
+2025-07-31 00:26:09.439 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:09.463 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:09.481 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 42.2123ms
+2025-07-31 00:26:11.493 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:11.500 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:11.506 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.2298ms
+2025-07-31 00:26:13.525 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:13.532 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:13.538 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.0678ms
+2025-07-31 00:26:15.545 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:15.550 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:15.558 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 12.7751ms
+2025-07-31 00:26:17.564 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:17.571 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:17.579 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.8455ms
+2025-07-31 00:26:19.592 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:19.600 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:19.606 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.0505ms
+2025-07-31 00:26:21.627 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:21.635 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:21.642 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.6543ms
+2025-07-31 00:26:23.650 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:23.657 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:23.663 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.2011ms
+2025-07-31 00:26:25.677 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:25.685 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:25.692 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 15.2602ms
+2025-07-31 00:26:27.715 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:27.738 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:27.753 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 37.5957ms
+2025-07-31 00:26:29.765 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:29.774 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:29.783 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 17.7953ms
+2025-07-31 00:26:31.795 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:31.818 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:31.833 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 38.2874ms
+2025-07-31 00:26:33.843 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:33.850 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:33.858 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 15.1084ms
+2025-07-31 00:26:35.865 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:35.882 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:35.899 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 33.5632ms
+2025-07-31 00:26:37.916 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:37.929 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:37.941 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 25.3492ms
+2025-07-31 00:26:39.960 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:39.967 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:39.973 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 12.0295ms
+2025-07-31 00:26:41.993 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:41.999 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:42.007 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.3138ms
+2025-07-31 00:26:44.028 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:44.035 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:44.043 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.4037ms
+2025-07-31 00:26:46.061 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:46.068 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:46.076 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.6946ms
+2025-07-31 00:26:48.094 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:48.101 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:48.108 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.7213ms
+2025-07-31 00:26:50.128 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:50.136 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:50.141 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.2845ms
+2025-07-31 00:26:52.150 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:52.156 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:52.163 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.2127ms
+2025-07-31 00:26:54.180 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:54.195 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:54.203 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 23.0609ms
+2025-07-31 00:26:56.210 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:56.218 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:56.224 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.6464ms
+2025-07-31 00:26:58.245 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:26:58.252 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:26:58.259 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.7266ms
+2025-07-31 00:27:00.266 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:00.273 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:00.281 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.9613ms
+2025-07-31 00:27:02.299 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:02.319 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:02.334 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 35.3161ms
+2025-07-31 00:27:04.344 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:04.351 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:04.359 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.6085ms
+2025-07-31 00:27:06.366 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:06.373 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:06.381 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 15.5351ms
+2025-07-31 00:27:08.395 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:08.401 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:08.406 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 11.9866ms
+2025-07-31 00:27:10.429 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:10.434 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:10.439 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 10.4433ms
+2025-07-31 00:27:12.461 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:12.467 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:12.473 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 11.288ms
+2025-07-31 00:27:14.494 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:14.501 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:14.507 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.1045ms
+2025-07-31 00:27:16.530 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:16.538 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:16.547 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 16.7586ms
+2025-07-31 00:27:18.554 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:18.564 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:18.570 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 15.823ms
+2025-07-31 00:27:20.579 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:20.584 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:20.590 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 11.6453ms
+2025-07-31 00:27:22.597 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:22.603 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:22.609 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 12.4934ms
+2025-07-31 00:27:24.629 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:24.637 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:24.643 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.6677ms
+2025-07-31 00:27:26.661 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:26.670 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:26.678 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 16.4568ms
+2025-07-31 00:27:28.696 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:28.703 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:28.709 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 12.9929ms
+2025-07-31 00:27:30.727 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:30.734 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:30.741 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.1097ms
+2025-07-31 00:27:32.762 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:32.770 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:32.776 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.8557ms
+2025-07-31 00:27:34.795 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:34.804 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:34.811 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 15.7974ms
+2025-07-31 00:27:36.828 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:36.836 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:36.842 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.583ms
+2025-07-31 00:27:38.864 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:38.879 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:38.897 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 33.3899ms
+2025-07-31 00:27:40.912 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:40.919 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:40.925 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.1442ms
+2025-07-31 00:27:42.946 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:42.960 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:42.976 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 30.2582ms
+2025-07-31 00:27:44.992 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:45.017 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:45.033 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 41.2906ms
+2025-07-31 00:27:47.050 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:47.069 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:47.086 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 36.0731ms
+2025-07-31 00:27:49.099 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:49.106 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:49.115 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 16.6081ms
+2025-07-31 00:27:51.130 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:51.140 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:51.147 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 17.6433ms
+2025-07-31 00:27:53.155 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:53.164 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:53.170 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.8186ms
+2025-07-31 00:27:55.179 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:55.186 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:55.192 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 12.4111ms
+2025-07-31 00:27:57.213 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:57.238 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:57.250 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 37.5853ms
+2025-07-31 00:27:59.257 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:27:59.266 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:27:59.271 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.9979ms
+2025-07-31 00:28:01.280 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:01.287 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:01.294 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.2242ms
+2025-07-31 00:28:03.313 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:03.322 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:03.335 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 21.6678ms
+2025-07-31 00:28:05.348 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:05.358 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:05.372 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 23.7936ms
+2025-07-31 00:28:07.381 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:07.389 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:07.397 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 16.0603ms
+2025-07-31 00:28:09.413 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:09.421 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:09.427 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.7864ms
+2025-07-31 00:28:11.447 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:11.453 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:11.459 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 12.317ms
+2025-07-31 00:28:13.479 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:13.485 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:13.490 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 10.8643ms
+2025-07-31 00:28:15.496 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:15.503 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:15.510 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.0407ms
+2025-07-31 00:28:17.530 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:17.536 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:17.543 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.7272ms
+2025-07-31 00:28:19.562 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:19.570 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:19.579 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 16.3431ms
+2025-07-31 00:28:21.599 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:21.604 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:21.609 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 10.0639ms
+2025-07-31 00:28:23.616 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:23.622 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:23.629 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.7278ms
+2025-07-31 00:28:25.637 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:25.642 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:25.648 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 11.1633ms
+2025-07-31 00:28:27.664 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:27.670 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:27.676 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 12.0347ms
+2025-07-31 00:28:29.696 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:29.704 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:29.710 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.7147ms
+2025-07-31 00:28:31.716 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:31.723 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:31.731 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.5674ms
+2025-07-31 00:28:33.747 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:33.755 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:33.760 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 12.7625ms
+2025-07-31 00:28:35.769 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:35.782 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:35.799 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 29.9023ms
+2025-07-31 00:28:37.815 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:37.823 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:37.831 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 15.9978ms
+2025-07-31 00:28:39.848 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:39.856 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:39.865 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 16.9449ms
+2025-07-31 00:28:41.881 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:41.889 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:41.897 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 16.4115ms
+2025-07-31 00:28:43.914 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:43.922 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:43.928 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.108ms
+2025-07-31 00:28:45.947 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:45.958 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:45.966 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 18.5568ms
+2025-07-31 00:28:47.980 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:47.988 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:47.997 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 16.3691ms
+2025-07-31 00:28:50.014 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:50.022 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:50.029 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.3113ms
+2025-07-31 00:28:52.048 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:52.055 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:52.062 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.911ms
+2025-07-31 00:28:54.081 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:54.088 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:54.095 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.0554ms
+2025-07-31 00:28:56.116 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:56.140 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:56.154 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 38.013ms
+2025-07-31 00:28:58.165 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:28:58.172 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:28:58.178 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.717ms
+2025-07-31 00:29:00.196 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:00.203 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:00.208 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 11.9223ms
+2025-07-31 00:29:02.221 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:02.228 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:02.237 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 15.6306ms
+2025-07-31 00:29:04.248 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:04.256 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:04.262 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.3739ms
+2025-07-31 00:29:06.281 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:06.287 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:06.294 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 12.6843ms
+2025-07-31 00:29:08.300 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:08.306 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:08.313 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.1306ms
+2025-07-31 00:29:10.324 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:10.433 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:10.474 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 149.6268ms
+2025-07-31 00:29:12.482 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:12.489 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:12.496 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.8432ms
+2025-07-31 00:29:14.515 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:14.523 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:14.530 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.6905ms
+2025-07-31 00:29:16.549 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:16.557 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:16.566 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 16.9354ms
+2025-07-31 00:29:18.581 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:18.586 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:18.592 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 10.8612ms
+2025-07-31 00:29:20.600 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:20.610 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:20.617 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 17.4905ms
+2025-07-31 00:29:22.630 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:22.639 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:22.645 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 15.154ms
+2025-07-31 00:29:24.667 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:24.678 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:24.690 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 22.7393ms
+2025-07-31 00:29:26.703 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:26.728 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:26.755 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 52.3171ms
+2025-07-31 00:29:28.773 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:28.790 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:28.806 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 33.1482ms
+2025-07-31 00:29:30.816 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:30.822 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:30.829 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 12.9108ms
+2025-07-31 00:29:32.849 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:32.856 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:32.863 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.7181ms
+2025-07-31 00:29:34.882 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:34.889 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:34.897 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.5334ms
+2025-07-31 00:29:36.916 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:36.923 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:36.930 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.0362ms
+2025-07-31 00:29:38.949 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:38.957 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:38.964 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 15.4577ms
+2025-07-31 00:29:40.983 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:40.993 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:41.002 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 19.0216ms
+2025-07-31 00:29:43.016 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:43.023 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:43.030 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.6322ms
+2025-07-31 00:29:45.050 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:45.060 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:45.070 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 20.7238ms
+2025-07-31 00:29:47.084 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:47.095 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:47.111 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 26.6719ms
+2025-07-31 00:29:49.135 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:49.145 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:49.152 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 16.9786ms
+2025-07-31 00:29:51.165 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:51.175 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:51.181 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 15.6743ms
+2025-07-31 00:29:53.190 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:53.206 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:53.214 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 23.5685ms
+2025-07-31 00:29:55.232 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:55.241 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:55.248 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 16.0193ms
+2025-07-31 00:29:57.256 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:57.307 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:57.325 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 69.4722ms
+2025-07-31 00:29:59.332 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:29:59.339 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:29:59.345 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 12.4983ms
+2025-07-31 00:30:01.366 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:01.372 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:01.377 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 11.6073ms
+2025-07-31 00:30:03.385 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:03.398 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:03.413 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 27.5247ms
+2025-07-31 00:30:05.432 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:05.441 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:05.449 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 17.5299ms
+2025-07-31 00:30:07.470 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:07.487 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:07.508 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 38.3925ms
+2025-07-31 00:30:09.518 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:09.525 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:09.533 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.8233ms
+2025-07-31 00:30:11.550 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:11.558 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:11.563 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 12.353ms
+2025-07-31 00:30:13.583 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:13.591 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:13.597 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.2153ms
+2025-07-31 00:30:15.608 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:15.633 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:15.656 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 47.6198ms
+2025-07-31 00:30:17.667 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:17.674 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:17.680 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.1731ms
+2025-07-31 00:30:19.700 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:19.711 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:19.722 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 21.2866ms
+2025-07-31 00:30:21.731 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:21.739 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:21.745 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.392ms
+2025-07-31 00:30:23.758 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:23.769 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:23.820 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 61.7023ms
+2025-07-31 00:30:25.827 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:25.834 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:25.842 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 15.29ms
+2025-07-31 00:30:27.850 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:27.857 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:27.864 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.4372ms
+2025-07-31 00:30:29.884 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:29.888 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:29.893 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 9.6799ms
+2025-07-31 00:30:31.899 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:31.908 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:31.916 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 16.1833ms
+2025-07-31 00:30:34.452 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:34.460 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:34.466 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 13.6136ms
+2025-07-31 00:30:37.467 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:37.477 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:37.629 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 161.9801ms
+2025-07-31 00:30:40.458 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 258
+2025-07-31 00:30:40.465 +03:00 [INF] CORS policy execution successful.
+2025-07-31 00:30:40.473 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/hangfire/stats - 200 null application/json 14.8461ms

@@ -212,8 +212,8 @@ namespace E_Commerce.Controllers
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10)
         {
-            bool effectiveIsActive = isActive ?? true;
-            bool effectiveIncludeDeleted = includeDeleted ?? false;
+            bool? effectiveIsActive = isActive;
+            bool? effectiveIncludeDeleted = includeDeleted ;
 
             if (!User?.IsInRole("Admin") ?? true)
             {

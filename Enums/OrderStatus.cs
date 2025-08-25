@@ -7,9 +7,11 @@ namespace E_Commerce.Enums
         Processing = 2,
         Shipped = 3,
         Delivered = 4,
-        Cancelled = 5,
+        CancelledByUser = 5,
         Refunded = 6,
         Returned = 7,
-		PaymentExpired=8
+		PaymentExpired=8,
+		CancelledByAdmin = 9,
+        Complete = 10,
 	}
 } 

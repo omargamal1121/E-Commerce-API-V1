@@ -133,7 +133,7 @@ namespace E_Commerce.Controllers
 		[HttpPost]
 		[Authorize(Roles = "Admin")]
 		[ActionName(nameof(CreateAsync))]
-		public async Task<ActionResult<ApiResponse<CategoryDto>>> CreateAsync([FromForm] CreateCategotyDto categoryDto)
+		public async Task<ActionResult<ApiResponse<CategoryDto>>> CreateAsync([FromBody] CreateCategotyDto categoryDto)
 		{
 			_logger.LogInformation($"Executing {nameof(CreateAsync)}");
 			
@@ -165,7 +165,7 @@ namespace E_Commerce.Controllers
 		[HttpPut("{id}")]
 		[Authorize(Roles = "Admin")]
 		[ActionName(nameof(UpdateAsync))]
-		public async Task<ActionResult<ApiResponse<CategoryDto>>> UpdateAsync(int id, [FromForm] UpdateCategoryDto categoryDto)
+		public async Task<ActionResult<ApiResponse<CategoryDto>>> UpdateAsync(int id, [FromBody] UpdateCategoryDto categoryDto)
 		{
 			_logger.LogInformation($"Executing {nameof(UpdateAsync)} for id: {id}");
 			

@@ -18,8 +18,13 @@ namespace E_Commerce.Repository
             _logger = logger;
         }
 
+        public  void DeleteRangeImages(List<Image> images)
+        {
+            _images.RemoveRange(images);
+        }
         public async Task<Image?> GetByUrlAsync(string url)
         {
+            
             _logger.LogInformation($"Executing {nameof(GetByUrlAsync)} for Url: {url}");
             Image? image = await _images.SingleOrDefaultAsync(i => i.Url == url);
             if (image is null)

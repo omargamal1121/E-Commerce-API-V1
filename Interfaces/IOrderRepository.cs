@@ -14,15 +14,11 @@ namespace E_Commerce.Interfaces
 
         Task<Order?> GetOrderByNumberAsync(string orderNumber);
         Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus status, string? notes = null);
-        Task<bool> CancelOrderAsync(int orderId, string cancellationReason);
-        Task<bool> ShipOrderAsync(int orderId);
-        Task<bool> DeliverOrderAsync(int orderId);
         Task<string> GenerateOrderNumberAsync();
         Task<int> GetOrderCountByCustomerAsync(string customerId);
         Task<decimal> GetTotalRevenueByCustomerAsync(string customerId);
         Task<decimal> GetTotalRevenueByDateRangeAsync(DateTime startDate, DateTime endDate);
-        public Task<List<Order>> FilterOrderAsync(string? userid = null, bool? Deleted = null, int page = 1, int pageSize = 10, OrderStatus? status = null);
-
+     
         Task<int> GetTotalOrderCountAsync(OrderStatus? status = null);
     }
 }

@@ -1,4 +1,4 @@
-﻿using E_Commerce.DtoModels.OrderDtos;
+using E_Commerce.DtoModels.OrderDtos;
 using E_Commerce.DtoModels.PaymentDtos;
 using E_Commerce.Enums;
 using E_Commerce.Models;
@@ -9,7 +9,10 @@ using Hangfire;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -112,6 +115,46 @@ namespace E_Commerce.Services.PayMobServices
 				return false;
 			}
 		}
+		public async Task<Result<PaymobPaymentStatusDto>> GetPaymentStatusAsync(long orderId)
+		{
+			if (string.IsNullOrEmpty(Token) || token_gentrate_at.AddHours(1) < DateTime.UtcNow)
+			{
+				var tokenResult = await GetTokenAsync();
+				if (!tokenResult)
+				{
+					_logger.LogError("Failed to get token for PayMob order creation");
+					return Result<PaymobPaymentStatusDto>.Fail("Failed to authenticate with Paymob");
+				}
+			}
+
+			using HttpClient client = new HttpClient();
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+			var response = await client.GetAsync($"https://accept.paymob.com/api/ecommerce/orders/{orderId}");
+
+			if (!response.IsSuccessStatusCode)
+			{
+				_logger.LogError("Paymob API call failed for order {OrderId}", orderId);
+				return Result<PaymobPaymentStatusDto>.Fail("Failed to retrieve payment status");
+			}
+
+			var json = await response.Content.ReadAsStringAsync();
+			using var doc = JsonDocument.Parse(json);
+
+			
+			var paidAmount = doc.RootElement.GetProperty("paid_amount_cents").GetInt32();
+			var currency = doc.RootElement.TryGetProperty("currency", out var currencyEl) ? currencyEl.GetString() : "EGP";
+
+			var status = (paidAmount > 0 ? "Paid" : "Unpaid");
+
+			return Result<PaymobPaymentStatusDto>.Ok(new PaymobPaymentStatusDto
+			{
+				Status = status,
+				PaidAmountCents = paidAmount,
+				Currency = currency ?? "EGP"
+			});
+		}
+	
 
 		public async Task<int> CreateOrderInPaymobAsync(CreateOrderRequest order)
 		{
@@ -245,15 +288,15 @@ namespace E_Commerce.Services.PayMobServices
 				return null;
 			}
 		}
-		public async Task<Result<string>> GetPaymentLinkAsync(CreatePayment dto)
+		public async Task<Result<PaymentLinkResult>> GetPaymentLinkAsync(CreatePayment dto,int expires)
 		{
 			if (dto == null)
 			{
-				return Result<string>.Fail("Invalid payment request", 400);
+				return Result<PaymentLinkResult>.Fail("Invalid payment request", 400);
 			}
 			if (dto.WalletPhoneNumber == null&&dto.PaymentMethod==PaymentMethodEnums.Wallet)
 			{
-				return Result<string>.Fail("Wallet Phone Number Needed", 400);
+				return Result<PaymentLinkResult>.Fail("Wallet Phone Number Needed", 400);
 			}
 
 			try
@@ -264,7 +307,7 @@ namespace E_Commerce.Services.PayMobServices
 					if (!tokenResult)
 					{
 						_logger.LogError("Failed to get token for payment link generation");
-						return Result<string>.Fail("Authentication failed", 401);
+						return Result<PaymentLinkResult>.Fail("Authentication failed", 401);
 					}
 				}
 
@@ -272,14 +315,14 @@ namespace E_Commerce.Services.PayMobServices
 				if (user == null)
 				{
 					_logger.LogWarning("User not found for payment: {CustomerId}", dto.CustomerId);
-					return Result<string>.Fail("User not found", 404);
+					return Result<PaymentLinkResult>.Fail("User not found", 404);
 				}
 
 				var address = await _unitOfWork.CustomerAddress.GetAddressByIdAsync(dto.AddressId);
 				if (address == null)
 				{
 					_logger.LogWarning("Address not found for payment: {AddressId}", dto.AddressId);
-					return Result<string>.Fail("Address not found", 404);
+					return Result<PaymentLinkResult>.Fail("Address not found", 404);
 				}
 
 				var paymobOrderRequest = new CreateOrderRequest
@@ -288,17 +331,17 @@ namespace E_Commerce.Services.PayMobServices
 					amount_cents = (int)(dto.Amount * 100),
 					currency = "EGP",
 					delivery_needed = true,
-					merchant_order_id = dto.OrderId.ToString()
+					merchant_order_num = dto.Ordernumber
 				};
 
 				var paymobOrderId = await CreateOrderInPaymobAsync(paymobOrderRequest);
 				if (paymobOrderId == 0)
 				{
-					_logger.LogError("Failed to create order in PayMob for OrderId: {OrderId}", dto.OrderId);
-					return Result<string>.Fail("Failed to create payment order", 500);
+					_logger.LogError(	"Failed to create order in PayMob for OrderId: {OrderId}", dto.Ordernumber);
+					return Result<PaymentLinkResult>.Fail("Failed to create payment order", 500);
 				}
 
-				_logger.LogInformation("Successfully created PayMob order: {PayMobOrderId} for local order: {OrderId}", paymobOrderId, dto.OrderId);
+				_logger.LogInformation("Successfully created PayMob order: {PayMobOrderId} for local order: {OrderId}", paymobOrderId, dto.Ordernumber);
 
 				var amountInCents = (int)(dto.Amount * 100);
 				var integrationId = await _unitOfWork.Repository<PaymentMethod>()
@@ -310,7 +353,7 @@ namespace E_Commerce.Services.PayMobServices
 				if (string.IsNullOrEmpty(integrationId))
 				{
 					_logger.LogError("Integration ID not found for payment method: {PaymentMethod}. Please configure the integration ID in the database.", dto.PaymentMethod);
-					return Result<string>.Fail("Payment method not configured", 400);
+					return Result<PaymentLinkResult>.Fail("Payment method not configured", 400);
 				}
 
 				_logger.LogInformation("Using integration ID: {IntegrationId} for payment method: {PaymentMethod}", integrationId, dto.PaymentMethod);
@@ -319,6 +362,7 @@ namespace E_Commerce.Services.PayMobServices
 				{
 					amount_cents = amountInCents,
 					auth_token = Token,
+					expiration= expires,
 					order_id = paymobOrderId,
 					integration_id = integrationId,
 					billing_data = new billing_data
@@ -338,11 +382,11 @@ namespace E_Commerce.Services.PayMobServices
 				var paymentKey = await GeneratePaymentKeyAsync(paymentKeyRequest, dto.PaymentMethod);
 				if (string.IsNullOrEmpty(paymentKey))
 				{
-					_logger.LogError("Failed to generate payment key from PayMob for order: {OrderId}", dto.OrderId);
-					return Result<string>.Fail("Failed to generate payment key", 500);
+					_logger.LogError("Failed to generate payment key from PayMob for order: {OrderId}", dto.Ordernumber);
+					return Result<PaymentLinkResult>.Fail("Failed to generate payment key", 500);
 				}
 
-				_logger.LogInformation("Successfully generated payment key for order: {OrderId}", dto.OrderId);
+				_logger.LogInformation("Successfully generated payment key for order: {OrderId}", dto.Ordernumber);
 
 				string paymentUrl;
 
@@ -350,6 +394,11 @@ namespace E_Commerce.Services.PayMobServices
 				{
 					
 					paymentUrl = await WalletUrl(PaymentProviderEnums.Paymob, paymentKey, dto.WalletPhoneNumber);
+					if(paymentUrl.IsNullOrEmpty())
+					{
+						_logger.LogWarning("Can't Genrate Link Of Wallet.. maybe number doesn't has wallet");
+						return Result<PaymentLinkResult>.Fail("Please Check If you Has Wallet on this number");
+					}
 				}
 				else
 				{
@@ -357,12 +406,12 @@ namespace E_Commerce.Services.PayMobServices
 					paymentUrl = await OnlineCardUrl(PaymentProviderEnums.Paymob, paymentKey);
 				}
 
-				return Result<string>.Ok(paymentUrl);
+				return Result<PaymentLinkResult>.Ok(new PaymentLinkResult { PaymentUrl=paymentUrl,PaymobOrderId=paymobOrderId});
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, "Exception occurred while generating payment link");
-				return Result<string>.Fail("Failed to initiate payment", 500);
+				return Result<PaymentLinkResult>.Fail("Failed to initiate payment", 500);
 			}
 		}
 
@@ -426,7 +475,7 @@ namespace E_Commerce.Services.PayMobServices
 			public decimal amount_cents { get; set; }
 			public string currency { get; set; } = "EGP";
 			public string auth_token { get; set; } = string.Empty;
-            public string? merchant_order_id { get; set; }
+            public string? merchant_order_num{ get; set; }
 		}
 
 		public class PaymentKeyContent
@@ -438,6 +487,17 @@ namespace E_Commerce.Services.PayMobServices
 			public int order_id { get; set; }
 			public string integration_id { get; set; } = string.Empty;
 			public billing_data billing_data { get; set; } = new billing_data();
+		}
+		public class PaymentLinkResult
+		{
+			public string PaymentUrl { get; set; }
+			public long PaymobOrderId { get; set; }
+		}
+		public class PaymobPaymentStatusDto
+		{
+			public string Status { get; set; } = "Unpaid"; // Paid, Pending, Unpaid
+			public int PaidAmountCents { get; set; }
+			public string Currency { get; set; } = "EGP";
 		}
 
 		public class billing_data

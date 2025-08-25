@@ -25,7 +25,7 @@ namespace E_Commerce.DtoModels.OrderDtos
         public List<OrderItemDto> Items { get; set; } = new List<OrderItemDto>();
         public PaymentDto? Payment { get; set; }
         
-        public bool IsCancelled => Status == OrderStatus.Cancelled.ToString();
+        public bool IsCancelled => Status == OrderStatus.CancelledByUser.ToString()|| Status == OrderStatus.CancelledByAdmin.ToString();
         public bool IsDelivered => Status == OrderStatus.Delivered.ToString();
         public bool IsShipped => Status == OrderStatus.Shipped.ToString();
         public bool CanBeCancelled => Status == OrderStatus.PendingPayment.ToString() || Status == OrderStatus.Confirmed.ToString();

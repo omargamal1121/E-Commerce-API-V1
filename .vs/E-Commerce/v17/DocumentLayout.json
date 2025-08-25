@@ -3,48 +3,32 @@
   "WorkspaceRootPath": "D:\\project_fashion\\E-Commerce-API-main\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\orderservices\\orderservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\orderservices\\orderservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\e-commers.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
-      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:e-commers.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\paymobservices\\paymobservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\paymobservices\\paymobservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\paymentprovidersservices\\paymentprovidersservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\paymentprovidersservices\\paymentprovidersservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\paymentservices\\paymentservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\paymentservices\\paymentservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\orderservices\\orderservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\orderservices\\orderservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\paymobservices\\paymobservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\paymobservices\\paymobservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\controllers\\enumscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:controllers\\enumscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\paymentwebhookservice\\paymentwebhookservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\paymentwebhookservice\\paymentwebhookservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\enumservices\\enumservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\enumservices\\enumservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\paymentproccessor\\ipaymentprocessor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\paymentproccessor\\ipaymentprocessor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\dtomodels\\enumdtos\\enumdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:dtomodels\\enumdtos\\enumdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\enums\\paymentmethod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:enums\\paymentmethod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\categoryservices\\categoryservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\categoryservices\\categoryservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -54,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -63,53 +47,39 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\appsettings.json",
-              "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\appsettings.json",
-              "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAACcAAAAAAAAAAADwvzkAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-08-15T16:45:08.037Z",
+              "Title": "PaymentProvidersServices.cs",
+              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\PaymentProvidersServices\\PaymentProvidersServices.cs",
+              "RelativeDocumentMoniker": "Services\\PaymentProvidersServices\\PaymentProvidersServices.cs",
+              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Services\\PaymentProvidersServices\\PaymentProvidersServices.cs",
+              "RelativeToolTip": "Services\\PaymentProvidersServices\\PaymentProvidersServices.cs",
+              "ViewState": "AgIAABUAAAAAy8zMzMwMwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-24T23:54:01.994Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IPaymentProcessor.cs",
+              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\PaymentProccessor\\IPaymentProcessor.cs",
+              "RelativeDocumentMoniker": "Services\\PaymentProccessor\\IPaymentProcessor.cs",
+              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Services\\PaymentProccessor\\IPaymentProcessor.cs",
+              "RelativeToolTip": "Services\\PaymentProccessor\\IPaymentProcessor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-24T23:53:52.664Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "E-Commers.http",
-              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\E-Commers.http",
-              "RelativeDocumentMoniker": "E-Commers.http",
-              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\E-Commers.http",
-              "RelativeToolTip": "E-Commers.http",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
-              "WhenOpened": "2025-08-15T16:45:06.406Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAALgAAAAAAAAAAADwv8YAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-15T14:52:09.003Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
               "Title": "PaymentServices.cs",
               "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\PaymentServices\\PaymentServices.cs",
               "RelativeDocumentMoniker": "Services\\PaymentServices\\PaymentServices.cs",
               "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Services\\PaymentServices\\PaymentServices.cs",
               "RelativeToolTip": "Services\\PaymentServices\\PaymentServices.cs",
-              "ViewState": "AgIAALQAAAAAAAAAAAAAwL8AAAAGAAAAAAAAAA==",
+              "ViewState": "AgIAANcAAAAAAAAAAAAswOEAAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-15T08:03:03.332Z"
+              "WhenOpened": "2025-08-24T23:53:47.757Z"
             },
             {
               "$type": "Document",
@@ -119,82 +89,45 @@
               "RelativeDocumentMoniker": "Services\\PayMobServices\\PayMobServices.cs",
               "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Services\\PayMobServices\\PayMobServices.cs",
               "RelativeToolTip": "Services\\PayMobServices\\PayMobServices.cs",
-              "ViewState": "AgIAAFQBAAAAAAAAAAAAwFwBAAAEAAAAAAAAAA==",
+              "ViewState": "AgIAAIUAAAAAlJmZmZkRwI8AAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-15T07:28:59.619Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-24T23:53:39.593Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAACwAAAAAAAAAAABwPToAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-08-24T19:39:43.689Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "PaymentWebhookService.cs",
+              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\PaymentWebhookService\\PaymentWebhookService.cs",
+              "RelativeDocumentMoniker": "Services\\PaymentWebhookService\\PaymentWebhookService.cs",
+              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Services\\PaymentWebhookService\\PaymentWebhookService.cs",
+              "RelativeToolTip": "Services\\PaymentWebhookService\\PaymentWebhookService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJ4AAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-24T14:38:29.821Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
               "Title": "OrderServices.cs",
               "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\OrderServices\\OrderServices.cs",
               "RelativeDocumentMoniker": "Services\\OrderServices\\OrderServices.cs",
               "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Services\\OrderServices\\OrderServices.cs",
               "RelativeToolTip": "Services\\OrderServices\\OrderServices.cs",
-              "ViewState": "AgIAALQBAAAAAAAAAAAYwMcBAAAxAAAAAAAAAA==",
+              "ViewState": "AgIAACAAAABAZmZmZmYkwC4AAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-15T07:19:30.502Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "EnumsController.cs",
-              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Controllers\\EnumsController.cs",
-              "RelativeDocumentMoniker": "Controllers\\EnumsController.cs",
-              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Controllers\\EnumsController.cs",
-              "RelativeToolTip": "Controllers\\EnumsController.cs",
-              "ViewState": "AgIAACIAAAAAAAAAAAAiwCkAAAB0AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-15T06:54:45.743Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "EnumDto.cs",
-              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\DtoModels\\EnumDtos\\EnumDto.cs",
-              "RelativeDocumentMoniker": "DtoModels\\EnumDtos\\EnumDto.cs",
-              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\DtoModels\\EnumDtos\\EnumDto.cs",
-              "RelativeToolTip": "DtoModels\\EnumDtos\\EnumDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-15T06:52:31.37Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "EnumServices.cs",
-              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\EnumServices\\EnumServices.cs",
-              "RelativeDocumentMoniker": "Services\\EnumServices\\EnumServices.cs",
-              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Services\\EnumServices\\EnumServices.cs",
-              "RelativeToolTip": "Services\\EnumServices\\EnumServices.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAaAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-15T06:51:13.714Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "PaymentMethod.cs",
-              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Enums\\PaymentMethod.cs",
-              "RelativeDocumentMoniker": "Enums\\PaymentMethod.cs",
-              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Enums\\PaymentMethod.cs",
-              "RelativeToolTip": "Enums\\PaymentMethod.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-14T14:35:29.008Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "CategoryServices.cs",
-              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\CategoryServices\\CategoryServices.cs",
-              "RelativeDocumentMoniker": "Services\\CategoryServices\\CategoryServices.cs",
-              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Services\\CategoryServices\\CategoryServices.cs",
-              "RelativeToolTip": "Services\\CategoryServices\\CategoryServices.cs",
-              "ViewState": "AgIAAEgAAAAAAAAAAAAowAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-14T12:34:36.066Z",
+              "WhenOpened": "2025-08-24T13:20:23.181Z",
               "EditorCaption": ""
             }
           ]

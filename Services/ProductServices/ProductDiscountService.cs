@@ -148,7 +148,6 @@ namespace E_Commerce.Services.ProductServices
                 if (isDiscountActive)
                 {
                     _logger.LogInformation($"Discount {dto.Discountid} is active. Updating cart and order prices for products: {string.Join(", ", dto.ProductsId)}");
-                    _backgroundJobClient.Enqueue(() => _orderServices.UpdateOrderItemsForProductsAfterAddDiscountAsync(dto.ProductsId, discount.DiscountPercent));
                     _backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterAddDiscountAsync(dto.ProductsId, discount.DiscountPercent));
                 }
                 else
@@ -158,8 +157,6 @@ namespace E_Commerce.Services.ProductServices
 
                 // Clear cache
                 RemoveProductCachesAsync();
-
-                // Get updated products with discount information
                 var updatedProducts = await _unitOfWork.Product
                     .GetAll()
                     .Where(p => dto.ProductsId.Contains(p.Id))
@@ -249,7 +246,7 @@ namespace E_Commerce.Services.ProductServices
 					return Result<List<ProductDto>>.Fail("Failed to log admin operation. Discount removal rolled back.", 500);
 				}
 
-				_backgroundJobClient.Enqueue(() => _orderServices.UpdateOrderItemsForProductsAfterRemoveDiscountAsync(productIds));
+			
 				_backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterRemoveDiscountAsync(productIds));
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
@@ -426,7 +423,7 @@ namespace E_Commerce.Services.ProductServices
 				if (isDiscountActive)
 				{
 					_logger.LogInformation($"Discount {discountId} is active. Updating cart and order prices for product: {productId}");
-					_backgroundJobClient.Enqueue(() => _orderServices.UpdateOrderItemsForProductsAfterAddDiscountAsync(new List<int> { productId }, discount.DiscountPercent));
+					
 					_backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterAddDiscountAsync(new List<int> { productId }, discount.DiscountPercent));
 				}
 				else
@@ -528,7 +525,7 @@ namespace E_Commerce.Services.ProductServices
 				if (isDiscountActive)
 				{
 					_logger.LogInformation($"[UpdateProductDiscountAsync] Discount {discountId} is active. Updating cart and order prices for product: {productId}");
-					_backgroundJobClient.Enqueue(() => _orderServices.UpdateOrderItemsForProductsAfterAddDiscountAsync(new List<int> { productId }, discount.DiscountPercent));
+				
 					_backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterAddDiscountAsync(new List<int> { productId }, discount.DiscountPercent));
 				}
 				else
@@ -593,7 +590,6 @@ namespace E_Commerce.Services.ProductServices
 					_logger.LogWarning($"[RemoveDiscountFromProductAsync] Failed to log admin operation for productId={productId}");
 					return Result<bool>.Fail("Failed to log admin operation. Discount removal rolled back.", 500);
 				}
-				_backgroundJobClient.Enqueue(() => _orderServices.UpdateOrderItemsForProductsAfterRemoveDiscountAsync(new List<int> { productId }));
 				_backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterRemoveDiscountAsync(new List<int> { productId }) );
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();

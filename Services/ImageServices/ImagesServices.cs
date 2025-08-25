@@ -20,8 +20,10 @@ namespace E_Commerce.Services
 		private readonly ILogger<ImagesServices> _logger;
 		private readonly IConfiguration _configuration;
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly IErrorNotificationService _errorNotificationService;
 		private readonly IAdminOpreationServices _adminOpreationServices;
 		private readonly IHttpContextAccessor _httpContextAccessor;
+		private readonly IBackgroundJobClient _backgroundJobClient;
 		private readonly Cloudinary _cloudinary;
 
 		private int MaxFileSize => _configuration.GetValue<int>("Security:FileUpload:MaxFileSizeMB", 5) * 1024 * 1024;
@@ -34,8 +36,9 @@ namespace E_Commerce.Services
 			new byte[] { 0x52, 0x49, 0x46, 0x46 },
 		};
 
-		public ImagesServices(Cloudinary cloudinary ,IHttpContextAccessor httpContextAccessor,ILogger<ImagesServices> logger, IConfiguration configuration, IUnitOfWork unitOfWork, IAdminOpreationServices adminOpreationServices)
+		public ImagesServices(IBackgroundJobClient backgroundJobClient ,Cloudinary cloudinary ,IHttpContextAccessor httpContextAccessor,ILogger<ImagesServices> logger, IConfiguration configuration, IUnitOfWork unitOfWork, IAdminOpreationServices adminOpreationServices)
 		{
+			_backgroundJobClient = backgroundJobClient;
 			_cloudinary = cloudinary;
 			_httpContextAccessor= httpContextAccessor;
 			_logger = logger;
@@ -325,64 +328,84 @@ namespace E_Commerce.Services
 		public Task<Result<Image>> SaveMainSubCategoryImageAsync(IFormFile image, int id, string? userId = null) => SaveMainImageAsync(image, "SubCategoryPhotos", id, userId);
 		public async Task<Result<string>> DeleteImageAsync(Image image)
 		{
-			_logger.LogInformation($"✅ Execute {nameof(DeleteImageAsync)} for image ID: {image.Id}");
+			_logger.LogInformation("✅ Execute {Method} for image ID: {ImageId}", nameof(DeleteImageAsync), image.Id);
 
 			try
 			{
+				// Extract filename from URL (Cloudinary public_id usually without extension)
 				var uri = new Uri(image.Url);
 				var filename = Path.GetFileNameWithoutExtension(uri.AbsolutePath);
 
-			
 				var deletionParams = new DeletionParams(filename);
 				var deletionResult = await _cloudinary.DestroyAsync(deletionParams);
 
 				if (deletionResult.Result != "ok" && deletionResult.Result != "not found")
 				{
-					_logger.LogWarning($"⚠️ Failed to delete image from Cloudinary: {deletionResult.Result}");
-					
+					_logger.LogWarning("⚠️ Failed to delete image {ImageId} from Cloudinary: {Result}", image.Id, deletionResult.Result);
 					return Result<string>.Fail($"Failed to delete image from Cloudinary: {deletionResult.Result}");
 				}
 
-				await _unitOfWork.Image.RestoreAsync(image.Id);
+				_unitOfWork.Image.Remove(image);
 				await _unitOfWork.CommitAsync();
 
-				_logger.LogInformation($"🗑️ Image marked as deleted and removed from Cloudinary: {image.Url}");
+				_logger.LogInformation("🗑️ Image ID {ImageId} deleted from Cloudinary and marked deleted in DB", image.Id);
 				return Result<string>.Ok("Image deleted successfully");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"❌ Error deleting image: {ex.Message}");
+				_logger.LogError(ex, "❌ Error deleting image {ImageId}", image.Id);
 				NotifyAdminOfError(ex.Message, ex.StackTrace);
 				return Result<string>.Fail("An error occurred while deleting the image");
 			}
 		}
 
-		public async Task<Result<List<string>>> DeleteImagesAsync(List<Image> images)
+		public async Task<Result<List<string>>> DeleteImagesAsync(List<Models.Image> images)
 		{
-			List<string> errorMessages = new List<string>();
+			var errorMessages = new List<string>();
+			var successfullyDeleted = new List<Models.Image>();
 
 			foreach (var image in images)
 			{
-				var result = await DeleteImageAsync(image);
-				if (!result.Success)
+				try
 				{
-					_logger.LogError($"❌ Failed to delete image ID {image.Id}: {result.Message}");
-					errorMessages.Add($"Image ID {image.Id}: {result.Message}");
+					var uri = new Uri(image.Url);
+					var filename = Path.GetFileNameWithoutExtension(uri.AbsolutePath);
+
+					var deletionParams = new DeletionParams(filename);
+					var deletionResult = await _cloudinary.DestroyAsync(deletionParams);
+
+					if (deletionResult.Result == "ok" || deletionResult.Result == "not found")
+					{
+						successfullyDeleted.Add(image);
+						_logger.LogInformation("🗑️ Image {ImageId} deleted from Cloudinary successfully", image.Id);
+					}
+					else
+					{
+						_logger.LogWarning("⚠️ Failed to delete image {ImageId} from Cloudinary: {Result}", image.Id, deletionResult.Result);
+						errorMessages.Add($"Image ID {image.Id}: {deletionResult.Result}");
+					}
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, "❌ Error deleting image {ImageId} from Cloudinary", image.Id);
+					_backgroundJobClient.Enqueue(() => _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
+					errorMessages.Add($"Image ID {image.Id}: Exception occurred");
 				}
 			}
 
+			if (successfullyDeleted.Any())
+			{
+				_unitOfWork.Image.RemoveList(successfullyDeleted);
+				await _unitOfWork.CommitAsync();
+				_logger.LogInformation("✅ {Count} images removed from database", successfullyDeleted.Count);
+			}
+
 			if (errorMessages.Count == 0)
-			{
 				return Result<List<string>>.Ok(new List<string> { "✅ All images deleted successfully" });
-			}
-			else
-			{
-				return Result<List<string>>.Fail("some images can't deleted ",errorMessages);
-			}
+
+			return Result<List<string>>.Fail("Some images could not be deleted", errorMessages);
 		}
 
 
-
-	
 	}
 }

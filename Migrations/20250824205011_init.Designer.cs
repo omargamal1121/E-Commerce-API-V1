@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250812230639_updateordermodel")]
-    partial class updateordermodel
+    [Migration("20250824205011_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -490,6 +490,9 @@ namespace E_Commerce.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<DateTime?>("RestockedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<DateTime?>("ShippedAt")
                         .HasColumnType("datetime(6)");
 
@@ -609,6 +612,9 @@ namespace E_Commerce.Migrations
                     b.Property<int>("PaymentProviderId")
                         .HasColumnType("int");
 
+                    b.Property<long>("ProviderOrderId")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("Status")
                         .HasMaxLength(20)
                         .HasColumnType("int");
@@ -621,8 +627,7 @@ namespace E_Commerce.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("OrderId")
-                        .IsUnique();
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("PaymentMethodId");
 
@@ -1492,6 +1497,9 @@ namespace E_Commerce.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ImageId")
                         .HasColumnType("int");
 
@@ -1503,9 +1511,6 @@ namespace E_Commerce.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ProfilePicture")
                         .HasColumnType("longtext");
 
                     b.HasIndex("ImageId1");
@@ -1586,22 +1591,22 @@ namespace E_Commerce.Migrations
                     b.HasOne("E_Commerce.Models.Category", "Category")
                         .WithMany("Images")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("E_Commerce.Models.Collection", "Collection")
                         .WithMany("Images")
                         .HasForeignKey("CollectionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("E_Commerce.Models.Product", "Product")
                         .WithMany("Images")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("E_Commerce.Models.SubCategory", "SubCategory")
                         .WithMany("Images")
                         .HasForeignKey("SubCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Category");
 
@@ -1686,8 +1691,8 @@ namespace E_Commerce.Migrations
                         .IsRequired();
 
                     b.HasOne("E_Commerce.Models.Order", "Order")
-                        .WithOne("Payment")
-                        .HasForeignKey("E_Commerce.Models.Payment", "OrderId")
+                        .WithMany("Payment")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 

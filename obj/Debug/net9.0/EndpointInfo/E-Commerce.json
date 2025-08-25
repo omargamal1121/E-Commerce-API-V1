@@ -1602,42 +1602,24 @@
         ],
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json-patch+json": {
               "schema": {
-                "required": [
-                  "Description",
-                  "Name"
-                ],
-                "type": "object",
-                "properties": {
-                  "Name": {
-                    "maxLength": 20,
-                    "minLength": 5,
-                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\s\\-,]*[a-zA-Z0-9]$",
-                    "type": "string"
-                  },
-                  "Description": {
-                    "maxLength": 50,
-                    "minLength": 10,
-                    "pattern": "^[\\w\\s.,\\-()'\\\"]{0,500}$",
-                    "type": "string"
-                  },
-                  "DisplayOrder": {
-                    "type": "integer",
-                    "format": "int32"
-                  }
-                }
-              },
-              "encoding": {
-                "Name": {
-                  "style": "form"
-                },
-                "Description": {
-                  "style": "form"
-                },
-                "DisplayOrder": {
-                  "style": "form"
-                }
+                "$ref": "#/components/schemas/UpdateCategoryDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCategoryDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCategoryDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCategoryDto"
               }
             }
           }
@@ -1779,42 +1761,24 @@
         ],
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json-patch+json": {
               "schema": {
-                "required": [
-                  "Description",
-                  "Name"
-                ],
-                "type": "object",
-                "properties": {
-                  "Name": {
-                    "maxLength": 20,
-                    "minLength": 5,
-                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\s\\-,]*[a-zA-Z0-9]$",
-                    "type": "string"
-                  },
-                  "Description": {
-                    "maxLength": 50,
-                    "minLength": 10,
-                    "pattern": "^[\\w\\s.,\\-()'\\\"]{0,500}$",
-                    "type": "string"
-                  },
-                  "DisplayOrder": {
-                    "type": "integer",
-                    "format": "int32"
-                  }
-                }
-              },
-              "encoding": {
-                "Name": {
-                  "style": "form"
-                },
-                "Description": {
-                  "style": "form"
-                },
-                "DisplayOrder": {
-                  "style": "form"
-                }
+                "$ref": "#/components/schemas/CreateCategotyDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategotyDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategotyDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategotyDto"
               }
             }
           }
@@ -4791,511 +4755,7 @@
         }
       }
     },
-    "/api/Order/{orderId}": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderDtoApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderDtoApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderDtoApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Order/number/{orderNumber}": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "parameters": [
-          {
-            "name": "orderNumber",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderDtoApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderDtoApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderDtoApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Order/customer": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderListDtoListApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderListDtoListApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderListDtoListApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Order/create-from-cart": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateOrderDto"
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateOrderDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateOrderDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateOrderDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderWithPaymentDtoApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderWithPaymentDtoApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderWithPaymentDtoApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Order/{orderId}/cancel": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CancelOrderDto"
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CancelOrderDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CancelOrderDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CancelOrderDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Order/customer/count": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/Int32NullableApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Int32NullableApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Int32NullableApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Order/customer/revenue": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DecimalApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DecimalApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DecimalApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Order/status/{status}": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "parameters": [
-          {
-            "name": "status",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/OrderStatus"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderListDtoListApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderListDtoListApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderListDtoListApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Order/{orderId}/status": {
-      "put": {
-        "tags": [
-          "Order"
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateOrderStatusDto"
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateOrderStatusDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateOrderStatusDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateOrderStatusDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Order/{orderId}/ship": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Order/{orderId}/deliver": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Order/filter": {
+    "/api/Order": {
       "get": {
         "tags": [
           "Order"
@@ -5363,57 +4823,52 @@
             }
           }
         }
-      }
-    },
-    "/api/Order/admin": {
-      "get": {
+      },
+      "post": {
         "tags": [
           "Order"
         ],
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderStatus"
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderDto"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/OrderListDtoListApiResponse"
+                  "$ref": "#/components/schemas/OrderWithPaymentDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OrderListDtoListApiResponse"
+                  "$ref": "#/components/schemas/OrderWithPaymentDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OrderListDtoListApiResponse"
+                  "$ref": "#/components/schemas/OrderWithPaymentDtoApiResponse"
                 }
               }
             }
@@ -5421,17 +4876,167 @@
         }
       }
     },
-    "/api/Order/admin/count": {
+    "/api/Order/{orderId}": {
       "get": {
         "tags": [
           "Order"
         ],
         "parameters": [
           {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderDtoApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Order/{orderId}/status": {
+      "put": {
+        "tags": [
+          "Order"
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
             "name": "status",
             "in": "query",
             "schema": {
               "$ref": "#/components/schemas/OrderStatus"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderStatusNoteDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderStatusNoteDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderStatusNoteDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderStatusNoteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Order/number/{orderNumber}": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "parameters": [
+          {
+            "name": "orderNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderDtoApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Order/count": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -5452,6 +5057,152 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Int32NullableApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Order/revenue/{userid}": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecimalApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecimalApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecimalApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Order/revenue": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecimalApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecimalApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecimalApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Payment": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePaymentRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePaymentRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePaymentRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponseDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponseDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponseDtoApiResponse"
                 }
               }
             }
@@ -8194,38 +7945,24 @@
         ],
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json-patch+json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "Name": {
-                    "maxLength": 20,
-                    "minLength": 0,
-                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\s\\-,]*[a-zA-Z0-9]$",
-                    "type": "string"
-                  },
-                  "Description": {
-                    "maxLength": 50,
-                    "minLength": 0,
-                    "pattern": "^[\\w\\s.,\\-()'\\\"]{0,500}$",
-                    "type": "string"
-                  },
-                  "CategoryId": {
-                    "type": "integer",
-                    "format": "int32"
-                  }
-                }
-              },
-              "encoding": {
-                "Name": {
-                  "style": "form"
-                },
-                "Description": {
-                  "style": "form"
-                },
-                "CategoryId": {
-                  "style": "form"
-                }
+                "$ref": "#/components/schemas/UpdateSubCategoryDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSubCategoryDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSubCategoryDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSubCategoryDto"
               }
             }
           }
@@ -8261,43 +7998,24 @@
         ],
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json-patch+json": {
               "schema": {
-                "required": [
-                  "CategoryId",
-                  "Description",
-                  "Name"
-                ],
-                "type": "object",
-                "properties": {
-                  "Name": {
-                    "maxLength": 20,
-                    "minLength": 5,
-                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\s\\-,]*[a-zA-Z0-9]$",
-                    "type": "string"
-                  },
-                  "Description": {
-                    "maxLength": 50,
-                    "minLength": 10,
-                    "pattern": "^[\\w\\s.,\\-()'\\\"]{0,500}$",
-                    "type": "string"
-                  },
-                  "CategoryId": {
-                    "type": "integer",
-                    "format": "int32"
-                  }
-                }
-              },
-              "encoding": {
-                "Name": {
-                  "style": "form"
-                },
-                "Description": {
-                  "style": "form"
-                },
-                "CategoryId": {
-                  "style": "form"
-                }
+                "$ref": "#/components/schemas/CreateSubCategoryDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubCategoryDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubCategoryDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubCategoryDto"
               }
             }
           }
@@ -8331,6 +8049,13 @@
         ],
         "parameters": [
           {
+            "name": "key",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "isActive",
             "in": "query",
             "schema": {
@@ -8338,7 +8063,7 @@
             }
           },
           {
-            "name": "isDeleted",
+            "name": "includeDeleted",
             "in": "query",
             "schema": {
               "type": "boolean"
@@ -8365,7 +8090,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubCategoryDtoListApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubCategoryDtoListApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubCategoryDtoListApiResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -8658,76 +8400,6 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BooleanApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/subcategories/search": {
-      "get": {
-        "tags": [
-          "SubCategory"
-        ],
-        "parameters": [
-          {
-            "name": "key",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "isActive",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "includeDeleted",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubCategoryDtoListApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubCategoryDtoListApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubCategoryDtoListApiResponse"
                 }
               }
             }
@@ -9471,20 +9143,6 @@
         },
         "additionalProperties": false
       },
-      "CancelOrderDto": {
-        "required": [
-          "cancellationReason"
-        ],
-        "type": "object",
-        "properties": {
-          "cancellationReason": {
-            "maxLength": 500,
-            "minLength": 10,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "CartDto": {
         "type": "object",
         "properties": {
@@ -10212,6 +9870,32 @@
         },
         "additionalProperties": false
       },
+      "CreateCategotyDto": {
+        "required": [
+          "description",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 20,
+            "minLength": 5,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\s\\-,]*[a-zA-Z0-9]$",
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 50,
+            "minLength": 10,
+            "pattern": "^[\\w\\s.,\\-()'\\\"]{0,500}$",
+            "type": "string"
+          },
+          "displayOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateCollectionDto": {
         "type": "object",
         "properties": {
@@ -10335,13 +10019,44 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
-          },
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreatePaymentOfCustomer": {
+        "type": "object",
+        "properties": {
           "walletPhoneNumber": {
             "type": "string",
             "nullable": true
           },
           "paymentMethod": {
             "$ref": "#/components/schemas/PaymentMethodEnums"
+          },
+          "currency": {
+            "maxLength": 3,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreatePaymentRequest": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentDetails": {
+            "$ref": "#/components/schemas/CreatePaymentOfCustomer"
           }
         },
         "additionalProperties": false
@@ -10415,6 +10130,33 @@
           "quantity": {
             "maximum": 2147483647,
             "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateSubCategoryDto": {
+        "required": [
+          "categoryId",
+          "description",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 20,
+            "minLength": 5,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\s\\-,]*[a-zA-Z0-9]$",
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 50,
+            "minLength": 10,
+            "pattern": "^[\\w\\s.,\\-()'\\\"]{0,500}$",
+            "type": "string"
+          },
+          "categoryId": {
             "type": "integer",
             "format": "int32"
           }
@@ -11542,10 +11284,22 @@
           5,
           6,
           7,
-          8
+          8,
+          9,
+          10
         ],
         "type": "integer",
         "format": "int32"
+      },
+      "OrderStatusNoteDto": {
+        "type": "object",
+        "properties": {
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "OrderWithPaymentDto": {
         "type": "object",
@@ -11924,6 +11678,70 @@
         "type": "integer",
         "format": "int32"
       },
+      "PaymentResponseDto": {
+        "type": "object",
+        "properties": {
+          "isRedirectRequired": {
+            "type": "boolean"
+          },
+          "redirectUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentid": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentResponseDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "statuscode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "responseBody": {
+            "$ref": "#/components/schemas/PaymentResponseDtoResponseBody"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentResponseDtoResponseBody": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "$ref": "#/components/schemas/ErrorResponse"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/PaymentResponseDto"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PaymobOrder": {
         "type": "object",
         "properties": {
@@ -12046,6 +11864,10 @@
             "nullable": true
           },
           "transactionProcessedCallbackResponses": {
+            "type": "string",
+            "nullable": true
+          },
+          "hmac": {
             "type": "string",
             "nullable": true
           }
@@ -13196,6 +13018,33 @@
         },
         "additionalProperties": false
       },
+      "UpdateCategoryDto": {
+        "required": [
+          "description",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 20,
+            "minLength": 5,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\s\\-,]*[a-zA-Z0-9]$",
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 50,
+            "minLength": 10,
+            "pattern": "^[\\w\\s.,\\-()'\\\"]{0,500}$",
+            "type": "string"
+          },
+          "displayOrder": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "UpdateCollectionDto": {
         "type": "object",
         "properties": {
@@ -13328,24 +13177,6 @@
         },
         "additionalProperties": false
       },
-      "UpdateOrderStatusDto": {
-        "required": [
-          "status"
-        ],
-        "type": "object",
-        "properties": {
-          "status": {
-            "$ref": "#/components/schemas/OrderStatus"
-          },
-          "notes": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "UpdateProductDto": {
         "type": "object",
         "properties": {
@@ -13405,6 +13236,31 @@
           "length": {
             "maximum": 200,
             "minimum": 0,
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateSubCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 20,
+            "minLength": 0,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\s\\-,]*[a-zA-Z0-9]$",
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "maxLength": 50,
+            "minLength": 0,
+            "pattern": "^[\\w\\s.,\\-()'\\\"]{0,500}$",
+            "type": "string",
+            "nullable": true
+          },
+          "categoryId": {
             "type": "integer",
             "format": "int32",
             "nullable": true

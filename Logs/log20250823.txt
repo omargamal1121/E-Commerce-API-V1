@@ -1,0 +1,160 @@
+2025-08-23 16:12:32.408 +03:00 [INF] DB tables already exist. Exit install
+2025-08-23 16:12:34.506 +03:00 [WRN] The foreign key property 'Customer.ImageId1' was created in shadow state because a conflicting property with the simple name 'ImageId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-08-23 16:12:35.576 +03:00 [INF] Executed DbCommand (78ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-08-23 16:12:36.275 +03:00 [INF] Executed DbCommand (76ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-08-23 16:12:36.458 +03:00 [INF] Executed DbCommand (86ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-08-23 16:12:36.486 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-08-23 16:12:36.504 +03:00 [INF] Starting data seeding...
+2025-08-23 16:12:36.538 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-08-23 16:12:37.049 +03:00 [INF] Executed DbCommand (118ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-08-23 16:12:37.126 +03:00 [INF] Role 'Admin' already exists.
+2025-08-23 16:12:37.285 +03:00 [INF] Executed DbCommand (76ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-08-23 16:12:37.292 +03:00 [INF] Role 'User' already exists.
+2025-08-23 16:12:37.464 +03:00 [INF] Executed DbCommand (80ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-08-23 16:12:37.550 +03:00 [INF] Admin user already exists. Skipping provider/method creation.
+2025-08-23 16:12:37.553 +03:00 [INF] Data seeding completed successfully.
+2025-08-23 16:12:39.105 +03:00 [INF] Now listening on: http://localhost:5069
+2025-08-23 16:12:39.205 +03:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-08-23 16:12:39.213 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-08-23 16:12:39.217 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-08-23 16:12:39.226 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-08-23 16:12:39.249 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-08-23 16:12:39.254 +03:00 [INF] Hosting environment: Development
+2025-08-23 16:12:39.267 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-08-23 16:12:39.455 +03:00 [INF] Server mrrobot:10892:61dba847 successfully announced in 192.1645 ms
+2025-08-23 16:12:39.461 +03:00 [INF] Server mrrobot:10892:61dba847 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-08-23 16:12:39.489 +03:00 [INF] Server mrrobot:10892:61dba847 all the dispatchers started
+2025-08-23 16:12:40.185 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-08-23 16:12:40.811 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 627.5917ms
+2025-08-23 16:12:40.848 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/swagger-ui-bundle.js - null null
+2025-08-23 16:12:40.853 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/swagger-ui-standalone-preset.js - null null
+2025-08-23 16:12:40.857 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-08-23 16:12:40.888 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-08-23 16:12:40.900 +03:00 [INF] The file /swagger-ui-bundle.js was not modified
+2025-08-23 16:12:40.903 +03:00 [INF] The file /swagger-ui-standalone-preset.js was not modified
+2025-08-23 16:12:40.907 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 50.0579ms
+2025-08-23 16:12:40.911 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 23.6149ms
+2025-08-23 16:12:40.912 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/swagger-ui-bundle.js - 304 null text/javascript 63.7268ms
+2025-08-23 16:12:40.918 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/swagger-ui-standalone-preset.js - 304 null text/javascript 64.7343ms
+2025-08-23 16:12:40.923 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-08-23 16:12:41.141 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 217.8454ms
+2025-08-23 16:12:41.563 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-08-23 16:12:41.831 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 268.1939ms
+2025-08-23 16:15:04.925 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-08-23 16:15:04.948 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 23.1683ms
+2025-08-23 16:15:05.096 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-08-23 16:15:05.111 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 14.4869ms
+2025-08-23 16:15:05.156 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-08-23 16:15:05.229 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 72.6632ms
+2025-08-23 16:15:05.296 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-08-23 16:15:05.305 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 8.7125ms
+2025-08-23 16:15:05.730 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-08-23 16:15:05.877 +03:00 [ERR] An unhandled exception has occurred while executing the request.
+Swashbuckle.AspNetCore.SwaggerGen.SwaggerGeneratorException: Conflicting method/path combination "GET api/subcategories" for actions - E_Commerce.Controllers.SubCategoryController.GetAll (E-Commerce), E_Commerce.Controllers.SubCategoryController.Search (E-Commerce). Actions require a unique method/path combination for Swagger/OpenAPI 2.0 and 3.0. Use ConflictingActionsResolver as a workaround or provide your own implementation of PathGroupSelector.
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.PrepareGenerateOperation(IGrouping`2 group)
+   at System.Linq.Enumerable.IteratorSelectIterator`2.MoveNext()
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GenerateOperationsAsync(IEnumerable`1 apiDescriptions, SchemaRepository schemaRepository)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GeneratePathsAsync(IEnumerable`1 apiDescriptions, SchemaRepository schemaRepository, Func`3 operationsGenerator)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GeneratePathsAsync(IEnumerable`1 apiDescriptions, SchemaRepository schemaRepository)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GetSwaggerAsync(String documentName, String host, String basePath)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2025-08-23 16:15:05.915 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 500 null text/plain; charset=utf-8 184.5942ms
+2025-08-23 16:15:13.580 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-08-23 16:15:13.591 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 10.9133ms
+2025-08-23 16:15:13.634 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-08-23 16:15:13.642 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-08-23 16:15:13.646 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-08-23 16:15:13.658 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 23.1128ms
+2025-08-23 16:15:13.666 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 24.28ms
+2025-08-23 16:15:13.678 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 31.6113ms
+2025-08-23 16:15:13.722 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-08-23 16:15:13.846 +03:00 [ERR] An unhandled exception has occurred while executing the request.
+Swashbuckle.AspNetCore.SwaggerGen.SwaggerGeneratorException: Ambiguous HTTP method for action - E_Commerce.Controllers.SubCategoryController.Deactivate (E-Commerce). Actions require an explicit HttpMethod binding for Swagger/OpenAPI 3.0
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.PrepareGenerateOperation(IGrouping`2 group)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GenerateOperationsAsync(IEnumerable`1 apiDescriptions, SchemaRepository schemaRepository)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GeneratePathsAsync(IEnumerable`1 apiDescriptions, SchemaRepository schemaRepository, Func`3 operationsGenerator)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GeneratePathsAsync(IEnumerable`1 apiDescriptions, SchemaRepository schemaRepository)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GetSwaggerAsync(String documentName, String host, String basePath)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2025-08-23 16:15:13.853 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 500 null text/plain; charset=utf-8 131.6938ms
+2025-08-23 16:15:24.952 +03:00 [INF] DB tables already exist. Exit install
+2025-08-23 16:15:26.162 +03:00 [WRN] The foreign key property 'Customer.ImageId1' was created in shadow state because a conflicting property with the simple name 'ImageId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-08-23 16:15:27.163 +03:00 [INF] Executed DbCommand (77ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-08-23 16:15:27.867 +03:00 [INF] Executed DbCommand (75ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-08-23 16:15:28.045 +03:00 [INF] Executed DbCommand (77ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-08-23 16:15:28.080 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-08-23 16:15:28.104 +03:00 [INF] Starting data seeding...
+2025-08-23 16:15:28.129 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-08-23 16:15:28.635 +03:00 [INF] Executed DbCommand (111ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-08-23 16:15:28.700 +03:00 [INF] Role 'Admin' already exists.
+2025-08-23 16:15:28.862 +03:00 [INF] Executed DbCommand (80ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-08-23 16:15:28.898 +03:00 [INF] Role 'User' already exists.
+2025-08-23 16:15:29.083 +03:00 [INF] Executed DbCommand (82ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-08-23 16:15:29.174 +03:00 [INF] Admin user already exists. Skipping provider/method creation.
+2025-08-23 16:15:29.177 +03:00 [INF] Data seeding completed successfully.
+2025-08-23 16:15:30.383 +03:00 [INF] Now listening on: http://localhost:5069
+2025-08-23 16:15:30.479 +03:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-08-23 16:15:30.482 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-08-23 16:15:30.484 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-08-23 16:15:30.485 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-08-23 16:15:30.503 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-08-23 16:15:30.548 +03:00 [INF] Hosting environment: Development
+2025-08-23 16:15:30.549 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-08-23 16:15:30.713 +03:00 [INF] Server mrrobot:12368:d7b1a69f successfully announced in 160.8742 ms
+2025-08-23 16:15:30.719 +03:00 [INF] Server mrrobot:12368:d7b1a69f is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-08-23 16:15:30.761 +03:00 [INF] Server mrrobot:12368:d7b1a69f all the dispatchers started
+2025-08-23 16:15:30.863 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-08-23 16:15:31.112 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 246.9851ms
+2025-08-23 16:15:31.152 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-08-23 16:15:31.153 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-08-23 16:15:31.169 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-08-23 16:15:31.174 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 22.1009ms
+2025-08-23 16:15:31.184 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 13.949ms
+2025-08-23 16:15:31.225 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 71.7698ms
+2025-08-23 16:15:31.296 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-08-23 16:15:31.592 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 295.3351ms
+2025-08-23 16:20:31.032 +03:00 [INF] 1 servers were removed due to timeout

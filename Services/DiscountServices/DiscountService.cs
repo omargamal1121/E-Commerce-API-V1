@@ -86,7 +86,7 @@ namespace E_Commerce.Services.Discount
 				_logger.LogInformation($"Discount with ID {id} has expired. Deactivating it.");
 				discount.IsActive = false;
 				var productsids = await  _unitOfWork.Product.GetAll().Where(p => p.DiscountId == id && p.DeletedAt == null).Select(p => p.Id).ToListAsync();
-				_backgroundJobClient.Enqueue(() => _orderServices.UpdateOrderItemsForProductsAfterRemoveDiscountAsync(productsids));
+				
 				_backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterRemoveDiscountAsync(productsids));
 
 			}
@@ -95,7 +95,7 @@ namespace E_Commerce.Services.Discount
 				_logger.LogInformation($"Discount with ID {id} is now valid. Activating it.");
 				discount.IsActive = true;
 				var productsids = await _unitOfWork.Product.GetAll().Where(p => p.DiscountId == id && p.DeletedAt == null).Select(p => p.Id).ToListAsync();
-				_backgroundJobClient.Enqueue(() => _orderServices.UpdateOrderItemsForProductsAfterAddDiscountAsync(productsids,discount.DiscountPercent));
+				
 				_backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterAddDiscountAsync(productsids,discount.DiscountPercent));
 			}
 
@@ -422,7 +422,7 @@ namespace E_Commerce.Services.Discount
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 				var productsids = await _unitOfWork.Product.GetAll().Where(p => p.DiscountId == id && p.DeletedAt == null).Select(p => p.Id).ToListAsync();
-				_backgroundJobClient.Enqueue(() => _orderServices.UpdateOrderItemsForProductsAfterRemoveDiscountAsync(productsids));
+		
 				_backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterRemoveDiscountAsync(productsids));
 				RemoveProductCaches();
 				return Result<bool>.Ok(true, "Discount deleted", 200);
@@ -719,7 +719,7 @@ namespace E_Commerce.Services.Discount
 					discount.Id
 				);
 				var productsids = await _unitOfWork.Product.GetAll().Where(p => p.DiscountId == id && p.DeletedAt == null).Select(p => p.Id).ToListAsync();
-				_backgroundJobClient.Enqueue(() => _orderServices.UpdateOrderItemsForProductsAfterAddDiscountAsync(productsids, discount.DiscountPercent));
+			
 				_backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterAddDiscountAsync(productsids, discount.DiscountPercent));
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
@@ -767,8 +767,6 @@ namespace E_Commerce.Services.Discount
 
 				var productsids = await _unitOfWork.Product.GetAll().Where(p => p.DiscountId == id && p.DeletedAt == null).Select(p => p.Id).ToListAsync();
 				_backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterRemoveDiscountAsync(productsids));
-				_backgroundJobClient.Enqueue(() => _orderServices.UpdateOrderItemsForProductsAfterRemoveDiscountAsync(productsids));
-
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 				RemoveProductCaches();
@@ -858,7 +856,6 @@ namespace E_Commerce.Services.Discount
 				if (discount == null)
 					return Result<bool>.Fail("Discount not found", 404);
 
-				// Get all cart items that contain products with this discount
 				var cartItemsToUpdate = await _unitOfWork.Repository<CartItem>().GetAll()
 					.Include(ci => ci.Product)
 					.ThenInclude(p => p.Discount)
@@ -879,7 +876,7 @@ namespace E_Commerce.Services.Discount
 					var originalPrice = cartItem.Product.Price;
 					decimal newUnitPrice;
 
-					// Check if discount is currently valid
+				
 					var now = DateTime.UtcNow;
 					var isDiscountValid = discount.IsActive && 
 										 discount.StartDate <= now && 
@@ -888,14 +885,13 @@ namespace E_Commerce.Services.Discount
 
 					if (isDiscountValid)
 					{
-						// Apply discount
 						var discountAmount = originalPrice * (discount.DiscountPercent / 100m);
 						newUnitPrice = originalPrice - discountAmount;
 						_logger.LogInformation($"Applying discount to cart item {cartItem.Id}: {originalPrice} -> {newUnitPrice}");
 					}
 					else
 					{
-						// Remove discount - use original price
+						
 						newUnitPrice = originalPrice;
 						_logger.LogInformation($"Removing discount from cart item {cartItem.Id}: {cartItem.UnitPrice} -> {newUnitPrice}");
 					}

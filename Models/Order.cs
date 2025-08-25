@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using E_Commerce.Enums;
 
@@ -43,15 +43,12 @@ namespace E_Commerce.Models
 		public DateTime? ShippedAt { get; set; }
 		public DateTime? DeliveredAt { get; set; }
 		public DateTime? CancelledAt { get; set; }
+		public DateTime? RestockedAt { get; set; }
 
 		public IEnumerable<OrderItem> Items { get; set; } = new List<OrderItem>();
-		public  Payment? Payment { get; set; }
+		public  List <Payment>? Payment { get; set; }
 		public ICollection<ReturnRequest> ReturnRequests { get; set; } = new List<ReturnRequest>();
 
-		public bool IsCancelled => Status == OrderStatus.Cancelled;
-		public bool IsDelivered => Status == OrderStatus.Delivered;
-		public bool IsShipped => Status == OrderStatus.Shipped;
-		public bool CanBeCancelled => Status == OrderStatus.PendingPayment || Status == OrderStatus.Confirmed;
-		public bool CanBeReturned => Status == OrderStatus.Delivered;
+		
 	}
 }

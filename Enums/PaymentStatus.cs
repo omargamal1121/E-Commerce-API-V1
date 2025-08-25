@@ -7,7 +7,8 @@ namespace E_Commerce.Enums
 		Failed = 3,
 		Cancelled = 4,
 		Refunded = 5,
-		
+		CashonDelivery=6
+
 	}
 
 }

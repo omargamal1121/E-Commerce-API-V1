@@ -269,7 +269,7 @@ namespace E_Commerce.Services.ProductServices
 		{
 			_logger.LogInformation($"Setting new main image for product: {productId}");
 			
-			var product = await _unitOfWork.Product.IsExsistAndActiveAsync(productId);
+			var product = await _unitOfWork.Product.IsExsistAsync(productId);
 			if (!product)
 				{
 					_logger.LogWarning("UploadAndSetMainImageAsync: Product not found. productId: {ProductId}", productId);

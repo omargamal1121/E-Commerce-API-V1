@@ -13,23 +13,28 @@ namespace E_Commerce.Interfaces
 		  int page = 1,
 		  int pageSize = 10,
 		  OrderStatus? status = null);
-		public  Task<Result<int>> UpdateOrderAfterPaid(int orderId, OrderStatus newStatus);
+		public  Task<Result<bool>> UpdateOrderAfterPaid(int orderId,OrderStatus orderStatus);
 		Task<Result<OrderDto>> GetOrderByIdAsync(int orderId, string userId, bool isAdmin = false);
 		public  Task<Result<OrderDto>> GetOrderByNumberAsync(string orderNumber, string userId, bool isAdmin = false);
-		Task<Result<List<OrderListDto>>> GetCustomerOrdersAsync(string userId,bool isDeleted, int page = 1, int pageSize = 10);
 		public Task<Result<OrderWithPaymentDto>> CreateOrderFromCartAsync(string userId, CreateOrderDto orderDto);
-		Task<Result<bool>> UpdateOrderStatusAsync(int orderId, UpdateOrderStatusDto statusDto);
-		Task<Result<string>> CancelOrderAsync(int orderId, CancelOrderDto cancelDto, string userId);
-		Task<Result<string>> ShipOrderAsync(int orderId);
-		Task<Result<string>> DeliverOrderAsync(int orderId);
+		Task<Result<bool>> ConfirmOrderAsync(int orderId, string adminId, string? notes = null);
+		Task<Result<bool>> ProcessOrderAsync(int orderId, string adminId, string? notes = null);
+		Task<Result<bool>> RefundOrderAsync(int orderId, string adminId, string? notes = null);
+		Task<Result<bool>> ReturnOrderAsync(int orderId, string adminId, string? notes = null);
+		Task<Result<bool>> ExpirePaymentAsync(int orderId, string adminId, string? notes = null);
+		Task<Result<bool>> CompleteOrderAsync(int orderId, string adminId, string? notes = null);
+		Task<Result<decimal>> GetTotalRevenueByDateRangeAsync(DateTime startDate, DateTime endDate);
+		public Task<Result<bool>> CancelOrderByCustomerAsync(int orderId, string userId);
+		public  Task<Result<bool>> CancelOrderByAdminAsync(int orderId, string adminId);
+
+		Task<Result<bool>> ShipOrderAsync(int orderId, string userId);
+		Task<Result<bool>> DeliverOrderAsync(int orderId, string userId);
 		Task<Result<int?>> GetOrderCountByCustomerAsync(string userId);
 		Task<Result<decimal>> GetTotalRevenueByCustomerAsync(string userId);
 
-		public Task UpdateOrderItemsForProductsAfterAddDiscountAsync(List<int> productIds, decimal discountPercent);
-		public  Task UpdateOrderItemsForProductsAfterRemoveDiscountAsync(List<int> productIds);
 
 
-
-		Task<Result<int?>> GetTotalOrderCountAsync(OrderStatus? status, string userRole);
+	
+		Task<Result<int?>> GetTotalOrderCountAsync(OrderStatus? status);
 	}
 } 

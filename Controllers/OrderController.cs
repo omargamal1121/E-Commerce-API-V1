@@ -1,4 +1,5 @@
 using E_Commerce.DtoModels.OrderDtos;
+using E_Commerce.DtoModels.PaymentDtos;
 using E_Commerce.DtoModels.Responses;
 using E_Commerce.Enums;
 using E_Commerce.ErrorHnadling;
@@ -10,472 +11,312 @@ using System.Security.Claims;
 
 namespace E_Commerce.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class OrderController : ControllerBase
-    {
-        private readonly IOrderServices _orderServices;
-        private readonly ILogger<OrderController> _logger;
+	[ApiController]
+	[Route("api/[controller]")]
+	public class OrderController : ControllerBase
+	{
+		private readonly IOrderServices _orderServices;
+		private readonly ILogger<OrderController> _logger;
 
-        public OrderController(IOrderServices orderServices, ILogger<OrderController> logger)
-        {
-            _orderServices = orderServices;
-            _logger = logger;
-        }
+		public OrderController(IOrderServices orderServices, ILogger<OrderController> logger)
+		{
+			_orderServices = orderServices;
+			_logger = logger;
+		}
 
-        private string GetUserId()
-        {
-            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
-        }
+		#region RESTful CRUD Operations
 
-        private string GetUserRole()
-        {
-            return User.FindFirst(ClaimTypes.Role)?.Value ?? "Customer";
-        }
+		/// <summary>
+		/// Get all orders with filtering and pagination (RESTful)
+		/// GET /api/order?userId={userId}&deleted={deleted}&page={page}&pageSize={pageSize}&status={status}
+		/// - Admins can filter by userId and see all orders
+		/// - Customers automatically filter to their own orders
+		/// </summary>
+		[HttpGet]
+		[Authorize(Roles = "Customer,Admin")]
+		public async Task<ActionResult<ApiResponse<List<OrderListDto>>>> GetOrders(
+			[FromQuery] string? userId = null,
+			[FromQuery] bool? deleted = null,
+			[FromQuery] int page = 1,
+			[FromQuery] int pageSize = 10,
+			[FromQuery] OrderStatus? status = null)
+		{
+			try
+			{
+				if (!ModelState.IsValid)
+				{
+					var errors = GetModelErrors();
+					_logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
+					return BadRequest(ApiResponse<List<OrderListDto>>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
+				}
 
-        private List<string> GetModelErrors()
-        {
-            return ModelState.Values
-                .SelectMany(v => v.Errors)
-                .Select(e => e.ErrorMessage)
-                .ToList();
-        }
+				if (page <= 0 || pageSize <= 0)
+				{
+					return BadRequest(ApiResponse<List<OrderListDto>>.CreateErrorResponse("Invalid pagination", new ErrorResponse("Invalid Data", "Page and pageSize must be greater than 0"), 400));
+				}
 
-        private ActionResult<ApiResponse<T>> HandleResult<T>(Result<T> result, string? actionName = null, int? id = null)
-        {
-            var apiResponse = result.Success
-                ? ApiResponse<T>.CreateSuccessResponse(result.Message, result.Data, result.StatusCode, warnings: result.Warnings)
-                : ApiResponse<T>.CreateErrorResponse(result.Message, new ErrorResponse("Error", result.Message), result.StatusCode, warnings: result.Warnings);
+				var role = GetUserRole();
+				var effectiveUserId = role == "Admin" ? null : GetUserId();
 
-            switch (result.StatusCode)
-            {
-                case 200:
-                    return Ok(apiResponse);
-                case 201:
-                    return actionName != null && id.HasValue ? CreatedAtAction(actionName, new { id }, apiResponse) : StatusCode(201, apiResponse);
-                case 400:
-                    return BadRequest(apiResponse);
-                case 401:
-                    return Unauthorized(apiResponse);
-                case 404:
-                    return NotFound(apiResponse);
-                case 409:
-                    return Conflict(apiResponse);
-                default:
-                    return StatusCode(result.StatusCode, apiResponse);
-            }
-        }
+				_logger.LogInformation($"Executing GetOrders: role: {role}, userId: {effectiveUserId}, deleted: {deleted}, page: {page}, size: {pageSize}, status: {status}");
+				var result = await _orderServices.FilterOrdersAsync(effectiveUserId, deleted, page, pageSize, status);
+				return HandleResult(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Error in GetOrders: {ex.Message}");
+				return StatusCode(500, ApiResponse<List<OrderListDto>>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while retrieving orders"), 500));
+			}
+		}
 
-        #region Customer/User Endpoints
+		/// <summary>
+		/// Get order by ID (RESTful)
+		/// GET /api/order/{orderId}
+		/// - Customers can only access their own orders
+		/// - Admins can access any order
+		/// </summary>
+		[HttpGet("{orderId}")]
+		[Authorize(Roles = "Customer,Admin")]
+		public async Task<ActionResult<ApiResponse<OrderDto>>> GetOrder(int orderId)
+		{
+			try
+			{
+				_logger.LogInformation($"Executing GetOrder for ID: {orderId}");
+				var userId = GetUserId();
+				var result = await _orderServices.GetOrderByIdAsync(orderId, userId);
+				return HandleResult(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Error in GetOrder: {ex.Message}");
+				return StatusCode(500, ApiResponse<OrderDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while retrieving the order"), 500));
+			}
+		}
 
-        /// <summary>
-        /// Get order by ID (Customer access - own orders only)
-        /// </summary>
-        [HttpGet("{orderId}")]
-        [Authorize(Roles = "Customer,Admin")]
-        public async Task<ActionResult<ApiResponse<OrderDto>>> GetOrderById(int orderId)
-        {
-            try
-            {
-                _logger.LogInformation($"Executing GetOrderById for ID: {orderId}");
-                var userId = GetUserId();
-                var result = await _orderServices.GetOrderByIdAsync(orderId, userId);
-                return HandleResult(result, nameof(GetOrderById), orderId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in GetOrderById: {ex.Message}");
-                return StatusCode(500, ApiResponse<OrderDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while retrieving the order"), 500));
-            }
-        }
+		/// <summary>
+		/// Create new order (RESTful)
+		/// POST /api/order
+		/// - Creates order from customer's cart
+		/// </summary>
+		[HttpPost]
+		[Authorize(Roles = "Customer,Admin")]
+		public async Task<ActionResult<ApiResponse<OrderWithPaymentDto>>> CreateOrder([FromBody] CreateOrderDto orderDto)
+		{
+			try
+			{
+				if (!ModelState.IsValid)
+				{
+					var errors = GetModelErrors();
+					_logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
+					return BadRequest(ApiResponse<OrderWithPaymentDto>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
+				}
 
-        /// <summary>
-        /// Get order by order number (Customer access - own orders only)
-        /// </summary>
-        [HttpGet("number/{orderNumber}")]
-        [Authorize(Roles = "Customer,Admin")]
-        public async Task<ActionResult<ApiResponse<OrderDto>>> GetOrderByNumber(string orderNumber)
-        {
-            try
-            {
-                _logger.LogInformation($"Executing GetOrderByNumber for number: {orderNumber}");
-                var userId = GetUserId();
-                var result = await _orderServices.GetOrderByNumberAsync(orderNumber, userId);
-                return HandleResult(result, nameof(GetOrderByNumber));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in GetOrderByNumber: {ex.Message}");
-                return StatusCode(500, ApiResponse<OrderDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while retrieving the order"), 500));
-            }
-        }
+				_logger.LogInformation("Executing CreateOrder");
+				var userId = GetUserId();
+				var result = await _orderServices.CreateOrderFromCartAsync(userId, orderDto);
+				return HandleResult(result, nameof(GetOrder), result.Success ? result.Data?.Order.OrderNumber : null);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Error in CreateOrder: {ex.Message}");
+				return StatusCode(500, ApiResponse<OrderWithPaymentDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while creating the order"), 500));
+			}
+		}
 
-        /// <summary>
-        /// Get customer orders with pagination (Customer access - own orders only)
-        /// </summary>
-        [HttpGet("customer")]
-        [Authorize(Roles = "Customer,Admin")]
-        public async Task<ActionResult<ApiResponse<List<OrderListDto>>>> GetCustomerOrders(
-            [FromQuery] int page = 1, 
-            [FromQuery] int pageSize = 10)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    var errors = GetModelErrors();
-                    _logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-                    return BadRequest(ApiResponse<List<OrderListDto>>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
-                }
+		/// <summary>
+		/// Update order status (RESTful)
+		/// PUT /api/order/{orderId}/status?status={status}
+		/// - Admins can set any supported status
+		/// - Customers can only cancel their own orders
+		/// </summary>
+		[HttpPut("{orderId}/status")]
+		[Authorize(Roles = "Customer,Admin")]
+		public async Task<ActionResult<ApiResponse<bool>>> UpdateOrderStatus(int orderId, [FromBody] OrderStatusNoteDto body, [FromQuery] OrderStatus status)
+		{
+			try
+			{
+				var role = GetUserRole();
+				var actorId = GetUserId();
 
-                if (page <= 0 || pageSize <= 0)
-                {
-                    return BadRequest(ApiResponse<List<OrderListDto>>.CreateErrorResponse("Invalid pagination", new ErrorResponse("Invalid Data", "Page and pageSize must be greater than 0"), 400));
-                }
+				if (role == "Admin")
+				{
+					Result<bool> result = status switch
+					{
+						OrderStatus.Confirmed => await _orderServices.ConfirmOrderAsync(orderId, actorId, body?.Notes),
+						OrderStatus.Processing => await _orderServices.ProcessOrderAsync(orderId, actorId, body?.Notes),
+						OrderStatus.Shipped => await _orderServices.ShipOrderAsync(orderId, actorId),
+						OrderStatus.Delivered => await _orderServices.DeliverOrderAsync(orderId, actorId),
+						OrderStatus.Complete => await _orderServices.CompleteOrderAsync(orderId, actorId, body?.Notes),
+						OrderStatus.Refunded => await _orderServices.RefundOrderAsync(orderId, actorId, body?.Notes),
+						OrderStatus.Returned => await _orderServices.ReturnOrderAsync(orderId, actorId, body?.Notes),
+						OrderStatus.PaymentExpired => await _orderServices.ExpirePaymentAsync(orderId, actorId, body?.Notes),
+						OrderStatus.CancelledByAdmin => await _orderServices.CancelOrderByAdminAsync(orderId, actorId),
+						_ => Result<bool>.Fail("Unsupported status for admin endpoint", 400)
+					};
 
-                _logger.LogInformation($"Executing GetCustomerOrders with pagination: page {page}, size {pageSize}");
-                var userId = GetUserId();
-                var result = await _orderServices.GetCustomerOrdersAsync(userId, false, page, pageSize);
-                return HandleResult(result, nameof(GetCustomerOrders));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in GetCustomerOrders: {ex.Message}");
-                return StatusCode(500, ApiResponse<List<OrderListDto>>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while retrieving customer orders"), 500));
-            }
-        }
+					return HandleResult(result);
+				}
+				else
+				{
+					if (status != OrderStatus.CancelledByUser)
+						return BadRequest(ApiResponse<bool>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", "Customers can only cancel their orders"), 400));
 
-        /// <summary>
-        /// Create order from cart (Customer access)
-        /// </summary>
-        [HttpPost("create-from-cart")]
-        [Authorize()]
-        public async Task<ActionResult<ApiResponse<OrderWithPaymentDto>>> CreateOrderFromCart([FromBody] CreateOrderDto orderDto)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    var errors = GetModelErrors();
-                    _logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-                    return BadRequest(ApiResponse<OrderDto>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
-                }
+					var result = await _orderServices.CancelOrderByCustomerAsync(orderId, actorId);
+					return HandleResult(result);
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Error in UpdateOrderStatus: {ex.Message}");
+				return StatusCode(500, ApiResponse<bool>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while updating order status"), 500));
+			}
+		}
 
-                _logger.LogInformation("Executing CreateOrderFromCart");
-                var userId = GetUserId();
-                var result = await _orderServices.CreateOrderFromCartAsync(userId, orderDto);
-                return HandleResult(result, nameof(CreateOrderFromCart));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in CreateOrderFromCart: {ex.Message}");
-                return StatusCode(500, ApiResponse<OrderDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while creating the order"), 500));
-            }
-        }
+		#endregion
 
-        /// <summary>
-        /// Cancel an order (Customer access - own orders only)
-        /// </summary>
-        [HttpPost("{orderId}/cancel")]
-        [Authorize(Roles = "Customer,Admin")]
-        public async Task<ActionResult<ApiResponse<string>>> CancelOrder(int orderId, [FromBody] CancelOrderDto cancelDto)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    var errors = GetModelErrors();
-                    _logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-                    return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
-                }
+		#region RESTful Sub-resources
 
-                _logger.LogInformation($"Executing CancelOrder for ID: {orderId}");
-                var userId = GetUserId();
-                var result = await _orderServices.CancelOrderAsync(orderId, cancelDto, userId);
-                return HandleResult(result, nameof(CancelOrder), orderId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in CancelOrder: {ex.Message}");
-                return StatusCode(500, ApiResponse<string>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while canceling the order"), 500));
-            }
-        }
+		/// <summary>
+		/// Get order by order number (RESTful sub-resource)
+		/// GET /api/order/number/{orderNumber}
+		/// </summary>
+		[HttpGet("number/{orderNumber}")]
+		[Authorize(Roles = "Customer,Admin")]
+		public async Task<ActionResult<ApiResponse<OrderDto>>> GetOrderByNumber(string orderNumber)
+		{
+			try
+			{
+				_logger.LogInformation($"Executing GetOrderByNumber for number: {orderNumber}");
+				var userId = GetUserId();
+				var result = await _orderServices.GetOrderByNumberAsync(orderNumber, userId);
+				return HandleResult(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Error in GetOrderByNumber: {ex.Message}");
+				return StatusCode(500, ApiResponse<OrderDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while retrieving the order"), 500));
+			}
+		}
 
-        /// <summary>
-        /// Get customer order count (Customer access - own count only)
-        /// </summary>
-        [HttpGet("customer/count")]
-        [Authorize(Roles = "Customer,Admin")]
-        public async Task<ActionResult<ApiResponse<int?>>> GetOrderCount()
-        {
-            try
-            {
-                _logger.LogInformation("Executing GetOrderCount");
-                var userId = GetUserId();
-                var result = await _orderServices.GetOrderCountByCustomerAsync(userId);
-                return HandleResult(result, nameof(GetOrderCount));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in GetOrderCount: {ex.Message}");
-                return StatusCode(500, ApiResponse<int?>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while getting order count"), 500));
-            }
-        }
+		/// <summary>
+		/// Get order count (RESTful)
+		/// GET /api/order/count?userId={userId}
+		/// - Admins can get count for any user
+		/// - Customers get their own count
+		/// </summary>
+		[HttpGet("count")]
+		[Authorize(Roles = "Customer,Admin")]
+		public async Task<ActionResult<ApiResponse<int?>>> GetOrderCount([FromQuery] string? userId = null)
+		{
+			try
+			{
+				_logger.LogInformation("Executing GetOrderCount");
+				var role = GetUserRole();
+				var effectiveUserId = role == "Admin" ? userId : GetUserId();
 
-        /// <summary>
-        /// Get customer total revenue (Customer access - own revenue only)
-        /// </summary>
-        [HttpGet("customer/revenue")]
-        [Authorize(Roles = "Customer,Admin")]
-        public async Task<ActionResult<ApiResponse<decimal>>> GetCustomerRevenue()
-        {
-            try
-            {
-                _logger.LogInformation("Executing GetCustomerRevenue");
-                var userId = GetUserId();
-                var result = await _orderServices.GetTotalRevenueByCustomerAsync(userId);
-                return HandleResult(result, nameof(GetCustomerRevenue));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in GetCustomerRevenue: {ex.Message}");
-                return StatusCode(500, ApiResponse<decimal>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while getting customer revenue"), 500));
-            }
-        }
+				var result = await _orderServices.GetOrderCountByCustomerAsync(effectiveUserId ?? GetUserId());
+				return HandleResult(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Error in GetOrderCount: {ex.Message}");
+				return StatusCode(500, ApiResponse<int?>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while getting order count"), 500));
+			}
+		}
 
-        #endregion
+		/// <summary>
+		/// Get revenue statistics (RESTful)
+		/// GET /api/order/revenue?userId={userId}
+		/// - Admins can get revenue for any user
+		/// - Customers get their own revenue
+		/// </summary>
+		[HttpGet("revenue/{userid}")]
+		[Authorize(Roles = "Customer,Admin")]
+		public async Task<ActionResult<ApiResponse<decimal>>> GetRevenueOfCustomer([FromQuery] string? userId = null)
+		{
+			try
+			{
+				_logger.LogInformation("Executing GetRevenue");
+				var role = GetUserRole();
+				var effectiveUserId = role == "Admin" ? userId : GetUserId();
 
-        #region Admin-Only Endpoints
+				var result = await _orderServices.GetTotalRevenueByCustomerAsync(effectiveUserId);
+				return HandleResult(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Error in GetRevenue: {ex.Message}");
+				return StatusCode(500, ApiResponse<decimal>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while getting revenue"), 500));
+			}
+		}
+		[HttpGet("revenue")]
+		[Authorize(Roles = "Admin")]
+		public async Task<ActionResult<ApiResponse<decimal>>> GetRevenue(DateTime start, DateTime end)
+		{
+			try
+			{
+				_logger.LogInformation("Executing GetRevenue");
+			
 
-        /// <summary>
-        /// Get orders by status (Admin only)
-        /// </summary>
-        [HttpGet("status/{status}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ApiResponse<List<OrderListDto>>>> GetOrdersByStatus(
-            OrderStatus status,
-            [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 10)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    var errors = GetModelErrors();
-                    _logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-                    return BadRequest(ApiResponse<List<OrderListDto>>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
-                }
+				var result = await _orderServices.GetTotalRevenueByDateRangeAsync(start,end);
+				return HandleResult(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Error in GetRevenue: {ex.Message}");
+				return StatusCode(500, ApiResponse<decimal>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while getting revenue"), 500));
+			}
+		}
 
-                if (page <= 0 || pageSize <= 0)
-                {
-                    return BadRequest(ApiResponse<List<OrderListDto>>.CreateErrorResponse("Invalid pagination", new ErrorResponse("Invalid Data", "Page and pageSize must be greater than 0"), 400));
-                }
+		#endregion
 
-                _logger.LogInformation($"Executing GetOrdersByStatus for status: {status}, page: {page}, size: {pageSize}");
-                var result = await _orderServices.FilterOrdersAsync(status: status, page: page, pageSize: pageSize);
-                return HandleResult(result, nameof(GetOrdersByStatus));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in GetOrdersByStatus: {ex.Message}");
-                return StatusCode(500, ApiResponse<List<OrderListDto>>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while retrieving orders by status"), 500));
-            }
-        }
+		#region Helper Methods
 
-        /// <summary>
-        /// Update order status (Admin only)
-        /// </summary>
-        [HttpPut("{orderId}/status")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ApiResponse<bool>>> UpdateOrderStatus(
-            int orderId, 
-            [FromBody] UpdateOrderStatusDto statusDto)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    var errors = GetModelErrors();
-                    _logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-                    return BadRequest(ApiResponse<bool>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
-                }
+		private string GetUserId()
+		{
+			return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+		}
 
-                _logger.LogInformation($"Executing UpdateOrderStatus for ID: {orderId}, status: {statusDto.Status}");
-                var result = await _orderServices.UpdateOrderStatusAsync(orderId, statusDto);
-                return HandleResult(result, nameof(UpdateOrderStatus), orderId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in UpdateOrderStatus: {ex.Message}");
-                return StatusCode(500, ApiResponse<OrderDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while updating order status"), 500));
-            }
-        }
+		private string GetUserRole()
+		{
+			return User.FindFirst(ClaimTypes.Role)?.Value ?? "Customer";
+		}
 
-        /// <summary>
-        /// Ship an order (Admin only)
-        /// </summary>
-        [HttpPost("{orderId}/ship")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ApiResponse<string>>> ShipOrder(int orderId)
-        {
-            try
-            {
-                _logger.LogInformation($"Executing ShipOrder for ID: {orderId}");
-                var result = await _orderServices.ShipOrderAsync(orderId);
-                return HandleResult(result, nameof(ShipOrder), orderId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in ShipOrder: {ex.Message}");
-                return StatusCode(500, ApiResponse<string>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while shipping the order"), 500));
-            }
-        }
+		private List<string> GetModelErrors()
+		{
+			return ModelState.Values
+				.SelectMany(v => v.Errors)
+				.Select(e => e.ErrorMessage)
+				.ToList();
+		}
 
-        /// <summary>
-        /// Deliver an order (Admin only)
-        /// </summary>
-        [HttpPost("{orderId}/deliver")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ApiResponse<string>>> DeliverOrder(int orderId)
-        {
-            try
-            {
-                _logger.LogInformation($"Executing DeliverOrder for ID: {orderId}");
-                var result = await _orderServices.DeliverOrderAsync(orderId);
-                return HandleResult(result, nameof(DeliverOrder), orderId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in DeliverOrder: {ex.Message}");
-                return StatusCode(500, ApiResponse<string>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while delivering the order"), 500));
-            }
-        }
+		private ActionResult<ApiResponse<T>> HandleResult<T>(Result<T> result, string? actionName = null, object? routeValues = null)
+		{
+			var apiResponse = result.Success
+				? ApiResponse<T>.CreateSuccessResponse(result.Message, result.Data, result.StatusCode, warnings: result.Warnings)
+				: ApiResponse<T>.CreateErrorResponse(result.Message, new ErrorResponse("Error", result.Message), result.StatusCode, warnings: result.Warnings);
 
-        /// <summary>
-        /// Get revenue by date range (Admin only)
-        /// </summary>
-        //[HttpGet("revenue")]
-        //[Authorize(Roles = "Admin")]
-        //public async Task<ActionResult<ApiResponse<decimal>>> GetRevenueByDateRange(
-        //    [FromQuery] DateTime startDate,
-        //    [FromQuery] DateTime endDate)
-        //{
-        //    try
-        //    {
-        //        _logger.LogInformation($"Executing GetRevenueByDateRange from {startDate} to {endDate}");
-        //        var userRole = GetUserRole();
-        //        var result = await _orderServices.GetTotalRevenueByDateRangeAsync(startDate, endDate, userRole);
-        //        return HandleResult(result, nameof(GetRevenueByDateRange));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError($"Error in GetRevenueByDateRange: {ex.Message}");
-        //        return StatusCode(500, ApiResponse<decimal>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while getting revenue by date range"), 500));
-        //    }
-        //}
+			switch (result.StatusCode)
+			{
+				case 200:
+					return Ok(apiResponse);
+				case 201:
+					return actionName != null && routeValues != null
+						? CreatedAtAction(actionName, routeValues, apiResponse)
+						: StatusCode(201, apiResponse);
+				case 400:
+					return BadRequest(apiResponse);
+				case 401:
+					return Unauthorized(apiResponse);
+				case 404:
+					return NotFound(apiResponse);
+				case 409:
+					return Conflict(apiResponse);
+				default:
+					return StatusCode(result.StatusCode, apiResponse);
+			}
+		}
 
-        /// <summary>
-        /// Filter orders with comprehensive filtering options (Admin only)
-        /// </summary>
-        [HttpGet("filter")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ApiResponse<List<OrderListDto>>>> FilterOrders(
-            [FromQuery] string? userId = null,
-            [FromQuery] bool? deleted = null,
-            [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 10,
-            [FromQuery] OrderStatus? status = null)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    var errors = GetModelErrors();
-                    _logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-                    return BadRequest(ApiResponse<List<OrderListDto>>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
-                }
-
-                if (page <= 0 || pageSize <= 0)
-                {
-                    return BadRequest(ApiResponse<List<OrderListDto>>.CreateErrorResponse("Invalid pagination", new ErrorResponse("Invalid Data", "Page and pageSize must be greater than 0"), 400));
-                }
-
-                _logger.LogInformation($"Executing FilterOrders: userId: {userId}, deleted: {deleted}, page: {page}, size: {pageSize}, status: {status}");
-                var result = await _orderServices.FilterOrdersAsync(userId, deleted, page, pageSize, status);
-                return HandleResult(result, nameof(FilterOrders));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in FilterOrders: {ex.Message}");
-                return StatusCode(500, ApiResponse<List<OrderListDto>>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while filtering orders"), 500));
-            }
-        }
-
-        /// <summary>
-        /// Get orders with pagination (Admin only) - Legacy endpoint, use /filter instead
-        /// </summary>
-        [HttpGet("admin")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ApiResponse<List<OrderListDto>>>> GetOrdersWithPagination(
-            [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 10,
-            [FromQuery] OrderStatus? status = null)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    var errors = GetModelErrors();
-                    _logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-                    return BadRequest(ApiResponse<List<OrderListDto>>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
-                }
-
-                if (page <= 0 || pageSize <= 0)
-                {
-                    return BadRequest(ApiResponse<List<OrderListDto>>.CreateErrorResponse("Invalid pagination", new ErrorResponse("Invalid Data", "Page and pageSize must be greater than 0"), 400));
-                }
-
-                _logger.LogInformation($"Executing GetOrdersWithPagination (legacy): page {page}, size {pageSize}, status: {status}");
-                // Use the new FilterOrdersAsync method internally
-                var result = await _orderServices.FilterOrdersAsync(null, false, page, pageSize, status);
-                return HandleResult(result, nameof(GetOrdersWithPagination));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in GetOrdersWithPagination: {ex.Message}");
-                return StatusCode(500, ApiResponse<List<OrderListDto>>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while retrieving orders with pagination"), 500));
-            }
-        }
-
-        /// <summary>
-        /// Get total order count (Admin only)
-        /// </summary>
-        [HttpGet("admin/count")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ApiResponse<int?>>> GetTotalOrderCount(
-            [FromQuery] OrderStatus? status = null)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    var errors = GetModelErrors();
-                    _logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-                    return BadRequest(ApiResponse<int?>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
-                }
-
-                _logger.LogInformation($"Executing GetTotalOrderCount, status: {status}");
-                var userRole = GetUserRole();
-                var result = await _orderServices.GetTotalOrderCountAsync(status, userRole);
-                return HandleResult(result, nameof(GetTotalOrderCount));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in GetTotalOrderCount: {ex.Message}");
-                return StatusCode(500, ApiResponse<int?>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while getting total order count"), 500));
-            }
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

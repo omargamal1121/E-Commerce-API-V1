@@ -185,7 +185,7 @@ namespace E_Commerce.Services.ProductServices
 			try
 			{
 				var bestSellerQuery = _unitOfWork.Repository<OrderItem>().GetAll()
-					.Where(i => i.Order.Status != OrderStatus.Cancelled)
+					.Where(i => i.Order.Status != OrderStatus.CancelledByAdmin|| i.Order.Status != OrderStatus.CancelledByUser)
 					.GroupBy(i => i.ProductId)
 					.Select(g => new
 					{

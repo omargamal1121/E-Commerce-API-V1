@@ -90,28 +90,30 @@ namespace E_Commerce.Context
 				.HasMany(p => p.Images)
 				.WithOne(i => i.Product)
 				.HasForeignKey(i => i.ProductId)
-				.OnDelete(DeleteBehavior.Restrict);
+				.OnDelete(DeleteBehavior.SetNull);
+
+	
 
 			// Category - Image (1:M)
 			builder.Entity<Category>()
 				.HasMany(c => c.Images)
 				.WithOne(i => i.Category)
 				.HasForeignKey(i => i.CategoryId)
-				.OnDelete(DeleteBehavior.Cascade);
+				.OnDelete(DeleteBehavior.SetNull);
 
 			// SubCategory - Image (1:M)
 			builder.Entity<SubCategory>()
 				.HasMany(sc => sc.Images)
 				.WithOne(i => i.SubCategory)
 				.HasForeignKey(i => i.SubCategoryId)
-				.OnDelete(DeleteBehavior.Cascade);
+				.OnDelete(DeleteBehavior.SetNull);
 
 			// Collection - Image (1:M)
 			builder.Entity<Collection>()
 				.HasMany(c => c.Images)
 				.WithOne(i => i.Collection)
 				.HasForeignKey(i => i.CollectionId)
-				.OnDelete(DeleteBehavior.Cascade);
+				.OnDelete(DeleteBehavior.SetNull);
 
 
 			// Product - Review (1:M)
@@ -194,9 +196,8 @@ namespace E_Commerce.Context
 
 			// Order - Payment (1:1)
 			builder.Entity<Order>()
-				.HasOne(o => o.Payment)
+				.HasMany(o => o.Payment)
 				.WithOne(p => p.Order)
-				.HasForeignKey<Payment>(p => p.OrderId)
 				.OnDelete(DeleteBehavior.NoAction);
 
 			// Customer - CustomerAddress (1:M)

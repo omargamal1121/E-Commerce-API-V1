@@ -87,7 +87,7 @@ namespace E_Commerce.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ActionName(nameof(Create))]
-        public async Task<ActionResult<ApiResponse<SubCategoryDto>>> Create([FromForm] CreateSubCategoryDto subCategoryDto)
+        public async Task<ActionResult<ApiResponse<SubCategoryDto>>> Create([FromBody] CreateSubCategoryDto subCategoryDto)
         {
             _logger.LogInformation($"Executing {nameof(Create)}");
             if (!ModelState.IsValid)
@@ -125,7 +125,7 @@ namespace E_Commerce.Controllers
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         [ActionName(nameof(Update))]
-        public async Task<ActionResult<ApiResponse<SubCategoryDto>>> Update(int id, [FromForm] UpdateSubCategoryDto subCategoryDto)
+        public async Task<ActionResult<ApiResponse<SubCategoryDto>>> Update(int id, [FromBody] UpdateSubCategoryDto subCategoryDto)
         {
             _logger.LogInformation($"Executing {nameof(Update)} for id: {id}");
             if (!ModelState.IsValid)
@@ -179,24 +179,7 @@ namespace E_Commerce.Controllers
             return HandleResult(result, nameof(RemoveImage), id);
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        [ActionName(nameof(GetAll))]
-        public async Task<IActionResult> GetAll([FromQuery] bool? isActive = null, [FromQuery] bool? isDeleted = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
-        {
-            bool? effectiveIsActive = isActive;
-            bool? effectiveIsDeleted = isDeleted;
-
-            if (!User?.IsInRole("Admin") ?? true)
-            {
-                effectiveIsActive = true;
-                effectiveIsDeleted = false;
-            }
-
-            _logger.LogInformation($"Executing {nameof(GetAll)} with isActive={effectiveIsActive}, isDeleted={effectiveIsDeleted}, page={page}, pageSize={pageSize}");
-            var result = await _subCategoryServices.GetAllSubCategoriesAsync(effectiveIsActive, effectiveIsDeleted, page, pageSize);
-            return StatusCode(result.StatusCode, result);
-        }
+     
 
         [HttpPatch("{id}/activate")]
         [Authorize(Roles = "Admin")]
@@ -220,7 +203,7 @@ namespace E_Commerce.Controllers
             return HandleResult(result, nameof(Deactivate));
         }
 
-        [HttpGet("search")]
+        [HttpGet()]
         [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<List<SubCategoryDto>>>> Search(
             [FromQuery] string key,

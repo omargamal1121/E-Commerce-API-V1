@@ -336,7 +336,7 @@ namespace E_Commerce.Services.ProductServices
 					return Result<ProductVariantDto>.Fail("Failed to add variant", 400);
 				}
 				_logger.LogInformation($"Updating product {productId} quantity after adding variant");
-				_productCatalogService.UpdateProductQuantity(productId);
+				_backgroundJobClient.Enqueue(()=> _productCatalogService.UpdateProductQuantity(productId));
 
 				_logger.LogInformation($"Recording admin operation for adding variant to product {productId} by user {userId}");
 			var isadded = await _adminOpreationServices.AddAdminOpreationAsync(
@@ -498,6 +498,16 @@ namespace E_Commerce.Services.ProductServices
 				var variant = await _unitOfWork.Repository<ProductVariant>().GetByIdAsync(id);
 				if (variant == null)
 					return Result<bool>.Fail("Variant not found", 404);
+
+
+				var isinorders = await _unitOfWork.Repository<OrderItem>().GetAll().AnyAsync(i => i.ProductVariantId == id &&
+				(i.Order.Status != OrderStatus.CancelledByAdmin && i.Order.Status != OrderStatus.CancelledByUser &&
+				i.Order.Status != OrderStatus.Complete)
+				);
+				if(isinorders)
+				{
+					return Result<bool>.Fail("Can't remove this becouse it in order", 400);
+				}
 
 				_logger.LogInformation($"Attempting to soft delete variant {id}");
 				var result = await _unitOfWork.Repository<ProductVariant>().SoftDeleteAsync(id);

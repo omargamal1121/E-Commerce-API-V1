@@ -12,7 +12,9 @@ namespace E_Commerce.DtoModels.PaymentDtos
         public string? IssuerBank { get; set; }
         [JsonProperty("transaction_processed_callback_responses")] 
         public string? TransactionProcessedCallbackResponses { get; set; }
-    }
+		[JsonProperty("hmac")]
+		public string? Hmac { get; set; }
+	}
 
     public class PaymobTransactionObj
     {

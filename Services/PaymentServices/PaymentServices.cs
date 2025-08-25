@@ -226,7 +226,7 @@ namespace E_Commerce.Services.PaymentServices
 		{
 			var payment = await _unitOfWork.Repository<Payment>().GetByIdAsync(paymentId);
 			if (payment == null || payment.Status != PaymentStatus.Pending)
-				return; // Nothing to do.
+				return;
 
 			var statusResponse = await _paymentProcessor.GetPaymentStatusAsync(payment.ProviderOrderId);
 
@@ -236,7 +236,7 @@ namespace E_Commerce.Services.PaymentServices
 				return;
 			}
 
-			var remoteStatus = statusResponse.Data.Status; // "Paid", "Pending", "Unpaid"
+			var remoteStatus = statusResponse.Data.Status; 
 
 			PaymentStatus newStatus = remoteStatus == "Paid"
 				? PaymentStatus.Completed

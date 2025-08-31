@@ -1,7 +1,7 @@
 using E_Commerce.DtoModels.Responses;
 using E_Commerce.Enums;
 using E_Commerce.Models;
-using E_Commerce.Services.AdminOpreationServices;
+using E_Commerce.Services.AdminOperationServices;
 using E_Commerce.Services.Cache;
 using E_Commerce.Services.EmailServices;
 using E_Commerce.UOW;
@@ -79,7 +79,6 @@ namespace E_Commerce.Services.PaymentMethodsServices
 				_logger.LogInformation("Creating payment method: {PaymentMethod}", paymentmethod.Name);
 
 				var aftercreating = await _unitOfWork.Repository<PaymentMethod>().CreateAsync(paymentmethod);
-				await _unitOfWork.CommitAsync();
 
 				_logger.LogInformation("Payment method created successfully with ID {Id}", aftercreating.Id);
 
@@ -91,7 +90,6 @@ namespace E_Commerce.Services.PaymentMethodsServices
 				}
 
 				_logger.LogInformation("Admin operation logged for payment method {Id}", aftercreating.Id);
-				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 				_backgroundJobClient.Enqueue(() => _cacheService.RemoveByTagAsync(PAYMENTMETHODCACGE));
 				return Result<PaymentMethodDto>.Ok(new PaymentMethodDto { Name =aftercreating.Name,
@@ -141,8 +139,6 @@ namespace E_Commerce.Services.PaymentMethodsServices
 
 				_logger.LogInformation("Updating payment method: {PaymentMethod}", existingPaymentMethod.Name);
 
-				await _unitOfWork.CommitAsync();
-
 				_logger.LogInformation("Payment method updated successfully with ID {Id}", id);
 
 				var result = await _adminOperationServices.AddAdminOpreationAsync("Update Payment Method", Opreations.UpdateOpreation, userid, id);
@@ -153,7 +149,6 @@ namespace E_Commerce.Services.PaymentMethodsServices
 				}
 
 				_logger.LogInformation("Admin operation logged for payment method update {Id}", id);
-				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
 				_backgroundJobClient.Enqueue(() => _cacheService.RemoveByTagAsync(PAYMENTMETHODCACGE));
@@ -188,7 +183,6 @@ namespace E_Commerce.Services.PaymentMethodsServices
 				_logger.LogInformation("Removing payment method: {PaymentMethod}", existingPaymentMethod.Name);
 
 				await _unitOfWork.Repository<PaymentMethod>().SoftDeleteAsync(id);
-				await _unitOfWork.CommitAsync();
 
 				_logger.LogInformation("Payment method removed successfully with ID {Id}", id);
 

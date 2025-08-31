@@ -17,7 +17,7 @@ namespace E_Commerce.Interfaces
 		Task<Result<bool>> DeleteAsync(int id, string userid);
 		Task<Result<CategoryDto>> UpdateAsync(int categoryid, UpdateCategoryDto category, string userid);
 		public  Task<Result<List<CategoryDto>>> FilterAsync(string? search,bool? isActive,bool?includeDeleted,int page,int pageSize);
-		Task<Result<CategoryDto>> ReturnRemovedCategoryAsync(int id, string userid);
+		Task<Result<CategoryDto>> RestoreAsync(int id, string userid);
 		Task<Result<List<ImageDto>>> AddImagesToCategoryAsync(int categoryId, List<IFormFile> images, string userId);
 		Task<Result<ImageDto>> AddMainImageToCategoryAsync(int categoryId, IFormFile mainImage, string userId);
 		Task<Result<bool>> RemoveImageFromCategoryAsync(int categoryId, int imageId, string userId);

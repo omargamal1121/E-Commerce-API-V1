@@ -2,6 +2,7 @@ using E_Commerce.DtoModels.OrderDtos;
 using E_Commerce.DtoModels.PaymentDtos;
 using E_Commerce.Enums;
 using E_Commerce.Models;
+using E_Commerce.Services;
 using E_Commerce.Services.EmailServices;
 using E_Commerce.Services.PaymentProccessor;
 using E_Commerce.UOW;
@@ -23,42 +24,58 @@ namespace E_Commerce.Services.PayMobServices
 {
 	public interface IPayMobServices
 	{
-		public Task<string?> GetTokenAsync();
-		public Task<int> CreateOrderInPaymobAsync(CreateOrderRequest order);
-		public Task<string?> GeneratePaymentKeyAsync(PaymentKeyContent content, PaymentMethodEnums paymentMethodEnums);
+		Task<Result<PaymobPaymentStatusDto>> GetPaymentStatusAsync(long orderId);
+		Task<Result<PaymentLinkResult>> GetPaymentLinkAsync(CreatePayment dto, int expires);
 	}
 
-	public class PayMobServices : IPaymentProcessor
+	public class PayMobServices : IPaymentProcessor, IPayMobServices
 	{
 		private readonly IBackgroundJobClient _backgroundJobClient;
 		private readonly ILogger<PayMobServices> _logger;
 		private readonly IErrorNotificationService _errorNotificationService;
-		public readonly IUnitOfWork _unitOfWork;
-		public readonly UserManager<Customer> _usermanger;
-		private string Token;
-		private DateTime token_gentrate_at;
+		private readonly IUnitOfWork _unitOfWork;
+		private readonly UserManager<Customer> _userManager;
+		private readonly HttpClient _httpClient;
+		private readonly object _tokenLock = new object();
+		private string _token = string.Empty;
+		private DateTime _tokenGeneratedAt = DateTime.MinValue;
 
-		public PayMobServices(UserManager<Customer> userManager, IUnitOfWork unitOfWork, ILogger<PayMobServices> logger, IErrorNotificationService errorNotificationService, IBackgroundJobClient backgroundJobClient)
+		public PayMobServices(
+			UserManager<Customer> userManager, 
+			IUnitOfWork unitOfWork, 
+			ILogger<PayMobServices> logger, 
+			IErrorNotificationService errorNotificationService, 
+			IBackgroundJobClient backgroundJobClient,
+			HttpClient httpClient)
 		{
-			_usermanger = userManager;
+			_userManager = userManager;
 			_unitOfWork = unitOfWork;
 			_logger = logger;
 			_errorNotificationService = errorNotificationService;
 			_backgroundJobClient = backgroundJobClient;
-			Token = "";
+			_httpClient = httpClient;
 		}
-
 
 		private async Task<bool> GetTokenAsync()
 		{
+			lock (_tokenLock)
+			{
+				// Check if token is still valid (with 5-minute buffer)
+				if (!string.IsNullOrEmpty(_token) && _tokenGeneratedAt.AddMinutes(55) > DateTime.UtcNow)
+				{
+					return true;
+				}
+			}
+
 			try
 			{
-				var apikey = await _unitOfWork.Repository<PaymentProvider>()
+				var apiKey = await _unitOfWork.Repository<PaymentProvider>()
 					.GetAll()
 					.Where(p => p.Provider == PaymentProviderEnums.Paymob)
-					.Select(p => p.PublicKey).FirstOrDefaultAsync();
+					.Select(p => p.PublicKey)
+					.FirstOrDefaultAsync();
 
-				if (string.IsNullOrEmpty(apikey))
+				if (string.IsNullOrEmpty(apiKey))
 				{
 					_logger.LogError("PayMob API key not found in database");
 					_backgroundJobClient.Enqueue(() =>
@@ -67,14 +84,13 @@ namespace E_Commerce.Services.PayMobServices
 					return false;
 				}
 
-				var body = new { api_key = apikey };
+				var body = new { api_key = apiKey };
 				_logger.LogInformation("Executing GetTokenAsync");
 
 				var json = JsonSerializer.Serialize(body);
 				var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-				using HttpClient client = new HttpClient();
-				var response = await client.PostAsync("https://accept.paymob.com/api/auth/tokens", content);
+				var response = await _httpClient.PostAsync("https://accept.paymob.com/api/auth/tokens", content);
 
 				if (!response.IsSuccessStatusCode)
 				{
@@ -101,9 +117,13 @@ namespace E_Commerce.Services.PayMobServices
 					return false;
 				}
 
+				lock (_tokenLock)
+				{
+					_token = result.token;
+					_tokenGeneratedAt = DateTime.UtcNow;
+				}
+
 				_logger.LogInformation("Successfully retrieved PayMob token");
-				Token = result.token;
-				token_gentrate_at = DateTime.UtcNow;
 				return true;
 			}
 			catch (Exception ex)
@@ -115,58 +135,57 @@ namespace E_Commerce.Services.PayMobServices
 				return false;
 			}
 		}
+
 		public async Task<Result<PaymobPaymentStatusDto>> GetPaymentStatusAsync(long orderId)
 		{
-			if (string.IsNullOrEmpty(Token) || token_gentrate_at.AddHours(1) < DateTime.UtcNow)
+			var tokenResult = await GetTokenAsync();
+			if (!tokenResult)
 			{
-				var tokenResult = await GetTokenAsync();
-				if (!tokenResult)
-				{
-					_logger.LogError("Failed to get token for PayMob order creation");
-					return Result<PaymobPaymentStatusDto>.Fail("Failed to authenticate with Paymob");
-				}
+				_logger.LogError("Failed to get token for PayMob payment status check");
+				return Result<PaymobPaymentStatusDto>.Fail("Failed to authenticate with Paymob");
 			}
 
-			using HttpClient client = new HttpClient();
-			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
-
-			var response = await client.GetAsync($"https://accept.paymob.com/api/ecommerce/orders/{orderId}");
-
-			if (!response.IsSuccessStatusCode)
+			try
 			{
-				_logger.LogError("Paymob API call failed for order {OrderId}", orderId);
+				_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+
+				var response = await _httpClient.GetAsync($"https://accept.paymob.com/api/ecommerce/orders/{orderId}");
+
+				if (!response.IsSuccessStatusCode)
+				{
+					_logger.LogError("Paymob API call failed for order {OrderId}", orderId);
+					return Result<PaymobPaymentStatusDto>.Fail("Failed to retrieve payment status");
+				}
+
+				var json = await response.Content.ReadAsStringAsync();
+				using var doc = JsonDocument.Parse(json);
+
+				var paidAmount = doc.RootElement.GetProperty("paid_amount_cents").GetInt32();
+				var currency = doc.RootElement.TryGetProperty("currency", out var currencyEl) ? currencyEl.GetString() : "EGP";
+
+				var status = (paidAmount > 0 ? "Paid" : "Unpaid");
+
+				return Result<PaymobPaymentStatusDto>.Ok(new PaymobPaymentStatusDto
+				{
+					Status = status,
+					PaidAmountCents = paidAmount,
+					Currency = currency ?? "EGP"
+				});
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Exception occurred while getting payment status for order {OrderId}", orderId);
 				return Result<PaymobPaymentStatusDto>.Fail("Failed to retrieve payment status");
 			}
-
-			var json = await response.Content.ReadAsStringAsync();
-			using var doc = JsonDocument.Parse(json);
-
-			
-			var paidAmount = doc.RootElement.GetProperty("paid_amount_cents").GetInt32();
-			var currency = doc.RootElement.TryGetProperty("currency", out var currencyEl) ? currencyEl.GetString() : "EGP";
-
-			var status = (paidAmount > 0 ? "Paid" : "Unpaid");
-
-			return Result<PaymobPaymentStatusDto>.Ok(new PaymobPaymentStatusDto
-			{
-				Status = status,
-				PaidAmountCents = paidAmount,
-				Currency = currency ?? "EGP"
-			});
 		}
-	
 
-		public async Task<int> CreateOrderInPaymobAsync(CreateOrderRequest order)
+		private async Task<int> CreateOrderInPaymobAsync(CreateOrderRequest order)
 		{
-			// Ensure we have a valid token
-			if (string.IsNullOrEmpty(Token) || token_gentrate_at.AddHours(1) < DateTime.UtcNow)
+			var tokenResult = await GetTokenAsync();
+			if (!tokenResult)
 			{
-				var tokenResult = await GetTokenAsync();
-				if (!tokenResult)
-				{
-					_logger.LogError("Failed to get token for PayMob order creation");
-					return 0;
-				}
+				_logger.LogError("Failed to get token for PayMob order creation");
+				return 0;
 			}
 
 			if (order == null)
@@ -180,13 +199,16 @@ namespace E_Commerce.Services.PayMobServices
 				var json = JsonSerializer.Serialize(order);
 				var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-				using HttpClient client = new HttpClient();
-				var response = await client.PostAsync("https://accept.paymob.com/api/ecommerce/orders", content);
+				var response = await _httpClient.PostAsync("https://accept.paymob.com/api/ecommerce/orders", content);
 
 				if (response.StatusCode == HttpStatusCode.Unauthorized)
 				{
-					await GetTokenAsync();
-					response = await client.PostAsync("https://accept.paymob.com/api/ecommerce/orders", content);
+					// Try to refresh token and retry once
+					var refreshResult = await GetTokenAsync();
+					if (refreshResult)
+					{
+						response = await _httpClient.PostAsync("https://accept.paymob.com/api/ecommerce/orders", content);
+					}
 				}
 
 				if (!response.IsSuccessStatusCode)
@@ -220,7 +242,7 @@ namespace E_Commerce.Services.PayMobServices
 			}
 		}
 
-		public async Task<string?> GeneratePaymentKeyAsync(PaymentKeyContent content, PaymentMethodEnums paymentMethodEnums)
+		private async Task<string?> GeneratePaymentKeyAsync(PaymentKeyContent content, PaymentMethodEnums paymentMethodEnums)
 		{
 			if (content == null)
 			{
@@ -228,34 +250,31 @@ namespace E_Commerce.Services.PayMobServices
 				return null;
 			}
 
-			// Ensure we have a valid token
-			if (string.IsNullOrEmpty(Token) || token_gentrate_at.AddHours(1) < DateTime.UtcNow)
+			var tokenResult = await GetTokenAsync();
+			if (!tokenResult)
 			{
-				var tokenResult = await GetTokenAsync();
-				if (!tokenResult)
-				{
-					_logger.LogError("Failed to get token for payment key generation");
-					return null;
-				}
+				_logger.LogError("Failed to get token for payment key generation");
+				return null;
 			}
 
 			try
 			{
 				_logger.LogInformation("Starting GeneratePaymentKeyAsync for Order ID: {OrderId}, Amount: {AmountCents}", content.order_id, content.amount_cents);
 
-			
 				var json = JsonSerializer.Serialize(content);
 				var requestBody = new StringContent(json, Encoding.UTF8, "application/json");
 
-				using HttpClient client = new HttpClient();
-				var response = await client.PostAsync("https://accept.paymob.com/api/acceptance/payment_keys", requestBody);
+				var response = await _httpClient.PostAsync("https://accept.paymob.com/api/acceptance/payment_keys", requestBody);
 
 				_logger.LogInformation("Request sent to Paymob payment_keys endpoint");
 
 				if (response.StatusCode == HttpStatusCode.Unauthorized)
 				{
-					await GetTokenAsync();
-					response = await client.PostAsync("https://accept.paymob.com/api/acceptance/payment_keys", requestBody);
+					var refreshResult = await GetTokenAsync();
+					if (refreshResult)
+					{
+						response = await _httpClient.PostAsync("https://accept.paymob.com/api/acceptance/payment_keys", requestBody);
+					}
 				}
 
 				if (!response.IsSuccessStatusCode)
@@ -288,30 +307,29 @@ namespace E_Commerce.Services.PayMobServices
 				return null;
 			}
 		}
-		public async Task<Result<PaymentLinkResult>> GetPaymentLinkAsync(CreatePayment dto,int expires)
+
+		public async Task<Result<PaymentLinkResult>> GetPaymentLinkAsync(CreatePayment dto, int expires)
 		{
 			if (dto == null)
 			{
 				return Result<PaymentLinkResult>.Fail("Invalid payment request", 400);
 			}
-			if (dto.WalletPhoneNumber == null&&dto.PaymentMethod==PaymentMethodEnums.Wallet)
+
+			if (dto.WalletPhoneNumber == null && dto.PaymentMethod == PaymentMethodEnums.Wallet)
 			{
 				return Result<PaymentLinkResult>.Fail("Wallet Phone Number Needed", 400);
 			}
 
 			try
 			{
-				if (string.IsNullOrEmpty(Token) || token_gentrate_at.AddHours(1) < DateTime.UtcNow)
+				var tokenResult = await GetTokenAsync();
+				if (!tokenResult)
 				{
-					var tokenResult = await GetTokenAsync();
-					if (!tokenResult)
-					{
-						_logger.LogError("Failed to get token for payment link generation");
-						return Result<PaymentLinkResult>.Fail("Authentication failed", 401);
-					}
+					_logger.LogError("Failed to get token for payment link generation");
+					return Result<PaymentLinkResult>.Fail("Authentication failed", 401);
 				}
 
-				var user = await _usermanger.FindByIdAsync(dto.CustomerId);
+				var user = await _userManager.FindByIdAsync(dto.CustomerId);
 				if (user == null)
 				{
 					_logger.LogWarning("User not found for payment: {CustomerId}", dto.CustomerId);
@@ -327,7 +345,7 @@ namespace E_Commerce.Services.PayMobServices
 
 				var paymobOrderRequest = new CreateOrderRequest
 				{
-					auth_token = Token,
+					auth_token = _token,
 					amount_cents = (int)(dto.Amount * 100),
 					currency = "EGP",
 					delivery_needed = true,
@@ -337,7 +355,7 @@ namespace E_Commerce.Services.PayMobServices
 				var paymobOrderId = await CreateOrderInPaymobAsync(paymobOrderRequest);
 				if (paymobOrderId == 0)
 				{
-					_logger.LogError(	"Failed to create order in PayMob for OrderId: {OrderId}", dto.Ordernumber);
+					_logger.LogError("Failed to create order in PayMob for OrderId: {OrderId}", dto.Ordernumber);
 					return Result<PaymentLinkResult>.Fail("Failed to create payment order", 500);
 				}
 
@@ -361,8 +379,8 @@ namespace E_Commerce.Services.PayMobServices
 				var paymentKeyRequest = new PaymentKeyContent
 				{
 					amount_cents = amountInCents,
-					auth_token = Token,
-					expiration= expires,
+					auth_token = _token,
+					expiration = expires,
 					order_id = paymobOrderId,
 					integration_id = integrationId,
 					billing_data = new billing_data
@@ -392,21 +410,19 @@ namespace E_Commerce.Services.PayMobServices
 
 				if (dto.PaymentMethod == PaymentMethodEnums.Wallet)
 				{
-					
 					paymentUrl = await WalletUrl(PaymentProviderEnums.Paymob, paymentKey, dto.WalletPhoneNumber);
-					if(paymentUrl.IsNullOrEmpty())
+					if (string.IsNullOrEmpty(paymentUrl))
 					{
-						_logger.LogWarning("Can't Genrate Link Of Wallet.. maybe number doesn't has wallet");
-						return Result<PaymentLinkResult>.Fail("Please Check If you Has Wallet on this number");
+						_logger.LogWarning("Can't Generate Link Of Wallet.. maybe number doesn't have wallet");
+						return Result<PaymentLinkResult>.Fail("Please Check If you Have Wallet on this number");
 					}
 				}
 				else
 				{
-					
 					paymentUrl = await OnlineCardUrl(PaymentProviderEnums.Paymob, paymentKey);
 				}
 
-				return Result<PaymentLinkResult>.Ok(new PaymentLinkResult { PaymentUrl=paymentUrl,PaymobOrderId=paymobOrderId});
+				return Result<PaymentLinkResult>.Ok(new PaymentLinkResult { PaymentUrl = paymentUrl, PaymobOrderId = paymobOrderId });
 			}
 			catch (Exception ex)
 			{
@@ -427,8 +443,7 @@ namespace E_Commerce.Services.PayMobServices
 				payment_token = paymentKey
 			};
 
-			using var client = new HttpClient();
-			var response = await client.PostAsync(
+			var response = await _httpClient.PostAsync(
 				"https://accept.paymob.com/api/acceptance/payments/pay",
 				new StringContent(JsonSerializer.Serialize(walletRequest), Encoding.UTF8, "application/json")
 			);

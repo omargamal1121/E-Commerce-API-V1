@@ -3,7 +3,7 @@ using CloudinaryDotNet.Actions;
 using E_Commerce.Enums;
 using E_Commerce.Interfaces;
 using E_Commerce.Models;
-using E_Commerce.Services.AdminOpreationServices;
+using E_Commerce.Services.AdminOperationServices;
 using E_Commerce.Services.EmailServices;
 using E_Commerce.UOW;
 using Hangfire;
@@ -178,7 +178,7 @@ namespace E_Commerce.Services
 			{
 				_logger.LogError($"❌ Error saving image: {ex.Message}");
 				NotifyAdminOfError(ex.Message, ex.StackTrace);
-				return Result<Image>.Fail($"Error saving image: {ex.Message}");
+				return Result<Image>.Fail($"Error saving image: {ex.Message}",500);
 			}
 		}
 

@@ -47,24 +47,7 @@ namespace E_Commerce.Controllers
             }
         }
 
-        // GET api/products/{productId}/variants
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<ActionResult<ApiResponse<List<ProductVariantDto>>>> GetProductVariants(int productId, [FromQuery] bool? isActive = null, [FromQuery] bool? deletedOnly = null)
-        {
-            bool isAdmin = User?.IsInRole("Admin") == true;
-            
-            // For non-admin users, restrict to active and non-deleted variants
-            if (!isAdmin)
-            {
-                isActive = true;
-                deletedOnly = false;
-            }
-            
-            var result = await _variantService.GetProductVariantsAsync(productId, isActive, deletedOnly);
-            return HandleResult<List<ProductVariantDto>>(result);
-        }
-
+       
         // GET api/products/{productId}/variants/{id}
         [HttpGet("{id}")]
         [AllowAnonymous]
@@ -205,7 +188,7 @@ namespace E_Commerce.Controllers
         }
 
         // GET api/products/{productId}/variants/search
-        [HttpGet("search")]
+        [HttpGet()]
         [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<List<ProductVariantDto>>>> SearchVariants(int productId, [FromQuery] string? color = null, [FromQuery] int? length = null, [FromQuery] int? waist = null, [FromQuery] VariantSize? size = null, [FromQuery] bool? isActive = null, [FromQuery] bool? deletedOnly = null)
         {

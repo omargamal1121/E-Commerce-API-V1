@@ -390,7 +390,7 @@ namespace E_Commerce.Controllers
 				return Unauthorized(ApiResponse<CategoryDto>.CreateErrorResponse("User authentication required", new ErrorResponse("Authentication", new List<string> { "User ID is required" }), 401));
 			}
 			
-			var result = await _categoryServices.ReturnRemovedCategoryAsync(id, userId);
+			var result = await _categoryServices.RestoreAsync(id, userId);
 			return HandleResult(result, nameof(RestoreCategoryAsync), id);
 		}
 

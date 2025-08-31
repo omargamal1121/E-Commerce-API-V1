@@ -84,8 +84,6 @@ namespace E_Commerce.Repository
 					_logger.LogWarning("Cart item not found for removal");
 					return false;
 				}
-
-				item.DeletedAt = DateTime.UtcNow;
 			    var isdeleted=	_context.CartItems.Remove(item);
                 if(isdeleted == null)
                 {

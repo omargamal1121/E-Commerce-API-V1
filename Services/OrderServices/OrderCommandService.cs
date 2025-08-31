@@ -1,0 +1,666 @@
+using E_Commerce.DtoModels.OrderDtos;
+using E_Commerce.Enums;
+using E_Commerce.Interfaces;
+using E_Commerce.Models;
+using E_Commerce.Services.AdminOperationServices;
+using E_Commerce.Services.Cache;
+using E_Commerce.Services.EmailServices;
+using E_Commerce.Services.ProductServices;
+using E_Commerce.Services.UserOpreationServices;
+using E_Commerce.UOW;
+using Hangfire;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Collections.Concurrent;
+
+namespace E_Commerce.Services.Order
+{
+    public class OrderCommandService : IOrderCommandService, IDisposable
+    {
+        private readonly ILogger<OrderCommandService> _logger;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserOpreationServices _userOpreationServices;
+        private readonly IOrderRepository _orderRepository;
+        private readonly ICartServices _cartServices;
+        private readonly IBackgroundJobClient _backgroundJobClient;
+        private readonly IErrorNotificationService _errorNotificationService;
+        private readonly IAdminOpreationServices _adminOperationServices;
+        private readonly IProductCatalogService _productCatalogService;
+        private readonly UserManager<Customer> _userManager;
+        private readonly IOrderCacheHelper _cacheHelper;
+        private readonly IProductVariantCommandService _productVariantCommandService;
+        
+        // Thread-safe dictionary to store locks for each product variant to prevent race conditions
+        private static readonly ConcurrentDictionary<int, SemaphoreSlim> _variantLocks = new();
+
+        public OrderCommandService(
+            IProductCatalogService productCatalogService,
+            IBackgroundJobClient backgroundJobClient,
+            IErrorNotificationService errorNotificationService,
+            UserManager<Customer> userManager,
+            IUserOpreationServices userOpreationServices,
+            ILogger<OrderCommandService> logger,
+            IUnitOfWork unitOfWork,
+            IOrderRepository orderRepository,
+            ICartServices cartServices,
+            IAdminOpreationServices adminOperationServices,
+            IOrderCacheHelper cacheHelper,
+            IProductVariantCommandService productVariantCommandService)
+        {
+            _productCatalogService = productCatalogService;
+            _backgroundJobClient = backgroundJobClient;
+            _errorNotificationService = errorNotificationService;
+            _userManager = userManager;
+            _userOpreationServices = userOpreationServices;
+            _logger = logger;
+            _unitOfWork = unitOfWork;
+            _orderRepository = orderRepository;
+            _cartServices = cartServices;
+            _adminOperationServices = adminOperationServices;
+            _cacheHelper = cacheHelper;
+            _productVariantCommandService = productVariantCommandService;
+        }
+
+        /// <summary>
+        /// Safely acquires a lock for a product variant to prevent race conditions
+        /// </summary>
+        private SemaphoreSlim GetVariantLock(int variantId)
+        {
+            return _variantLocks.GetOrAdd(variantId, _ => new SemaphoreSlim(1, 1));
+        }
+
+        /// <summary>
+        /// Cleanup method to dispose locks and prevent memory leaks
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Protected dispose method for derived classes
+        /// </summary>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                foreach (var lockPair in _variantLocks)
+                {
+                    lockPair.Value?.Dispose();
+                }
+                _variantLocks.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Finalizer to ensure cleanup
+        /// </summary>
+        ~OrderCommandService()
+        {
+            Dispose(false);
+        }
+
+        public async Task<Result<OrderWithPaymentDto>> CreateOrderFromCartAsync(string userId, CreateOrderDto orderDto)
+        {
+            _logger.LogInformation("Creating order from cart for user: {UserId}", userId);
+
+            await using var transaction = await _unitOfWork.BeginTransactionAsync();
+
+            try
+            {
+                #region Validate User and Cart
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                    return Result<OrderWithPaymentDto>.Fail("UnAuthorized", 401);
+
+                if (!await _unitOfWork.Cart.IsExsistByUserId(userId))
+                    return Result<OrderWithPaymentDto>.Fail("Cart is empty", 400);
+
+                if (!await _unitOfWork.CustomerAddress.IsExsistByIdAndUserIdAsync(orderDto.AddressId, userId))
+                    return Result<OrderWithPaymentDto>.Fail("Address doesn't exist", 400);
+
+                var cartResult = await _cartServices.GetCartAsync(userId);
+                if (!cartResult.Success || cartResult.Data == null || cartResult.Data.IsEmpty)
+                    return Result<OrderWithPaymentDto>.Fail("Cart is empty", 400);
+
+                var cart = cartResult.Data;
+
+                if (cart.CheckoutDate == null || cart.CheckoutDate.Value.AddDays(7) < DateTime.UtcNow)
+                    return Result<OrderWithPaymentDto>.Fail("Please checkout before creating order", 400);
+                #endregion
+
+                #region Check Stock Availability (without reducing yet)
+                var variantIds = cart.Items
+                    .Where(i => i.Product.IsActive && i.DeletedAt == null)
+                    .Select(i => i.Product.productVariantForCartDto.Id)
+                    .ToList();
+
+                var variants = await _unitOfWork.Repository<ProductVariant>()
+                    .GetAll()
+                    .Where(v => variantIds.Contains(v.Id))
+                    .ToListAsync();
+
+                // Validate stock availability first without reducing
+                foreach (var item in cart.Items)
+                {
+                    var variant = variants.FirstOrDefault(v => v.Id == item.Product.productVariantForCartDto.Id);
+                    if (variant == null || variant.Quantity < item.Quantity)
+                    {
+                        await transaction.RollbackAsync();
+                        return Result<OrderWithPaymentDto>.Fail(
+                            $"Product {item.Product.Name} is not available in required quantity",
+                            400
+                        );
+                    }
+                }
+                #endregion
+
+                #region Create Order + Items
+                var subtotal = cart.Items.Sum(i => i.Quantity * i.UnitPrice);
+                var total = subtotal;
+
+                var orderNumber = await _orderRepository.GenerateOrderNumberAsync();
+
+                var order = new E_Commerce.Models.Order
+                {
+                    CustomerId = userId,
+                    OrderNumber = orderNumber,
+                    CustomerAddressId = orderDto.AddressId,
+                    Status = OrderStatus.PendingPayment,
+                    Subtotal = subtotal,
+                    Total = total,
+                    Notes = orderDto.Notes,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                var createdOrder = await _orderRepository.CreateAsync(order);
+                if (createdOrder == null)
+                {
+                    await transaction.RollbackAsync();
+                    return Result<OrderWithPaymentDto>.Fail("Failed to create order", 500);
+                }
+                await _unitOfWork.CommitAsync();
+
+                var orderItems = cart.Items.Select(item => new OrderItem
+                {
+                    OrderId = createdOrder.Id,
+                    ProductId = item.ProductId,
+                    ProductVariantId = item.Product.productVariantForCartDto.Id,
+                    Quantity = item.Quantity,
+                    UnitPrice = item.UnitPrice,
+                    TotalPrice = item.Quantity * item.UnitPrice,
+                    OrderedAt = DateTime.UtcNow,
+                    CreatedAt = DateTime.UtcNow
+                }).ToList();
+
+                await _unitOfWork.Repository<OrderItem>().CreateRangeAsync(orderItems.ToArray());
+                #endregion
+
+                #region Reduce Stock After Order Creation Succeeds
+                // Use ProductVariantCommandService methods instead of direct manipulation
+                foreach (var item in cart.Items)
+                {
+                    var variant = variants.FirstOrDefault(v => v.Id == item.Product.productVariantForCartDto.Id);
+                    if (variant != null)
+                    {
+                        // Use the proper service method to remove quantity
+                        var removeResult = await _productVariantCommandService.RemoveQuntityAfterOrder(variant.Id, item.Quantity);
+                        if (!removeResult.Success)
+                        {
+                            await transaction.RollbackAsync();
+                            return Result<OrderWithPaymentDto>.Fail(
+                                $"Failed to reduce stock for product variant {variant.Id}: {removeResult.Message}",
+                                500
+                            );
+                        }
+                    }
+                }
+                #endregion
+
+                #region Clear Cart + Commit
+                await _unitOfWork.Cart.ClearCartAsync(cart.Id);
+
+                await _unitOfWork.CommitAsync();
+                await transaction.CommitAsync();
+                #endregion
+
+                #region Log User Operation (best effort)
+                var logResult = await _userOpreationServices.AddUserOpreationAsync(
+                    $"Created order {orderNumber} from cart",
+                    Opreations.AddOpreation,
+                    userId,
+                    createdOrder.Id
+                );
+
+                if (!logResult.Success)
+                    _logger.LogWarning("User operation logging failed for order {OrderId}", createdOrder.Id);
+                #endregion
+
+                #region Prepare Response
+                var mappedOrderDto = await _unitOfWork.Order
+                    .GetAll()
+                    .Where(o => o.Id == createdOrder.Id)
+                    .Select(OrderMapper.OrderSelector)
+                    .FirstOrDefaultAsync();
+
+                if (mappedOrderDto == null)
+                {
+                    _logger.LogError("Failed to retrieve created order DTO for order {OrderId}", createdOrder.Id);
+                    return Result<OrderWithPaymentDto>.Fail("Failed to retrieve created order", 500);
+                }
+
+                _backgroundJobClient.Enqueue(() => _cacheHelper.ClearOrderCache());
+
+                var response = new OrderWithPaymentDto { Order = mappedOrderDto };
+
+                _backgroundJobClient.Schedule(
+                    () => ExpireUnpaidOrderInBackground(createdOrder.Id),
+                    TimeSpan.FromHours(2)
+                );
+
+                return Result<OrderWithPaymentDto>.Ok(response, "Order created successfully", 201);
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Exception while creating order for user {UserId}", userId);
+                _cacheHelper.NotifyAdminError($"Exception creating order for user {userId}: {ex.Message}", ex.StackTrace);
+                return Result<OrderWithPaymentDto>.Fail("An error occurred while creating the order", 500);
+            }
+        }
+
+        public async Task<Result<bool>> UpdateOrderAfterPaid(int orderId, OrderStatus orderStatus)
+        {
+            await using var transaction = await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                var order = await _orderRepository.GetAll().Include(o => o.Items).Where(o => o.Id == orderId).FirstOrDefaultAsync();
+                if (order == null)
+                    return Result<bool>.Fail("Can't find order", 404);
+
+                // Validate status transition
+                if (!IsValidTransition(order.Status, orderStatus))
+                    return Result<bool>.Fail($"Invalid status transition from {order.Status} to {orderStatus}", 400);
+
+                // Handle stock reduction when moving to Processing status
+                if (orderStatus == OrderStatus.Processing && order.RestockedAt != null)
+                {
+                    // Don't queue background job yet - wait for transaction to succeed
+                    order.RestockedAt = null;
+                }
+
+                order.Status = orderStatus;
+
+                await _unitOfWork.CommitAsync();
+                await transaction.CommitAsync();
+
+                // Now that transaction succeeded, queue background jobs
+                if (orderStatus == OrderStatus.Processing && order.RestockedAt == null)
+                {
+                    _backgroundJobClient.Enqueue(() => ReduceQuantityOfProduct(order.Items.ToList()));
+                }
+                
+                _backgroundJobClient.Enqueue(() => _cacheHelper.ClearOrderCache());
+
+                _logger.LogInformation("Updated order {OrderId} to {Status} after payment", orderId, order.Status);
+                return Result<bool>.Ok(true, "Order updated after payment", 200);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error updating order {OrderId} after payment", orderId);
+                _cacheHelper.NotifyAdminError($"Error updating order {orderId} after payment: {ex.Message}", ex.StackTrace);
+                return Result<bool>.Fail("An error occurred while updating the order after payment", 500);
+            }
+        }
+
+        private async Task ReduceQuantityOfProduct(List<OrderItem> orderItems)
+        {
+            // Use ProductVariantCommandService methods instead of direct manipulation
+            foreach (var orderItem in orderItems)
+            {
+                var removeResult = await _productVariantCommandService.RemoveQuntityAfterOrder(orderItem.ProductVariantId, orderItem.Quantity);
+                if (!removeResult.Success)
+                {
+                    _logger.LogError("Failed to reduce quantity for variant {VariantId}: {Message}", 
+                        orderItem.ProductVariantId, removeResult.Message);
+                }
+            }
+            
+            _backgroundJobClient.Enqueue(() => _cacheHelper.ClearOrderCache());
+        }
+
+        private bool IsValidTransition(OrderStatus current, OrderStatus target)
+        {
+            return current switch
+            {
+                OrderStatus.PendingPayment => target is OrderStatus.Confirmed or OrderStatus.PaymentExpired or OrderStatus.CancelledByUser or OrderStatus.CancelledByAdmin,
+                OrderStatus.Confirmed => target is OrderStatus.Processing or OrderStatus.CancelledByAdmin,
+                OrderStatus.Processing => target is OrderStatus.Shipped or OrderStatus.CancelledByAdmin,
+                OrderStatus.Shipped => target is OrderStatus.Delivered or OrderStatus.Returned,
+                OrderStatus.Delivered => target is OrderStatus.Complete or OrderStatus.Returned or OrderStatus.Refunded,
+                OrderStatus.PaymentExpired => target is OrderStatus.PendingPayment or OrderStatus.CancelledByAdmin or OrderStatus.CancelledByUser,
+                _ => false
+            };
+        }
+
+        private async Task<Result<bool>> UpdateStatusAsync(
+            int orderId,
+            string adminId,
+            OrderStatus target,
+            string operationTitle,
+            string successMessage,
+            string? notes = null)
+        {
+            await using var transaction = await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                var order = await _orderRepository.GetByIdAsync(orderId);
+                if (order == null)
+                    return Result<bool>.Fail("Order not found", 404);
+
+                if (!IsValidTransition(order.Status, target))
+                    return Result<bool>.Fail("Invalid status transition", 400);
+                order.Status = target;
+                if (target == OrderStatus.Shipped)
+                    order.ShippedAt = DateTime.UtcNow;
+
+                if (target == OrderStatus.Delivered)
+                    order.DeliveredAt = DateTime.UtcNow;
+
+                var log = await _adminOperationServices.AddAdminOpreationAsync(
+                    $"{operationTitle} order {orderId}",
+                    Opreations.UpdateOpreation,
+                    adminId,
+                    orderId);
+
+                if (!log.Success)
+                    _logger.LogWarning("Admin log failed while {Op} order {OrderId}: {Msg}", operationTitle, orderId, log.Message);
+
+                await _unitOfWork.CommitAsync();
+                await transaction.CommitAsync();
+                _backgroundJobClient.Enqueue(() => _cacheHelper.ClearOrderCache());
+
+                return Result<bool>.Ok(true, successMessage, 200);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error updating order {OrderId} to {Target}", orderId, target);
+                return Result<bool>.Fail("An error occurred while updating order status", 500);
+            }
+        }
+
+        public Task<Result<bool>> ConfirmOrderAsync(int orderId, string adminId, string? notes = null)
+            => UpdateStatusAsync(orderId, adminId, OrderStatus.Confirmed, "Confirmed", "Order confirmed", notes);
+
+        public Task<Result<bool>> ProcessOrderAsync(int orderId, string adminId, string? notes = null)
+            => UpdateStatusAsync(orderId, adminId, OrderStatus.Processing, "Processing", "Order set to processing", notes);
+
+        public Task<Result<bool>> RefundOrderAsync(int orderId, string adminId, string? notes = null)
+            => UpdateStatusAsync(orderId, adminId, OrderStatus.Refunded, "Refunded", "Order refunded", notes);
+
+        public Task<Result<bool>> ReturnOrderAsync(int orderId, string adminId, string? notes = null)
+            => UpdateStatusAsync(orderId, adminId, OrderStatus.Returned, "Returned", "Order marked as returned", notes);
+
+        public Task<Result<bool>> ExpirePaymentAsync(int orderId, string adminId, string? notes = null)
+            => UpdateStatusAsync(orderId, adminId, OrderStatus.PaymentExpired, "Payment expired", "Order payment expired", notes);
+
+        public Task<Result<bool>> CompleteOrderAsync(int orderId, string adminId, string? notes = null)
+            => UpdateStatusAsync(orderId, adminId, OrderStatus.Complete, "Completed", "Order completed", notes);
+
+        public Task<Result<bool>> ShipOrderAsync(int orderId, string adminId, string? notes = null)
+            => UpdateStatusAsync(orderId, adminId, OrderStatus.Shipped, "Shipped", "Order shipped successfully", notes);
+
+        public Task<Result<bool>> DeliverOrderAsync(int orderId, string adminId, string? notes = null)
+            => UpdateStatusAsync(orderId, adminId, OrderStatus.Delivered, "Delivered", "Order delivered successfully", notes);
+
+        public Task<Result<bool>> ShipOrderAsync(int orderId, string userId)
+            => UpdateStatusAsync(orderId, userId, OrderStatus.Shipped, "Shipped", "Order shipped successfully", null);
+
+        public Task<Result<bool>> DeliverOrderAsync(int orderId, string userId)
+            => UpdateStatusAsync(orderId, userId, OrderStatus.Delivered, "Delivered", "Order delivered successfully", null);
+
+        public async Task<Result<bool>> CancelOrderByCustomerAsync(int orderId, string userId)
+        {
+            await using var transaction = await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                var order = await _orderRepository.GetByIdAsync(orderId);
+                if (order == null || order.CustomerId != userId)
+                {
+                    await transaction.RollbackAsync();
+                    return Result<bool>.Fail("Order not found or access denied", 404);
+                }
+
+                if (order.Status == OrderStatus.CancelledByAdmin || order.Status == OrderStatus.CancelledByUser)
+                {
+                    await transaction.RollbackAsync();
+                    return Result<bool>.Fail("Order is already cancelled", 400);
+                }
+
+                if (order.Status is not (OrderStatus.PendingPayment or OrderStatus.PaymentExpired))
+                {
+                    await transaction.RollbackAsync();
+                    return Result<bool>.Fail("Order cannot be canceled in its current status", 400);
+                }
+
+                order.CancelledAt = DateTime.UtcNow;
+                order.Status = OrderStatus.CancelledByUser;
+
+                var operationAdded = await _userOpreationServices.AddUserOpreationAsync(
+                    $"Cancelled order {order.Id}",
+                    Opreations.UpdateOpreation,
+                    userId,
+                    orderId
+                );
+
+                if (!operationAdded.Success)
+                {
+                    await transaction.RollbackAsync();
+                    return Result<bool>.Fail("Failed to record user operation", 500);
+                }
+
+                await _unitOfWork.CommitAsync();
+                await transaction.CommitAsync();
+
+                _backgroundJobClient.Enqueue(() => _cacheHelper.ClearOrderCache());
+                _backgroundJobClient.Enqueue(() => RestockOrderItemsInBackground(orderId));
+
+                return Result<bool>.Ok(true, "Order cancelled successfully", 200);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error cancelling order {OrderId} by user {UserId}", orderId, userId);
+                _cacheHelper.NotifyAdminError($"Error cancelling order {orderId} by user {userId}: {ex.Message}", ex.StackTrace);
+                return Result<bool>.Fail("An error occurred while cancelling the order", 500);
+            }
+        }
+
+        public async Task<Result<bool>> CancelOrderByAdminAsync(int orderId, string adminId)
+        {
+            await using var transaction = await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                var order = await _orderRepository.GetByIdAsync(orderId);
+                if (order == null)
+                {
+                    return Result<bool>.Fail("Order not found", 404);
+                }
+
+                if (order.Status == OrderStatus.Delivered
+                    || order.Status == OrderStatus.Refunded
+                    || order.Status == OrderStatus.Returned)
+                {
+                    return Result<bool>.Fail("Can't cancel delivered, refunded, or returned orders", 400);
+                }
+
+                if (order.Status == OrderStatus.CancelledByAdmin
+                    || order.Status == OrderStatus.CancelledByUser)
+                {
+                    return Result<bool>.Fail("Order is already cancelled", 400);
+                }
+
+                // ✅ Update order
+                order.CancelledAt = DateTime.UtcNow;
+                order.Status = OrderStatus.CancelledByAdmin;
+
+                await _unitOfWork.CommitAsync();
+                await transaction.CommitAsync();
+
+                // ✅ Log admin operation (best-effort)
+                var adminOperationResult = await _adminOperationServices.AddAdminOpreationAsync(
+                    $"Cancelled order {orderId} by admin {adminId}",
+                    Opreations.UpdateOpreation,
+                    adminId,
+                    orderId);
+
+                if (!adminOperationResult.Success)
+                {
+                    _logger.LogWarning("Failed to log admin operation for order {OrderId} by admin {AdminId}", orderId, adminId);
+                }
+
+                // ✅ Schedule background jobs
+                _backgroundJobClient.Enqueue(() => _cacheHelper.ClearOrderCache());
+                _backgroundJobClient.Enqueue(() => RestockOrderItemsInBackground(orderId));
+
+                return Result<bool>.Ok(true, "Order cancelled by admin", 200);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error while cancelling order by admin {AdminId}", adminId);
+                _cacheHelper.NotifyAdminError(ex.Message, ex.StackTrace);
+                return Result<bool>.Fail("An error occurred while cancelling order", 500);
+            }
+        }
+
+        public async Task ExpireUnpaidOrderInBackground(int orderId)
+        {
+            await using var transaction = await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                var order = await _orderRepository.GetByIdAsync(orderId);
+                if (order == null)
+                {
+                    _logger.LogWarning("Expire skipped: order {OrderId} not found", orderId);
+                    return;
+                }
+
+                if (order.Status != OrderStatus.PendingPayment)
+                {
+                    _logger.LogInformation("Expire skipped: order {OrderId} status is {Status}", orderId, order.Status);
+                    return;
+                }
+
+                // Validate status transition before changing
+                if (!IsValidTransition(order.Status, OrderStatus.PaymentExpired))
+                {
+                    _logger.LogWarning("Cannot change order {OrderId} status to PaymentExpired from {CurrentStatus}", orderId, order.Status);
+                    return;
+                }
+
+                order.Status = OrderStatus.PaymentExpired;
+                await _unitOfWork.CommitAsync();
+                await transaction.CommitAsync();
+                _backgroundJobClient.Enqueue(() => RestockOrderItemsInBackground(orderId));
+                _backgroundJobClient.Enqueue(() => _cacheHelper.ClearOrderCache());
+                _logger.LogInformation("Order {OrderId} auto-expired and restock scheduled", orderId);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error while auto-expiring order {OrderId}", orderId);
+            }
+        }
+
+        public async Task RestockOrderItemsInBackground(int orderId)
+        {
+            
+
+            try
+            {
+                var order = await _unitOfWork.Repository<E_Commerce.Models.Order>().GetByIdAsync(orderId);
+                if (order == null)
+                {
+                    _logger.LogWarning("Restock skipped: order {OrderId} not found", orderId);
+                    return;
+                }
+
+                if (order.RestockedAt.HasValue)
+                {
+                    _logger.LogInformation("Restock skipped: order {OrderId} already restocked at {RestockedAt}", orderId, order.RestockedAt);
+                    return;
+                }
+
+                // Only change status if it's still PendingPayment and has expired
+                if (order.Status == OrderStatus.PendingPayment &&
+                    order.CreatedAt.HasValue &&
+                    order.CreatedAt.Value.AddHours(2) < DateTime.UtcNow)
+                {
+                    // Validate the transition before changing status
+                    if (IsValidTransition(order.Status, OrderStatus.PaymentExpired))
+                    {
+                        order.Status = OrderStatus.PaymentExpired;
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Cannot change order {OrderId} status to PaymentExpired from {CurrentStatus}", orderId, order.Status);
+                        return;
+                    }
+                }
+
+                // Allow restock only if status is cancelled/expired
+                if (order.Status != OrderStatus.CancelledByAdmin &&
+                    order.Status != OrderStatus.CancelledByUser &&
+                    order.Status != OrderStatus.PaymentExpired)
+                {
+                    _logger.LogInformation("Restock skipped: order {OrderId} status is {Status}", orderId, order.Status);
+                    return;
+                }
+
+                var orderItems = await _unitOfWork.Repository<OrderItem>()
+                    .GetAll()
+                    .Where(i => i.OrderId == orderId)
+                    .Select(i => new { i.ProductVariantId, i.Quantity })
+                    .ToListAsync();
+
+                if (!orderItems.Any())
+                {
+                    _logger.LogInformation("Restock skipped: order {OrderId} has no items", orderId);
+                    return;
+                }
+
+                // Use ProductVariantCommandService methods instead of direct manipulation
+                foreach (var item in orderItems)
+                {
+                    var addResult = await _productVariantCommandService.AddQuntityAfterRestoreOrder(item.ProductVariantId, item.Quantity);
+                    if (!addResult.Success)
+                    {
+                        _logger.LogError("Failed to restock variant {VariantId}: {Message}", 
+                            item.ProductVariantId, addResult.Message);
+                    }
+                }
+
+                // Mark restocked
+                order.RestockedAt = DateTime.UtcNow;
+
+                await _unitOfWork.CommitAsync();
+                _backgroundJobClient.Enqueue(() => _cacheHelper.ClearOrderCache());
+
+                _logger.LogInformation("Restocked inventory for order {OrderId}", orderId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while restocking inventory for order {OrderId}", orderId);
+
+                _backgroundJobClient.Enqueue(() =>
+                    _errorNotificationService.SendErrorNotificationAsync(ex.Message, null));
+            }
+        }
+    }
+}

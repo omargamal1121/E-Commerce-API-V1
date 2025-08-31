@@ -39,6 +39,7 @@ using E_Commerce.Services.SubCategoryServices;
 using E_Commerce.Services.UserOpreationServices;
 using E_Commerce.Services.WareHouseServices;
 using E_Commerce.Services.WishlistServices;
+
 using E_Commerce.UOW;
 using Hangfire;
 using Hangfire.MySql;
@@ -57,7 +58,6 @@ using Microsoft.OpenApi.Models;
 using MySqlConnector;
 using Newtonsoft.Json;
 using Scalar.AspNetCore;
-using Serilog;
 using Serilog;
 using Serilog.AspNetCore;
 using StackExchange.Redis;
@@ -90,10 +90,23 @@ namespace E_Commerce
 			builder.Host.UseSerilog();
 			builder.Services.AddHttpContextAccessor();
 
+			// Add Service Registrations
+			builder.Services.AddCategoryServices();
+			builder.Services.AddInfrastructureServices();
+			builder.Services.AddCartServices();
+			builder.Services.AddDiscountServices();
+			builder.Services.AddPaymentServices();
+			builder.Services.AddProductServices();
+			builder.Services.AddAccountServices();
+			builder.Services.AddOrderServices();
+
+			// Add Link Builders
 			builder.Services.AddTransient<ICategoryLinkBuilder, CategoryLinkBuilder>();
             builder.Services.AddTransient<IProductLinkBuilder, ProductLinkBuilder>();
 			builder.Services.AddTransient<IAccountLinkBuilder, AccountLinkBuilder>();
 			builder.Services.AddTransient<IWareHouseLinkBuilder, WareHouseLinkBuilder>();
+			builder.Services.AddTransient<ISubCategoryLinkBuilder, SubCategoryLinkBuilder>();
+
             builder
                 .Services.AddIdentity<Customer, IdentityRole>(options =>
                 {
@@ -116,61 +129,9 @@ namespace E_Commerce
                 })
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
-            builder.Services.AddScoped<ITokenService, TokenService>();
-            builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             builder.Services.AddScoped<IImagesServices, ImagesServices>();
-            builder.Services.AddTransient<IErrorNotificationService, ErrorNotificationService>();
-            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IImageRepository, ImageRepository>();
-            builder.Services.AddScoped<ICategoryServices, CategoryServices>();
-            builder.Services.AddScoped<IWareHouseRepository, WareHouseRepository>();
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            builder.Services.AddScoped<IProductVariantRepository, ProductVariantRepository>();
-            builder.Services.AddScoped<IProductInventoryRepository, ProductInventoryRepository>();
-            builder.Services.AddScoped<IAdminOpreationServices, AdminOpreationServices>();
-            builder.Services.AddScoped<IUserOpreationServices, UserOpreationServices>();
-            builder.Services.AddScoped<IWareHouseServices, WareHouseServices>();
-            builder.Services.AddScoped<ICartRepository, CartRepository>();
-            builder.Services.AddScoped<ICartServices, CartServices>();
-			builder.Services.AddScoped<IPaymentMethodsServices, PaymentMethodsServices>();
-			builder.Services.AddScoped<IPaymentProcessor, PayMobServices>();
-
-			builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-            builder.Services.AddScoped<IOrderServices, OrderServices>();
-            builder.Services.AddScoped<ICollectionRepository, CollectionRepository>();
-            builder.Services.AddScoped<ICollectionServices, CollectionServices>();
-            builder.Services.AddScoped<ICustomerAddressRepository, CustomerAddressRepository>();
-            builder.Services.AddScoped<ICustomerAddressServices, CustomerAddressServices>();
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddScoped<IPaymentProvidersServices, PaymentProvidersServices>();
-            builder.Services.AddScoped<IPaymentServices, PaymentServices>();
-            builder.Services.AddScoped<IWishlistService, WishlistService>();
-
-            builder.Services.AddScoped(typeof(IRepository<>), typeof(MainRepository<>));
-        
-            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-            builder.Services.AddScoped<IRegistrationService, RegistrationService>();
-            builder.Services.AddScoped<IPasswordService, PasswordService>();
-            builder.Services.AddScoped<IProfileService, ProfileService>();
-            builder.Services.AddScoped<IAccountManagementService, AccountManagementService>();
-            builder.Services.AddScoped<IProductCatalogService, ProductCatalogService>();
-            builder.Services.AddScoped<IProductSearchService, ProductSearchService>();
-            builder.Services.AddScoped<IProductImageService, ProductImageService>();
-            builder.Services.AddScoped<IProductVariantService, ProductVariantService>();
-            builder.Services.AddScoped<IProductDiscountService, ProductDiscountService>();
-            builder.Services.AddScoped<IProductInventoryService, Services.ProductInventoryServices.ProductInventoryService>();
-            builder.Services.AddScoped<IProductsServices, ProductsServices>();
-            builder.Services.AddScoped<IDiscountService, DiscountService>();
-            builder.Services.AddScoped<IPaymentWebhookService, PaymentWebhookService>();
             builder.Services.AddAutoMapper(typeof(MappingProfile));
-			builder.Services.AddTransient<IEmailSender, EmailSender>();
-			builder.Services.AddScoped<IAccountEmailService, AccountEmailService>();
-			builder.Services.AddScoped<ErrorNotificationService>();
-			builder.Services.AddScoped<CategoryCleanupService>();
-			builder.Services.AddScoped<ISubCategoryServices, SubCategoryServices>();
-			builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
-			builder.Services.AddScoped<IAdminOpreationServices, AdminOpreationServices>();
-			builder.Services.AddTransient<ISubCategoryLinkBuilder, SubCategoryLinkBuilder>();
             builder.Services.AddResponseCaching();
 			builder.Services.Configure<CloudinarySettings>(
 			builder.Configuration.GetSection("CloudinarySettings"));

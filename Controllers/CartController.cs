@@ -187,12 +187,12 @@ namespace E_Commerce.Controllers
             }
         }
 
-        /// <summary>
-        /// Clear all items from the cart
-        /// </summary>
-        /// <returns>Success/failure</returns>
-        [HttpDelete("clear")]
-        public async Task<ActionResult<ApiResponse<bool>>> ClearCart()
+		/// <summary>
+		/// Clear all items from the cart
+		/// </summary>
+		/// <returns>Success/failure</returns>
+		[HttpDelete("items/clear")]
+		public async Task<ActionResult<ApiResponse<bool>>> ClearCart()
         {
             try
             {
@@ -212,60 +212,6 @@ namespace E_Commerce.Controllers
                 return StatusCode(500, ApiResponse<bool>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while clearing cart"), 500));
             }
         }
-
-        /// <summary>
-        /// Get the total number of items in the cart
-        /// </summary>
-        /// <returns>Item count</returns>
-        [HttpGet("items/count")]
-        public async Task<ActionResult<ApiResponse<int?>>> GetCartItemCount()
-        {
-            try
-            {
-                var userId = GetCurrentUserId();
-                if (string.IsNullOrEmpty(userId))
-                {
-                    return Unauthorized(ApiResponse<int>.CreateErrorResponse("Unauthorized", new ErrorResponse("Unauthorized", "User not authenticated"), 401));
-                }
-
-                _logger.LogInformation("Executing GetCartItemCount");
-                var result = await _cartServices.GetCartItemCountAsync(userId);
-                return HandleResult(result, nameof(GetCartItemCount));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in GetCartItemCount: {ex.Message}");
-                return StatusCode(500, ApiResponse<int>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while getting cart item count"), 500));
-            }
-        }
-
-       
-      
-        /// <summary>
-        /// Check if the cart is empty
-        /// </summary>
-        /// <returns>True if cart is empty, false otherwise</returns>
-        [HttpGet("empty")]
-        public async Task<ActionResult<ApiResponse<bool>>> IsCartEmpty()
-        {
-            try
-            {
-                var userId = GetCurrentUserId();
-                if (string.IsNullOrEmpty(userId))
-                {
-                    return Unauthorized(ApiResponse<bool>.CreateErrorResponse("Unauthorized", new ErrorResponse("Unauthorized", "User not authenticated"), 401));
-                }
-
-                _logger.LogInformation("Executing IsCartEmpty");
-                var result = await _cartServices.IsCartEmptyAsync(userId);
-                return HandleResult(result, nameof(IsCartEmpty));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in IsCartEmpty: {ex.Message}");
-                return StatusCode(500, ApiResponse<bool>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while checking if cart is empty"), 500));
-            }
-        }
         [HttpPost("checkout")]
        
         public async Task<ActionResult<ApiResponse<bool>>> CheckOut()
@@ -280,7 +226,7 @@ namespace E_Commerce.Controllers
 
                 _logger.LogInformation("Executing CheckOut");
                 var result = await _cartServices.UpdateCheckoutData(userId);
-                return HandleResult(result, nameof(IsCartEmpty));
+                return HandleResult(result, nameof(CheckOut));
             }
             catch (Exception ex)
             {

@@ -668,46 +668,6 @@
   },
   {
     "ContainingType": "E_Commerce.Controllers.CartController",
-    "Method": "ClearCart",
-    "RelativePath": "api/Cart/clear",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "E_Commerce.Controllers.CartController",
-    "Method": "IsCartEmpty",
-    "RelativePath": "api/Cart/empty",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "E_Commerce.Controllers.CartController",
     "Method": "AddItemToCart",
     "RelativePath": "api/Cart/items",
     "HttpMethod": "POST",
@@ -796,15 +756,15 @@
   },
   {
     "ContainingType": "E_Commerce.Controllers.CartController",
-    "Method": "GetCartItemCount",
-    "RelativePath": "api/Cart/items/count",
-    "HttpMethod": "GET",
+    "Method": "ClearCart",
+    "RelativePath": "api/Cart/items/clear",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -1152,12 +1112,17 @@
   },
   {
     "ContainingType": "E_Commerce.Controllers.CollectionController",
-    "Method": "GetCollections",
+    "Method": "SearchCollections",
     "RelativePath": "api/Collection",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
+      {
+        "Name": "searchTerm",
+        "Type": "System.String",
+        "IsRequired": false
+      },
       {
         "Name": "page",
         "Type": "System.Int32",
@@ -1302,9 +1267,9 @@
   },
   {
     "ContainingType": "E_Commerce.Controllers.CollectionController",
-    "Method": "ActivateCollection",
-    "RelativePath": "api/Collection/{id}/activate",
-    "HttpMethod": "PATCH",
+    "Method": "GetCollectionImages",
+    "RelativePath": "api/Collection/{id}/images",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -1316,64 +1281,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "E_Commerce.Controllers.CollectionController",
-    "Method": "DeactivateCollection",
-    "RelativePath": "api/Collection/{id}/deactivate",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "E_Commerce.Controllers.CollectionController",
-    "Method": "UpdateCollectionDisplayOrder",
-    "RelativePath": "api/Collection/{id}/display-order",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "displayOrder",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commerce.DtoModels.ImagesDtos.ImageDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -1447,9 +1355,9 @@
   },
   {
     "ContainingType": "E_Commerce.Controllers.CollectionController",
-    "Method": "AddMainImageToCollection",
+    "Method": "SetMainImage",
     "RelativePath": "api/Collection/{id}/main-image",
-    "HttpMethod": "POST",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -1467,6 +1375,32 @@
     "ReturnTypes": [
       {
         "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[E_Commerce.DtoModels.ImagesDtos.ImageDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "E_Commerce.Controllers.CollectionController",
+    "Method": "GetCollectionProducts",
+    "RelativePath": "api/Collection/{id}/products",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commerce.DtoModels.ProductDtos.ProductDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -1529,52 +1463,6 @@
     "ReturnTypes": [
       {
         "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "E_Commerce.Controllers.CollectionController",
-    "Method": "SearchCollections",
-    "RelativePath": "api/Collection/search",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "searchTerm",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "page",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "pageSize",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "isActive",
-        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "isDeleted",
-        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commerce.DtoModels.CollectionDtos.CollectionSummaryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -2156,26 +2044,6 @@
   },
   {
     "ContainingType": "E_Commerce.Controllers.DiscountController",
-    "Method": "GetAllAsync",
-    "RelativePath": "api/Discount",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commerce.DtoModels.DiscoutDtos.DiscountDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "E_Commerce.Controllers.DiscountController",
     "Method": "CreateAsync",
     "RelativePath": "api/Discount",
     "HttpMethod": "POST",
@@ -2191,6 +2059,52 @@
     "ReturnTypes": [
       {
         "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[E_Commerce.DtoModels.DiscoutDtos.DiscountDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "E_Commerce.Controllers.DiscountController",
+    "Method": "FilterAsync",
+    "RelativePath": "api/Discount",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "search",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "isActive",
+        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "includeDeleted",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commerce.DtoModels.DiscoutDtos.DiscountDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -2321,37 +2235,6 @@
   },
   {
     "ContainingType": "E_Commerce.Controllers.DiscountController",
-    "Method": "CalculateAsync",
-    "RelativePath": "api/Discount/{id}/calculate",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "originalPrice",
-        "Type": "System.Decimal",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Decimal, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "E_Commerce.Controllers.DiscountController",
     "Method": "DeactivateAsync",
     "RelativePath": "api/Discount/{id}/deactivate",
     "HttpMethod": "PATCH",
@@ -2404,52 +2287,6 @@
   },
   {
     "ContainingType": "E_Commerce.Controllers.DiscountController",
-    "Method": "ValidateAsync",
-    "RelativePath": "api/Discount/{id}/validate",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "E_Commerce.Controllers.DiscountController",
-    "Method": "GetActiveAsync",
-    "RelativePath": "api/Discount/active",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commerce.DtoModels.DiscoutDtos.DiscountDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "E_Commerce.Controllers.DiscountController",
     "Method": "GetByCategoryAsync",
     "RelativePath": "api/Discount/category/{categoryId}",
     "HttpMethod": "GET",
@@ -2482,52 +2319,6 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commerce.DtoModels.DiscoutDtos.DiscountDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "E_Commerce.Controllers.DiscountController",
-    "Method": "FilterAsync",
-    "RelativePath": "api/Discount/filter",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "search",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "isActive",
-        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "includeDeleted",
-        "Type": "System.Boolean",
-        "IsRequired": false
-      },
-      {
-        "Name": "page",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "pageSize",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
     "ReturnTypes": [
       {
         "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commerce.DtoModels.DiscoutDtos.DiscountDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
@@ -3411,6 +3202,11 @@
     "Order": 0,
     "Parameters": [
       {
+        "Name": "search",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
         "Name": "isActive",
         "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
@@ -3591,7 +3387,7 @@
   {
     "ContainingType": "E_Commerce.Controllers.ProductController",
     "Method": "GetProductDiscount",
-    "RelativePath": "api/Products/{id}/discount",
+    "RelativePath": "api/Products/{id}/Discount",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -3617,7 +3413,7 @@
   {
     "ContainingType": "E_Commerce.Controllers.ProductController",
     "Method": "AddDiscountToProduct",
-    "RelativePath": "api/Products/{id}/discount",
+    "RelativePath": "api/Products/{id}/Discount",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -3628,7 +3424,7 @@
         "IsRequired": true
       },
       {
-        "Name": "discountId",
+        "Name": "DiscountId",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -3648,7 +3444,7 @@
   {
     "ContainingType": "E_Commerce.Controllers.ProductController",
     "Method": "UpdateProductDiscount",
-    "RelativePath": "api/Products/{id}/discount",
+    "RelativePath": "api/Products/{id}/Discount",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -3659,7 +3455,7 @@
         "IsRequired": true
       },
       {
-        "Name": "discountId",
+        "Name": "DiscountId",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -3679,7 +3475,7 @@
   {
     "ContainingType": "E_Commerce.Controllers.ProductController",
     "Method": "RemoveDiscountFromProduct",
-    "RelativePath": "api/Products/{id}/discount",
+    "RelativePath": "api/Products/{id}/Discount",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -3849,42 +3645,6 @@
   },
   {
     "ContainingType": "E_Commerce.Controllers.ProductVariantController",
-    "Method": "GetProductVariants",
-    "RelativePath": "api/Products/{productId}/Variants",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "productId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "isActive",
-        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "deletedOnly",
-        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commerce.DtoModels.ProductDtos.ProductVariantDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "E_Commerce.Controllers.ProductVariantController",
     "Method": "CreateVariant",
     "RelativePath": "api/Products/{productId}/Variants",
     "HttpMethod": "POST",
@@ -3905,6 +3665,62 @@
     "ReturnTypes": [
       {
         "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[E_Commerce.DtoModels.ProductDtos.ProductVariantDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "E_Commerce.Controllers.ProductVariantController",
+    "Method": "SearchVariants",
+    "RelativePath": "api/Products/{productId}/Variants",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "productId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "color",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "length",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "waist",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "size",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "isActive",
+        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "deletedOnly",
+        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commerce.DtoModels.ProductDtos.ProductVariantDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -4178,62 +3994,6 @@
     ]
   },
   {
-    "ContainingType": "E_Commerce.Controllers.ProductVariantController",
-    "Method": "SearchVariants",
-    "RelativePath": "api/Products/{productId}/Variants/search",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "productId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "color",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "length",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "waist",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "size",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "isActive",
-        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "deletedOnly",
-        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commerce.DtoModels.ProductDtos.ProductVariantDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
     "ContainingType": "E_Commerce.Controllers.ProductController",
     "Method": "AdvancedSearch",
     "RelativePath": "api/Products/advanced-search",
@@ -4270,47 +4030,6 @@
     "ReturnTypes": [
       {
         "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commerce.DtoModels.ProductDtos.ProductDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "E_Commerce.Controllers.ProductController",
-    "Method": "GetBestSellingProducts",
-    "RelativePath": "api/Products/best-selling",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "page",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "pageSize",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "isDeleted",
-        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "isActive",
-        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commerce.Services.ProductServices.BestSellingProductDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -4364,7 +4083,7 @@
   {
     "ContainingType": "E_Commerce.Controllers.ProductController",
     "Method": "ApplyDiscountToProducts",
-    "RelativePath": "api/Products/bulk/discount",
+    "RelativePath": "api/Products/bulk/Discount",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -4390,7 +4109,7 @@
   {
     "ContainingType": "E_Commerce.Controllers.ProductController",
     "Method": "RemoveDiscountFromProducts",
-    "RelativePath": "api/Products/bulk/discount",
+    "RelativePath": "api/Products/bulk/Discount",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,

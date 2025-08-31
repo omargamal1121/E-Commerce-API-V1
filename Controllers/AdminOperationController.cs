@@ -1,5 +1,6 @@
 ﻿using E_Commerce.DtoModels;
 using E_Commerce.Models;
+using E_Commerce.Services.AdminOperationServices;
 using E_Commerce.UOW;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,36 +10,32 @@ namespace E_Commerce.Controllers
 {
 		[Route("api/[Controller]")]
 		[ApiController]
-	//[Authorize(Roles ="Admin")]
+		[Authorize(Roles ="Admin")]
 	
 	public class AdminOperationController : ControllerBase
 	{
-		private readonly IUnitOfWork _unitOfWork;
+	
 		private ILogger<AdminOperationController> _Logger;
-		public AdminOperationController(ILogger<AdminOperationController> Logger, IUnitOfWork unitOfWork)
+		private readonly IAdminOpreationServices _adminOpreationServices;
+		public AdminOperationController(IAdminOpreationServices adminOpreationServices , ILogger<AdminOperationController> Logger)
 		{
 			_Logger = Logger;
-			_unitOfWork = unitOfWork;
-			
+			_adminOpreationServices = adminOpreationServices;
+
 		}
 
 		[HttpGet]
 		public async Task<ActionResult<ResponseDto>> GetAllOperation()
 		{
-			_Logger.LogInformation($"Execute:{nameof(GetAllOperation)}");
-			var opreations =  _unitOfWork.Repository<AdminOperationsLog>().GetAll();
-			if (opreations == null || !opreations.Any())
-				return NotFound(new ResponseDto { Message = "No operations found" });
-
-			var list = opreations.Select(x => new
+			_Logger.LogInformation($"Execute {nameof(GetAllOperation)}");
+			var result = await _adminOpreationServices.GetAllOpreationsAsync();
+			if (!result.Success)
 			{
-				x.Id,
-				x.AdminId,
-				x.ItemId,
-				x.Description,
-				x.CreatedAt
-			});
-			return Ok(new ResponseDto { Data = list });	
+				_Logger.LogError(result.Message);
+				return BadRequest(new ResponseDto(result.Message));
+			}
+			return Ok(new ResponseDto("Admin operations retrieved successfully", result.Data));
+
 		}
 	}
 }

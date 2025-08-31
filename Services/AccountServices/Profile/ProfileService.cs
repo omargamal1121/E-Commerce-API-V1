@@ -139,7 +139,7 @@ namespace E_Commerce.Services.AccountServices.Profile
                     _logger.LogError($"User not found with ID: {id}", id);
                     return Result<UploadPhotoResponseDto>.Fail("Can't Found User with this id", 401);
                 }
-                BackgroundJob.Enqueue<ProfileService>(s => s.ReplaceCustomerImageAsync(customer, pathResult.Data));
+                await ReplaceCustomerImageAsync(customer, pathResult.Data);
                 var updateResult = await _userManager.UpdateAsync(customer);
                 if (!updateResult.Succeeded)
                 {
@@ -147,8 +147,8 @@ namespace E_Commerce.Services.AccountServices.Profile
                     await transaction.RollbackAsync();
                     return Result<UploadPhotoResponseDto>.Fail("Failed to update profile.", 500);
                 }
-                BackgroundJob.Enqueue<ProfileService>(s => s.AddOperationAsync(id, "Update Profile photo", Opreations.UpdateOpreation));
-                await transaction.CommitAsync();
+            
+                 await transaction.CommitAsync();
                 _logger.LogInformation("Successfully uploaded photo for user ID: {UserId}", id);
                 return Result<UploadPhotoResponseDto>.Ok(new UploadPhotoResponseDto { ImageUrl = pathResult.Data.Url }, "Photo uploaded successfully.", 200);
             }
@@ -162,7 +162,6 @@ namespace E_Commerce.Services.AccountServices.Profile
             }
         }
 
-        // Background method for replacing customer image
         public async Task ReplaceCustomerImageAsync(Customer customer, Image newImage)
         {
             try

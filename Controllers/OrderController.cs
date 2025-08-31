@@ -114,7 +114,7 @@ namespace E_Commerce.Controllers
 				_logger.LogInformation("Executing CreateOrder");
 				var userId = GetUserId();
 				var result = await _orderServices.CreateOrderFromCartAsync(userId, orderDto);
-				return HandleResult(result, nameof(GetOrder), result.Success ? result.Data?.Order.OrderNumber : null);
+				return HandleResult(result, nameof(CreateOrder), result.Success ? result.Data?.Order.OrderNumber : null);
 			}
 			catch (Exception ex)
 			{

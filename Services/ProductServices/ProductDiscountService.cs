@@ -6,11 +6,12 @@ using E_Commerce.Enums;
 using E_Commerce.ErrorHnadling;
 using E_Commerce.Interfaces;
 using E_Commerce.Models;
-using E_Commerce.Services.AdminOpreationServices;
+using E_Commerce.Services.AdminOperationServices;
 using E_Commerce.Services.Cache;
 using E_Commerce.Services.CartServices;
 using E_Commerce.Services.EmailServices;
 using E_Commerce.Services.Order;
+using E_Commerce.Services.SubCategoryServices;
 using E_Commerce.UOW;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
@@ -18,55 +19,44 @@ using System.Linq.Expressions;
 
 namespace E_Commerce.Services.ProductServices
 {
-	public interface IProductDiscountService
-	{
-		Task<Result<DiscountDto>> GetProductDiscountAsync(int productId);
-		Task<Result<bool>> AddDiscountToProductAsync(int productId, int discountId, string userId);
-		Task<Result<bool>> UpdateProductDiscountAsync(int productId, int discountId, string userId);
-		Task<Result<bool>> RemoveDiscountFromProductAsync(int productId, string userId);
-		Task<Result<List<ProductDto>>> GetProductsWithActiveDiscountsAsync();
-		Task<Result<List<ProductDto>>> ApplyDiscountToProductsAsync(ApplyDiscountToProductsDto dto, string userId);
-		Task<Result<List<ProductDto>>> RemoveDiscountFromProductsAsync(List<int> productIds, string userId);
-	}
 
 	public class ProductDiscountService : IProductDiscountService
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly ILogger<ProductDiscountService> _logger;
+		private readonly IProductCacheManger _productCacheManger;
+		private readonly IproductMapper _productMapper;
 		private readonly IBackgroundJobClient _backgroundJobClient;
 		private readonly IAdminOpreationServices _adminOpreationServices;
 		private readonly IErrorNotificationService _errorNotificationService;
 		private readonly ICartServices _cartServices;
-		private readonly IOrderServices _orderServices;
-		private readonly ICacheManager _cacheManager;
-		private const string CACHE_TAG_PRODUCT_SEARCH = "product_search";
-		private const string CACHE_TAG_CART = "cart";
-		private const string CACHE_TAG_SUBCATEGORY = "subcategory";
-		private static readonly string[] PRODUCT_CACHE_TAGS = new[] { CACHE_TAG_PRODUCT_SEARCH, CACHE_TAG_SUBCATEGORY, PRODUCT_WITH_VARIANT_TAG ,CACHE_TAG_CART};
-		private const string PRODUCT_WITH_VARIANT_TAG = "productwithvariantdata";
 
+		private readonly ISubCategoryCacheHelper _SubCategoryCacheHelper;
 
 		public ProductDiscountService(
-			IOrderServices orderServices,
+			ISubCategoryCacheHelper subCategoryCacheHelper,
+			IProductCacheManger productCacheManger,
+			IproductMapper iproductMapper,
 			ICartServices	cartServices,
 			IBackgroundJobClient backgroundJobClient,
-			ICacheManager cacheManager,
+		
 			IUnitOfWork unitOfWork,
 			ILogger<ProductDiscountService> logger,
 			IAdminOpreationServices adminOpreationServices,
 			IErrorNotificationService errorNotificationService)
 		{ 
-			_orderServices = orderServices;
+			_SubCategoryCacheHelper = subCategoryCacheHelper;
+			_productCacheManger = productCacheManger;
+			_productMapper = iproductMapper;
 			_cartServices = cartServices;
 			_backgroundJobClient = backgroundJobClient;
-			_cacheManager = cacheManager;
 			_unitOfWork = unitOfWork;
 			_logger = logger;
 			_adminOpreationServices = adminOpreationServices;
 			_errorNotificationService = errorNotificationService;
 		}
 
-				public async Task<Result<List<ProductDto>>> ApplyDiscountToProductsAsync(ApplyDiscountToProductsDto dto, string userId)
+		public async Task<Result<List<ProductDto>>> ApplyDiscountToProductsAsync(ApplyDiscountToProductsDto dto, string userId)
         {
             _logger.LogInformation($"Applying discount {dto?.Discountid} to {dto?.ProductsId?.Count ?? 0} products");
             
@@ -126,9 +116,10 @@ namespace E_Commerce.Services.ProductServices
                 {
                     product.DiscountId = dto.Discountid;
                 }
+				_unitOfWork.Product.UpdateList(existingProducts);
 
-                // Log admin operation
-                var adminOpResult = await _adminOpreationServices.AddAdminOpreationAsync(
+				// Log admin operation
+				var adminOpResult = await _adminOpreationServices.AddAdminOpreationAsync(
                     $"Applied discount '{discount.Name}' ({dto.Discountid}) to {existingProducts.Count} products: {string.Join(", ", dto.ProductsId)}",
                     Opreations.AddOpreation,
                     userId,
@@ -156,13 +147,13 @@ namespace E_Commerce.Services.ProductServices
                 }
 
                 // Clear cache
-                RemoveProductCachesAsync();
-                var updatedProducts = await _unitOfWork.Product
-                    .GetAll()
-                    .Where(p => dto.ProductsId.Contains(p.Id))
-                    .Select(maptoProductDtoexpression)
-                    .ToListAsync();
-
+                _productCacheManger.ClearProductCache();
+				_SubCategoryCacheHelper.ClearSubCategoryDataCache();
+				var updatedProducts = _unitOfWork.Product
+					.GetAll()
+					.Where(p => dto.ProductsId.Contains(p.Id));
+				var prodcutsdto =await  _productMapper.maptoProductDtoexpression(updatedProducts).ToListAsync();
+                   
                 var message = $"Successfully applied discount to {existingProducts.Count} products";
                 if (!isDiscountActive)
                 {
@@ -174,7 +165,7 @@ namespace E_Commerce.Services.ProductServices
                 }
 
                 _logger.LogInformation($"Successfully applied discount {dto.Discountid} to {existingProducts.Count} products. Active: {isDiscountActive}");
-                return Result<List<ProductDto>>.Ok(updatedProducts, message, 200, warnings: warnings);
+                return Result<List<ProductDto>>.Ok(prodcutsdto, message, 200, warnings: warnings);
             }
             catch (Exception ex)
             {
@@ -232,6 +223,7 @@ namespace E_Commerce.Services.ProductServices
 					product.DiscountId = null;
 				}
 
+				_unitOfWork.Product.UpdateList(productsWithDiscounts);
 				// Log admin operation
 				var adminOpResult = await _adminOpreationServices.AddAdminOpreationAsync(
 					$"Removed discounts from {productsWithDiscounts.Count} products: {string.Join(", ", productsWithDiscounts.Select(p => p.Id))}",
@@ -252,15 +244,14 @@ namespace E_Commerce.Services.ProductServices
 				await transaction.CommitAsync();
 
 		
-				RemoveProductCachesAsync();
-			
+		      _productCacheManger.ClearProductCache();
+			_SubCategoryCacheHelper.ClearSubCategoryDataCache();
 
-				var updatedProducts = await _unitOfWork.Product
+
+				var updatedProducts = _unitOfWork.Product
 					.GetAll()
-					.Where(p => productIds.Contains(p.Id))
-					.Select(maptoProductDtoexpression)
-					.ToListAsync();
-
+					.Where(p => productIds.Contains(p.Id));
+					var productDtos = await _productMapper.maptoProductDtoexpression(updatedProducts).ToListAsync();
 				var message = $"Successfully removed discounts from {productsWithDiscounts.Count} products";
 				if (warnings.Any())
 				{
@@ -268,7 +259,7 @@ namespace E_Commerce.Services.ProductServices
 				}
 
 				_logger.LogInformation($"Successfully removed discounts from {productsWithDiscounts.Count} products");
-				return Result<List<ProductDto>>.Ok(updatedProducts, message, 200, warnings: warnings);
+				return Result<List<ProductDto>>.Ok(productDtos, message, 200, warnings: warnings);
 			}
 			catch (Exception ex)
 			{
@@ -324,54 +315,6 @@ namespace E_Commerce.Services.ProductServices
 			}
 		}
 
-		private void RemoveProductCachesAsync()
-		{
-			_backgroundJobClient.Enqueue(() => _cacheManager.RemoveByTagsAsync(PRODUCT_CACHE_TAGS));
-		}
-
-		private static Expression<Func<Models.Product, ProductDetailDto>> maptoProductDetailDtoexpression = p =>
-		 new ProductDetailDto
-		 {
-			 Id = p.Id,
-			 Name = p.Name,
-			 Description = p.Description,
-			 AvailableQuantity = p.Quantity,
-			 Gender = p.Gender,
-			 CreatedAt = p.CreatedAt,
-			 DeletedAt = p.DeletedAt,
-			 ModifiedAt = p.ModifiedAt,
-			 fitType = p.fitType,
-			 IsActive= p.IsActive,
-			 FinalPrice = (p.Discount != null && p.Discount.IsActive && (p.Discount.DeletedAt == null) && (p.Discount.EndDate > DateTime.UtcNow)) ? Math.Round(p.Price - (((p.Discount.DiscountPercent) / 100) * p.Price)) : p.Price,
-
-			 Price = p.Price,
-			 SubCategoryId = p.SubCategoryId,
-			 Discount = p.Discount != null  && p.Discount.DeletedAt == null && p.Discount.EndDate > DateTime.UtcNow ? new DiscountDto
-			 {
-				 Id = p.Discount.Id,
-				 DiscountPercent = p.Discount.DiscountPercent,
-				 IsActive = p.Discount.IsActive,
-				 StartDate = p.Discount.StartDate,
-				 EndDate = p.Discount.EndDate,
-				 Name = p.Discount.Name,
-				 Description = p.Discount.Description
-			 } : null,
-			 Images = p.Images.Where(i => i.DeletedAt == null).Select(i => new ImageDto
-			 {
-				 Id = i.Id,
-				 Url = i.Url
-			 }).ToList(),
-			 Variants = p.ProductVariants.Where(v => v.DeletedAt == null && v.Quantity != 0).Select(v => new ProductVariantDto
-			 {
-				 Id = v.Id,
-				 Color = v.Color,
-				 Size = v.Size,
-				 Waist = v.Waist,
-				 Length = v.Length,
-				 Quantity = v.Quantity,
-				 ProductId = v.ProductId
-			 }).ToList()
-		 };
 
 
 
@@ -431,7 +374,7 @@ namespace E_Commerce.Services.ProductServices
 					_logger.LogInformation($"Discount {discountId} is not active. Skipping cart and order price updates for product: {productId}");
 				}
 
-				RemoveProductCachesAsync();
+		      _productCacheManger.ClearProductCache();
 
 				var message = "Discount added successfully";
 				if (!isDiscountActive)
@@ -473,7 +416,7 @@ namespace E_Commerce.Services.ProductServices
 			try
 			{
 				
-				if (await _unitOfWork.Product.IsExsistAsync(productId))
+				if (!await _unitOfWork.Product.IsExsistAsync(productId))
 				{
 					_logger.LogWarning($"[UpdateProductDiscountAsync] Product not found: {productId}");
 					return Result<bool>.Fail("Product not found", 404);
@@ -533,7 +476,8 @@ namespace E_Commerce.Services.ProductServices
 					_logger.LogInformation($"[UpdateProductDiscountAsync] Discount {discountId} is not active. Skipping cart and order price updates for product: {productId}");
 				}
 
-				RemoveProductCachesAsync();
+		      _productCacheManger.ClearProductCache();
+				_SubCategoryCacheHelper.ClearSubCategoryDataCache();
 
 				var message = "Discount updated successfully";
 				if (!isDiscountActive)
@@ -555,7 +499,7 @@ namespace E_Commerce.Services.ProductServices
 		public async Task<Result<bool>> RemoveDiscountFromProductAsync(int productId, string userId)
 		{
 			_logger.LogInformation($"[RemoveDiscountFromProductAsync] Called with productId={productId}, userId={userId}");
-			// Input validation
+		
 			if (productId <= 0)
 			{
 				_logger.LogWarning("[RemoveDiscountFromProductAsync] Invalid product ID: {productId}", productId);
@@ -593,7 +537,8 @@ namespace E_Commerce.Services.ProductServices
 				_backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterRemoveDiscountAsync(new List<int> { productId }) );
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-				RemoveProductCachesAsync();
+		      _productCacheManger.ClearProductCache();
+				_SubCategoryCacheHelper.ClearSubCategoryDataCache();
 
 				_logger.LogInformation($"[RemoveDiscountFromProductAsync] Discount removed successfully for productId={productId}");
 				return Result<bool>.Ok(true, "Discount removed successfully", 200);
@@ -606,53 +551,31 @@ namespace E_Commerce.Services.ProductServices
 			}
 		}
 
-		private static Expression<Func<Models.Product, ProductDto>> maptoProductDtoexpression =
-			p => new ProductDto
-			{
-				Id = p.Id,
-				Name = p.Name,
-				Description = p.Description,
-				AvailableQuantity = p.Quantity,
-				Gender = p.Gender,
-				SubCategoryId = p.SubCategoryId,
-				Price = p.Price,
-				FinalPrice = (p.Discount != null && p.Discount.IsActive && (p.Discount.DeletedAt == null) && (p.Discount.EndDate > DateTime.UtcNow)) ? Math.Round(p.Price - (((p.Discount.DiscountPercent) / 100) * p.Price)) : p.Price,
-				DiscountPrecentage = p.Discount != null && p.Discount.IsActive && p.Discount.DeletedAt == null ?  p.Discount.DiscountPercent : null,
-				DiscountName = p.Discount != null && p.Discount.DeletedAt==null ? p.Discount.Name : null,
-				EndAt = p.Discount != null && p.Discount.IsActive && p.Discount.DeletedAt == null ? p.Discount.EndDate : null,
-				IsActive = p.IsActive,
-				CreatedAt = p.CreatedAt,
-				ModifiedAt = p.ModifiedAt,
-				DeletedAt = p.DeletedAt,
-				fitType = p.fitType,
-				images = p.Images
-							.Where(i => i.DeletedAt == null)
-							.Select(i => new ImageDto
-							{
-								Id = i.Id,
-								Url = i.Url,
-								IsMain = i.IsMain
-							}).ToList()
-			};
-		public async Task<Result<List<ProductDto>>> GetProductsWithActiveDiscountsAsync()
+		
+		public async Task<Result<List<ProductDto>>> GetProductsWithActiveDiscountsAsync(bool? isactive)
 		{
 			try
 			{
 				var now = DateTime.UtcNow;
 
-				var products = await _unitOfWork.Product.GetAll()
+				var products = _unitOfWork.Product.GetAll()
 					.Where(p => p.Discount != null
 						&& p.Discount.IsActive
 						&& p.Discount.DeletedAt == null
 						&& p.Discount.StartDate <= now
-						&& p.Discount.EndDate > now)
-					.Select(maptoProductDtoexpression)
-					.ToListAsync();
+						&& p.Discount.EndDate > now
+						&& p.DeletedAt==null
+						);
+				if (isactive.HasValue)
+				products=	products.Where(p=>p.IsActive==isactive.Value);
+
+				var productDtos = await _productMapper.maptoProductDtoexpression(products).ToListAsync();
+
 
 				if (!products.Any())
 					return Result<List<ProductDto>>.Fail("No products with active discounts found", 404);
 
-				return Result<List<ProductDto>>.Ok(products, "Products with active discounts retrieved successfully", 200);
+				return Result<List<ProductDto>>.Ok(productDtos, "Products with active discounts retrieved successfully", 200);
 			}
 			catch (Exception ex)
 			{

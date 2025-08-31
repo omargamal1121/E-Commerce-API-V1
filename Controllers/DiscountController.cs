@@ -50,17 +50,7 @@ namespace E_Commerce.Controllers
 			}
 		}
 
-		[HttpGet]
-		[ActionName(nameof(GetAllAsync))]
-		[ResponseCache(Duration = 120)]
-		public async Task<ActionResult<ApiResponse<List<DiscountDto>>>> GetAllAsync()
-		{
-			_logger.LogInformation($"Executing {nameof(GetAllAsync)}");
-
-			var response = await _discountService.GetAllAsync();
-			return HandleResult<List<DiscountDto>>(response, nameof(GetAllAsync));
-		}
-
+	
 		[HttpGet("{id}")]
 		[ActionName(nameof(GetByIdAsync))]
 		[ResponseCache(Duration = 60, VaryByQueryKeys = new string[] { "id", "isActive", "includeDeleted" })]
@@ -159,7 +149,7 @@ namespace E_Commerce.Controllers
 			return HandleResult<DiscountDto>(response, nameof(GetByIdAsync), id);
 		}
 
-		[HttpGet("filter")]
+		[HttpGet()]
 		[ActionName(nameof(FilterAsync))]
 		[ResponseCache(Duration = 60, VaryByQueryKeys = new string[] { "search", "isActive", "includeDeleted", "page", "pageSize" })]
 		public async Task<ActionResult<ApiResponse<List<DiscountDto>>>> FilterAsync(
@@ -185,16 +175,7 @@ namespace E_Commerce.Controllers
 			return HandleResult<List<DiscountDto>>(response, nameof(FilterAsync));
 		}
 
-		[HttpGet("active")]
-		[ActionName(nameof(GetActiveAsync))]
-		[ResponseCache(Duration = 60)]
-		public async Task<ActionResult<ApiResponse<List<DiscountDto>>>> GetActiveAsync()
-		{
-			_logger.LogInformation($"Executing {nameof(GetActiveAsync)}");
-		
-			var response = await _discountService.GetActiveDiscountsAsync();
-			return HandleResult<List<DiscountDto>>(response, nameof(GetActiveAsync));
-		}
+	
 
 		[HttpGet("expired")]
 		[ActionName(nameof(GetExpiredAsync))]
@@ -273,37 +254,5 @@ namespace E_Commerce.Controllers
 			return HandleResult<bool>(response, nameof(GetByIdAsync), id);
 		}
 
-		[HttpGet("{id}/validate")]
-		[ActionName(nameof(ValidateAsync))]
-		[ResponseCache(Duration = 30, VaryByQueryKeys = new string[] { "id" })]
-		public async Task<ActionResult<ApiResponse<bool>>> ValidateAsync(int id)
-		{
-			_logger.LogInformation($"Executing {nameof(ValidateAsync)} for ID: {id}");
-
-			var response = await _discountService.IsDiscountValidAsync(id);
-			return HandleResult<bool>(response, nameof(ValidateAsync), id);
-		}
-
-		[HttpGet("{id}/calculate")]
-		[ActionName(nameof(CalculateAsync))]
-		[ResponseCache(Duration = 30, VaryByQueryKeys = new string[] { "id", "originalPrice" })]
-		public async Task<ActionResult<ApiResponse<decimal>>> CalculateAsync(
-			int id,
-			[FromQuery] decimal originalPrice)
-		{
-			_logger.LogInformation($"Executing {nameof(CalculateAsync)} for ID: {id}, originalPrice: {originalPrice}");
-			
-			if (originalPrice <= 0)
-			{
-				return BadRequest(ApiResponse<decimal>.CreateErrorResponse(
-					"Invalid Price",
-					new ErrorResponse("Validation", new List<string> { "Original price must be greater than 0" }),
-					400
-				));
-			}
-
-			var response = await _discountService.CalculateDiscountedPriceAsync(id, originalPrice);
-			return HandleResult<decimal>(response, nameof(CalculateAsync), id);
-		}
 	}
 }

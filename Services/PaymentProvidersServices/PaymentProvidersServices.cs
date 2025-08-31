@@ -1,6 +1,5 @@
 ﻿using E_Commerce.Enums;
 using E_Commerce.Models;
-using E_Commerce.Services.AdminOpreationServices;
 using E_Commerce.Services.EmailServices;
 using E_Commerce.Services.Cache;
 using E_Commerce.UOW;
@@ -8,12 +7,13 @@ using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using E_Commerce.Services.AdminOperationServices;
 
 namespace E_Commerce.Services.PaymentProvidersServices
 {
 	public interface IPaymentProvidersServices
 	{
-		  Task<Result<PaymentProviderDto>> AddIfNotExistsAsync(CreatePaymentProviderDto dto, string userId);
+		Task<Result<PaymentProviderDto>> AddIfNotExistsAsync(CreatePaymentProviderDto dto, string userId);
 		Task<Result<PaymentProviderDto>> CreatePaymentProvider(CreatePaymentProviderDto paymentdto, string userid);
 		Task<Result<bool>> UpdateAsync(int id, UpdatePaymentProviderDto dto, string userId);
 		Task<Result<bool>> RemovePaymentProviderAsync(int id, string userId);
@@ -27,8 +27,8 @@ namespace E_Commerce.Services.PaymentProvidersServices
 		private readonly IBackgroundJobClient _backgroundJobClient;
 		private readonly IErrorNotificationService _errorNotificationService;
 		private readonly IAdminOpreationServices _adminOperationServices;
-		public readonly IUnitOfWork _unitOfWork;
-		public readonly ILogger<PaymentProvidersServices> _logger;
+		private readonly IUnitOfWork _unitOfWork;
+		private readonly ILogger<PaymentProvidersServices> _logger;
 
 		public const string PAYMENTPROVIDER_CACHE = "PaymentProviderCache";
 
@@ -46,15 +46,25 @@ namespace E_Commerce.Services.PaymentProvidersServices
 			_errorNotificationService = errorNotificationService;
 			_logger = logger;
 			_cacheService = cacheManager;
-
-
 		}
+
 		public async Task<Result<PaymentProviderDto>> AddIfNotExistsAsync(CreatePaymentProviderDto dto, string userId)
 		{
+			if (dto == null)
+			{
+				_logger.LogWarning("AddIfNotExistsAsync called with null DTO by user {UserId}", userId);
+				return Result<PaymentProviderDto>.Fail("Payment provider data is required.");
+			}
+
+			// Case-insensitive name check
 			var existing = await _unitOfWork.Repository<PaymentProvider>().GetAll()
-										 .AnyAsync(m => m.Name == dto.Name);
+				.AnyAsync(m => m.Name.ToLower() == dto.Name.ToLower() && m.DeletedAt == null);
+			
 			if (existing)
-				return Result<PaymentProviderDto>.Fail("Is Already exsist");
+			{
+				_logger.LogWarning("Payment provider with name '{Name}' already exists", dto.Name);
+				return Result<PaymentProviderDto>.Fail("Payment provider with this name already exists.");
+			}
 
 			return await CreatePaymentProvider(dto, userId);
 		}
@@ -63,15 +73,25 @@ namespace E_Commerce.Services.PaymentProvidersServices
 		{
 			_logger.LogInformation("Starting CreatePaymentProvider for user {UserId}", userid);
 
+			if (paymentdto == null)
+			{
+				_logger.LogWarning("CreatePaymentProvider called with null DTO by user {UserId}", userid);
+				return Result<PaymentProviderDto>.Fail("Payment provider data is required.");
+			}
+
 			using var transaction = await _unitOfWork.BeginTransactionAsync();
 
 			try
 			{
-				
-				if (paymentdto == null)
+				// Validate unique name within transaction
+				var existingName = await _unitOfWork.Repository<PaymentProvider>().GetAll()
+					.AnyAsync(m => m.Name.ToLower() == paymentdto.Name.ToLower() && m.DeletedAt == null);
+
+				if (existingName)
 				{
-					_logger.LogWarning("CreatePaymentProvider called with null DTO by user {UserId}", userid);
-					return Result<PaymentProviderDto>.Fail($"CreatePaymentProvider called with null DTO by user {userid}");
+					_logger.LogWarning("Payment provider with name '{Name}' already exists", paymentdto.Name);
+					await transaction.RollbackAsync();
+					return Result<PaymentProviderDto>.Fail("Payment provider with this name already exists.");
 				}
 
 				var paymentProvider = new PaymentProvider
@@ -80,10 +100,9 @@ namespace E_Commerce.Services.PaymentProvidersServices
 					ApiEndpoint = paymentdto.ApiEndpoint,
 					PublicKey = paymentdto.PublicKey,
 					PrivateKey = paymentdto.PrivateKey,
-					Hmac= paymentdto.Hmac,
-					IframeId= paymentdto.IframeId,
-					Provider= paymentdto.PaymentProvider
-				
+					Hmac = paymentdto.Hmac,
+					IframeId = paymentdto.IframeId,
+					Provider = paymentdto.PaymentProvider
 				};
 
 				_logger.LogInformation("Creating payment provider: {PaymentProvider}", paymentProvider.Name);
@@ -95,7 +114,6 @@ namespace E_Commerce.Services.PaymentProvidersServices
 					await transaction.RollbackAsync();
 					return Result<PaymentProviderDto>.Fail("Failed to create payment provider");
 				}
-				await _unitOfWork.CommitAsync();
 
 				var adminOperationResult = await _adminOperationServices.AddAdminOpreationAsync(
 					"Add Payment Provider", Opreations.AddOpreation, userid, createdProvider.Id);
@@ -106,12 +124,20 @@ namespace E_Commerce.Services.PaymentProvidersServices
 					await transaction.RollbackAsync();
 					return Result<PaymentProviderDto>.Fail("Failed to add admin operation", 500);
 				}
-				await _unitOfWork.CommitAsync();
 
 				await transaction.CommitAsync();
 
+				// Clear cache after successful commit
+				_backgroundJobClient.Enqueue(() => _cacheService.RemoveByTagAsync(PAYMENTPROVIDER_CACHE));
+
 				_logger.LogInformation("Payment provider created successfully with ID {Id}", createdProvider.Id);
-				return Result<PaymentProviderDto>.Ok(new PaymentProviderDto { Id=createdProvider.Id,CreatedAt=createdProvider.CreatedAt.Value});
+				return Result<PaymentProviderDto>.Ok(new PaymentProviderDto 
+				{ 
+					Id = createdProvider.Id, 
+					Name = createdProvider.Name,
+					CreatedAt = createdProvider.CreatedAt.Value,
+					IsDeleted = false
+				});
 			}
 			catch (Exception ex)
 			{
@@ -140,6 +166,7 @@ namespace E_Commerce.Services.PaymentProvidersServices
 				if (hasActiveMethods)
 				{
 					_logger.LogWarning("Cannot remove payment provider {Id} because it has active payment methods", id);
+					await transaction.RollbackAsync();
 					return Result<bool>.Fail("Cannot remove provider with active payment methods. Please deactivate or reassign them first.", 409);
 				}
 
@@ -147,6 +174,7 @@ namespace E_Commerce.Services.PaymentProvidersServices
 				if (existing == null || existing.DeletedAt != null)
 				{
 					_logger.LogWarning("Payment provider with ID {Id} not found or already deleted", id);
+					await transaction.RollbackAsync();
 					return Result<bool>.Fail($"Payment provider with ID {id} not found");
 				}
 
@@ -159,8 +187,6 @@ namespace E_Commerce.Services.PaymentProvidersServices
 					return Result<bool>.Fail("Failed to delete payment provider", 500);
 				}
 
-				await _unitOfWork.CommitAsync();
-
 				var log = await _adminOperationServices.AddAdminOpreationAsync(
 					"Remove Payment Provider",
 					Opreations.DeleteOpreation,
@@ -168,12 +194,14 @@ namespace E_Commerce.Services.PaymentProvidersServices
 					id);
 				if (log == null || !log.Success)
 				{
+					_logger.LogWarning("Failed to add admin operation for provider removal {Id}", id);
 					await transaction.RollbackAsync();
 					return Result<bool>.Fail("Failed to add admin operation", 500);
 				}
 
 				await transaction.CommitAsync();
 
+				// Clear cache after successful commit
 				_backgroundJobClient.Enqueue(() => _cacheService.RemoveByTagAsync(PAYMENTPROVIDER_CACHE));
 
 				return Result<bool>.Ok(true);
@@ -281,7 +309,6 @@ namespace E_Commerce.Services.PaymentProvidersServices
 						IsDeleted = p.DeletedAt != null,
 						CreatedAt = p.CreatedAt ?? DateTime.MinValue,
 						UpdatedAt = p.ModifiedAt,
-						
 					})
 					.ToListAsync();
 
@@ -297,15 +324,39 @@ namespace E_Commerce.Services.PaymentProvidersServices
 				return Result<List<PaymentProviderDto>>.Fail("An error occurred while fetching payment providers.");
 			}
 		}
-		public async Task<Result<bool>> UpdateAsync(int id,UpdatePaymentProviderDto dto, string userId)
+
+		public async Task<Result<bool>> UpdateAsync(int id, UpdatePaymentProviderDto dto, string userId)
 		{
+			if (dto == null)
+			{
+				_logger.LogWarning("UpdateAsync called with null DTO by user {UserId}", userId);
+				return Result<bool>.Fail("Payment provider data is required.");
+			}
+
 			using var transaction = await _unitOfWork.BeginTransactionAsync();
 
 			try
 			{
 				var paymentprovider = await _unitOfWork.Repository<PaymentProvider>().GetByIdAsync(id);
 				if (paymentprovider == null || paymentprovider.DeletedAt != null)
-					return Result<bool>.Fail("Payment method not found or deleted");
+				{
+					await transaction.RollbackAsync();
+					return Result<bool>.Fail("Payment provider not found or deleted");
+				}
+
+				// Check for duplicate name (case-insensitive)
+				if (paymentprovider.Name.ToLower() != dto.Name.ToLower())
+				{
+					var nameExists = await _unitOfWork.Repository<PaymentProvider>().GetAll()
+						.AnyAsync(p => p.Name.ToLower() == dto.Name.ToLower() && p.Id != id && p.DeletedAt == null);
+					
+					if (nameExists)
+					{
+						_logger.LogWarning("Payment provider with name '{Name}' already exists", dto.Name);
+						await transaction.RollbackAsync();
+						return Result<bool>.Fail("Payment provider with this name already exists.");
+					}
+				}
 
 				var updatedFields = new List<string>();
 
@@ -351,23 +402,25 @@ namespace E_Commerce.Services.PaymentProvidersServices
 					paymentprovider.Provider = dto.PaymentProvider;
 				}
 
-
+				// Only update if there are changes
+				if (updatedFields.Count == 0)
+				{
+					await transaction.RollbackAsync();
+					return Result<bool>.Ok(true); // No changes needed
+				}
 
 				paymentprovider.ModifiedAt = DateTime.UtcNow;
 
-				
-
 				var logResult = await _adminOperationServices.AddAdminOpreationAsync(
-				
-					  string.Join(" | ", updatedFields),
+					string.Join(" | ", updatedFields),
 					Opreations.UpdateOpreation,
-					 userId,
-
-					 paymentprovider.Id
+					userId,
+					paymentprovider.Id
 				);
 
-				if (logResult==null||!logResult.Success)
+				if (logResult == null || !logResult.Success)
 				{
+					_logger.LogWarning("Failed to add admin operation for provider update {Id}", id);
 					await transaction.RollbackAsync();
 					return Result<bool>.Fail("Failed to log admin operation.");
 				}
@@ -375,18 +428,20 @@ namespace E_Commerce.Services.PaymentProvidersServices
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
-				
-				return Result<bool>.Ok(false);
+				// Clear cache after successful commit
+				_backgroundJobClient.Enqueue(() => _cacheService.RemoveByTagAsync(PAYMENTPROVIDER_CACHE));
+
+				return Result<bool>.Ok(true);
 			}
 			catch (Exception ex)
 			{
 				await transaction.RollbackAsync();
-				_logger.LogError(ex, "Error while updating payment method");
+				_logger.LogError(ex, "Error while updating payment provider {Id}", id);
+				_backgroundJobClient.Enqueue(() =>
+					_errorNotificationService.SendErrorNotificationAsync("Error in UpdateAsync", ex.Message));
 				return Result<bool>.Fail("Unexpected error occurred.");
 			}
 		}
-
-
 	}
 	public class CreatePaymentProviderDto
 	{

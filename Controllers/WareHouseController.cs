@@ -33,7 +33,7 @@ namespace E_Commerce.Controllers
 		private readonly IProductInventoryService _productInventoryService;
 		private readonly ILogger<WareHousesController> _logger;
 
-		public WareHousesController(
+		private WareHousesController(
 			IProductInventoryService productInventoryService,
 			IWareHouseServices wareHouseServices, 
 			ILogger<WareHousesController> logger,
@@ -46,7 +46,7 @@ namespace E_Commerce.Controllers
 
 		[HttpGet]
 		[ActionName(nameof(GetAll))]
-		public async Task<ActionResult<ApiResponse<List<WareHouseDto>>>> GetAll()
+		private async Task<ActionResult<ApiResponse<List<WareHouseDto>>>> GetAll()
 		{
 			try
 			{
@@ -63,7 +63,7 @@ namespace E_Commerce.Controllers
 
 		[HttpGet("{id}")]
 		[ActionName(nameof(GetByIdAsync))]
-		public async Task<ActionResult<ApiResponse<WareHouseDto>>> GetByIdAsync([FromRoute] int id)
+		private async Task<ActionResult<ApiResponse<WareHouseDto>>> GetByIdAsync([FromRoute] int id)
 		{
 			try
 			{
@@ -86,7 +86,7 @@ namespace E_Commerce.Controllers
 
 		[HttpPost]
 		[ActionName(nameof(CreateWareHouseAsync))]
-		public async Task<ActionResult<ApiResponse<WareHouseDto>>> CreateWareHouseAsync([FromBody] WareHouseDto model)
+		private async Task<ActionResult<ApiResponse<WareHouseDto>>> CreateWareHouseAsync([FromBody] WareHouseDto model)
 		{
 			try
 			{
@@ -124,7 +124,7 @@ namespace E_Commerce.Controllers
 
 		[HttpPatch("{id}")]
 		[ActionName(nameof(UpdateWareHouseAsync))]
-		public async Task<ActionResult<ApiResponse<WareHouseDto>>> UpdateWareHouseAsync(
+		private async Task<ActionResult<ApiResponse<WareHouseDto>>> UpdateWareHouseAsync(
 			[FromRoute] int id,
 			[FromBody] WareHouseDto updateDto)
 		{
@@ -171,7 +171,7 @@ namespace E_Commerce.Controllers
 
 		[HttpDelete("{id}")]
 		[ActionName(nameof(DeleteWareHouseAsync))]
-		public async Task<ActionResult<ApiResponse<string>>> DeleteWareHouseAsync([FromRoute] int id)
+		private async Task<ActionResult<ApiResponse<string>>> DeleteWareHouseAsync([FromRoute] int id)
 		{
 			try
 			{
@@ -201,7 +201,7 @@ namespace E_Commerce.Controllers
 
 		[HttpPatch("Return-Deleted-WareHouse/{id}")]
 		[ActionName(nameof(ReturnRemovedWareHouseAsync))]
-		public async Task<ActionResult<ApiResponse<WareHouseDto>>> ReturnRemovedWareHouseAsync([FromRoute] int id)
+		private async Task<ActionResult<ApiResponse<WareHouseDto>>> ReturnRemovedWareHouseAsync([FromRoute] int id)
 		{
 			try
 			{
@@ -231,7 +231,7 @@ namespace E_Commerce.Controllers
 
 		[HttpGet("{id}/Products")]
 		[ActionName(nameof(GetProductsByWareHouseId))]
-		public async Task<ActionResult<ApiResponse<List<InventoryDto>>>> GetProductsByWareHouseId([FromRoute] int id)
+		private async Task<ActionResult<ApiResponse<List<InventoryDto>>>> GetProductsByWareHouseId([FromRoute] int id)
 		{
 			try
 			{
@@ -254,7 +254,7 @@ namespace E_Commerce.Controllers
 
 		[HttpPatch("Transfer-All-Products/{currentWarehouseId}/{newWarehouseId}")]
 		[ActionName(nameof(TransferAllProducts))]
-		public async Task<ActionResult<ApiResponse<string>>> TransferAllProducts(
+		private async Task<ActionResult<ApiResponse<string>>> TransferAllProducts(
 			[FromRoute] int currentWarehouseId,
 			[FromRoute] int newWarehouseId)
 		{

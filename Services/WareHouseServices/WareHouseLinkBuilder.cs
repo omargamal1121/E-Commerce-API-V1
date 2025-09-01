@@ -21,15 +21,15 @@ namespace E_Commerce.Services.WareHouseServices
 		{
 			var list = new List<LinkDto>
 			{
-					new LinkDto(GetUriByAction(nameof(WareHousesController.CreateWareHouseAsync))??"","Create-WareHouse","POST"),
-				new LinkDto(GetUriByAction(nameof(WareHousesController.GetAll))??"","get-all-WareHouse","GET"),
+			//		new LinkDto(GetUriByAction(nameof(WareHousesController.CreateWareHouseAsync))??"","Create-WareHouse","POST"),
+			//	new LinkDto(GetUriByAction(nameof(WareHousesController.GetAll))??"","get-all-WareHouse","GET"),
 			
 			};
-			if (id != null)
-				list.AddRange(new LinkDto(GetUriByAction(nameof(WareHousesController.GetProductsByWareHouseId), id) ?? "", "get-WareHouse-product", "GET"),
-				new LinkDto(GetUriByAction(nameof(WareHousesController.ReturnRemovedWareHouseAsync), id) ?? "", "return-removed-warehouse", "PATCH"), 
-				new LinkDto(GetUriByAction(nameof(WareHousesController.DeleteWareHouseAsync), id) ?? "", "delete-WareHouse", "DELETE"),
-				new LinkDto(GetUriByAction(nameof(WareHousesController.UpdateWareHouseAsync), id) ?? "", "update-WareHouse", "PUT"));
+			//if (id != null)
+			//	list.AddRange(new LinkDto(GetUriByAction(nameof(WareHousesController.GetProductsByWareHouseId), id) ?? "", "get-WareHouse-product", "GET"),
+			//	new LinkDto(GetUriByAction(nameof(WareHousesController.ReturnRemovedWareHouseAsync), id) ?? "", "return-removed-warehouse", "PATCH"), 
+			//	new LinkDto(GetUriByAction(nameof(WareHousesController.DeleteWareHouseAsync), id) ?? "", "delete-WareHouse", "DELETE"),
+			//	new LinkDto(GetUriByAction(nameof(WareHousesController.UpdateWareHouseAsync), id) ?? "", "update-WareHouse", "PUT"));
 			return list;
 		}
 	}

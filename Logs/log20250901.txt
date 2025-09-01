@@ -765,3 +765,74 @@ WHERE `a`.`UserId` = @__userId_0
 2025-09-01 17:06:32.819 +03:00 [INF] Cache set successfully for key: advsearch__________False_1_100_True_False with tags: [product_search]
 2025-09-01 17:06:46.963 +03:00 [INF] Setting cache for key: advsearch__________False_1_50_True_False
 2025-09-01 17:06:47.193 +03:00 [INF] Cache set successfully for key: advsearch__________False_1_50_True_False with tags: [product_search]
+2025-09-01 17:19:59.815 +03:00 [INF] DB tables already exist. Exit install
+2025-09-01 17:20:00.987 +03:00 [WRN] The foreign key property 'Customer.ImageId1' was created in shadow state because a conflicting property with the simple name 'ImageId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-09-01 17:20:01.940 +03:00 [INF] Executed DbCommand (76ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-01 17:20:02.646 +03:00 [INF] Executed DbCommand (94ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-01 17:20:02.837 +03:00 [INF] Executed DbCommand (80ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-09-01 17:20:02.906 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-09-01 17:20:02.922 +03:00 [INF] Starting data seeding...
+2025-09-01 17:20:02.952 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-09-01 17:20:03.414 +03:00 [INF] Executed DbCommand (116ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-09-01 17:20:03.474 +03:00 [INF] Role 'Admin' already exists.
+2025-09-01 17:20:03.642 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-09-01 17:20:03.662 +03:00 [INF] Role 'User' already exists.
+2025-09-01 17:20:03.854 +03:00 [INF] Executed DbCommand (76ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-01 17:20:03.932 +03:00 [INF] Admin user already exists. Skipping provider/method creation.
+2025-09-01 17:20:03.937 +03:00 [INF] Data seeding completed successfully.
+2025-09-01 17:20:05.296 +03:00 [INF] Now listening on: http://localhost:5069
+2025-09-01 17:20:05.387 +03:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-09-01 17:20:05.393 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-09-01 17:20:05.401 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-09-01 17:20:05.409 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-09-01 17:20:05.425 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-09-01 17:20:05.431 +03:00 [INF] Hosting environment: Development
+2025-09-01 17:20:05.437 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-09-01 17:20:05.610 +03:00 [INF] Server mrrobot:9516:07756042 successfully announced in 170.8397 ms
+2025-09-01 17:20:05.629 +03:00 [INF] Server mrrobot:9516:07756042 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-09-01 17:20:05.699 +03:00 [INF] Server mrrobot:9516:07756042 all the dispatchers started
+2025-09-01 17:20:06.117 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-09-01 17:20:06.498 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 382.5619ms
+2025-09-01 17:20:06.590 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-09-01 17:20:06.591 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-09-01 17:20:06.693 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-09-01 17:20:06.748 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 156.2414ms
+2025-09-01 17:20:06.781 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16504 application/javascript; charset=utf-8 88.3749ms
+2025-09-01 17:20:06.878 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 288.2679ms
+2025-09-01 17:20:06.986 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-09-01 17:20:07.228 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 242.2296ms
+2025-09-01 17:20:15.788 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-09-01 17:20:15.847 +03:00 [WRN] Failed to determine the https port for redirect.
+2025-09-01 17:20:16.090 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-01 17:20:16.103 +03:00 [INF] No cached response available for this request.
+2025-09-01 17:20:16.108 +03:00 [INF] The response could not be cached for this request.
+2025-09-01 17:20:16.110 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/.well-known/appspecific/com.chrome.devtools.json - 404 0 null 322.5774ms
+2025-09-01 17:20:16.120 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5069/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2025-09-01 17:20:40.597 +03:00 [WRN] Stopping the server due to DomainUnload or ProcessExit event...
+2025-09-01 17:20:40.599 +03:00 [INF] Server mrrobot:9516:07756042 caught stopping signal...
+2025-09-01 17:20:40.601 +03:00 [INF] Server mrrobot:9516:07756042 caught stopped signal...
+2025-09-01 17:20:40.606 +03:00 [WRN] Server mrrobot:9516:07756042 caught shutdown signal...
+2025-09-01 17:20:40.606 +03:00 [INF] Server mrrobot:9516:07756042 All dispatchers stopped
+2025-09-01 17:20:41.204 +03:00 [INF] Server mrrobot:9516:07756042 successfully reported itself as stopped in 591.1093 ms
+2025-09-01 17:20:41.209 +03:00 [INF] Server mrrobot:9516:07756042 has been stopped in total 607.9359 ms

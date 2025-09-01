@@ -142,12 +142,16 @@ namespace E_Commerce
 				var apiKey = config.GetValue<string>("ApiKey");
 				var apiSecret = config.GetValue<string>("ApiSecret");
 
-				var account = new Account("dud4kxeix", "639515651354965", "hSR3PAJNAlRkGHHEk1GuH1rfD1U");
+			//	var account = new Account("dud4kxeix", "639515651354965", "hSR3PAJNAlRkGHHEk1GuH1rfD1U");
+				var account = new Account(cloudName, apiKey, apiSecret);
 				return new Cloudinary(account);
 			});
 
 
-			var redisUrl = "rediss://default:AbS_AAIncDE0MDc1NDlmMTI2OWU0YTdlOTU0MTA0MWJjMjExODQ0YXAxNDYyNzE@square-guinea-46271.upstash.io:6379";
+			//var redisUrl = "rediss://default:AbS_AAIncDE0MDc1NDlmMTI2OWU0YTdlOTU0MTA0MWJjMjExODQ0YXAxNDYyNzE@square-guinea-46271.upstash.io:6379";
+			var redisUrl = builder.Configuration.GetConnectionString("Redis")
+					   ?? throw new Exception("Redis connection string not found!");
+
 			var uri = new Uri(redisUrl);
 
 			var config = new ConfigurationOptions

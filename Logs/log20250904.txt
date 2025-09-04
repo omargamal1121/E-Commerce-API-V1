@@ -1,0 +1,57 @@
+2025-09-04 15:40:31.350 +03:00 [INF] DB tables already exist. Exit install
+2025-09-04 15:40:33.163 +03:00 [WRN] The foreign key property 'Customer.ImageId1' was created in shadow state because a conflicting property with the simple name 'ImageId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-09-04 15:40:34.311 +03:00 [INF] Executed DbCommand (90ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-04 15:40:35.132 +03:00 [INF] Executed DbCommand (75ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-04 15:40:35.304 +03:00 [INF] Executed DbCommand (77ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-09-04 15:40:35.324 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-09-04 15:40:35.335 +03:00 [INF] Starting data seeding...
+2025-09-04 15:40:35.370 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-09-04 15:40:35.917 +03:00 [INF] Executed DbCommand (112ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-09-04 15:40:35.993 +03:00 [INF] Role 'Admin' already exists.
+2025-09-04 15:40:36.149 +03:00 [INF] Executed DbCommand (76ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-09-04 15:40:36.617 +03:00 [INF] Role 'User' already exists.
+2025-09-04 15:40:36.825 +03:00 [INF] Executed DbCommand (88ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-04 15:40:36.910 +03:00 [INF] Admin user already exists. Skipping provider/method creation.
+2025-09-04 15:40:36.912 +03:00 [INF] Data seeding completed successfully.
+2025-09-04 15:40:38.721 +03:00 [INF] Now listening on: http://localhost:5069
+2025-09-04 15:40:39.481 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-09-04 15:40:39.654 +03:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-09-04 15:40:39.880 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-09-04 15:40:39.882 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-09-04 15:40:39.888 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-09-04 15:40:39.917 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-09-04 15:40:40.062 +03:00 [INF] Hosting environment: Development
+2025-09-04 15:40:40.080 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 598.6727ms
+2025-09-04 15:40:40.165 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-09-04 15:40:40.172 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-09-04 15:40:40.188 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-09-04 15:40:40.196 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-09-04 15:40:40.229 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 63.4904ms
+2025-09-04 15:40:40.328 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 132.579ms
+2025-09-04 15:40:40.408 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 236.102ms
+2025-09-04 15:40:40.409 +03:00 [INF] Server mrrobot:1816:775335d3 successfully announced in 484.1029 ms
+2025-09-04 15:40:40.514 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-09-04 15:40:40.558 +03:00 [INF] Server mrrobot:1816:775335d3 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-09-04 15:40:40.856 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 341.7193ms
+2025-09-04 15:40:41.334 +03:00 [INF] Server mrrobot:1816:775335d3 all the dispatchers started

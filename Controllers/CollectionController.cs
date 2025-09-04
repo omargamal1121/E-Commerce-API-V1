@@ -93,6 +93,20 @@ namespace E_Commerce.Controllers
             return ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
         }
 
+        [HttpPatch("activate/{id}")]
+		public async Task<ActionResult<ApiResponse<bool>>> ActiveAsync(int id)
+		{
+			var userid = HttpContext?.Items["UserId"]?.ToString();
+			var response = await _collectionServices.ActivateCollectionAsync(id, userid);
+			return CreateResponse  (response,nameof(ActiveAsync),id);
+        }
+        [HttpPatch("dactivate/{id}")]
+		public async Task<ActionResult<ApiResponse<bool>>> DeactiveAsync(int id)
+		{
+			var userid = HttpContext?.Items["UserId"]?.ToString();
+			var response = await _collectionServices.DeactivateCollectionAsync(id, userid);
+			return CreateResponse  (response,nameof(ActiveAsync),id);
+        }
         #region Public Read Operations (Anonymous)
         /// <summary>
         /// Get collection by ID (unified endpoint that checks user role)

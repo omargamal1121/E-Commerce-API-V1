@@ -2761,7 +2761,7 @@
     "Parameters": [
       {
         "Name": "paymentRequest",
-        "Type": "CreatePaymentRequest",
+        "Type": "CreatePaymentRequestDto",
         "IsRequired": true
       }
     ],
@@ -3697,7 +3697,7 @@
   },
   {
     "ContainingType": "E_Commerce.Controllers.ProductVariantController",
-    "Method": "CreateVariant",
+    "Method": "CreateVariants",
     "RelativePath": "api/Products/{productId}/Variants",
     "HttpMethod": "POST",
     "IsController": true,
@@ -3710,13 +3710,13 @@
       },
       {
         "Name": "dto",
-        "Type": "E_Commerce.DtoModels.ProductDtos.CreateProductVariantDto",
+        "Type": "System.Collections.Generic.List\u00601[[E_Commerce.DtoModels.ProductDtos.CreateProductVariantDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[E_Commerce.DtoModels.ProductDtos.ProductVariantDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commerce.DtoModels.ProductDtos.ProductVariantDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

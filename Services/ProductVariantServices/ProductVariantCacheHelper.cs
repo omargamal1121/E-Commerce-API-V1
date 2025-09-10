@@ -1,8 +1,9 @@
 using E_Commerce.DtoModels.ProductDtos;
 using E_Commerce.Services.Cache;
+using E_Commerce.Services.ProductVariantServices;
 using Hangfire;
 
-namespace E_Commerce.Services.ProductServices
+namespace E_Commerce.Services.ProductVariantServices
 {
     public class ProductVariantCacheHelper : IProductVariantCacheHelper
     {
@@ -33,19 +34,19 @@ namespace E_Commerce.Services.ProductServices
             _backgroundJobClient.Enqueue(() => _cacheManager.RemoveByTagsAsync(PRODUCT_CACHE_TAGS));
         }
 
-        public async Task CacheVariantAsync(int id, ProductVariantDto variant)
+        public  void CacheVariantAsync(int id, ProductVariantDto variant)
         {
             var cacheKey = GetVariantCacheKey(id);
             _backgroundJobClient.Enqueue(() => _cacheManager.SetAsync(cacheKey, variant, null, new[] { GetProductCacheTag(variant.ProductId), VARIANT_DATA_TAG }));
         }
    
-		public async Task CacheProductVariantsAsync(int productId, List<ProductVariantDto> variants)
+		public void CacheProductVariantsAsync(int productId, List<ProductVariantDto> variants)
         {
             var cacheKey = GetProductVariantsCacheKey(productId);
             _backgroundJobClient.Enqueue(() => _cacheManager.SetAsync(cacheKey, variants, null, new[] { GetProductCacheTag(productId), VARIANT_DATA_TAG }));
         }
 
-        public async Task CacheSearchResultsAsync(int productId, string cacheKey, List<ProductVariantDto> variants)
+        public  void CacheSearchResultsAsync(int productId, string cacheKey, List<ProductVariantDto> variants)
         {
             _backgroundJobClient.Enqueue(() => _cacheManager.SetAsync(cacheKey, variants, null, new[] { GetProductCacheTag(productId), VARIANT_DATA_TAG }));
         }

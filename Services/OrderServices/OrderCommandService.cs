@@ -4,8 +4,11 @@ using E_Commerce.Interfaces;
 using E_Commerce.Models;
 using E_Commerce.Services.AdminOperationServices;
 using E_Commerce.Services.Cache;
+using E_Commerce.Services.Collection;
 using E_Commerce.Services.EmailServices;
 using E_Commerce.Services.ProductServices;
+using E_Commerce.Services.ProductVariantServices;
+using E_Commerce.Services.SubCategoryServices;
 using E_Commerce.Services.UserOpreationServices;
 using E_Commerce.UOW;
 using Hangfire;
@@ -20,7 +23,12 @@ namespace E_Commerce.Services.Order
     {
         private readonly ILogger<OrderCommandService> _logger;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IUserOpreationServices _userOpreationServices;
+        private readonly IProductVariantCacheHelper _productVariantCacheHelper;
+        private readonly IProductCacheManger _productCacheManger;
+        private readonly ICollectionCacheHelper _collectionCacheHelper;
+        private readonly ISubCategoryCacheHelper _subCategoryCacheHelper;
+
+		private readonly IUserOpreationServices _userOpreationServices;
         private readonly IOrderRepository _orderRepository;
         private readonly ICartServices _cartServices;
         private readonly IBackgroundJobClient _backgroundJobClient;
@@ -35,7 +43,12 @@ namespace E_Commerce.Services.Order
         private static readonly ConcurrentDictionary<int, SemaphoreSlim> _variantLocks = new();
 
         public OrderCommandService(
-            IProductCatalogService productCatalogService,
+            ISubCategoryCacheHelper subCategoryCacheHelper,
+            IProductVariantCacheHelper productVariantCacheHelper,
+            IProductCacheManger productCacheManger,
+            ICollectionCacheHelper collectionCacheHelper,
+
+			IProductCatalogService productCatalogService,
             IBackgroundJobClient backgroundJobClient,
             IErrorNotificationService errorNotificationService,
             UserManager<Customer> userManager,
@@ -48,7 +61,11 @@ namespace E_Commerce.Services.Order
             IOrderCacheHelper cacheHelper,
             IProductVariantCommandService productVariantCommandService)
         {
-            _productCatalogService = productCatalogService;
+            _subCategoryCacheHelper = subCategoryCacheHelper;
+            _productVariantCacheHelper = productVariantCacheHelper;
+            _collectionCacheHelper = collectionCacheHelper;
+            _productCacheManger = productCacheManger;
+			_productCatalogService = productCatalogService;
             _backgroundJobClient = backgroundJobClient;
             _errorNotificationService = errorNotificationService;
             _userManager = userManager;
@@ -62,17 +79,6 @@ namespace E_Commerce.Services.Order
             _productVariantCommandService = productVariantCommandService;
         }
 
-        /// <summary>
-        /// Safely acquires a lock for a product variant to prevent race conditions
-        /// </summary>
-        private SemaphoreSlim GetVariantLock(int variantId)
-        {
-            return _variantLocks.GetOrAdd(variantId, _ => new SemaphoreSlim(1, 1));
-        }
-
-        /// <summary>
-        /// Cleanup method to dispose locks and prevent memory leaks
-        /// </summary>
         public void Dispose()
         {
             Dispose(true);
@@ -129,36 +135,37 @@ namespace E_Commerce.Services.Order
 
                 if (cart.CheckoutDate == null || cart.CheckoutDate.Value.AddDays(7) < DateTime.UtcNow)
                     return Result<OrderWithPaymentDto>.Fail("Please checkout before creating order", 400);
-                #endregion
+				#endregion
 
-                #region Check Stock Availability (without reducing yet)
-                var variantIds = cart.Items
-                    .Where(i => i.Product.IsActive && i.DeletedAt == null)
-                    .Select(i => i.Product.productVariantForCartDto.Id)
-                    .ToList();
+				#region Check Stock Availability (without reducing yet)
+				var variantIds = cart.Items
+					.Where(i => i.Product.IsActive && i.DeletedAt == null)
+					.Select(i => i.Product.productVariantForCartDto.Id)
+					.ToList();
 
-                var variants = await _unitOfWork.Repository<ProductVariant>()
-                    .GetAll()
-                    .Where(v => variantIds.Contains(v.Id))
-                    .ToListAsync();
+				var variants = await _unitOfWork.Repository<ProductVariant>()
+					.GetAll().AsNoTracking().Include(v=>v.Product)
+					.Where(v => variantIds.Contains(v.Id))
+					.ToListAsync();
 
-                // Validate stock availability first without reducing
-                foreach (var item in cart.Items)
-                {
-                    var variant = variants.FirstOrDefault(v => v.Id == item.Product.productVariantForCartDto.Id);
-                    if (variant == null || variant.Quantity < item.Quantity)
-                    {
-                        await transaction.RollbackAsync();
-                        return Result<OrderWithPaymentDto>.Fail(
-                            $"Product {item.Product.Name} is not available in required quantity",
-                            400
-                        );
-                    }
-                }
-                #endregion
+				// Validate stock availability first without reducing
+				foreach (var item in cart.Items)
+				{
+					var variant = variants.FirstOrDefault(v => v.Id == item.Product.productVariantForCartDto.Id);
+					if (variant == null || variant.Quantity < item.Quantity)
+					{
+						await transaction.RollbackAsync();
+						return Result<OrderWithPaymentDto>.Fail(
+							$"Product '{item.Product.Name}' is not available in required quantity. " +
+							$"Requested: {item.Quantity}, Available: {(variant?.Quantity ?? 0)}",
+							400
+						);
+					}
+				}
+				#endregion
 
-                #region Create Order + Items
-                var subtotal = cart.Items.Sum(i => i.Quantity * i.UnitPrice);
+				#region Create Order + Items
+				var subtotal = cart.Items.Sum(i => i.Quantity * i.UnitPrice);
                 var total = subtotal;
 
                 var orderNumber = await _orderRepository.GenerateOrderNumberAsync();
@@ -196,31 +203,40 @@ namespace E_Commerce.Services.Order
                 }).ToList();
 
                 await _unitOfWork.Repository<OrderItem>().CreateRangeAsync(orderItems.ToArray());
-                #endregion
+				#endregion
 
-                #region Reduce Stock After Order Creation Succeeds
-                // Use ProductVariantCommandService methods instead of direct manipulation
-                foreach (var item in cart.Items)
-                {
-                    var variant = variants.FirstOrDefault(v => v.Id == item.Product.productVariantForCartDto.Id);
-                    if (variant != null)
-                    {
-                        // Use the proper service method to remove quantity
-                        var removeResult = await _productVariantCommandService.RemoveQuntityAfterOrder(variant.Id, item.Quantity);
-                        if (!removeResult.Success)
-                        {
-                            await transaction.RollbackAsync();
-                            return Result<OrderWithPaymentDto>.Fail(
-                                $"Failed to reduce stock for product variant {variant.Id}: {removeResult.Message}",
-                                500
-                            );
-                        }
-                    }
-                }
-                #endregion
+				#region Reduce Stock After Order Creation Succeeds
+				foreach (var item in cart.Items)
+				{
+					var variant = variants.FirstOrDefault(v => v.Id == item.Product.productVariantForCartDto.Id);
+					if (variant != null)
+					{
+						if (variant.Quantity < item.Quantity)
+						{
+							await transaction.RollbackAsync();
+							return Result<OrderWithPaymentDto>.Fail(
+								$"Insufficient stock for product '{item.Product.Name}'. " +
+								$"Requested: {item.Quantity}, Available: {variant.Quantity}",
+								400
+							);
+						}
 
-                #region Clear Cart + Commit
-                await _unitOfWork.Cart.ClearCartAsync(cart.Id);
+						var removeResult = await _productVariantCommandService.RemoveQuntityAfterOrder(variant.Id, item.Quantity);
+						if (!removeResult.Success)
+						{
+							await transaction.RollbackAsync();
+							return Result<OrderWithPaymentDto>.Fail(
+								$"Failed to reduce stock for product '{item.Product.Name}': No Enough Quntity",
+								409
+							);
+						}
+					}
+				}
+				#endregion
+
+
+				#region Clear Cart + Commit
+				await _unitOfWork.Cart.ClearCartAsync(cart.Id);
 
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
@@ -251,7 +267,7 @@ namespace E_Commerce.Services.Order
                     return Result<OrderWithPaymentDto>.Fail("Failed to retrieve created order", 500);
                 }
 
-                _backgroundJobClient.Enqueue(() => _cacheHelper.ClearOrderCache());
+                RemoveCacheAndRelated();
 
                 var response = new OrderWithPaymentDto { Order = mappedOrderDto };
 
@@ -272,52 +288,71 @@ namespace E_Commerce.Services.Order
             }
         }
 
-        public async Task<Result<bool>> UpdateOrderAfterPaid(int orderId, OrderStatus orderStatus)
-        {
-            await using var transaction = await _unitOfWork.BeginTransactionAsync();
-            try
-            {
-                var order = await _orderRepository.GetAll().Include(o => o.Items).Where(o => o.Id == orderId).FirstOrDefaultAsync();
-                if (order == null)
-                    return Result<bool>.Fail("Can't find order", 404);
+		public async Task<Result<bool>> UpdateOrderAfterPaid(int orderId, OrderStatus orderStatus)
+		{
+			_logger.LogInformation("Execute {Method}_id:{OrderId}_to status:{Status}",
+				nameof(UpdateOrderAfterPaid), orderId, orderStatus);
 
-                // Validate status transition
-                if (!IsValidTransition(order.Status, orderStatus))
-                    return Result<bool>.Fail($"Invalid status transition from {order.Status} to {orderStatus}", 400);
+			await using var transaction = await _unitOfWork.BeginTransactionAsync();
+			try
+			{
+				var order = await _orderRepository.GetAll()
+					.Include(o => o.Items)
+					.FirstOrDefaultAsync(o => o.Id == orderId);
 
-                // Handle stock reduction when moving to Processing status
-                if (orderStatus == OrderStatus.Processing && order.RestockedAt != null)
-                {
-                    // Don't queue background job yet - wait for transaction to succeed
-                    order.RestockedAt = null;
-                }
+				if (order == null)
+				{
+					_logger.LogWarning("Can't find order {OrderId}", orderId);
+					return Result<bool>.Fail("Can't find order", 404);
+				}
 
-                order.Status = orderStatus;
+				if (!IsValidTransition(order.Status, orderStatus))
+				{
+					_logger.LogWarning("Invalid status transition from {Old} to {New}", order.Status, orderStatus);
+					return Result<bool>.Fail($"Invalid status transition from {order.Status} to {orderStatus}", 400);
+				}
 
-                await _unitOfWork.CommitAsync();
-                await transaction.CommitAsync();
+				bool shouldReduceStock = false;
 
-                // Now that transaction succeeded, queue background jobs
-                if (orderStatus == OrderStatus.Processing && order.RestockedAt == null)
-                {
-                    _backgroundJobClient.Enqueue(() => ReduceQuantityOfProduct(order.Items.ToList()));
-                }
-                
-                _backgroundJobClient.Enqueue(() => _cacheHelper.ClearOrderCache());
+				if (orderStatus == OrderStatus.Processing)
+				{
+				
+					if (order.Status != OrderStatus.Processing || order.RestockedAt != null)
+					{
+						shouldReduceStock = true;
+						order.RestockedAt = null;
+					}
+				}
 
-                _logger.LogInformation("Updated order {OrderId} to {Status} after payment", orderId, order.Status);
-                return Result<bool>.Ok(true, "Order updated after payment", 200);
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                _logger.LogError(ex, "Error updating order {OrderId} after payment", orderId);
-                _cacheHelper.NotifyAdminError($"Error updating order {orderId} after payment: {ex.Message}", ex.StackTrace);
-                return Result<bool>.Fail("An error occurred while updating the order after payment", 500);
-            }
-        }
+				order.Status = orderStatus;
 
-        private async Task ReduceQuantityOfProduct(List<OrderItem> orderItems)
+				await _unitOfWork.CommitAsync();
+				await transaction.CommitAsync();
+
+
+				if (shouldReduceStock && order.Items.Any())
+				{
+                    var itemsToReduce = order.Items.ToList();
+
+					_backgroundJobClient.Enqueue(() => ReduceQuantityOfProduct(itemsToReduce));
+				}
+
+				RemoveCacheAndRelated();
+
+				_logger.LogInformation("Updated order {OrderId} to {Status} after payment", orderId, order.Status);
+				return Result<bool>.Ok(true, "Order updated after payment", 200);
+			}
+			catch (Exception ex)
+			{
+				await transaction.RollbackAsync();
+				_logger.LogError(ex, "Error updating order {OrderId} after payment", orderId);
+				_cacheHelper.NotifyAdminError($"Error updating order {orderId} after payment: {ex.Message}", ex.StackTrace);
+				return Result<bool>.Fail("An error occurred while updating the order after payment", 500);
+			}
+		}
+
+
+		private async Task ReduceQuantityOfProduct(List<OrderItem> orderItems)
         {
             // Use ProductVariantCommandService methods instead of direct manipulation
             foreach (var orderItem in orderItems)
@@ -329,22 +364,31 @@ namespace E_Commerce.Services.Order
                         orderItem.ProductVariantId, removeResult.Message);
                 }
             }
-            
-            _backgroundJobClient.Enqueue(() => _cacheHelper.ClearOrderCache());
-        }
 
-        private bool IsValidTransition(OrderStatus current, OrderStatus target)
+
+		}
+        private void RemoveCacheAndRelated()
+        {
+            _cacheHelper.ClearOrderCache();
+			_productVariantCacheHelper.RemoveProductCachesAsync();
+            _productCacheManger.ClearProductCache();
+            _collectionCacheHelper.ClearCollectionCache();
+            _subCategoryCacheHelper.ClearSubCategoryCache();
+
+		}
+		private bool IsValidTransition(OrderStatus current, OrderStatus target)
         {
             return current switch
             {
-                OrderStatus.PendingPayment => target is OrderStatus.Confirmed or OrderStatus.PaymentExpired or OrderStatus.CancelledByUser or OrderStatus.CancelledByAdmin,
-                OrderStatus.Confirmed => target is OrderStatus.Processing or OrderStatus.CancelledByAdmin,
-                OrderStatus.Processing => target is OrderStatus.Shipped or OrderStatus.CancelledByAdmin,
-                OrderStatus.Shipped => target is OrderStatus.Delivered or OrderStatus.Returned,
-                OrderStatus.Delivered => target is OrderStatus.Complete or OrderStatus.Returned or OrderStatus.Refunded,
-                OrderStatus.PaymentExpired => target is OrderStatus.PendingPayment or OrderStatus.CancelledByAdmin or OrderStatus.CancelledByUser,
-                _ => false
-            };
+				OrderStatus.PendingPayment => target is OrderStatus.Confirmed or OrderStatus.PaymentExpired or OrderStatus.CancelledByUser or OrderStatus.CancelledByAdmin,
+				OrderStatus.Confirmed => target is OrderStatus.Processing or OrderStatus.CancelledByAdmin,
+				OrderStatus.Processing => target is OrderStatus.Shipped or OrderStatus.CancelledByAdmin, // optional depending on policy
+				OrderStatus.Shipped => target is OrderStatus.Delivered,
+				OrderStatus.Delivered => target is OrderStatus.Complete or OrderStatus.Returned or OrderStatus.Refunded,
+				OrderStatus.PaymentExpired => target is OrderStatus.CancelledByAdmin or OrderStatus.CancelledByUser, // allow back to PendingPayment only if retry supported
+				_ => false
+
+			};
         }
 
         private async Task<Result<bool>> UpdateStatusAsync(
@@ -382,9 +426,9 @@ namespace E_Commerce.Services.Order
 
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-                _backgroundJobClient.Enqueue(() => _cacheHelper.ClearOrderCache());
+				RemoveCacheAndRelated();
 
-                return Result<bool>.Ok(true, successMessage, 200);
+				return Result<bool>.Ok(true, successMessage, 200);
             }
             catch (Exception ex)
             {
@@ -467,7 +511,7 @@ namespace E_Commerce.Services.Order
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
-                _backgroundJobClient.Enqueue(() => _cacheHelper.ClearOrderCache());
+                RemoveCacheAndRelated();
                 _backgroundJobClient.Enqueue(() => RestockOrderItemsInBackground(orderId));
 
                 return Result<bool>.Ok(true, "Order cancelled successfully", 200);
@@ -525,7 +569,7 @@ namespace E_Commerce.Services.Order
                 }
 
                 // ✅ Schedule background jobs
-                _backgroundJobClient.Enqueue(() => _cacheHelper.ClearOrderCache());
+                RemoveCacheAndRelated();
                 _backgroundJobClient.Enqueue(() => RestockOrderItemsInBackground(orderId));
 
                 return Result<bool>.Ok(true, "Order cancelled by admin", 200);
@@ -568,7 +612,7 @@ namespace E_Commerce.Services.Order
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
                 _backgroundJobClient.Enqueue(() => RestockOrderItemsInBackground(orderId));
-                _backgroundJobClient.Enqueue(() => _cacheHelper.ClearOrderCache());
+                RemoveCacheAndRelated();
                 _logger.LogInformation("Order {OrderId} auto-expired and restock scheduled", orderId);
             }
             catch (Exception ex)
@@ -650,7 +694,7 @@ namespace E_Commerce.Services.Order
                 order.RestockedAt = DateTime.UtcNow;
 
                 await _unitOfWork.CommitAsync();
-                _backgroundJobClient.Enqueue(() => _cacheHelper.ClearOrderCache());
+                RemoveCacheAndRelated();
 
                 _logger.LogInformation("Restocked inventory for order {OrderId}", orderId);
             }

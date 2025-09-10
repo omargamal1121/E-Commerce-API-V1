@@ -1,7 +1,7 @@
 using E_Commerce.DtoModels.ProductDtos;
 using E_Commerce.Models;
 
-namespace E_Commerce.Services.ProductServices
+namespace E_Commerce.Services.ProductVariantServices
 {
     public interface IProductVariantMapper
     {

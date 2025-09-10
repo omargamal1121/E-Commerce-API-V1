@@ -1,15 +1,21 @@
 using E_Commerce.DtoModels.ProductDtos;
 using E_Commerce.DtoModels.Responses;
 using E_Commerce.Enums;
+using E_Commerce.Services.ProductVariantServices;
 
-namespace E_Commerce.Services.ProductServices
+namespace E_Commerce.Services.ProductVariantServices
 {
     public interface IProductVariantService
     {
         Task<Result<List<ProductVariantDto>>> GetProductVariantsAsync(int productId);
         Task<Result<List<ProductVariantDto>>> GetProductVariantsAsync(int productId, bool? isActive, bool? deletedOnly);
         Task<Result<ProductVariantDto>> GetVariantByIdAsync(int id);
-        Task<Result<ProductVariantDto>> AddVariantAsync(int productId, CreateProductVariantDto dto, string userId);
+        Task<Result<List<ProductVariantDto>>> AddVariantsAsync(
+        int productId,
+        List<CreateProductVariantDto> dtos,
+        string userId);
+
+		Task<Result<ProductVariantDto>> AddVariantAsync(int productId, CreateProductVariantDto dto, string userId);
         Task<Result<ProductVariantDto>> UpdateVariantAsync(int id, UpdateProductVariantDto dto, string userId);
         Task<Result<bool>> DeleteVariantAsync(int id, string userId);
 
@@ -59,10 +65,14 @@ namespace E_Commerce.Services.ProductServices
 
         public async Task<Result<bool>> DeleteVariantAsync(int id, string userId)
             => await _commandService.DeleteVariantAsync(id, userId);
+        public async Task<Result<List<ProductVariantDto>>> AddVariantsAsync(
+            int productId,
+            List<CreateProductVariantDto> dtos,
+            string userId)
+            => await _commandService.AddVariantsAsync(productId, dtos, userId);
 
-       
 
-        public async Task<Result<bool>> ActivateVariantAsync(int id, string userId)
+		public async Task<Result<bool>> ActivateVariantAsync(int id, string userId)
             => await _commandService.ActivateVariantAsync(id, userId);
 
         public async Task<Result<bool>> DeactivateVariantAsync(int id, string userId)

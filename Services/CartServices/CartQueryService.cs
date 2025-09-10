@@ -131,7 +131,7 @@ namespace E_Commerce.Services.CartServices
             }
         }
 
-        private async Task RemoveCheckout(string userid)
+        public async Task RemoveCheckout(string userid)
         {
             var cart = await _cartRepository.GetCartByUserIdAsync(userid);
             if (cart != null && cart.CheckoutDate != null)

@@ -5,7 +5,7 @@ using E_Commerce.Enums;
 using Microsoft.AspNetCore.Authorization;
 using E_Commerce.DtoModels.Responses;
 using E_Commerce.ErrorHnadling;
-using E_Commerce.Services.ProductServices;
+using E_Commerce.Services.ProductVariantServices;
 
 namespace E_Commerce.Controllers
 {
@@ -57,10 +57,10 @@ namespace E_Commerce.Controllers
             return HandleResult<ProductVariantDto>(result);
         }
 
-        // POST api/products/{productId}/variants
-        [HttpPost]
+      
+        [HttpPost()]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ApiResponse<ProductVariantDto>>> CreateVariant(int productId, [FromBody] CreateProductVariantDto dto)
+        public async Task<ActionResult<ApiResponse<List<ProductVariantDto>>>> CreateVariants(int productId, [FromBody] List<CreateProductVariantDto> dto)
         {
             if (!ModelState.IsValid)
             {
@@ -73,8 +73,8 @@ namespace E_Commerce.Controllers
             }
             
             var userId = HttpContext.Items["UserId"]?.ToString();
-            var result = await _variantService.AddVariantAsync(productId, dto, userId);
-            return HandleResult<ProductVariantDto>(result, nameof(GetVariantById), result.Data?.Id, productId);
+            var result = await _variantService.AddVariantsAsync(productId, dto, userId);
+            return HandleResult(result, nameof(CreateVariants));
         }
 
         // PUT api/products/{productId}/variants/{id}

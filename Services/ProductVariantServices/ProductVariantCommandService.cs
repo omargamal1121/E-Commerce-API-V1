@@ -9,8 +9,13 @@ using Microsoft.EntityFrameworkCore;
 using Hangfire;
 using E_Commerce.Services.EmailServices;
 using E_Commerce.Services.AdminOperationServices;
+using E_Commerce.Services.ProductServices;
+using E_Commerce.Services.ProductVariantServices;
+using Microsoft.IdentityModel.Tokens;
+using E_Commerce.Services.SubCategoryServices;
+using E_Commerce.Services.Collection;
 
-namespace E_Commerce.Services.ProductServices
+namespace E_Commerce.Services.ProductVariantServices
 {
     public class ProductVariantCommandService : IProductVariantCommandService
     {
@@ -22,9 +27,17 @@ namespace E_Commerce.Services.ProductServices
         private readonly IProductCatalogService _productCatalogService;
         private readonly IProductVariantCacheHelper _cacheHelper;
         private readonly IProductVariantMapper _mapper;
+        private readonly IProductCacheManger _productCacheManger;
+        private readonly ISubCategoryCacheHelper _subCategoryCacheHelper;
+        
+        private readonly ICollectionCacheHelper _collectionCacheHelper;
 
-        public ProductVariantCommandService(
-            IUnitOfWork unitOfWork,
+		public ProductVariantCommandService(
+
+            ISubCategoryCacheHelper subCategoryCacheHelper,
+            ICollectionCacheHelper  collectionCacheHelper,
+            IProductCacheManger productCacheManger,
+			IUnitOfWork unitOfWork,
             ILogger<ProductVariantCommandService> logger,
             IAdminOpreationServices adminOpreationServices,
             IErrorNotificationService errorNotificationService,
@@ -33,7 +46,10 @@ namespace E_Commerce.Services.ProductServices
             IProductVariantCacheHelper cacheHelper,
             IProductVariantMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            _subCategoryCacheHelper = subCategoryCacheHelper;
+            _productCacheManger = productCacheManger;
+            _collectionCacheHelper = collectionCacheHelper;
+			_unitOfWork = unitOfWork;
             _logger = logger;
             _adminOpreationServices = adminOpreationServices;
             _errorNotificationService = errorNotificationService;
@@ -43,8 +59,9 @@ namespace E_Commerce.Services.ProductServices
             _mapper = mapper;
         }
 
-        #region Quantity Management Methods
-        public async Task<Result<bool>> AddQuntityAfterRestoreOrder(int id, int addQuantity)
+
+		#region Quantity Management Methods
+		public async Task<Result<bool>> AddQuntityAfterRestoreOrder(int id, int addQuantity)
         {
             _logger.LogInformation($"Adding quantity for variant: {id}");
             using var transaction = await _unitOfWork.BeginTransactionAsync();
@@ -53,7 +70,7 @@ namespace E_Commerce.Services.ProductServices
                 if (addQuantity <= 0)
                     return Result<bool>.Fail("Add quantity must be positive", 400);
 
-                var variant = await _unitOfWork.Repository<ProductVariant>().GetByIdAsync(id);
+                var variant = await _unitOfWork.Repository< ProductVariant>().GetByIdAsync(id);
                 if (variant == null)
                     return Result<bool>.Fail("Variant not found", 404);
 
@@ -61,10 +78,9 @@ namespace E_Commerce.Services.ProductServices
 
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-                // Update cache and product catalog
-                _cacheHelper.RemoveProductCachesAsync();
+				_backgroundJobClient.Enqueue(() => _productCatalogService.UpdateProductQuantity(variant.ProductId));
 
-                _logger.LogInformation($"Quantity for variant {id} restored to {variant.Quantity}");
+				_logger.LogInformation($"Quantity for variant {id} restored to {variant.Quantity}");
                 return Result<bool>.Ok(true);
             }
             catch (Exception ex)
@@ -107,10 +123,16 @@ namespace E_Commerce.Services.ProductServices
                     );
                 }
 				_backgroundJobClient.Enqueue(() => _productCatalogService.UpdateProductQuantity(variant.ProductId));
-				_cacheHelper.RemoveProductCachesAsync();
-                await _unitOfWork.CommitAsync();
+				var affectedRows = await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+					"UPDATE ProductVariants SET Quantity = Quantity - {0} WHERE Id = {1} AND Quantity >= {0}",
+					quantity, id
+				);
 
-                return Result<bool>.Ok(true);
+				if (affectedRows == 0)
+				{
+					return Result<bool>.Fail("Not enough quantity or someone else already bought it", 400);
+				}
+				return Result<bool>.Ok(true);
             }
             catch (Exception ex)
             {
@@ -124,19 +146,33 @@ namespace E_Commerce.Services.ProductServices
         #endregion
 
         #region Product Lifecycle Management Methods
-        private async Task CheckAndDeactivateProductIfAllVariantsInactiveOrZeroAsync(int productId)
+        public async Task CheckAndDeactivateProductIfAllVariantsInactiveOrZeroAsync(int productId)
         {
-            var variants = await _unitOfWork.Repository<ProductVariant>().GetAll()
-                .Where(v => v.ProductId == productId && v.DeletedAt == null)
-                .ToListAsync();
-            if (variants.Count == 0 || variants.All(v => !v.IsActive || v.Quantity == 0))
+            try
             {
-                var product = await _unitOfWork.Product.GetByIdAsync(productId);
-                if (product != null && product.IsActive)
-                {
-                    await _productCatalogService.DeactivateProductAsync(productId, "system");
-                }
+				var variants = await _unitOfWork.Repository<ProductVariant>().GetAll()
+			  .Where(v => v.ProductId == productId && v.DeletedAt == null)
+			  .ToListAsync();
+				if (variants.Count == 0 || variants.All(v => !v.IsActive || v.Quantity == 0))
+				{
+					var product = await _unitOfWork.Product.GetByIdAsync(productId);
+					if (product != null && product.IsActive)
+					{
+						product.IsActive = false;
+						product.ModifiedAt = DateTime.UtcNow;
+						await _unitOfWork.CommitAsync();
+                        RemoveCacheAndRelatedCaches();
+					}
+				}
+
+			}
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+
+             _backgroundJobClient.Enqueue(()=>  _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
             }
+          
         }
         #endregion
 
@@ -202,8 +238,8 @@ namespace E_Commerce.Services.ProductServices
 
                 // Map to DTO and cache
                 var variantDto = _mapper.MapToProductVariantDto(variant);
-                await _cacheHelper.CacheVariantAsync(variant.Id, variantDto);
-                _cacheHelper.RemoveProductCachesAsync();
+               
+                RemoveCacheAndRelatedCaches();
 
                 _logger.LogInformation($"Successfully completed adding variant (ID: {variant.Id}) to product {productId}");
                 return Result<ProductVariantDto>.Ok(variantDto, "Variant added successfully", 201);
@@ -217,10 +253,115 @@ namespace E_Commerce.Services.ProductServices
                 return Result<ProductVariantDto>.Fail("Error adding variant", 500);
             }
         }
-        #endregion
 
-        #region Update Operations Methods
-        public async Task<Result<ProductVariantDto>> UpdateVariantAsync(int id, UpdateProductVariantDto dto, string userId)
+		private void RemoveCacheAndRelatedCaches()
+		{
+			_cacheHelper.RemoveProductCachesAsync();
+			_collectionCacheHelper.ClearCollectionDataCache();
+			_subCategoryCacheHelper.ClearSubCategoryDataCache();
+			_productCacheManger.ClearProductCache();
+		}
+
+		public async Task<Result<List<ProductVariantDto>>> AddVariantsAsync(
+		int productId,
+		List<CreateProductVariantDto> dtos,
+		string userId)
+		{
+			_logger.LogInformation("Adding variants to product: {ProductId}", productId);
+
+			// ? Check if product exists
+			var productExists = await _unitOfWork.Product.IsExsistAsync(productId);
+			if (!productExists)
+				return Result<List<ProductVariantDto>>.Fail("Product not found", 404);
+
+			// ? Validate input
+			if (dtos == null || !dtos.Any())
+				return Result<List<ProductVariantDto>>.Fail("Color and Size are required", 400);
+
+			using var transaction = await _unitOfWork.BeginTransactionAsync();
+			var newVariants = new List<ProductVariant>();
+			var errors = new List<string>();
+
+			foreach (var dto in dtos)
+			{
+				_logger.LogInformation(
+					"Checking if variant with color={Color}, size={Size}, waist={Waist}, length={Length} already exists for product {ProductId}",
+					dto.Color, dto.Size, dto.Waist, dto.Length, productId);
+
+				var exists = await _unitOfWork.ProductVariant.IsExsistBySizeandColor(
+					productId, dto.Color, dto.Size, dto.Waist, dto.Length);
+
+				if (exists)
+				{
+					_logger.LogWarning(
+						"Duplicate variant found for product {ProductId} (Color={Color}, Size={Size}, Waist={Waist}, Length={Length})",
+						productId, dto.Color, dto.Size, dto.Waist, dto.Length);
+
+					errors.Add(
+						$"Variant already exists (Color: {dto.Color}, Size: {dto.Size}, Waist: {dto.Waist}, Length: {dto.Length})");
+					continue;
+				}
+
+				var variant = _mapper.MapToProductVariant(dto);
+				variant.ProductId = productId;
+				newVariants.Add(variant);
+			}
+			if (!newVariants.Any())
+			{
+				await transaction.RollbackAsync();
+				_logger.LogWarning("No new variants added for product {ProductId}. All were duplicates.", productId);
+				return Result<List<ProductVariantDto>>.Fail("No new variants were added", 400, errors);
+			}
+
+			try
+			{
+				// ? Save to DB
+				var created = await _unitOfWork.Repository<ProductVariant>().CreateRangeAsync(newVariants.ToArray());
+				if (created == null || !created.Any())
+				{
+					await transaction.RollbackAsync();
+					return Result<List<ProductVariantDto>>.Fail("Failed to add variants", 400, errors);
+				}
+
+
+
+				var isAdded = await _adminOpreationServices.AddAdminOpreationAsync(
+					$"Add Variant(s) to Product {productId}",
+					Opreations.AddOpreation,
+					userId,
+					productId);
+
+				if (isAdded == null)
+				{
+					_logger.LogError("Failed to record admin operation for product {ProductId}", productId);
+					await transaction.RollbackAsync();
+					return Result<List<ProductVariantDto>>.Fail("Error adding variant", 500);
+				}
+
+				await _unitOfWork.CommitAsync();
+				await transaction.CommitAsync();
+
+				RemoveCacheAndRelatedCaches();
+				_backgroundJobClient.Enqueue(() => _productCatalogService.UpdateProductQuantity(productId));
+				var variantDtos = _mapper.MapToProductVariantDtoList(created);
+				_logger.LogInformation("Successfully added {Count} variant(s) to product {ProductId}", variantDtos.Count, productId);
+
+				return Result<List<ProductVariantDto>>.Ok(variantDtos, "Variants added successfully", 201,errors);
+			}
+			catch (Exception ex)
+			{
+				await transaction.RollbackAsync();
+				_logger.LogError(ex, "Error adding variants to product {ProductId}. Transaction rolled back.", productId);
+				_backgroundJobClient.Enqueue(() => _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
+
+				return Result<List<ProductVariantDto>>.Fail("Error adding variants", 500, errors);
+			}
+		}
+
+		#endregion
+
+		#region Update Operations Methods
+		public async Task<Result<ProductVariantDto>> UpdateVariantAsync(int id, UpdateProductVariantDto dto, string userId)
         {
             _logger.LogInformation($"Updating variant: {id}");
             using var transaction = await _unitOfWork.BeginTransactionAsync();
@@ -288,8 +429,8 @@ namespace E_Commerce.Services.ProductServices
 
                 // Update cache and map to DTO
                 var variantDto = _mapper.MapToProductVariantDto(variant);
-                await _cacheHelper.CacheVariantAsync(id, variantDto);
-               _cacheHelper.RemoveProductCachesAsync();
+                 _cacheHelper.CacheVariantAsync(id, variantDto);
+               RemoveCacheAndRelatedCaches();
 
                 return Result<ProductVariantDto>.Ok(variantDto, "Variant updated successfully", 200);
             }
@@ -317,8 +458,8 @@ namespace E_Commerce.Services.ProductServices
                     return Result<bool>.Fail("Variant not found", 404);
 
                 var isinorders = await _unitOfWork.Repository<OrderItem>().GetAll().AnyAsync(i => i.ProductVariantId == id &&
-                (i.Order.Status != OrderStatus.CancelledByAdmin && i.Order.Status != OrderStatus.CancelledByUser &&
-                i.Order.Status != OrderStatus.Complete)
+                i.Order.Status != OrderStatus.CancelledByAdmin && i.Order.Status != OrderStatus.CancelledByUser &&
+                i.Order.Status != OrderStatus.Complete
                 );
                 if (isinorders)
                 {
@@ -354,9 +495,9 @@ namespace E_Commerce.Services.ProductServices
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
-                // Update cache and check product status
-               _cacheHelper.RemoveProductCachesAsync();
-                _logger.LogInformation($"Checking if product {variant.ProductId} should be deactivated after variant deletion");
+				// Update cache and check product status
+				RemoveCacheAndRelatedCaches();
+				_logger.LogInformation($"Checking if product {variant.ProductId} should be deactivated after variant deletion");
                 await CheckAndDeactivateProductIfAllVariantsInactiveOrZeroAsync(variant.ProductId);
 
                 _logger.LogInformation($"Successfully completed all operations for deleting variant {id}");
@@ -415,7 +556,7 @@ namespace E_Commerce.Services.ProductServices
                 }
                 _logger.LogInformation($"Successfully activated variant {id}");
                 _logger.LogInformation($"Updating product {varaintinfo.productid} quantity after activating variant {id}");
-                _productCatalogService.UpdateProductQuantity(varaintinfo.productid);
+   
 
                 _logger.LogInformation($"Recording admin operation for activating variant {id} by user {userId}");
                 var isAdded = await _adminOpreationServices.AddAdminOpreationAsync(
@@ -437,10 +578,11 @@ namespace E_Commerce.Services.ProductServices
                 await transaction.CommitAsync();
 
                 // Update cache
-                _cacheHelper.RemoveProductCachesAsync();
+                RemoveCacheAndRelatedCaches();
 
                 _logger.LogInformation($"Successfully completed all operations for activating variant {id}");
-                return Result<bool>.Ok(true, "Variant activated", 200);
+				_backgroundJobClient.Enqueue(()=> _productCatalogService.UpdateProductQuantity(varaintinfo.productid));
+				return Result<bool>.Ok(true, "Variant activated", 200);
             }
             catch (Exception ex)
             {
@@ -479,7 +621,6 @@ namespace E_Commerce.Services.ProductServices
                 }
                 _logger.LogInformation($"Successfully deactivated variant {id}");
 
-                _productCatalogService.UpdateProductQuantity(varaintinfo.productid);
 
                 await _adminOpreationServices.AddAdminOpreationAsync(
                     $"Deactivate Variant {id}",
@@ -492,8 +633,11 @@ namespace E_Commerce.Services.ProductServices
                 await transaction.CommitAsync();
 
                 // Update cache and check product status
-                _cacheHelper.RemoveProductCachesAsync();
-                await CheckAndDeactivateProductIfAllVariantsInactiveOrZeroAsync(varaintinfo.productid);
+                   RemoveCacheAndRelatedCaches();
+                _backgroundJobClient.Enqueue(()=> CheckAndDeactivateProductIfAllVariantsInactiveOrZeroAsync(varaintinfo.productid));
+
+                _backgroundJobClient.Enqueue(() =>
+                _productCatalogService.UpdateProductQuantity(varaintinfo.productid));
 
                 return Result<bool>.Ok(true, "Variant deactivated", 200);
             }
@@ -540,7 +684,7 @@ namespace E_Commerce.Services.ProductServices
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
-               _cacheHelper.RemoveProductCachesAsync();
+               RemoveCacheAndRelatedCaches();
 				_backgroundJobClient.Enqueue(() => _productCatalogService.UpdateProductQuantity(variant.ProductId));
 
                 return Result<bool>.Ok(true, "Quantity added successfully", 200);
@@ -589,7 +733,7 @@ namespace E_Commerce.Services.ProductServices
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
-				_cacheHelper.RemoveProductCachesAsync();
+				RemoveCacheAndRelatedCaches();
 
 				return Result<bool>.Ok(true, "Quantity removed successfully", 200);
             }
@@ -652,7 +796,7 @@ namespace E_Commerce.Services.ProductServices
                 await _unitOfWork.CommitAsync();
 
 
-                _cacheHelper.RemoveProductCachesAsync();
+                RemoveCacheAndRelatedCaches();
 
                 _logger.LogInformation($"Committing transaction for restoring variant {id}");
                 await transaction.CommitAsync();

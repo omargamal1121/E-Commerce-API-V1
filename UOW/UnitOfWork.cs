@@ -10,7 +10,6 @@ using StackExchange.Redis;
 
 public class UnitOfWork : IUnitOfWork
 {
-	private readonly AppDbContext _context;
 	private readonly Dictionary<Type, object> _repositories = new();
 	private readonly ILoggerFactory _loggerFactory;
 	private readonly IConnectionMultiplexer _redis;
@@ -26,7 +25,10 @@ public class UnitOfWork : IUnitOfWork
 	public IImageRepository Image { get; }
 	public ICustomerAddressRepository CustomerAddress { get; }
 
+	public AppDbContext context { get; }
+
 	public UnitOfWork(
+		AppDbContext dbContext,
 		IProductVariantRepository productVariant,
 		ISubCategoryRepository subCategory,
 		IProductRepository product,
@@ -36,12 +38,12 @@ public class UnitOfWork : IUnitOfWork
 		IWareHouseRepository wareHouse,
 		IProductInventoryRepository productInventory,
 		IConnectionMultiplexer redis,
-		AppDbContext context,
 		ICategoryRepository category,
 		ILoggerFactory loggerFactory,
 		IImageRepository imageRepository,
 		ICustomerAddressRepository customerAddressRepository)
 	{ 
+		context = dbContext;
 		ProductVariant = productVariant;
 		SubCategory = subCategory;
 		Product = product;
@@ -51,7 +53,6 @@ public class UnitOfWork : IUnitOfWork
 		WareHouse = wareHouse;
 		ProductInventory = productInventory;
 		_redis = redis;
-		_context = context;
 		Category = category;
 		_loggerFactory = loggerFactory;
 		Image = imageRepository;
@@ -61,12 +62,12 @@ public class UnitOfWork : IUnitOfWork
 	public async Task<int> CommitAsync()
 	{
 	
-		return await _context.SaveChangesAsync();
+		return await context.SaveChangesAsync();
 	}
 
 	public void Dispose()
 	{
-		_context.Dispose();
+		context.Dispose();
 	}
 
 	public IRepository<T> Repository<T>() where T : BaseEntity
@@ -77,7 +78,7 @@ public class UnitOfWork : IUnitOfWork
 			var logger = _loggerFactory.CreateLogger<MainRepository<T>>();
 
 		
-			var repository = new MainRepository<T>(_context, logger);
+			var repository = new MainRepository<T>(context, logger);
 			_repositories.Add(typeof(T), repository);
 		}
 
@@ -85,6 +86,6 @@ public class UnitOfWork : IUnitOfWork
 	}
 	public async Task<IDbContextTransaction> BeginTransactionAsync()
 	{
-		return await _context.Database.BeginTransactionAsync();
+		return await context.Database.BeginTransactionAsync();
 	}
 }

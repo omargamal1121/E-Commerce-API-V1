@@ -4907,22 +4907,22 @@
           "content": {
             "application/json-patch+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreatePaymentRequest"
+                "$ref": "#/components/schemas/CreatePaymentRequestDto"
               }
             },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreatePaymentRequest"
+                "$ref": "#/components/schemas/CreatePaymentRequestDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreatePaymentRequest"
+                "$ref": "#/components/schemas/CreatePaymentRequestDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreatePaymentRequest"
+                "$ref": "#/components/schemas/CreatePaymentRequestDto"
               }
             }
           }
@@ -7081,22 +7081,34 @@
           "content": {
             "application/json-patch+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateProductVariantDto"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateProductVariantDto"
+                }
               }
             },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateProductVariantDto"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateProductVariantDto"
+                }
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateProductVariantDto"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateProductVariantDto"
+                }
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateProductVariantDto"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateProductVariantDto"
+                }
               }
             }
           }
@@ -7107,17 +7119,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductVariantDtoApiResponse"
+                  "$ref": "#/components/schemas/ProductVariantDtoListApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductVariantDtoApiResponse"
+                  "$ref": "#/components/schemas/ProductVariantDtoListApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductVariantDtoApiResponse"
+                  "$ref": "#/components/schemas/ProductVariantDtoListApiResponse"
                 }
               }
             }
@@ -9261,7 +9273,7 @@
         },
         "additionalProperties": false
       },
-      "CreatePaymentRequest": {
+      "CreatePaymentRequestDto": {
         "type": "object",
         "properties": {
           "orderId": {

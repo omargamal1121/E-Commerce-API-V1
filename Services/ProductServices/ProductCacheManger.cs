@@ -1,6 +1,8 @@
 ﻿
 using E_Commerce.Services.Cache;
+using E_Commerce.Services.Collection;
 using E_Commerce.Services.EmailServices;
+using E_Commerce.Services.SubCategoryServices;
 using Hangfire;
 
 namespace E_Commerce.Services.ProductServices
@@ -32,6 +34,7 @@ namespace E_Commerce.Services.ProductServices
 		public void ClearProductCache()
 		{
 			_jobClient.Enqueue(() => _cacheManager.RemoveByTagsAsync(_ProductTags));
+			
 		}
 	
 		public void ClearProductListCache()

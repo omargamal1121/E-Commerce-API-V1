@@ -9,6 +9,7 @@ using E_Commerce.Models;
 using E_Commerce.Services.AdminOperationServices;
 using E_Commerce.Services.Cache;
 using E_Commerce.Services.CartServices;
+using E_Commerce.Services.Collection;
 using E_Commerce.Services.EmailServices;
 using E_Commerce.Services.Order;
 using E_Commerce.Services.SubCategoryServices;
@@ -30,10 +31,13 @@ namespace E_Commerce.Services.ProductServices
 		private readonly IAdminOpreationServices _adminOpreationServices;
 		private readonly IErrorNotificationService _errorNotificationService;
 		private readonly ICartServices _cartServices;
+		private readonly ICollectionCacheHelper _collectionCacheHelper ;
+	
 
 		private readonly ISubCategoryCacheHelper _SubCategoryCacheHelper;
 
 		public ProductDiscountService(
+			ICollectionCacheHelper collectionCacheHelper,
 			ISubCategoryCacheHelper subCategoryCacheHelper,
 			IProductCacheManger productCacheManger,
 			IproductMapper iproductMapper,
@@ -45,6 +49,7 @@ namespace E_Commerce.Services.ProductServices
 			IAdminOpreationServices adminOpreationServices,
 			IErrorNotificationService errorNotificationService)
 		{ 
+			_collectionCacheHelper = collectionCacheHelper;
 			_SubCategoryCacheHelper = subCategoryCacheHelper;
 			_productCacheManger = productCacheManger;
 			_productMapper = iproductMapper;
@@ -54,6 +59,13 @@ namespace E_Commerce.Services.ProductServices
 			_logger = logger;
 			_adminOpreationServices = adminOpreationServices;
 			_errorNotificationService = errorNotificationService;
+		}
+
+		private void RemoveCacheAndRelatedCaches()
+		{
+			_collectionCacheHelper.ClearCollectionDataCache();
+			_SubCategoryCacheHelper.ClearSubCategoryDataCache();
+			_productCacheManger.ClearProductCache();
 		}
 
 		public async Task<Result<List<ProductDto>>> ApplyDiscountToProductsAsync(ApplyDiscountToProductsDto dto, string userId)
@@ -146,9 +158,8 @@ namespace E_Commerce.Services.ProductServices
                     _logger.LogInformation($"Discount {dto.Discountid} is not active. Skipping cart and order price updates.");
                 }
 
-                // Clear cache
-                _productCacheManger.ClearProductCache();
-				_SubCategoryCacheHelper.ClearSubCategoryDataCache();
+				// Clear cache
+				RemoveCacheAndRelatedCaches();
 				var updatedProducts = _unitOfWork.Product
 					.GetAll()
 					.Where(p => dto.ProductsId.Contains(p.Id));
@@ -243,9 +254,7 @@ namespace E_Commerce.Services.ProductServices
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
-		
-		      _productCacheManger.ClearProductCache();
-			_SubCategoryCacheHelper.ClearSubCategoryDataCache();
+				RemoveCacheAndRelatedCaches();
 
 
 				var updatedProducts = _unitOfWork.Product
@@ -374,7 +383,7 @@ namespace E_Commerce.Services.ProductServices
 					_logger.LogInformation($"Discount {discountId} is not active. Skipping cart and order price updates for product: {productId}");
 				}
 
-		      _productCacheManger.ClearProductCache();
+				RemoveCacheAndRelatedCaches();
 
 				var message = "Discount added successfully";
 				if (!isDiscountActive)
@@ -476,8 +485,7 @@ namespace E_Commerce.Services.ProductServices
 					_logger.LogInformation($"[UpdateProductDiscountAsync] Discount {discountId} is not active. Skipping cart and order price updates for product: {productId}");
 				}
 
-		      _productCacheManger.ClearProductCache();
-				_SubCategoryCacheHelper.ClearSubCategoryDataCache();
+				RemoveCacheAndRelatedCaches();
 
 				var message = "Discount updated successfully";
 				if (!isDiscountActive)
@@ -537,7 +545,7 @@ namespace E_Commerce.Services.ProductServices
 				_backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterRemoveDiscountAsync(new List<int> { productId }) );
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-		      _productCacheManger.ClearProductCache();
+				RemoveCacheAndRelatedCaches();
 				_SubCategoryCacheHelper.ClearSubCategoryDataCache();
 
 				_logger.LogInformation($"[RemoveDiscountFromProductAsync] Discount removed successfully for productId={productId}");

@@ -1,9 +1,7 @@
 using E_Commerce.Interfaces;
-using E_Commerce.Services.CategoryServcies;
-using E_Commerce.Services.CategoryServices;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace E_Commerce.Services.CategoryServcies
+namespace E_Commerce.Services.CategoryServices
 {
     public static class CategoryServiceRegistration
     {

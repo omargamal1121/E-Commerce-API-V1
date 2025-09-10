@@ -27,8 +27,8 @@ namespace E_Commerce.Controllers
 		/// POST /api/payment
 		/// </summary>
 		[HttpPost]
-		[Authorize(Roles = "Customer,Admin")]
-		public async Task<ActionResult<ApiResponse<PaymentResponseDto>>> CreatePayment([FromBody] CreatePaymentRequest paymentRequest)
+		[Authorize(Roles = "User,Admin")]
+		public async Task<ActionResult<ApiResponse<PaymentResponseDto>>> CreatePayment([FromBody] CreatePaymentRequestDto paymentRequest)
 		{
 			try
 			{
@@ -145,7 +145,7 @@ namespace E_Commerce.Controllers
 
 		private string GetUserRole()
 		{
-			return User.FindFirst(ClaimTypes.Role)?.Value ?? "Customer";
+			return User.FindFirst(ClaimTypes.Role)?.Value ?? "User";
 		}
 
 		private List<string> GetModelErrors()
@@ -188,14 +188,8 @@ namespace E_Commerce.Controllers
 }
 
 // Supporting DTOs for the PaymentController
-public class CreatePaymentRequest
+public class CreatePaymentRequestDto
 {
 	public string OrderId { get; set; } = string.Empty;
 	public CreatePaymentOfCustomer PaymentDetails { get; set; } = new();
-}
-
-public class UpdatePaymentStatusRequest
-{
-	public string Status { get; set; } = string.Empty;
-	public string? Notes { get; set; }
 }

@@ -20,7 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace E_Commerce.Services.CategoryServcies
+namespace E_Commerce.Services.CategoryServices
 {
 	public class CategoryServices : ICategoryServices
 	{

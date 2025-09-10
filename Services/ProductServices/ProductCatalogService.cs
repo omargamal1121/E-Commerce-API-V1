@@ -18,6 +18,8 @@ using Hangfire;
 using System.Linq.Expressions;
 using E_Commerce.Services.SubCategoryServices;
 using E_Commerce.Services.AdminOperationServices;
+using System.Threading.Tasks;
+using E_Commerce.Services.Collection;
 
 namespace E_Commerce.Services.ProductServices
 {
@@ -25,7 +27,7 @@ namespace E_Commerce.Services.ProductServices
 	{
 		
 		Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive, bool? deletedOnly);
-		public void UpdateProductQuantity(int Productid  );
+		public Task UpdateProductQuantity(int Productid  );
 		Task<Result<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId);
 		Task<Result<ProductDto>> UpdateProductAsync(int id, UpdateProductDto dto, string userId);
 		Task<Result<bool>> DeleteProductAsync(int id, string userId);
@@ -38,6 +40,7 @@ namespace E_Commerce.Services.ProductServices
 	public class ProductCatalogService : IProductCatalogService
 	{
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly ICollectionCacheHelper _collectionCacheHelper;
 		private readonly IproductMapper _productMapper;
 		private readonly IProductCacheManger _productCacheManger;
 		private readonly ICartServices _cartServices;
@@ -50,7 +53,7 @@ namespace E_Commerce.Services.ProductServices
 		private readonly ISubCategoryCacheHelper _subCategoryCacheHelper;
 
 		public ProductCatalogService(
-			
+			ICollectionCacheHelper collectionCacheHelper,
 			ISubCategoryCacheHelper  subCategoryCacheHelper,
 			IProductCacheManger productCacheManger,
 			IproductMapper iproductMapper,
@@ -64,6 +67,7 @@ namespace E_Commerce.Services.ProductServices
 			IErrorNotificationService errorNotificationService
 			)
 		{
+			_collectionCacheHelper = collectionCacheHelper;
 			_productMapper = iproductMapper;
 			_productCacheManger=productCacheManger;
 			_subCategoryCacheHelper = subCategoryCacheHelper;
@@ -89,8 +93,13 @@ namespace E_Commerce.Services.ProductServices
 		{
 			_backgroundJobClient.Enqueue(() =>  _subCategoryServices.DeactivateSubCategoryIfAllProductsAreInactiveAsync(subcategoryid, userid));
 		}
+		private void RemoveCacheAndRelatedCaches()
+		{
+			_collectionCacheHelper.ClearCollectionDataCache();
+			_subCategoryCacheHelper.ClearSubCategoryDataCache();
+			_productCacheManger.ClearProductCache();
+		}
 
-	
 		public async Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive, bool? deletedOnly)
 		{
 			_logger.LogInformation($"Retrieving product by id: {id}, isActive: {isActive}, deletedOnly: {deletedOnly}");
@@ -101,6 +110,11 @@ namespace E_Commerce.Services.ProductServices
 			try
 			{
 				var query = _unitOfWork.Product.GetAll().AsNoTracking().Where(p => p.Id == id);
+
+				if(! await query.AnyAsync()){
+					_logger.LogWarning($"Product with id: {id} not found in database");
+					return Result<ProductDetailDto>.Fail("Product not found", 404);
+				}
 
 				if (deletedOnly.HasValue)
 				{
@@ -205,8 +219,9 @@ namespace E_Commerce.Services.ProductServices
 				}
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-				_productCacheManger.ClearProductCache();
-		
+				RemoveCacheAndRelatedCaches();
+
+
 				var productdto = _productMapper.Maptoproductdto(product);
 				return Result<ProductDto>.Ok(productdto, "Product created successfully.", 201);
 			}
@@ -304,8 +319,8 @@ namespace E_Commerce.Services.ProductServices
 					_logger.LogError("UpdateProductAsync: Failed to log admin operation for product {Id}", id);
 					return Result<ProductDto>.Fail("Failed to log admin operation. Product update rolled back.", 500);
 				}
-				_productCacheManger.ClearProductCache();
-				_subCategoryCacheHelper.ClearSubCategoryDataCache();
+				RemoveCacheAndRelatedCaches();
+			
 
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
@@ -353,8 +368,7 @@ namespace E_Commerce.Services.ProductServices
 				}
 				 await _unitOfWork.CommitAsync();
 				await transacrion.CommitAsync();
-				_productCacheManger.ClearProductCache();
-				_subCategoryCacheHelper.ClearSubCategoryDataCache();
+				RemoveCacheAndRelatedCaches();;
 				DeactiveCollectionMethod(id);
 
 				DeActiveSubcategory(product.SubCategoryId, userId);
@@ -396,8 +410,7 @@ namespace E_Commerce.Services.ProductServices
 					return Result<bool>.Fail("Error restoring product", 500);
 
 				}
-				_productCacheManger.ClearProductCache();
-				_subCategoryCacheHelper.ClearSubCategoryDataCache();
+				RemoveCacheAndRelatedCaches();
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 			
@@ -502,8 +515,8 @@ namespace E_Commerce.Services.ProductServices
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
-				_productCacheManger.ClearProductCache();
-				_subCategoryCacheHelper.ClearSubCategoryDataCache();
+				RemoveCacheAndRelatedCaches();
+		
 
 				return Result<bool>.Ok(true, "Product activated successfully", 200);
 			}
@@ -558,8 +571,7 @@ namespace E_Commerce.Services.ProductServices
 				await transaction.CommitAsync();
 
 
-				_productCacheManger.ClearProductCache();
-				_subCategoryCacheHelper.ClearSubCategoryDataCache();
+				RemoveCacheAndRelatedCaches();
 				DeactiveCollectionMethod(productId);
 				DeActiveSubcategory(productInfo.SubCategoryId, userId);
 				RemoveCartItem(userId, null, productId);
@@ -576,10 +588,22 @@ namespace E_Commerce.Services.ProductServices
 			}
 		}
 
-		public void UpdateProductQuantity(int productid)
+		public async Task UpdateProductQuantity(int productid)
 		{
+			try
+			{
+				await _unitOfWork.Product.UpdateProductQuntity(productid);
+				await _unitOfWork.CommitAsync();
 
-			_unitOfWork.Product.UpdateProductQuntity( productid);
+				RemoveCacheAndRelatedCaches();
+
+			}
+			catch (Exception ex)
+			{
+
+				_backgroundJobClient.Enqueue(() => _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
+			}
+	
 		}
 
 	}

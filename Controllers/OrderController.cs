@@ -33,7 +33,7 @@ namespace E_Commerce.Controllers
 		/// - Customers automatically filter to their own orders
 		/// </summary>
 		[HttpGet]
-		[Authorize(Roles = "Customer,Admin")]
+		[Authorize(Roles = "User,Admin")]
 		public async Task<ActionResult<ApiResponse<List<OrderListDto>>>> GetOrders(
 			[FromQuery] string? userId = null,
 			[FromQuery] bool? deleted = null,
@@ -76,14 +76,15 @@ namespace E_Commerce.Controllers
 		/// - Admins can access any order
 		/// </summary>
 		[HttpGet("{orderId}")]
-		[Authorize(Roles = "Customer,Admin")]
+		[Authorize(Roles = "User,Admin")]
 		public async Task<ActionResult<ApiResponse<OrderDto>>> GetOrder(int orderId)
 		{
 			try
 			{
 				_logger.LogInformation($"Executing GetOrder for ID: {orderId}");
 				var userId = GetUserId();
-				var result = await _orderServices.GetOrderByIdAsync(orderId, userId);
+				var isadmin = GetUserRole() == "Admin";
+				var result = await _orderServices.GetOrderByIdAsync(orderId, userId,isadmin);
 				return HandleResult(result);
 			}
 			catch (Exception ex)
@@ -99,7 +100,7 @@ namespace E_Commerce.Controllers
 		/// - Creates order from customer's cart
 		/// </summary>
 		[HttpPost]
-		[Authorize(Roles = "Customer,Admin")]
+		[Authorize(Roles = "User,Admin")]
 		public async Task<ActionResult<ApiResponse<OrderWithPaymentDto>>> CreateOrder([FromBody] CreateOrderDto orderDto)
 		{
 			try
@@ -130,7 +131,7 @@ namespace E_Commerce.Controllers
 		/// - Customers can only cancel their own orders
 		/// </summary>
 		[HttpPut("{orderId}/status")]
-		[Authorize(Roles = "Customer,Admin")]
+		[Authorize(Roles = "User,Admin")]
 		public async Task<ActionResult<ApiResponse<bool>>> UpdateOrderStatus(int orderId, [FromBody] OrderStatusNoteDto body, [FromQuery] OrderStatus status)
 		{
 			try
@@ -159,7 +160,7 @@ namespace E_Commerce.Controllers
 				else
 				{
 					if (status != OrderStatus.CancelledByUser)
-						return BadRequest(ApiResponse<bool>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", "Customers can only cancel their orders"), 400));
+						return BadRequest(ApiResponse<bool>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", "Customers can only cancel their orders"), 403));
 
 					var result = await _orderServices.CancelOrderByCustomerAsync(orderId, actorId);
 					return HandleResult(result);
@@ -181,14 +182,15 @@ namespace E_Commerce.Controllers
 		/// GET /api/order/number/{orderNumber}
 		/// </summary>
 		[HttpGet("number/{orderNumber}")]
-		[Authorize(Roles = "Customer,Admin")]
+		[Authorize(Roles = "User,Admin")]
 		public async Task<ActionResult<ApiResponse<OrderDto>>> GetOrderByNumber(string orderNumber)
 		{
 			try
 			{
 				_logger.LogInformation($"Executing GetOrderByNumber for number: {orderNumber}");
 				var userId = GetUserId();
-				var result = await _orderServices.GetOrderByNumberAsync(orderNumber, userId);
+				var isadmin = GetUserRole() == "Admin";
+				var result = await _orderServices.GetOrderByNumberAsync(orderNumber, userId,isadmin);
 				return HandleResult(result);
 			}
 			catch (Exception ex)
@@ -205,7 +207,7 @@ namespace E_Commerce.Controllers
 		/// - Customers get their own count
 		/// </summary>
 		[HttpGet("count")]
-		[Authorize(Roles = "Customer,Admin")]
+		[Authorize(Roles = "User,Admin")]
 		public async Task<ActionResult<ApiResponse<int?>>> GetOrderCount([FromQuery] string? userId = null)
 		{
 			try
@@ -213,6 +215,7 @@ namespace E_Commerce.Controllers
 				_logger.LogInformation("Executing GetOrderCount");
 				var role = GetUserRole();
 				var effectiveUserId = role == "Admin" ? userId : GetUserId();
+
 
 				var result = await _orderServices.GetOrderCountByCustomerAsync(effectiveUserId ?? GetUserId());
 				return HandleResult(result);
@@ -231,7 +234,7 @@ namespace E_Commerce.Controllers
 		/// - Customers get their own revenue
 		/// </summary>
 		[HttpGet("revenue/{userid}")]
-		[Authorize(Roles = "Customer,Admin")]
+		[Authorize(Roles = "User,Admin")]
 		public async Task<ActionResult<ApiResponse<decimal>>> GetRevenueOfCustomer([FromQuery] string? userId = null)
 		{
 			try

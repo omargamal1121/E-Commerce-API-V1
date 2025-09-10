@@ -3,7 +3,6 @@ using E_Commerce.Services.EmailServices;
 using E_Commerce.Services.AdminOpreationServices;
 using E_Commerce.Services.UserOpreationServices;
 using E_Commerce.Services.CustomerAddress;
-using E_Commerce.Services.Collection;
 using E_Commerce.Services.WareHouseServices;
 using E_Commerce.Services.WishlistServices;
 using E_Commerce.Services.SubCategoryServices;
@@ -14,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using E_Commerce.Repository;
 using E_Commerce.BackgroundJops;
 using E_Commerce.Services.CacheServices;
+using E_Commerce.Services.CollectionService;
 
 namespace E_Commerce.Services
 {

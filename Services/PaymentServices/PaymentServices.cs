@@ -4,11 +4,14 @@ using E_Commerce.Enums;
 using E_Commerce.Interfaces;
 using E_Commerce.Models;
 using E_Commerce.Services.AdminOperationServices;
+using E_Commerce.Services.Collection;
 using E_Commerce.Services.EmailServices;
 using E_Commerce.Services.Order;
 using E_Commerce.Services.PaymentMethodsServices;
 using E_Commerce.Services.PaymentProccessor;
 using E_Commerce.Services.ProductServices;
+using E_Commerce.Services.ProductVariantServices;
+using E_Commerce.Services.SubCategoryServices;
 using E_Commerce.Services.UserOpreationServices;
 using E_Commerce.UOW;
 using Hangfire;
@@ -28,36 +31,45 @@ namespace E_Commerce.Services.PaymentServices
     public class PaymentServices : IPaymentServices
     {
         private readonly IPaymentMethodsServices _paymentMethodsServices;
-        private readonly IOrderServices _orderservices;
+		private readonly IProductVariantCacheHelper _productVariantCacheHelper;
+		private readonly IProductCacheManger _productCacheManger;
+		private readonly ICollectionCacheHelper _collectionCacheHelper;
+		private readonly ISubCategoryCacheHelper _subCategoryCacheHelper;
+		private readonly IOrderServices _orderservices;
         private readonly IBackgroundJobClient _backgroundJobClient;
         private readonly IPaymentProcessor _paymentProcessor;
         private readonly IErrorNotificationService _errorNotificationService;
-        private readonly IAdminOpreationServices _adminOperationServices;
         private readonly IUserOpreationServices _userOpreationServices;
-        private readonly IProductVariantService _productVariantService;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger<PaymentServices> _logger;
+        private readonly IOrderCacheHelper _orderCacheHelper;   
+		private readonly ILogger<PaymentServices> _logger;
 
         public PaymentServices(
-            IOrderServices orderservices,
+			  ISubCategoryCacheHelper subCategoryCacheHelper,
+			IProductVariantCacheHelper productVariantCacheHelper,
+			IProductCacheManger productCacheManger,
+			ICollectionCacheHelper collectionCacheHelper,
+			IOrderCacheHelper orderCacheHelper,
+			IOrderServices orderservices,
             IUserOpreationServices userOpreationServices,
-            IProductVariantService productVariantService,
             IPaymentProcessor paymentProcessor,
             IPaymentMethodsServices paymentMethodsServices, 
             IUnitOfWork unitOfWork, 
             ILogger<PaymentServices> logger, 
             IBackgroundJobClient backgroundJobClient, 
-            IErrorNotificationService errorNotificationService, 
-            IAdminOpreationServices adminOpreationServices)
+            IErrorNotificationService errorNotificationService)
         {
-            _userOpreationServices = userOpreationServices;
+			_subCategoryCacheHelper = subCategoryCacheHelper;
+			_productVariantCacheHelper = productVariantCacheHelper;
+			_collectionCacheHelper = collectionCacheHelper;
+			_productCacheManger = productCacheManger;
+			_orderCacheHelper = orderCacheHelper;
+			_userOpreationServices = userOpreationServices;
             _orderservices = orderservices;
-            _productVariantService = productVariantService;
             _paymentProcessor = paymentProcessor;
             _paymentMethodsServices = paymentMethodsServices;
             _unitOfWork = unitOfWork;
             _backgroundJobClient = backgroundJobClient;
-            _adminOperationServices = adminOpreationServices;
             _errorNotificationService = errorNotificationService;
             _logger = logger;
         }
@@ -114,7 +126,8 @@ namespace E_Commerce.Services.PaymentServices
 					await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
                 _logger.LogInformation("Payment {PaymentId} updated successfully", latestPayment.Id);
-                return Result<int>.Ok(latestPayment.Id);
+				RemoveCacheAndRelated();
+				return Result<int>.Ok(latestPayment.Id);
             }
             catch (Exception ex)
             {
@@ -351,14 +364,12 @@ namespace E_Commerce.Services.PaymentServices
                 if (payment == null)
                 {
                     _logger.LogWarning("Payment {PaymentId} not found", paymentId);
-                    await transaction.RollbackAsync();
                     return;
                 }
 
                 if (payment.Status != PaymentStatus.Pending)
                 {
                     _logger.LogInformation("Payment {PaymentId} is not pending (current status: {Status})", paymentId, payment.Status);
-                    await transaction.RollbackAsync();
                     return;
                 }
 
@@ -367,7 +378,6 @@ namespace E_Commerce.Services.PaymentServices
                 if (!statusResponse.Success || statusResponse.Data == null)
                 {
                     _logger.LogWarning("Failed to fetch status for payment {PaymentId}: {Error}", paymentId, statusResponse.Message);
-                    await transaction.RollbackAsync();
                     return;
                 }
 
@@ -391,19 +401,16 @@ namespace E_Commerce.Services.PaymentServices
                 payment.ModifiedAt = DateTime.UtcNow;
                 
                 var orderStatus = newStatus == PaymentStatus.Completed
-                    ? OrderStatus.Processing
+                    ? OrderStatus.Confirmed
                     : OrderStatus.PaymentExpired;
 
-                var orderUpdateResult = await _orderservices.UpdateOrderAfterPaid(payment.OrderId, orderStatus);
-                if (!orderUpdateResult.Success)
-                {
-                    _logger.LogError("Failed to update order status for payment {PaymentId}", paymentId);
-                    await transaction.RollbackAsync();
-                    return;
-                }
+              _backgroundJobClient.Enqueue(()=>  _orderservices.UpdateOrderAfterPaid(payment.OrderId, orderStatus));
+          
 
+                await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-                _logger.LogInformation("Payment {PaymentId} updated to {Status}", paymentId, newStatus);
+                RemoveCacheAndRelated();
+				_logger.LogInformation("Payment {PaymentId} updated to {Status}", paymentId, newStatus);
             }
             catch (Exception ex)
             {
@@ -416,5 +423,14 @@ namespace E_Commerce.Services.PaymentServices
                     TimeSpan.FromMinutes(30));
             }
         }
-    }
+		private void RemoveCacheAndRelated()
+		{
+			_orderCacheHelper.ClearOrderCache();
+			_productVariantCacheHelper.RemoveProductCachesAsync();
+			_productCacheManger.ClearProductCache();
+			_collectionCacheHelper.ClearCollectionCache();
+			_subCategoryCacheHelper.ClearSubCategoryCache();
+
+		}
+	}
 }

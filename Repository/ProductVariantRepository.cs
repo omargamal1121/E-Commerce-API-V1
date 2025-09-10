@@ -46,20 +46,30 @@ namespace E_Commerce.Repository
 				.AsNoTracking()
 				.ToListAsync();
 		}
-		public async Task<bool> IsExsistBySizeandColor(int productid,string? color,VariantSize?size,int? wist,int?length)
+		public async Task<bool> IsExsistBySizeandColor(
+		int productId,
+		string? color,
+		VariantSize? size,
+		int? waist,
+		int? length)
 		{
-			var query=_entity.AsNoTracking().Where(v => v.ProductId == productid);
-			if(color.IsNullOrEmpty())
-				query.Where(v => v.Color == color);
+			var query = _entity.AsNoTracking().Where(v => v.ProductId == productId);
+
+			if (!string.IsNullOrEmpty(color))
+				query = query.Where(v => v.Color == color);
+
 			if (size.HasValue)
-				query.Where(v => v.Size == size.Value);
-			if (wist.HasValue)
-				query.Where(v => v.Waist == wist.Value);
-			if(length.HasValue)
-				query.Where(query => query.Length == length.Value);
+				query = query.Where(v => v.Size == size.Value);
+
+			if (waist.HasValue)
+				query = query.Where(v => v.Waist == waist.Value);
+
+			if (length.HasValue)
+				query = query.Where(v => v.Length == length.Value);
+
 			return await query.AnyAsync();
-				
 		}
+
 
 		// Price Management
 		public async Task<bool> UpdateVariantPriceAsync(int variantId, decimal newPrice)

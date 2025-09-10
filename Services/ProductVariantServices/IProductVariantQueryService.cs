@@ -2,7 +2,7 @@ using E_Commerce.DtoModels.ProductDtos;
 using E_Commerce.DtoModels.Responses;
 using E_Commerce.Enums;
 
-namespace E_Commerce.Services.ProductServices
+namespace E_Commerce.Services.ProductVariantServices
 {
     public interface IProductVariantQueryService
     {

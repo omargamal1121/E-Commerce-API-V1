@@ -2,7 +2,9 @@ using E_Commerce.DtoModels.ImagesDtos;
 using E_Commerce.Interfaces;
 using E_Commerce.Services.AdminOperationServices;
 using E_Commerce.Services.Cache;
+using E_Commerce.Services.Collection;
 using E_Commerce.Services.EmailServices;
+using E_Commerce.Services.SubCategoryServices;
 using E_Commerce.UOW;
 using Hangfire;
 
@@ -32,13 +34,14 @@ namespace E_Commerce.Services.ProductServices
 		private readonly ISubCategoryServices _subCategoryServices;
 		private readonly ICacheManager _cacheManager;
 		private readonly IProductCatalogService _productCatalogService;
-		private const string CACHE_TAG_PRODUCT_SEARCH = "product_search";
-
-		public const string CACHE_TAG_CATEGORY_WITH_DATA = "categorywithdata";
-		private static readonly string[] PRODUCT_CACHE_TAGS = new[] { CACHE_TAG_PRODUCT_SEARCH, CACHE_TAG_CATEGORY_WITH_DATA, PRODUCT_WITH_VARIANT_TAG };
-		private const string PRODUCT_WITH_VARIANT_TAG = "productwithvariantdata";
+		private readonly IProductCacheManger _productCacheManger;
+		private readonly ICollectionCacheHelper _collectionCacheHelper;
+		private readonly ISubCategoryCacheHelper _subCategoryCacheHelper;
 
 		public ProductImageService(
+			ISubCategoryCacheHelper subCategoryCacheHelper,
+			IProductCacheManger productCacheManger,
+			ICollectionCacheHelper collectionCacheHelper,
 			ICacheManager cacheManager,
 			IBackgroundJobClient backgroundJobClient,
 			IUnitOfWork unitOfWork,
@@ -61,10 +64,13 @@ namespace E_Commerce.Services.ProductServices
 		}
 		private void RemoveProductCaches()
 		{
+			_collectionCacheHelper.ClearCollectionDataCache();
+			_subCategoryCacheHelper.ClearSubCategoryDataCache();
+			_productCacheManger.ClearProductCache();
 
-			BackgroundJob.Enqueue(() => _cacheManager.RemoveByTagsAsync(PRODUCT_CACHE_TAGS));
 		}
 
+	
 		public async Task<Result<List<ImageDto>>> GetProductImagesAsync(int productId)
 		{
 			try

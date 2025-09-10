@@ -1,7 +1,7 @@
-using E_Commerce.Services.ProductServices;
+using E_Commerce.Services.ProductVariantServices;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace E_Commerce.Services.ProductServices
+namespace E_Commerce.Services.ProductVariantServices
 {
     public static class ProductVariantServiceRegistration
     {

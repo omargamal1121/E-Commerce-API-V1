@@ -9,8 +9,9 @@ using Hangfire;
 using E_Commerce.Services.Cache;
 using E_Commerce.Services.EmailServices;
 using E_Commerce.Models;
+using E_Commerce.Services.ProductVariantServices;
 
-namespace E_Commerce.Services.ProductServices
+namespace E_Commerce.Services.ProductVariantServices
 {
     public class ProductVariantQueryService : IProductVariantQueryService
     {
@@ -51,7 +52,7 @@ namespace E_Commerce.Services.ProductServices
             if (result.Success)
             {
                 // Cache the results using the helper
-                await _cacheHelper.CacheProductVariantsAsync(id, result.Data);
+                _cacheHelper.CacheProductVariantsAsync(id, result.Data);
             }
             return result;
         }
@@ -120,7 +121,7 @@ namespace E_Commerce.Services.ProductServices
                 var variantDto = _mapper.MapToProductVariantDto(variant);
                 
                 _logger.LogInformation($"Caching variant {id} data");
-                await _cacheHelper.CacheVariantAsync(id, variantDto);
+                _cacheHelper.CacheVariantAsync(id, variantDto);
                 
                 return Result<ProductVariantDto>.Ok(variantDto, "Variant retrieved successfully", 200);
             }
@@ -182,7 +183,7 @@ namespace E_Commerce.Services.ProductServices
 
                 // Store results in cache using the helper
                 _logger.LogInformation($"Caching search results for product {productId}");
-                await _cacheHelper.CacheSearchResultsAsync(productId, cacheKey, variantDtos);
+                _cacheHelper.CacheSearchResultsAsync(productId, cacheKey, variantDtos);
 
                 _logger.LogInformation($"Successfully retrieved {variantDtos.Count} variants for product {productId}");
                 return Result<List<ProductVariantDto>>.Ok(variantDtos, "Variants retrieved successfully", 200);

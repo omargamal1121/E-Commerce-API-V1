@@ -10,6 +10,7 @@ using E_Commerce.Interfaces;
 using E_Commerce.Models;
 using E_Commerce.Services.AdminOpreationServices;
 using E_Commerce.Services.EmailServices;
+using E_Commerce.Services.ProductVariantServices;
 using E_Commerce.UOW;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -47,6 +48,7 @@ namespace E_Commerce.Services.ProductServices
 		// Core Product Operations
 		public async Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive = null, bool? deletedOnly = null)
 		{
+			_logger.LogInformation($"Fetching product details for Product ID: {id}, IsActive: {isActive}, DeletedOnly: {deletedOnly}");
 			return await _productCatalogService.GetProductByIdAsync(id, isActive, deletedOnly);
 		}
 		public async Task<Result<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId)

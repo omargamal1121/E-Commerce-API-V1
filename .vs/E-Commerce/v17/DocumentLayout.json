@@ -3,32 +3,32 @@
   "WorkspaceRootPath": "D:\\project_fashion\\E-Commerce-API-main\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\context\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:context\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\uow\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:uow\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\orderservices\\orderqueryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\orderservices\\orderqueryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\orderservices\\ordercommandservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\orderservices\\ordercommandservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\paymentservices\\paymentservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\paymentservices\\paymentservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\paymobservices\\paymobservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\paymobservices\\paymobservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\controllers\\paymentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:controllers\\paymentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\productvariantservices\\productvariantcommandservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\productvariantservices\\productvariantcommandservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\orderservices\\ordercommandservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\orderservices\\ordercommandservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\orderservices\\ordercachehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|solutionrelative:services\\orderservices\\ordercachehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{94F97F80-D94C-978E-C845-20D69BD1A077}|E-Commerce.csproj|d:\\project_fashion\\e-commerce-api-main\\services\\orderservices\\iordercommandservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -42,7 +42,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,81 +50,90 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Context\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "Context\\AppDbContext.cs",
+              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Context\\AppDbContext.cs",
+              "RelativeToolTip": "Context\\AppDbContext.cs",
+              "ViewState": "AgIAABwBAAAAAAAAAAAmwC8BAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-11T01:26:24.468Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "UnitOfWork.cs",
+              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\UOW\\UnitOfWork.cs",
+              "RelativeDocumentMoniker": "UOW\\UnitOfWork.cs",
+              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\UOW\\UnitOfWork.cs",
+              "RelativeToolTip": "UOW\\UnitOfWork.cs",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAIwFsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-11T01:00:38.459Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "OrderQueryService.cs",
               "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\OrderServices\\OrderQueryService.cs",
               "RelativeDocumentMoniker": "Services\\OrderServices\\OrderQueryService.cs",
               "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Services\\OrderServices\\OrderQueryService.cs",
               "RelativeToolTip": "Services\\OrderServices\\OrderQueryService.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAANIAAAAAAAAAAAAqwOkAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-10T00:24:54.615Z",
+              "WhenOpened": "2025-09-10T16:56:39.494Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "PaymentServices.cs",
-              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\PaymentServices\\PaymentServices.cs",
-              "RelativeDocumentMoniker": "Services\\PaymentServices\\PaymentServices.cs",
-              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Services\\PaymentServices\\PaymentServices.cs",
-              "RelativeToolTip": "Services\\PaymentServices\\PaymentServices.cs",
-              "ViewState": "AgIAAH8BAACA7P////8VwJMBAAArAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-09T23:50:21.855Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "PayMobServices.cs",
-              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\PayMobServices\\PayMobServices.cs",
-              "RelativeDocumentMoniker": "Services\\PayMobServices\\PayMobServices.cs",
-              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Services\\PayMobServices\\PayMobServices.cs",
-              "RelativeToolTip": "Services\\PayMobServices\\PayMobServices.cs",
-              "ViewState": "AgIAAIIAAAAAAAAAAAAcwIkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-09T21:33:54.359Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "PaymentController.cs",
-              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Controllers\\PaymentController.cs",
-              "RelativeDocumentMoniker": "Controllers\\PaymentController.cs",
-              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Controllers\\PaymentController.cs",
-              "RelativeToolTip": "Controllers\\PaymentController.cs",
-              "ViewState": "AgIAAIoAAAAAAAAAAAAowJMAAAA5AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-09T23:40:16.433Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
               "Title": "OrderController.cs",
               "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Controllers\\OrderController.cs",
               "RelativeDocumentMoniker": "Controllers\\OrderController.cs",
               "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Controllers\\OrderController.cs",
               "RelativeToolTip": "Controllers\\OrderController.cs",
-              "ViewState": "AgIAADYBAAAAAAAAAAAUwPUAAABOAAAAAAAAAA==",
+              "ViewState": "AgIAADEAAAAAAAAAAAAAwDoAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-09T23:40:06.973Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-10T16:53:45.131Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 4,
               "Title": "ProductVariantCommandService.cs",
               "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\ProductVariantServices\\ProductVariantCommandService.cs",
               "RelativeDocumentMoniker": "Services\\ProductVariantServices\\ProductVariantCommandService.cs",
               "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Services\\ProductVariantServices\\ProductVariantCommandService.cs",
               "RelativeToolTip": "Services\\ProductVariantServices\\ProductVariantCommandService.cs",
-              "ViewState": "AgIAAHMCAAAAAAAAAADwv3wCAACDAAAAAAAAAA==",
+              "ViewState": "AgIAAIEAAAAAAAAAAAAAAJEAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-09T23:22:45.201Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-10T15:00:27.356Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "OrderCommandService.cs",
+              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\OrderServices\\OrderCommandService.cs",
+              "RelativeDocumentMoniker": "Services\\OrderServices\\OrderCommandService.cs",
+              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Services\\OrderServices\\OrderCommandService.cs",
+              "RelativeToolTip": "Services\\OrderServices\\OrderCommandService.cs",
+              "ViewState": "AgIAAHEBAAAAAAAAAAAuwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-10T14:59:56.179Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "OrderCacheHelper.cs",
+              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\OrderServices\\OrderCacheHelper.cs",
+              "RelativeDocumentMoniker": "Services\\OrderServices\\OrderCacheHelper.cs",
+              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Services\\OrderServices\\OrderCacheHelper.cs",
+              "RelativeToolTip": "Services\\OrderServices\\OrderCacheHelper.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-10T14:59:52.787Z"
             },
             {
               "$type": "Document",
@@ -134,23 +143,9 @@
               "RelativeDocumentMoniker": "Services\\OrderServices\\IOrderCommandService.cs",
               "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Services\\OrderServices\\IOrderCommandService.cs",
               "RelativeToolTip": "Services\\OrderServices\\IOrderCommandService.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-09T23:18:08.371Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "OrderCommandService.cs",
-              "DocumentMoniker": "D:\\project_fashion\\E-Commerce-API-main\\Services\\OrderServices\\OrderCommandService.cs",
-              "RelativeDocumentMoniker": "Services\\OrderServices\\OrderCommandService.cs",
-              "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Services\\OrderServices\\OrderCommandService.cs",
-              "RelativeToolTip": "Services\\OrderServices\\OrderCommandService.cs",
-              "ViewState": "AgIAAHIBAAAAAAAAAAAswIUBAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-09T22:52:37.816Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-10T14:59:48.108Z"
             }
           ]
         },

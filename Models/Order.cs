@@ -45,7 +45,10 @@ namespace E_Commerce.Models
 		public DateTime? CancelledAt { get; set; }
 		public DateTime? RestockedAt { get; set; }
 
-		public IEnumerable<OrderItem> Items { get; set; } = new List<OrderItem>();
+        [Timestamp]
+        [Column(TypeName = "binary(8)")]
+        public byte[]? RowVersion { get; set; } = null;
+        public IEnumerable<OrderItem> Items { get; set; } = new List<OrderItem>();
 		public  List <Payment>? Payment { get; set; }
 		public ICollection<ReturnRequest> ReturnRequests { get; set; } = new List<ReturnRequest>();
 

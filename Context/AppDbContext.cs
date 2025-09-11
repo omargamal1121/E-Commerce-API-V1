@@ -48,10 +48,84 @@ namespace E_Commerce.Context
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
-			base.OnModelCreating(builder);
 
-			// Category - SubCategory (1:M)
-			builder.Entity<Category>()
+
+
+            base.OnModelCreating(builder);
+            builder.Entity<Product>().HasIndex(p => p.Name).IsUnique();
+            builder.Entity<Product>().HasIndex(p => new { p.SubCategoryId, p.DiscountId });
+
+    
+            builder.Entity<SubCategory>().HasIndex(sc => sc.CategoryId);
+
+            builder.Entity<Category>().HasIndex(c => c.Name).IsUnique();
+
+  
+            builder.Entity<ProductVariant>().HasIndex(v => v.ProductId);
+            builder.Entity<ProductVariant>()
+                .HasIndex(v => new { v.ProductId, v.Color, v.Size, v.Waist, v.Length })
+                .IsUnique();
+
+            builder.Entity<Image>().HasIndex(i => i.ProductId);
+            builder.Entity<Image>().HasIndex(i => i.CategoryId);
+            builder.Entity<Image>().HasIndex(i => i.SubCategoryId);
+            builder.Entity<Image>().HasIndex(i => i.CollectionId);
+
+
+            builder.Entity<Order>().HasIndex(o => o.CustomerId);
+            builder.Entity<Order>().HasIndex(o => o.Status); 
+
+
+            builder.Entity<Payment>().HasIndex(p => p.OrderId);
+            builder.Entity<Payment>().HasIndex(p => p.PaymentMethodId);
+            builder.Entity<Payment>().HasIndex(p => p.PaymentProviderId);
+            builder.Entity<Payment>()
+    .HasIndex(p => new { p.OrderId, p.Status,p.PaymentMethodId })
+    .IsUnique();
+
+
+            builder.Entity<Cart>().HasIndex(c => c.CustomerId);
+
+
+            builder.Entity<CartItem>().HasIndex(ci => new { ci.CartId, ci.ProductId, ci.ProductVariantId });
+
+
+            builder.Entity<Review>().HasIndex(r => new { r.CustomerId, r.ProductId });
+
+ 
+            builder.Entity<WishlistItem>().HasIndex(w => new { w.CustomerId, w.ProductId });
+
+  
+            builder.Entity<ReturnRequest>().HasIndex(rr => rr.CustomerId);
+            builder.Entity<ReturnRequest>().HasIndex(rr => rr.OrderId);
+
+
+            builder.Entity<ReturnRequestProduct>().HasIndex(rrp => new { rrp.ReturnRequestId, rrp.ProductId });
+
+
+            builder.Entity<CustomerAddress>().HasIndex(a => a.CustomerId);
+
+
+            builder.Entity<ProductCollection>().HasIndex(pc => new { pc.ProductId, pc.CollectionId });
+
+
+            builder.Entity<Collection>().HasIndex(c => c.Name);
+
+       
+            builder.Entity<Warehouse>().HasIndex(w => w.Name).IsUnique();
+
+
+            builder.Entity<ProductInventory>().HasIndex(pi => new { pi.ProductId, pi.WarehouseId });
+
+  
+            builder.Entity<PaymentWebhook>().HasIndex(w => w.PaymentId);
+
+            builder.Entity<UserOperationsLog>().HasIndex(l => l.UserId);
+            builder.Entity<AdminOperationsLog>().HasIndex(l => l.AdminId);
+
+
+            // Category - SubCategory (1:M)
+            builder.Entity<Category>()
 				.HasMany(c => c.SubCategories)
 				.WithOne(sc => sc.Category)
 				.HasForeignKey(sc => sc.CategoryId)
@@ -90,7 +164,7 @@ namespace E_Commerce.Context
 				.HasMany(p => p.Images)
 				.WithOne(i => i.Product)
 				.HasForeignKey(i => i.ProductId)
-				.OnDelete(DeleteBehavior.SetNull);
+				.OnDelete(DeleteBehavior.Cascade);
 
 	
 
@@ -99,21 +173,21 @@ namespace E_Commerce.Context
 				.HasMany(c => c.Images)
 				.WithOne(i => i.Category)
 				.HasForeignKey(i => i.CategoryId)
-				.OnDelete(DeleteBehavior.SetNull);
+				.OnDelete(DeleteBehavior.Cascade);
 
 			// SubCategory - Image (1:M)
 			builder.Entity<SubCategory>()
 				.HasMany(sc => sc.Images)
 				.WithOne(i => i.SubCategory)
 				.HasForeignKey(i => i.SubCategoryId)
-				.OnDelete(DeleteBehavior.SetNull);
+				.OnDelete(DeleteBehavior.Cascade);
 
 			// Collection - Image (1:M)
 			builder.Entity<Collection>()
 				.HasMany(c => c.Images)
 				.WithOne(i => i.Collection)
 				.HasForeignKey(i => i.CollectionId)
-				.OnDelete(DeleteBehavior.SetNull);
+				.OnDelete(DeleteBehavior.Cascade);
 
 
 			// Product - Review (1:M)

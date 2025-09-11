@@ -279,6 +279,12 @@ namespace E_Commerce.Services.Order
                 return Result<OrderWithPaymentDto>.Ok(response, "Order created successfully", 201);
                 #endregion
             }
+            catch (DbUpdateConcurrencyException e)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogWarning(e, "Concurrency conflict while creating order for user {UserId}", userId);
+                return Result<OrderWithPaymentDto>.Fail("Order was modified by another process.", 409);
+            }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
@@ -305,6 +311,11 @@ namespace E_Commerce.Services.Order
 					_logger.LogWarning("Can't find order {OrderId}", orderId);
 					return Result<bool>.Fail("Can't find order", 404);
 				}
+
+                // Lock the order row to serialize concurrent status updates
+                await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+                    "SELECT Id FROM Orders WHERE Id = {0} FOR UPDATE",
+                    order.Id);
 
 				if (!IsValidTransition(order.Status, orderStatus))
 				{
@@ -341,6 +352,12 @@ namespace E_Commerce.Services.Order
 
 				_logger.LogInformation("Updated order {OrderId} to {Status} after payment", orderId, order.Status);
 				return Result<bool>.Ok(true, "Order updated after payment", 200);
+			}
+			catch (DbUpdateConcurrencyException e)
+			{
+				await transaction.RollbackAsync();
+				_logger.LogWarning(e, "Concurrency conflict while updating order {OrderId} after payment", orderId);
+				return Result<bool>.Fail("Order was modified by another process.", 409);
 			}
 			catch (Exception ex)
 			{
@@ -406,6 +423,10 @@ namespace E_Commerce.Services.Order
                 if (order == null)
                     return Result<bool>.Fail("Order not found", 404);
 
+                await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+                    "SELECT Id FROM Orders WHERE Id = {0} FOR UPDATE",
+                    order.Id);
+
                 if (!IsValidTransition(order.Status, target))
                     return Result<bool>.Fail("Invalid status transition", 400);
                 order.Status = target;
@@ -429,6 +450,12 @@ namespace E_Commerce.Services.Order
 				RemoveCacheAndRelated();
 
 				return Result<bool>.Ok(true, successMessage, 200);
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogWarning(e, "Concurrency conflict updating order {OrderId} to {Target}", orderId, target);
+                return Result<bool>.Fail("Order was modified by another process.", 409);
             }
             catch (Exception ex)
             {
@@ -480,6 +507,10 @@ namespace E_Commerce.Services.Order
                     return Result<bool>.Fail("Order not found or access denied", 404);
                 }
 
+                await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+                    "SELECT Id FROM Orders WHERE Id = {0} FOR UPDATE",
+                    order.Id);
+
                 if (order.Status == OrderStatus.CancelledByAdmin || order.Status == OrderStatus.CancelledByUser)
                 {
                     await transaction.RollbackAsync();
@@ -516,6 +547,12 @@ namespace E_Commerce.Services.Order
 
                 return Result<bool>.Ok(true, "Order cancelled successfully", 200);
             }
+            catch (DbUpdateConcurrencyException e)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogWarning(e, "Concurrency conflict cancelling order {OrderId} by user {UserId}", orderId, userId);
+                return Result<bool>.Fail("Order was modified by another process.", 409);
+            }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
@@ -535,6 +572,10 @@ namespace E_Commerce.Services.Order
                 {
                     return Result<bool>.Fail("Order not found", 404);
                 }
+
+                await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+                    "SELECT Id FROM Orders WHERE Id = {0} FOR UPDATE",
+                    order.Id);
 
                 if (order.Status == OrderStatus.Delivered
                     || order.Status == OrderStatus.Refunded
@@ -574,6 +615,13 @@ namespace E_Commerce.Services.Order
 
                 return Result<bool>.Ok(true, "Order cancelled by admin", 200);
             }
+            catch (DbUpdateConcurrencyException e)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogWarning(e, "Concurrency conflict while cancelling order {OrderId} by admin {AdminId}", orderId, adminId);
+                _cacheHelper.NotifyAdminError(e.Message, e.StackTrace);
+                return Result<bool>.Fail("Order was modified by another process.", 409);
+            }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
@@ -595,6 +643,10 @@ namespace E_Commerce.Services.Order
                     return;
                 }
 
+                await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+                    "SELECT Id FROM Orders WHERE Id = {0} FOR UPDATE",
+                    order.Id);
+
                 if (order.Status != OrderStatus.PendingPayment)
                 {
                     _logger.LogInformation("Expire skipped: order {OrderId} status is {Status}", orderId, order.Status);
@@ -615,6 +667,11 @@ namespace E_Commerce.Services.Order
                 RemoveCacheAndRelated();
                 _logger.LogInformation("Order {OrderId} auto-expired and restock scheduled", orderId);
             }
+            catch (DbUpdateConcurrencyException e)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogWarning(e, "Concurrency conflict while auto-expiring order {OrderId}", orderId);
+            }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
@@ -634,6 +691,10 @@ namespace E_Commerce.Services.Order
                     _logger.LogWarning("Restock skipped: order {OrderId} not found", orderId);
                     return;
                 }
+
+                await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+                    "SELECT Id FROM Orders WHERE Id = {0} FOR UPDATE",
+                    order.Id);
 
                 if (order.RestockedAt.HasValue)
                 {
@@ -697,6 +758,10 @@ namespace E_Commerce.Services.Order
                 RemoveCacheAndRelated();
 
                 _logger.LogInformation("Restocked inventory for order {OrderId}", orderId);
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                _logger.LogWarning(e, "Concurrency conflict while restocking order {OrderId}", orderId);
             }
             catch (Exception ex)
             {

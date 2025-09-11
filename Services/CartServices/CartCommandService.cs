@@ -100,6 +100,11 @@ namespace E_Commerce.Services.CartServices
                         await _unitOfWork.CommitAsync();
                 }
 
+                // Lock the cart row to serialize modifications
+                await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+                    "SELECT Id FROM Cart WHERE Id = {0} FOR UPDATE",
+                    cart.Id);
+
                 if (itemDto.Quantity > product.varint.Quantity)
                 {
                     await transaction.RollbackAsync();
@@ -175,6 +180,12 @@ namespace E_Commerce.Services.CartServices
                 _logger.LogInformation($"Item added to cart for user: {userId}, product: {itemDto.ProductId}");
                 return Result<bool>.Ok(true, "Item added to cart successfully", 200);
             }
+            catch (DbUpdateConcurrencyException e)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogWarning(e, "Concurrency conflict while adding item to cart for user {UserId}", userId);
+                return Result<bool>.Fail("Cart was modified by another process.", 409);
+            }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
@@ -219,6 +230,10 @@ namespace E_Commerce.Services.CartServices
                     await transaction.RollbackAsync();
                     return Result<bool>.Fail("Cart not found", 404);
                 }
+
+                await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+                    "SELECT Id FROM Cart WHERE Id = {0} FOR UPDATE",
+                    cart.Id);
 
                 var cartItem = cart.Items.FirstOrDefault(i => i.ProductId == productId && i.ProductVariantId == productVariantId);
                 if (cartItem == null)
@@ -294,6 +309,12 @@ namespace E_Commerce.Services.CartServices
                 _logger.LogInformation($"Cart item updated successfully for user: {userId}, product: {productId}, variant: {productVariantId}");
                 return Result<bool>.Ok(true, "Cart item updated successfully", 200);
             }
+            catch (DbUpdateConcurrencyException e)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogWarning(e, "Concurrency conflict while updating cart item for user {UserId}", userId);
+                return Result<bool>.Fail("Cart was modified by another process.", 409);
+            }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
@@ -316,6 +337,10 @@ namespace E_Commerce.Services.CartServices
                     await transaction.RollbackAsync();
                     return Result<bool>.Fail("Cart not found", 404);
                 }
+
+                await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+                    "SELECT Id FROM Cart WHERE Id = {0} FOR UPDATE",
+                    cart.Id);
 
                 var removeResult = await _cartRepository.RemoveCartItemAsync(cart.Id, itemDto.ProductId, itemDto.ProductVariantId);
                 if (!removeResult)
@@ -348,6 +373,12 @@ namespace E_Commerce.Services.CartServices
                 _logger.LogInformation($"Item removed from cart for user: {userId}, product: {itemDto.ProductId}");
                 return Result<bool>.Ok(true, "Item removed from cart successfully", 200);
             }
+            catch (DbUpdateConcurrencyException e)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogWarning(e, "Concurrency conflict while removing cart item for user {UserId}", userId);
+                return Result<bool>.Fail("Cart was modified by another process.", 409);
+            }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
@@ -370,6 +401,10 @@ namespace E_Commerce.Services.CartServices
                     await transaction.RollbackAsync();
                     return Result<bool>.Fail("Cart not found", 404);
                 }
+
+                await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+                    "SELECT Id FROM Cart WHERE Id = {0} FOR UPDATE",
+                    cart.Id);
 
                 var clearResult = await _cartRepository.ClearCartAsync(cart.Id);
                 if (!clearResult)
@@ -398,6 +433,12 @@ namespace E_Commerce.Services.CartServices
                 await _cacheHelper.RemoveCartCacheAsync(userId);
 
                 return Result<bool>.Ok(true, "Cart cleared successfully", 200);
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogWarning(e, "Concurrency conflict while clearing cart for user {UserId}", userId);
+                return Result<bool>.Fail("Cart was modified by another process.", 409);
             }
             catch (Exception ex)
             {

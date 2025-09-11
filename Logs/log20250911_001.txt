@@ -1,0 +1,60 @@
+2025-09-11 19:54:50.584 +03:00 [INF] DB tables already exist. Exit install
+2025-09-11 19:54:52.421 +03:00 [WRN] The foreign key property 'Customer.ImageId1' was created in shadow state because a conflicting property with the simple name 'ImageId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-09-11 19:54:53.560 +03:00 [INF] Executed DbCommand (76ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-11 19:54:54.347 +03:00 [INF] Executed DbCommand (75ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-11 19:54:54.546 +03:00 [INF] Executed DbCommand (80ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-09-11 19:54:54.579 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-09-11 19:54:54.594 +03:00 [INF] Starting data seeding...
+2025-09-11 19:54:54.633 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-09-11 19:54:55.143 +03:00 [INF] Executed DbCommand (108ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-09-11 19:54:55.216 +03:00 [INF] Role 'Admin' already exists.
+2025-09-11 19:54:55.383 +03:00 [INF] Executed DbCommand (78ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-09-11 19:54:55.501 +03:00 [INF] Role 'User' already exists.
+2025-09-11 19:54:55.682 +03:00 [INF] Executed DbCommand (82ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-11 19:54:55.786 +03:00 [INF] Admin user already exists. Skipping provider/method creation.
+2025-09-11 19:54:55.788 +03:00 [INF] Data seeding completed successfully.
+2025-09-11 19:54:57.176 +03:00 [INF] Now listening on: http://localhost:5069
+2025-09-11 19:54:57.270 +03:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-09-11 19:54:57.273 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-09-11 19:54:57.277 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-09-11 19:54:57.279 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-09-11 19:54:57.293 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-09-11 19:54:57.296 +03:00 [INF] Hosting environment: Development
+2025-09-11 19:54:57.297 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-09-11 19:54:57.493 +03:00 [INF] Server mrrobot:23828:4ca085d5 successfully announced in 190.2499 ms
+2025-09-11 19:54:57.526 +03:00 [INF] Server mrrobot:23828:4ca085d5 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-09-11 19:54:57.654 +03:00 [INF] Server mrrobot:23828:4ca085d5 all the dispatchers started
+2025-09-11 19:57:21.266 +03:00 [INF] DB tables already exist. Exit install
+2025-09-11 19:57:22.885 +03:00 [WRN] The foreign key property 'Customer.ImageId1' was created in shadow state because a conflicting property with the simple name 'ImageId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-09-11 19:57:23.980 +03:00 [INF] Executed DbCommand (77ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-11 19:57:24.660 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-11 19:57:24.846 +03:00 [INF] Executed DbCommand (76ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-09-11 19:57:24.868 +03:00 [INF] Applying migration '20250911165452_updatepaymen'.
+2025-09-11 19:57:25.334 +03:00 [ERR] Failed executing DbCommand (83ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX `IX_Payments_OrderId_Status_PaymentMethodId` ON `Payments` (`OrderId`, `Status`, `PaymentMethodId`);

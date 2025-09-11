@@ -86,7 +86,7 @@ namespace E_Commerce.Services.PaymentServices
                 {
                     _logger.LogWarning("Transaction ID is null or empty for order {OrderId}", orderId);
                     await transaction.RollbackAsync();
-                    return Result<int>.Fail("Transaction ID is required");
+                    return Result<int>.Fail("Transaction ID is required", 400,null);
                 }
 
                 var latestPayment = await _unitOfWork.Repository<Payment>()
@@ -99,8 +99,13 @@ namespace E_Commerce.Services.PaymentServices
                 {
                     _logger.LogWarning("Payment not found for order {OrderId} with provider order ID {ProviderOrderId}", orderId, providerOrderId);
                     await transaction.RollbackAsync();
-                    return Result<int>.Fail("Payment not found");
+                    return Result<int>.Fail("Payment not found", 404,null);
                 }
+
+                // Lock the payment row to prevent concurrent updates
+                await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+                    "SELECT Id FROM Payments WHERE Id = {0} FOR UPDATE",
+                    latestPayment.Id);
 
                 if (latestPayment.Status == status)
                 {
@@ -121,13 +126,19 @@ namespace E_Commerce.Services.PaymentServices
                 {
                     _logger.LogError("Payment update failed for Payment ID {PaymentId}", latestPayment.Id);
                     await transaction.RollbackAsync();
-                    return Result<int>.Fail("Failed to update payment");
+                    return Result<int>.Fail("Failed to update payment", 500, null);
                 }
-					await _unitOfWork.CommitAsync();
+				await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
                 _logger.LogInformation("Payment {PaymentId} updated successfully", latestPayment.Id);
 				RemoveCacheAndRelated();
 				return Result<int>.Ok(latestPayment.Id);
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                _logger.LogWarning(e, "Concurrency conflict while updating payment for order {OrderId}", orderId);
+                await transaction.RollbackAsync();
+                return Result<int>.Fail("Payment was modified by another process.", 409, null);
             }
             catch (Exception ex)
             {
@@ -137,7 +148,7 @@ namespace E_Commerce.Services.PaymentServices
                 _backgroundJobClient.Enqueue(() =>
                     _errorNotificationService.SendErrorNotificationAsync("Error in UpdatePaymentAfterPaid", ex.Message));
                 
-                return Result<int>.Fail("Error while updating payment");
+                return Result<int>.Fail("Error while updating payment", 500, null);
             }
         }
 
@@ -170,6 +181,11 @@ namespace E_Commerce.Services.PaymentServices
                     return Result<PaymentResponseDto>.Fail("Order not found.");
                 }
 
+                // Lock the order row to serialize payment creation for this order
+                await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+                    "SELECT Id FROM Orders WHERE Id = {0} FOR UPDATE",
+                    order.Id);
+
                 if (order.CustomerId != userid)
                 {
                     _logger.LogWarning("Order {OrderId} does not belong to user {UserId}", order.Id, userid);
@@ -182,19 +198,6 @@ namespace E_Commerce.Services.PaymentServices
                     _logger.LogWarning("Order {OrderId} is not eligible for payment. Current status: {Status}", order.Id, order.Status);
                     await transaction.RollbackAsync();
                     return Result<PaymentResponseDto>.Fail("This order cannot be paid due to its current status.", 400);
-                }
-
-                // Check if payment already exists for this order
-                var existingPayment = await _unitOfWork.Repository<Payment>()
-                    .GetAll()
-                    .Where(p => p.OrderId == order.Id && p.Status == PaymentStatus.Pending)
-                    .FirstOrDefaultAsync();
-
-                if (existingPayment != null)
-                {
-                    _logger.LogWarning("Payment already exists for order {OrderId}", order.Id);
-                    await transaction.RollbackAsync();
-                    return Result<PaymentResponseDto>.Fail("Payment already exists for this order.", 400);
                 }
 
                 // Validate payment method
@@ -285,7 +288,7 @@ namespace E_Commerce.Services.PaymentServices
                     _logger.LogWarning("Failed to log user operation for Payment ID {Id}", createdPayment.Id);
                     // Don't fail the entire operation for logging failure
                 }
-					await _unitOfWork.CommitAsync();
+				await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
                 _logger.LogInformation("Payment created successfully with ID {Id}", createdPayment.Id);
@@ -298,8 +301,52 @@ namespace E_Commerce.Services.PaymentServices
                         TimeSpan.FromHours(1));
                 }
 
-                return Result<PaymentResponseDto>.Ok(response);
+                return Result<PaymentResponseDto>.Ok(response!);
             }
+            catch (DbUpdateConcurrencyException e)
+            {
+                _logger.LogWarning(e, "Concurrency conflict while creating payment for order {OrderNumber}", ordernumber);
+                await transaction.RollbackAsync();
+                return Result<PaymentResponseDto>.Fail("Payment was modified by another process.", 409);
+            }
+            catch (DbUpdateException e)
+            {
+                _logger.LogWarning(e,
+                    "Unique constraint violation while creating payment. Order: {OrderNumber}, User: {UserId}",
+                    ordernumber, userid);
+
+                await transaction.RollbackAsync();
+
+                var inner = e.InnerException;
+                var isDuplicate = false;
+                if (inner is MySqlConnector.MySqlException mysqlEx1 && mysqlEx1.Number == 1062)
+                {
+                    isDuplicate = true;
+                }
+                else if (inner?.GetType().FullName == "MySql.Data.MySqlClient.MySqlException")
+                {
+                    var numberProp = inner.GetType().GetProperty("Number");
+                    if (numberProp != null && numberProp.GetValue(inner) is int num && num == 1062)
+                    {
+                        isDuplicate = true;
+                    }
+                }
+                else if (inner?.Message?.Contains("Duplicate entry", StringComparison.OrdinalIgnoreCase) == true
+                    || inner?.Message?.Contains("IX_Payments_OrderId_Status_PaymentMethodId", StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    isDuplicate = true;
+                }
+
+                if (isDuplicate)
+                {
+                    return Result<PaymentResponseDto>.Fail(
+                        "A payment is already in progress for this order. Please check your payments history.",
+                        409);
+                }
+
+                return Result<PaymentResponseDto>.Fail("Database update error.", 500);
+            }
+
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while creating payment for user {UserId}", userid);
@@ -342,7 +389,7 @@ namespace E_Commerce.Services.PaymentServices
                 return Result<PaymentResponseDto>.Fail(onlinePaymentResult.Message);
             }
 
-            payment.ProviderOrderId = onlinePaymentResult.Data.PaymobOrderId;
+            payment.ProviderOrderId = onlinePaymentResult.Data!.PaymobOrderId;
 
             return Result<PaymentResponseDto>.Ok(new PaymentResponseDto
             {
@@ -366,6 +413,11 @@ namespace E_Commerce.Services.PaymentServices
                     _logger.LogWarning("Payment {PaymentId} not found", paymentId);
                     return;
                 }
+
+                // Lock payment row while we refresh its status
+                await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+                    "SELECT Id FROM Payments WHERE Id = {0} FOR UPDATE",
+                    payment.Id);
 
                 if (payment.Status != PaymentStatus.Pending)
                 {
@@ -411,6 +463,11 @@ namespace E_Commerce.Services.PaymentServices
                 await transaction.CommitAsync();
                 RemoveCacheAndRelated();
 				_logger.LogInformation("Payment {PaymentId} updated to {Status}", paymentId, newStatus);
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                _logger.LogWarning(e, "Concurrency conflict while updating payment status for {PaymentId}", paymentId);
+                await transaction.RollbackAsync();
             }
             catch (Exception ex)
             {

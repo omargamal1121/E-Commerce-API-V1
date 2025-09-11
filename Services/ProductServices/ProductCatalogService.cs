@@ -225,6 +225,12 @@ namespace E_Commerce.Services.ProductServices
 				var productdto = _productMapper.Maptoproductdto(product);
 				return Result<ProductDto>.Ok(productdto, "Product created successfully.", 201);
 			}
+			catch (DbUpdateException dbEx)
+			{
+				await transaction.RollbackAsync();
+				_logger.LogWarning(dbEx, "CreateProductAsync: Unique constraint violation for product name: {ProductName}", dto.Name);
+				return Result<ProductDto>.Fail($"There's already a product with the same name: {dto.Name}", 409);
+			}
 			catch (Exception ex)
 			{
 				await transaction.RollbackAsync();
@@ -320,12 +326,23 @@ namespace E_Commerce.Services.ProductServices
 					return Result<ProductDto>.Fail("Failed to log admin operation. Product update rolled back.", 500);
 				}
 				RemoveCacheAndRelatedCaches();
-			
-
+				
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 				var productDetailDto = _productMapper.Maptoproductdto(product);
 				return Result<ProductDto>.Ok(productDetailDto, "Product updated successfully.", 200);
+			}
+			catch (DbUpdateConcurrencyException e)
+			{
+				await transaction.RollbackAsync();
+				_logger.LogWarning(e, "UpdateProductAsync: Concurrency conflict for product {Id}", id);
+				return Result<ProductDto>.Fail("The product was modified by another process. Please refresh and try again.", 409);
+			}
+			catch (DbUpdateException dbEx)
+			{
+				await transaction.RollbackAsync();
+				_logger.LogWarning(dbEx, "UpdateProductAsync: Unique constraint violation when updating product {Id}", id);
+				return Result<ProductDto>.Fail("Duplicate product name.", 409);
 			}
 			catch (Exception ex)
 			{
@@ -352,7 +369,7 @@ namespace E_Commerce.Services.ProductServices
 				if (!result){
 					await transacrion.RollbackAsync();
 					return Result<bool>.Fail("Failed to delete product", 500);
-}
+			}
 				// Log admin operation
 				var isadded= await _adminOpreationServices.AddAdminOpreationAsync(
 					$"Delete Product {id}",
@@ -376,11 +393,17 @@ namespace E_Commerce.Services.ProductServices
 
 				return Result<bool>.Ok(true, "Product deleted", 200);
 			}
+			catch (DbUpdateConcurrencyException e)
+			{
+				await transacrion.RollbackAsync();
+				_logger.LogWarning(e, "DeleteProductAsync: Concurrency conflict for product {Id}", id);
+				return Result<bool>.Fail("Product was modified or deleted by another process.", 409);
+			}
 			catch (Exception ex)
 			{
-				await transacrion.CommitAsync();
+				await transacrion.RollbackAsync();
 				_logger.LogError(ex, $"Error in DeleteProductAsync for id: {id}");
-				 	_backgroundJobClient.Enqueue(()=> _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
+					_backgroundJobClient.Enqueue(()=> _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
 				return Result<bool>.Fail("Error deleting product", 500);
 			}
 		}
@@ -415,6 +438,12 @@ namespace E_Commerce.Services.ProductServices
 				await transaction.CommitAsync();
 			
 				return Result<bool>.Ok(true, "Product restored successfully", 200);
+			}
+			catch (DbUpdateConcurrencyException e)
+			{
+				await transaction.RollbackAsync();
+				_logger.LogWarning(e, "RestoreProductAsync: Concurrency conflict for product {Id}", id);
+				return Result<bool>.Fail("Product was modified by another process.", 409);
 			}
 			catch (Exception ex)
 			{
@@ -520,6 +549,12 @@ namespace E_Commerce.Services.ProductServices
 
 				return Result<bool>.Ok(true, "Product activated successfully", 200);
 			}
+			catch (DbUpdateConcurrencyException e)
+			{
+				await transaction.RollbackAsync();
+				_logger.LogWarning(e, "ActivateProductAsync: Concurrency conflict for product {Id}", productId);
+				return Result<bool>.Fail("Product was modified by another process.", 409);
+			}
 			catch (Exception ex)
 			{
 				await transaction.RollbackAsync();
@@ -579,6 +614,12 @@ namespace E_Commerce.Services.ProductServices
 				_logger.LogInformation($"Product {productId} deactivated. Triggered background jobs for collection and subcategory checks.");
 
 				return Result<bool>.Ok(true, "Product deactivated successfully", 200);
+			}
+			catch (DbUpdateConcurrencyException e)
+			{
+				await transaction.RollbackAsync();
+				_logger.LogWarning(e, "DeactivateProductAsync: Concurrency conflict for product {Id}", productId);
+				return Result<bool>.Fail("Product was modified by another process.", 409);
 			}
 			catch (Exception ex)
 			{

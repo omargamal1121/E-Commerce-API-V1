@@ -8,7 +8,10 @@ namespace E_Commerce.Models
     {
         [Required]
         public string Color { get; set; }
-        
+
+        [Timestamp]
+        [Column(TypeName = "binary(8)")]
+        public byte[]? RowVersion { get; set; } = null;
         public VariantSize? Size { get; set; }
         public int? Waist { get; set; }
         public int? Length { get; set; }

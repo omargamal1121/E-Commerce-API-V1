@@ -9276,7 +9276,7 @@
       "CreatePaymentRequestDto": {
         "type": "object",
         "properties": {
-          "orderId": {
+          "orderNumber": {
             "type": "string",
             "nullable": true
           },
@@ -10222,7 +10222,11 @@
             "nullable": true
           },
           "payment": {
-            "$ref": "#/components/schemas/PaymentDto"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentDto"
+            },
+            "nullable": true
           },
           "isCancelled": {
             "type": "boolean",
@@ -10552,7 +10556,7 @@
             "format": "int32"
           },
           "status": {
-            "$ref": "#/components/schemas/OrderStatus"
+            "$ref": "#/components/schemas/PaymentStatus"
           }
         },
         "additionalProperties": false
@@ -10883,6 +10887,18 @@
           }
         },
         "additionalProperties": false
+      },
+      "PaymentStatus": {
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "type": "integer",
+        "format": "int32"
       },
       "PaymobOrder": {
         "type": "object",

@@ -34,7 +34,15 @@ namespace E_Commerce.Services.Order
             ShippedAt = order.ShippedAt,
             DeliveredAt = order.DeliveredAt,
             CancelledAt = order.CancelledAt,
-
+            Payment=order.Payment==null?null: order.Payment.Select(p=>new PaymentDto { 
+                Status=p.Status,
+                Amount=p.Amount,
+                CreatedAt=p.CreatedAt,
+                Id=p.Id,
+                PaymentDate=p.PaymentDate,
+                PaymentMethodId=p.PaymentMethodId,
+                PaymentProviderId= p.PaymentProviderId,
+            }),
             Customer = order.Customer == null ? null : new CustomerDto
             {
                 Id = order.Customer.Id,
@@ -52,6 +60,7 @@ namespace E_Commerce.Services.Order
                 UnitPrice = item.UnitPrice,
                 TotalPrice = item.TotalPrice,
                 OrderedAt = item.OrderedAt,
+                
                 Product = new ProductForCartDto
                 {
                     Id = item.Product.Id,

@@ -119,8 +119,7 @@ namespace E_Commerce.Controllers
             
             var role = GetUserRole();
             var isAdmin = role == "Admin";
-            
-            // For non-admin users, only show active and non-deleted collections
+          
             var result = await _collectionServices.GetCollectionByIdAsync(
                 id, 
                 isAdmin ? null : true, 
@@ -268,7 +267,7 @@ namespace E_Commerce.Controllers
         /// Get collection images (Admin only)
         /// </summary>
         [HttpGet("{id}/images")]
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous()]
         public async Task<ActionResult<ApiResponse<List<ImageDto>>>> GetCollectionImages(int id)
         {
             if (id <= 0)
@@ -422,7 +421,7 @@ namespace E_Commerce.Controllers
         /// Get collection products (Admin only)
         /// </summary>
         [HttpGet("{id}/products")]
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous()]
         public async Task<ActionResult<ApiResponse<List<ProductDto>>>> GetCollectionProducts(int id)
         {
             if (id <= 0)
@@ -435,16 +434,24 @@ namespace E_Commerce.Controllers
                 _logger.LogInformation(
                     $"Executing {nameof(GetCollectionProducts)} for collection ID: {id}"
                 );
-                var collection = await _collectionServices.GetCollectionByIdAsync(id, null, null);
-                if (!collection.Success)
+                var role = GetUserRole();
+                var isAdmin = role == "Admin";
+
+                var result = await _collectionServices.GetCollectionByIdAsync(
+                    id,
+                    isAdmin ? null : true,
+                    isAdmin ? null : false
+                );
+                if (!result.Success)
                 {
-                    return CreateErrorResponse<List<ProductDto>>(collection.Message, collection.StatusCode);
+                    return CreateErrorResponse<List<ProductDto>>(result.Message, result.StatusCode);
                 }
 
-                var products = collection.Data?.Products?.ToList() ?? new List<ProductDto>();
+                var products = result.Data?.Products?.ToList() ?? new List<ProductDto>();
                 var successResponse = ApiResponse<List<ProductDto>>.CreateSuccessResponse(
                     "Collection products retrieved successfully",
                     products,
+                    
                     200
                 );
                 return Ok(successResponse);

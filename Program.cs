@@ -211,7 +211,7 @@ namespace E_Commerce
 						partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
 						factory: _ => new FixedWindowRateLimiterOptions
 						{
-							PermitLimit = 20,
+							PermitLimit = 90,
 							Window = TimeSpan.FromMinutes(1),
 							AutoReplenishment = true
 						}));

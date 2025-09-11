@@ -3,13 +3,11 @@ using E_Commerce.DtoModels.Responses;
 using E_Commerce.Enums;
 using E_Commerce.Interfaces;
 using E_Commerce.Models;
-using E_Commerce.Services.AdminOperationServices;
 using E_Commerce.Services.UserOpreationServices;
 using E_Commerce.UOW;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace E_Commerce.Services.CartServices
 {
@@ -465,7 +463,7 @@ namespace E_Commerce.Services.CartServices
             foreach (var id in updatecartcheckout)
             {
               
-                _backgroundJobClient.Enqueue(() => RemoveCheckoutAsync(id));
+                await RemoveCheckoutAsync(id);
 			}
 
 			_unitOfWork.Repository<CartItem>().UpdateList(cartItems);
@@ -474,32 +472,51 @@ namespace E_Commerce.Services.CartServices
             _cacheHelper.ClearCartCache();
         }
 
-        public async Task UpdateCartItemsForProductsAfterRemoveDiscountAsync(List<int> productIds)
-        {
-            var cartItems = await _unitOfWork.Repository<CartItem>()
-                .GetAll()
-                .Where(ci => productIds.Contains(ci.ProductId))
-                .Include(ci => ci.Product)
-                .ToListAsync();
-            HashSet<int> updatecartcheckout = new HashSet<int>();
+		public async Task UpdateCartItemsForProductsAfterRemoveDiscountAsync(List<int> productIds)
+		{
+			var cartItems = await _unitOfWork.Repository<CartItem>()
+				.GetAll()
+				.Where(ci => productIds.Contains(ci.ProductId))
+				.Include(ci => ci.Product)
+				.ToListAsync();
+
+			HashSet<int> cartIds = new HashSet<int>();
 
 			foreach (var item in cartItems)
-            {
-                updatecartcheckout.Add(item.CartId);
+			{
 				item.UnitPrice = item.Product.Price;
-                item.ModifiedAt = DateTime.UtcNow;
-            }
-            foreach (var id in updatecartcheckout)
-            {
-                _backgroundJobClient.Enqueue(() => RemoveCheckoutAsync(id));
-            }
+				item.ModifiedAt = DateTime.UtcNow;
+				cartIds.Add(item.CartId);
+			}
 
-				_unitOfWork.Repository<CartItem>().UpdateList(cartItems);
-            await _unitOfWork.CommitAsync();
-            _cacheHelper.ClearCartCache();
+			_unitOfWork.Repository<CartItem>().UpdateList(cartItems);
+
+
+			foreach (var cartId in cartIds)
+			{
+				await ResetCheckoutStatusAndRecalculateAsync(cartId);
+			}
+
+			await _unitOfWork.CommitAsync();
+			_cacheHelper.ClearCartCache();
+		}
+
+		public async Task ResetCheckoutStatusAndRecalculateAsync(int cartId)
+		{
+			var cart = await _cartRepository.GetByIdAsync(cartId); 
+			if (cart == null)
+				return;
+
+			cart.CheckoutDate = null;
+
+
+			cart.ModifiedAt = DateTime.UtcNow;
+
+         await    _unitOfWork.CommitAsync();
         }
 
-        public async Task RemoveCheckoutAsync(int id)
+
+		public async Task RemoveCheckoutAsync(int id)
         {
             var cart = await _cartRepository.GetByIdAsync(id);
             if (cart == null)

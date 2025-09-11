@@ -94,46 +94,48 @@ namespace E_Commerce.Services.ProductVariantServices
             }
         }
 
-        public async Task<Result<bool>> RemoveQuntityAfterOrder(int id, int quantity)
-        {
-            _logger.LogInformation($"Removing {quantity} from variant: {id}");
-           
+		public async Task<Result<bool>> RemoveQuntityAfterOrder(int id, int quantity)
+		{
+			_logger.LogInformation($"Removing {quantity} from variant: {id}");
+
             try
             {
                 if (quantity <= 0)
                     return Result<bool>.Fail("Remove quantity must be positive", 400);
 
-                var variant = await _unitOfWork.Repository<ProductVariant>().GetByIdAsync(id);
-                if (variant == null)
+                var affectedRows = await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+                    "UPDATE ProductVariants SET Quantity = Quantity - {0} WHERE Id = {1} AND Quantity >= {0}",
+                    quantity, id
+                );
+
+                if (affectedRows == 0)
                 {
-                    _logger.LogWarning($"Variant {id} not found");
-                    return Result<bool>.Fail("Variant not found", 404);
+                    return Result<bool>.Fail("Not enough quantity or someone else already bought it", 409);
                 }
-
-                if (variant.Quantity < quantity)
-                    return Result<bool>.Fail("Not enough quantity to remove", 400);
-
-                variant.Quantity -= quantity;
+                var variant = await _unitOfWork.Repository<ProductVariant>().GetByIdAsync(id);
 
                 if (variant.Quantity == 0)
                 {
                     variant.IsActive = false;
+
                     _backgroundJobClient.Enqueue(() =>
                         CheckAndDeactivateProductIfAllVariantsInactiveOrZeroAsync(variant.ProductId)
                     );
                 }
-				_backgroundJobClient.Enqueue(() => _productCatalogService.UpdateProductQuantity(variant.ProductId));
-				var affectedRows = await _unitOfWork.context.Database.ExecuteSqlRawAsync(
-					"UPDATE ProductVariants SET Quantity = Quantity - {0} WHERE Id = {1} AND Quantity >= {0}",
-					quantity, id
-				);
 
-				if (affectedRows == 0)
-				{
-					return Result<bool>.Fail("Not enough quantity or someone else already bought it", 400);
-				}
-				return Result<bool>.Ok(true);
+                _backgroundJobClient.Enqueue(() =>
+                    _productCatalogService.UpdateProductQuantity(variant.ProductId));
+
+                return Result<bool>.Ok(true);
             }
+            catch (DbUpdateConcurrencyException e)
+            {
+
+				_logger.LogWarning(e, $"Is Already Deleted in RemoveQuntityAfterOrder for id: {id}");
+		
+				return Result<bool>.Fail("Error removing quantity", 409);
+
+			}
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error in RemoveQuntityAfterOrder for id: {id}");
@@ -142,11 +144,12 @@ namespace E_Commerce.Services.ProductVariantServices
                 );
                 return Result<bool>.Fail("Error removing quantity", 500);
             }
-        }
-        #endregion
+		}
 
-        #region Product Lifecycle Management Methods
-        public async Task CheckAndDeactivateProductIfAllVariantsInactiveOrZeroAsync(int productId)
+		#endregion
+
+		#region Product Lifecycle Management Methods
+		public async Task CheckAndDeactivateProductIfAllVariantsInactiveOrZeroAsync(int productId)
         {
             try
             {

@@ -650,3 +650,4 @@ D:\project_fashion\E-Commerce-API-main\obj\Debug\net9.0\ref\E-Commerce.dll
 D:\project_fashion\E-Commerce-API-main\obj\Debug\net9.0\E-Commerce.sourcelink.json
 D:\project_fashion\E-Commerce-API-main\bin\Debug\net9.0\CloudinaryDotNet.dll
 D:\project_fashion\E-Commerce-API-main\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
+D:\project_fashion\E-Commerce-API-main\obj\Debug\net9.0\swae.build.ex.cache

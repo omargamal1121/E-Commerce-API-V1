@@ -24,7 +24,10 @@ namespace E_Commerce.Models
 		public decimal UnitPrice
 		{ get; set; }
 
+        [Timestamp]
+        [Column(TypeName = "binary(8)")]
+        public byte[]? RowVersion { get; set; } = null;
 
-		public DateTime AddedAt { get; set; } = DateTime.UtcNow;
+        public DateTime AddedAt { get; set; } = DateTime.UtcNow;
     }
 } 

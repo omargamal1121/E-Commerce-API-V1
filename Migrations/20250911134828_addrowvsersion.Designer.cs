@@ -4,6 +4,7 @@ using E_Commerce.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250911134828_addrowvsersion")]
+    partial class addrowvsersion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,11 +145,11 @@ namespace E_Commerce.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CartId");
+
                     b.HasIndex("ProductId");
 
                     b.HasIndex("ProductVariantId");
-
-                    b.HasIndex("CartId", "ProductId", "ProductVariantId");
 
                     b.ToTable("CartItems");
                 });
@@ -186,9 +189,6 @@ namespace E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.ToTable("Categories");
                 });
 
@@ -220,11 +220,9 @@ namespace E_Commerce.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name");
 
                     b.ToTable("Collections");
                 });
@@ -533,8 +531,6 @@ namespace E_Commerce.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("Status");
-
                     b.ToTable("Orders");
                 });
 
@@ -651,9 +647,6 @@ namespace E_Commerce.Migrations
                     b.HasIndex("PaymentMethodId");
 
                     b.HasIndex("PaymentProviderId");
-
-                    b.HasIndex("OrderId", "Status", "PaymentMethodId")
-                        .IsUnique();
 
                     b.ToTable("Payments");
                 });
@@ -920,11 +913,6 @@ namespace E_Commerce.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("binary(8)");
-
                     b.Property<int>("SubCategoryId")
                         .HasColumnType("int");
 
@@ -935,10 +923,7 @@ namespace E_Commerce.Migrations
 
                     b.HasIndex("DiscountId");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("SubCategoryId", "DiscountId");
+                    b.HasIndex("SubCategoryId");
 
                     b.ToTable("Products");
                 });
@@ -966,8 +951,6 @@ namespace E_Commerce.Migrations
                     b.HasKey("ProductId", "CollectionId");
 
                     b.HasIndex("CollectionId");
-
-                    b.HasIndex("ProductId", "CollectionId");
 
                     b.ToTable("ProductCollections");
                 });
@@ -1000,9 +983,9 @@ namespace E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WarehouseId");
+                    b.HasIndex("ProductId");
 
-                    b.HasIndex("ProductId", "WarehouseId");
+                    b.HasIndex("WarehouseId");
 
                     b.ToTable("ProductInventory");
                 });
@@ -1017,7 +1000,7 @@ namespace E_Commerce.Migrations
 
                     b.Property<string>("Color")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -1054,9 +1037,6 @@ namespace E_Commerce.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("ProductId", "Color", "Size", "Waist", "Length")
-                        .IsUnique();
 
                     b.ToTable("ProductVariants");
                 });
@@ -1119,8 +1099,6 @@ namespace E_Commerce.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("ReturnRequestId", "ProductId");
-
                     b.ToTable("ReturnRequestProducts");
                 });
 
@@ -1152,9 +1130,9 @@ namespace E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("CustomerId");
 
-                    b.HasIndex("CustomerId", "ProductId");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Reviews");
                 });
@@ -1290,9 +1268,6 @@ namespace E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.ToTable("Warehouses");
                 });
 
@@ -1322,9 +1297,9 @@ namespace E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("CustomerId");
 
-                    b.HasIndex("CustomerId", "ProductId");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("WishlistItems");
                 });
@@ -1641,22 +1616,22 @@ namespace E_Commerce.Migrations
                     b.HasOne("E_Commerce.Models.Category", "Category")
                         .WithMany("Images")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("E_Commerce.Models.Collection", "Collection")
                         .WithMany("Images")
                         .HasForeignKey("CollectionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("E_Commerce.Models.Product", "Product")
                         .WithMany("Images")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("E_Commerce.Models.SubCategory", "SubCategory")
                         .WithMany("Images")
                         .HasForeignKey("SubCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Category");
 

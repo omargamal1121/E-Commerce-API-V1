@@ -56,7 +56,7 @@ namespace E_Commerce.Controllers
 				}
 
 				var role = GetUserRole();
-				var effectiveUserId = role == "Admin" ? null : GetUserId();
+				var effectiveUserId = role == "Admin" ? userId : GetUserId();
 
 				_logger.LogInformation($"Executing GetOrders: role: {role}, userId: {effectiveUserId}, deleted: {deleted}, page: {page}, size: {pageSize}, status: {status}");
 				var result = await _orderServices.FilterOrdersAsync(effectiveUserId, deleted, page, pageSize, status);

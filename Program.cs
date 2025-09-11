@@ -89,7 +89,10 @@ namespace E_Commerce
 			 .CreateLogger();
 
 			builder.Host.UseSerilog();
-			builder.Services.AddHttpContextAccessor();
+            builder.Services.AddHealthChecks();
+
+  
+            builder.Services.AddHttpContextAccessor();
 
 			// Add Service Registrations
 			builder.Services.AddCategoryServices();
@@ -351,12 +354,14 @@ namespace E_Commerce
 			app.UseMiddleware<SecurityStampMiddleware>();
 			app.UseStaticFiles();
 			app.UseResponseCaching();
+
 			app.UseAuthorization();
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllers();
 			});
-			app.Run();
+            app.MapHealthChecks("/health");
+            app.Run();
 		}
 	}
 }

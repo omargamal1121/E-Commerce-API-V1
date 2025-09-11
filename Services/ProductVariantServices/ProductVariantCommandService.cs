@@ -70,18 +70,29 @@ namespace E_Commerce.Services.ProductVariantServices
                 if (addQuantity <= 0)
                     return Result<bool>.Fail("Add quantity must be positive", 400);
 
-                var variant = await _unitOfWork.Repository< ProductVariant>().GetByIdAsync(id);
-                if (variant == null)
-                    return Result<bool>.Fail("Variant not found", 404);
+				var affectedRows = await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+					"UPDATE ProductVariants SET Quantity = Quantity + {0} WHERE Id = {1}",
+					addQuantity, id
+				);
+				if (affectedRows == 0)
+				{
+					await transaction.RollbackAsync();
+					return Result<bool>.Fail("Variant not found", 404);
+				}
 
-                variant.Quantity += addQuantity;
+				var variant = await _unitOfWork.Repository<ProductVariant>().GetByIdAsync(id);
 
-                await _unitOfWork.CommitAsync();
-                await transaction.CommitAsync();
+				await _unitOfWork.CommitAsync();
+				await transaction.CommitAsync();
+
 				_backgroundJobClient.Enqueue(() => _productCatalogService.UpdateProductQuantity(variant.ProductId));
-
-				_logger.LogInformation($"Quantity for variant {id} restored to {variant.Quantity}");
+				_logger.LogInformation($"Quantity for variant {id} increased by {addQuantity}");
                 return Result<bool>.Ok(true);
+            }catch(DbUpdateConcurrencyException e)
+            {
+                _logger.LogWarning(e, $"Error in AddQuntityAfterRestoreOrder for id: {id}");
+                await transaction.RollbackAsync();
+                return Result<bool>.Fail("Error adding quantity", 409);
             }
             catch (Exception ex)
             {
@@ -132,7 +143,6 @@ namespace E_Commerce.Services.ProductVariantServices
             {
 
 				_logger.LogWarning(e, $"Is Already Deleted in RemoveQuntityAfterOrder for id: {id}");
-		
 				return Result<bool>.Fail("Error removing quantity", 409);
 
 			}
@@ -241,11 +251,17 @@ namespace E_Commerce.Services.ProductVariantServices
 
                 // Map to DTO and cache
                 var variantDto = _mapper.MapToProductVariantDto(variant);
-               
+                
                 RemoveCacheAndRelatedCaches();
-
+                
                 _logger.LogInformation($"Successfully completed adding variant (ID: {variant.Id}) to product {productId}");
                 return Result<ProductVariantDto>.Ok(variantDto, "Variant added successfully", 201);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogWarning(dbEx, $"Unique constraint hit while adding variant to product {productId}");
+                return Result<ProductVariantDto>.Fail("Variant with this color , size , waist and length already exists", 400);
             }
             catch (Exception ex)
             {
@@ -351,6 +367,13 @@ namespace E_Commerce.Services.ProductVariantServices
 
 				return Result<List<ProductVariantDto>>.Ok(variantDtos, "Variants added successfully", 201,errors);
 			}
+			catch (DbUpdateException dbEx)
+			{
+				await transaction.RollbackAsync();
+				_logger.LogWarning(dbEx, "Unique constraint hit while adding variants to product {ProductId}", productId);
+				errors.Add("One or more variants duplicate existing items");
+				return Result<List<ProductVariantDto>>.Fail("Error adding variants", 400, errors);
+			}
 			catch (Exception ex)
 			{
 				await transaction.RollbackAsync();
@@ -437,6 +460,24 @@ namespace E_Commerce.Services.ProductVariantServices
 
                 return Result<ProductVariantDto>.Ok(variantDto, "Variant updated successfully", 200);
             }
+            catch (DbUpdateConcurrencyException e)
+{
+    _logger.LogWarning(e, $"Error in UpdateVariantAsync for id: {id}");
+    await transaction.RollbackAsync();
+    return Result<ProductVariantDto>.Fail("Error updating variant", 409);
+}
+            catch (DbUpdateException dbEx)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogWarning(dbEx, $"Unique constraint hit while updating variant {id}");
+                return Result<ProductVariantDto>.Fail("Variant with this color , size , waist and length already exists", 400);
+            }
+            
+            
+            
+            
+            
+            
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error in UpdateVariantAsync for id: {id}. Rolling back transaction.");
@@ -480,7 +521,7 @@ namespace E_Commerce.Services.ProductVariantServices
                 _logger.LogInformation($"Successfully soft deleted variant {id}");
 
                 _logger.LogInformation($"Updating product {variant.ProductId} quantity after deleting variant {id}");
-                _productCatalogService.UpdateProductQuantity(variant.ProductId);
+                
 
                 _logger.LogInformation($"Recording admin operation for deleting variant {id} by user {userId}");
                 var isAdded = await _adminOpreationServices.AddAdminOpreationAsync(
@@ -500,11 +541,18 @@ namespace E_Commerce.Services.ProductVariantServices
 
 				// Update cache and check product status
 				RemoveCacheAndRelatedCaches();
-				_logger.LogInformation($"Checking if product {variant.ProductId} should be deactivated after variant deletion");
+                _backgroundJobClient.Enqueue(()=> _productCatalogService.UpdateProductQuantity(variant.ProductId));
+                _logger.LogInformation($"Checking if product {variant.ProductId} should be deactivated after variant deletion");
                 await CheckAndDeactivateProductIfAllVariantsInactiveOrZeroAsync(variant.ProductId);
 
                 _logger.LogInformation($"Successfully completed all operations for deleting variant {id}");
                 return Result<bool>.Ok(true, "Variant deleted successfully", 200);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogWarning(ex, $"Concurrency conflict when deleting variant {id}");
+                return Result<bool>.Fail("Variant already deleted or modified by another process.", 409);
             }
             catch (Exception ex)
             {
@@ -587,6 +635,12 @@ namespace E_Commerce.Services.ProductVariantServices
 				_backgroundJobClient.Enqueue(()=> _productCatalogService.UpdateProductQuantity(varaintinfo.productid));
 				return Result<bool>.Ok(true, "Variant activated", 200);
             }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogWarning(ex, $"Concurrency conflict when Activate variant {id}");
+                return Result<bool>.Fail("Variant already  modified by another process.", 409);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error in ActivateVariantAsync for id: {id}. Rolling back transaction.");
@@ -662,13 +716,19 @@ namespace E_Commerce.Services.ProductVariantServices
                 if (addQuantity <= 0)
                     return Result<bool>.Fail("Add quantity must be positive", 400);
 
-                var variant = await _unitOfWork.Repository<ProductVariant>().GetByIdAsync(id);
-                if (variant == null)
-                    return Result<bool>.Fail("Variant not found", 404);
+				var affectedRows = await _unitOfWork.context.Database.ExecuteSqlRawAsync(
+					"UPDATE ProductVariants SET Quantity = Quantity + {0} WHERE Id = {1}",
+					addQuantity, id
+				);
+				if (affectedRows == 0)
+				{
+					await transaction.RollbackAsync();
+					return Result<bool>.Fail("Variant not found", 404);
+				}
 
-                 variant.Quantity += addQuantity;
+				var variant = await _unitOfWork.Repository<ProductVariant>().GetByIdAsync(id);
 
-      
+
                 var adminopreation = await _adminOpreationServices.AddAdminOpreationAsync(
                     $"Add Quantity for Variant {id}",
                     Opreations.UpdateOpreation,
@@ -691,6 +751,12 @@ namespace E_Commerce.Services.ProductVariantServices
 				_backgroundJobClient.Enqueue(() => _productCatalogService.UpdateProductQuantity(variant.ProductId));
 
                 return Result<bool>.Ok(true, "Quantity added successfully", 200);
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                _logger.LogWarning(e, $"Error in AddVariantQuantityAsync for id: {id}");
+                await transaction.RollbackAsync();
+                return Result<bool>.Fail("Error adding quantity", 409);
             }
             catch (Exception ex)
             {
@@ -739,6 +805,12 @@ namespace E_Commerce.Services.ProductVariantServices
 				RemoveCacheAndRelatedCaches();
 
 				return Result<bool>.Ok(true, "Quantity removed successfully", 200);
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                _logger.LogWarning(e, $"Error in RemoveVariantQuantityAsync for id: {id}. Rolling back transaction.");
+                await transaction.RollbackAsync();
+                return Result<bool>.Fail("Error removing quantity", 409);
             }
             catch (Exception ex)
             {
@@ -793,7 +865,6 @@ namespace E_Commerce.Services.ProductVariantServices
                 }
 
                 _logger.LogInformation($"Updating product {variantinfo.productid} quantity after restoring variant {id}");
-                _productCatalogService.UpdateProductQuantity(variantinfo.productid);
 
                 _logger.LogInformation($"Committing transaction for restoring variant {id}");
                 await _unitOfWork.CommitAsync();
@@ -804,7 +875,15 @@ namespace E_Commerce.Services.ProductVariantServices
                 _logger.LogInformation($"Committing transaction for restoring variant {id}");
                 await transaction.CommitAsync();
                 _logger.LogInformation($"Successfully completed all operations for restoring variant {id}");
+                _backgroundJobClient.Enqueue(()=>_productCatalogService.UpdateProductQuantity(variantinfo.productid));
                 return Result<bool>.Ok(true, "Variant restored successfully", 200);
+
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogWarning(ex, $"Concurrency conflict when restoring variant {id}");
+                await transaction.RollbackAsync();
+                return Result<bool>.Fail("Variant already restored or modified by another process.", 409);
             }
             catch (Exception ex)
             {

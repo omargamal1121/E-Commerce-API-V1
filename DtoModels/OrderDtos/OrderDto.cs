@@ -23,7 +23,7 @@ namespace E_Commerce.DtoModels.OrderDtos
         public DateTime? DeliveredAt { get; set; }
         public DateTime? CancelledAt { get; set; }
         public List<OrderItemDto> Items { get; set; } = new List<OrderItemDto>();
-        public PaymentDto? Payment { get; set; }
+        public IEnumerable<PaymentDto>? Payment { get; set; }
         
         public bool IsCancelled => Status == OrderStatus.CancelledByUser.ToString()|| Status == OrderStatus.CancelledByAdmin.ToString();
         public bool IsDelivered => Status == OrderStatus.Delivered.ToString();
@@ -71,7 +71,7 @@ namespace E_Commerce.DtoModels.OrderDtos
         public decimal Amount { get; set; }
         public DateTime PaymentDate { get; set; }
         public int OrderId { get; set; }
-        public OrderStatus Status { get; set; } 
+        public PaymentStatus Status { get; set; } 
     }
 
     

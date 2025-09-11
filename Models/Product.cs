@@ -41,6 +41,10 @@ namespace E_Commerce.Models
 
 		public ICollection<Image> Images { get; set; } = new List<Image>();
 
+		[Timestamp]
+		[Column(TypeName = "binary(8)")]
+		public byte[]? RowVersion { get; set; } = null;
+
 		// Product Variants
 		public ICollection<ProductVariant> ProductVariants { get; set; } = new List<ProductVariant>();
 

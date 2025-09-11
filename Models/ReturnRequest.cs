@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_Commerce.Models
 {
     public class ReturnRequest
     {
+
+        [Timestamp]
+        [Column(TypeName = "binary(8)")]
+        public byte[]? RowVersion { get; set; } = null;
         public int Id { get; set; }
         [Required]
         public int OrderId { get; set; }

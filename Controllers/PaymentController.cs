@@ -39,9 +39,9 @@ namespace E_Commerce.Controllers
 					return BadRequest(ApiResponse<PaymentResponseDto>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
 				}
 
-				_logger.LogInformation($"Executing CreatePayment for order: {paymentRequest.OrderId}");
+				_logger.LogInformation($"Executing CreatePayment for order: {paymentRequest.OrderNumber}");
 				var userId = GetUserId();
-				var result = await _paymentServices.CreatePaymentMethod(paymentRequest.OrderId, paymentRequest.PaymentDetails, userId);
+				var result = await _paymentServices.CreatePaymentMethod(paymentRequest.OrderNumber, paymentRequest.PaymentDetails, userId);
 				return HandleResult(result, nameof(CreatePayment), new { id = result.Data?.Paymentid });
 			}
 			catch (Exception ex)
@@ -190,6 +190,6 @@ namespace E_Commerce.Controllers
 // Supporting DTOs for the PaymentController
 public class CreatePaymentRequestDto
 {
-	public string OrderId { get; set; } = string.Empty;
+	public string OrderNumber { get; set; } = string.Empty;
 	public CreatePaymentOfCustomer PaymentDetails { get; set; } = new();
 }

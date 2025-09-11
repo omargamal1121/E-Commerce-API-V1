@@ -6,9 +6,13 @@ namespace E_Commerce.Models
 {
 	public class Payment:BaseEntity
 	{
-	
 
-		[ForeignKey("Customer")]
+
+        [Timestamp]
+        [Column(TypeName = "binary(8)")]
+        public byte[]? RowVersion { get; set; } = null;
+
+        [ForeignKey("Customer")]
 		public string CustomerId { get; set; } = string.Empty;
 		public  Customer Customer { get; set; }
 
@@ -37,6 +41,9 @@ namespace E_Commerce.Models
 		public string? TransactionId { get; set; }
 
 		public long ProviderOrderId { get; set; }
+
+
+
 
 		public ICollection<PaymentWebhook> Webhooks { get; set; } = new List<PaymentWebhook>();
 	}

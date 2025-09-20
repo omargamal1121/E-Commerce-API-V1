@@ -244,7 +244,7 @@ namespace E_Commerce.Services.PaymentServices
                     Message = "Cash on Delivery selected. No redirect required."
                 };
 
-                // Handle online payment vs cash on delivery
+               
                 if (paymentdto.PaymentMethod != PaymentMethodEnums.CashOnDelivery)
                 {
                     var onlinePaymentResult = await ProcessOnlinePayment(paymentdto, order, payment);
@@ -303,12 +303,7 @@ namespace E_Commerce.Services.PaymentServices
 
                 return Result<PaymentResponseDto>.Ok(response!);
             }
-            catch (DbUpdateConcurrencyException e)
-            {
-                _logger.LogWarning(e, "Concurrency conflict while creating payment for order {OrderNumber}", ordernumber);
-                await transaction.RollbackAsync();
-                return Result<PaymentResponseDto>.Fail("Payment was modified by another process.", 409);
-            }
+           
             catch (DbUpdateException e)
             {
                 _logger.LogWarning(e,

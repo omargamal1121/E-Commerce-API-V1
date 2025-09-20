@@ -32,7 +32,7 @@ namespace E_Commerce.DtoModels.ProductDtos
 
 
 		public bool IsActive { get; set; }
-		public IEnumerable<ImageDto> images { get; set; }
+		public IEnumerable<ImageDto>? images { get; set; }
 
 
 

@@ -36,8 +36,9 @@ namespace E_Commerce.Services
 			new byte[] { 0x52, 0x49, 0x46, 0x46 },
 		};
 
-		public ImagesServices(IBackgroundJobClient backgroundJobClient ,Cloudinary cloudinary ,IHttpContextAccessor httpContextAccessor,ILogger<ImagesServices> logger, IConfiguration configuration, IUnitOfWork unitOfWork, IAdminOpreationServices adminOpreationServices)
+		public ImagesServices(IErrorNotificationService errorNotificationService ,IBackgroundJobClient backgroundJobClient ,Cloudinary cloudinary ,IHttpContextAccessor httpContextAccessor,ILogger<ImagesServices> logger, IConfiguration configuration, IUnitOfWork unitOfWork, IAdminOpreationServices adminOpreationServices)
 		{
+			_errorNotificationService = errorNotificationService;
 			_backgroundJobClient = backgroundJobClient;
 			_cloudinary = cloudinary;
 			_httpContextAccessor= httpContextAccessor;
@@ -326,6 +327,16 @@ namespace E_Commerce.Services
 		public Task<Result<Image>> SaveMainCollectionImageAsync(IFormFile image, int id, string? userId = null) => SaveMainImageAsync(image, "CollectionPhotos", id, userId);
 		public Task<Result<Image>> SaveMainProductImageAsync(IFormFile image, int id, string? userId = null) => SaveMainImageAsync(image, "ProductPhotos", id, userId);
 		public Task<Result<Image>> SaveMainSubCategoryImageAsync(IFormFile image, int id, string? userId = null) => SaveMainImageAsync(image, "SubCategoryPhotos", id, userId);
+		public async Task<Result<string>> DeleteImageAsync(int imageid)
+		{
+			var image= await _unitOfWork.Image.GetByIdAsync(imageid);
+			if (image == null){
+				_logger.LogInformation($"Image not found by this id:{imageid}");
+				return Result<string>.Fail($"Image not found by this id:{imageid}",404);
+			}
+			return await DeleteImageAsync(image);
+
+        }
 		public async Task<Result<string>> DeleteImageAsync(Image image)
 		{
 			_logger.LogInformation("✅ Execute {Method} for image ID: {ImageId}", nameof(DeleteImageAsync), image.Id);

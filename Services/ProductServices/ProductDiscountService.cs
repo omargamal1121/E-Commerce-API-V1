@@ -95,16 +95,14 @@ namespace E_Commerce.Services.ProductServices
                     return Result<List<ProductDto>>.Fail("Discount not found or deleted.", 404);
                 }
 
-                // Check if discount is active and valid
                 var now = DateTime.UtcNow;
-                var isDiscountActive = discount.IsActive && 
+                var isDiscountActive = discount.IsActive ||( 
                                       discount.StartDate <= now && 
                                       discount.EndDate >= now && 
-                                      discount.DeletedAt == null;
+                                      discount.DeletedAt == null);
 
                 _logger.LogInformation($"Discount {dto.Discountid} active status: {isDiscountActive} (IsActive: {discount.IsActive}, StartDate: {discount.StartDate}, EndDate: {discount.EndDate}, DeletedAt: {discount.DeletedAt})");
 
-                // Validate all products exist and are not deleted
                 var existingProducts = await _unitOfWork.Product.GetAll()
                     .Where(p => dto.ProductsId.Contains(p.Id) && p.DeletedAt == null)
                     .ToListAsync();
@@ -117,7 +115,6 @@ namespace E_Commerce.Services.ProductServices
                     return Result<List<ProductDto>>.Fail($"Some products not found or deleted: {string.Join(", ", missingIds)}", 404);
                 }
 
-                // Check if any products already have a discount
                 var productsWithExistingDiscount = existingProducts.Where(p => p.DiscountId != null).ToList();
                 var warnings = new List<string>();
 
@@ -127,7 +124,6 @@ namespace E_Commerce.Services.ProductServices
                     warnings.Add($"Products {string.Join(", ", existingDiscountIds)} already have discounts and will be updated.");
                 }
 
-                // Apply discount to all products
                 foreach (var product in existingProducts)
                 {
                     product.DiscountId = dto.Discountid;

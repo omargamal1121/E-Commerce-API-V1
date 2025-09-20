@@ -82,15 +82,8 @@ namespace E_Commerce.Controllers
 			// Role-based filtering
 			bool isAdmin = User?.IsInRole("Admin") ?? false;
 			
-			// Regular users can only see active, non-deleted categories
-			if (!isAdmin)
-			{
-				isActive = true;
-				includeDeleted = false;
-			}
 			
-			// Admins can use any filters, regular users get fixed filters
-			var result = await _categoryServices.GetCategoryByIdAsync(id, isActive, includeDeleted);
+			var result = await _categoryServices.GetCategoryByIdAsync(id, isActive, includeDeleted,isAdmin);
 			return HandleResult(result, "GetCategoryById", id);
 		}
 
@@ -112,15 +105,10 @@ namespace E_Commerce.Controllers
 			// Role-based filtering
 			bool isAdmin = User?.IsInRole("Admin") ?? false;
 			
-			// Regular users can only see active, non-deleted categories
-			if (!isAdmin)
-			{
-				isActive = true;
-				isDeleted = false;
-			}
+			
 			
 			// Admins can use any filters, regular users get fixed filters
-			var searchResult = await _categoryServices.FilterAsync(search, isActive, isDeleted, page, pageSize);
+			var searchResult = await _categoryServices.FilterAsync(search, isActive, isDeleted, page, pageSize,isAdmin);
 			return HandleResult(searchResult, "GetCategories");
 		}
 

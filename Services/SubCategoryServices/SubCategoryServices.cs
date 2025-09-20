@@ -53,10 +53,9 @@ namespace E_Commerce.Services.SubCategoryServices
      
 
 
-		public async Task<Result<SubCategoryDtoWithData>> GetSubCategoryByIdAsync(int id, bool? isActive = null, bool? isDeleted = null)
+		public async Task<Result<SubCategoryDtoWithData>> GetSubCategoryByIdAsync(int id, bool? isActive = null, bool? isDeleted = null, bool IsAdmin = false)
 		{
-			
-			return await _subCategoryQueryService.GetSubCategoryByIdAsync(id, isActive, isDeleted);
+			return await _subCategoryQueryService.GetSubCategoryByIdAsync(id, isActive, isDeleted, IsAdmin);
 		}
 
 
@@ -74,9 +73,9 @@ namespace E_Commerce.Services.SubCategoryServices
             return await _subCategoryCommandService.DeleteAsync(id, userid);
 		}
 
-        public async Task<Result<List<SubCategoryDto>>> FilterAsync(string? search,bool? isActive,bool?isDeleted,int page,int pageSize)
+        public async Task<Result<List<SubCategoryDto>>> FilterAsync(string? search,bool? isActive,bool?isDeleted,int page,int pageSize, bool IsAdmin = false)
         {
-            return await _subCategoryQueryService.FilterAsync(search, isActive, isDeleted, page, pageSize);
+            return await _subCategoryQueryService.FilterAsync(search, isActive, isDeleted, page, pageSize, IsAdmin);
 		}
 
 	

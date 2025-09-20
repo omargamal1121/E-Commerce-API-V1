@@ -32,17 +32,18 @@ namespace E_Commerce.Services.ProductServices
 		private readonly IErrorNotificationService _errorNotificationService;
 		private readonly IImagesServices _imagesServices;
 		private readonly ISubCategoryServices _subCategoryServices;
-		private readonly ICacheManager _cacheManager;
 		private readonly IProductCatalogService _productCatalogService;
 		private readonly IProductCacheManger _productCacheManger;
 		private readonly ICollectionCacheHelper _collectionCacheHelper;
 		private readonly ISubCategoryCacheHelper _subCategoryCacheHelper;
 
 		public ProductImageService(
+			ISubCategoryCacheHelper subCategoryCache,
+			IProductCacheManger productCache ,
+			ICollectionCacheHelper collectionCache,
 			ISubCategoryCacheHelper subCategoryCacheHelper,
 			IProductCacheManger productCacheManger,
 			ICollectionCacheHelper collectionCacheHelper,
-			ICacheManager cacheManager,
 			IBackgroundJobClient backgroundJobClient,
 			IUnitOfWork unitOfWork,
 			ILogger<ProductImageService> logger,
@@ -52,7 +53,8 @@ namespace E_Commerce.Services.ProductServices
 			ISubCategoryServices subCategoryServices,
 			IProductCatalogService productCatalogService)
 		{
-			_cacheManager = cacheManager;
+			_subCategoryCacheHelper = subCategoryCache;
+			_productCacheManger = productCacheManger;
 			_backgroundJobClient = backgroundJobClient;
 			_unitOfWork = unitOfWork;
 			_logger = logger;
@@ -61,6 +63,7 @@ namespace E_Commerce.Services.ProductServices
 			_imagesServices = imagesServices;
 			_subCategoryServices = subCategoryServices;
 			_productCatalogService = productCatalogService;
+			_collectionCacheHelper = collectionCacheHelper;
 		}
 		private void RemoveProductCaches()
 		{
@@ -208,13 +211,13 @@ namespace E_Commerce.Services.ProductServices
 
 				}
 
-				var isdeleted = await _unitOfWork.Image.SoftDeleteAsync(imageId);
+				var isdeleted = await _imagesServices.DeleteImageAsync(imageId);
 			
-				if (!isdeleted )
+				if (!isdeleted.Success )
 				{
 					_logger.LogWarning("RemoveProductImageAsync: Image not found or already deleted. productId: {ProductId}, imageId: {ImageId}", productId, imageId);
 					await transaction.RollbackAsync();
-					return Result<bool>.Fail("Image not found on this product or already deleted", 404);
+					return Result<bool>.Fail(isdeleted.Message, isdeleted.StatusCode);
 				}
 
 				

@@ -1,6 +1,5 @@
 ﻿using E_Commerce.DtoModels.ImagesDtos;
 using E_Commerce.DtoModels.Shared;
-using E_Commerce.DtoModels.ProductDtos;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -16,9 +15,5 @@ namespace E_Commerce.DtoModels.SubCategorydto
 		public IEnumerable<ImageDto>? Images { get; set; }
 
 		public bool IsActive { get; set; } = false;
-	}
-	public class SubCategoryDtoWithData: SubCategoryDto
-	{
-		public IEnumerable<ProductDto>? Products { get; set; }
 	}
 }

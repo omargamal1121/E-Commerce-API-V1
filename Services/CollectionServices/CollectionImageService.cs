@@ -162,8 +162,8 @@ namespace E_Commerce.Services.Collection
                     return Result<bool>.Fail($"No image with this id {imageId}");
                 }
 
-                var updateResult = _unitOfWork.Image.Remove(image);
-                if (!updateResult)
+                var updateResult = await _imagesServices.DeleteImageAsync(image);
+                if (!updateResult.Success)
                 {
                     await transaction.RollbackAsync();
                     return Result<bool>.Fail("Failed to remove image", 400);

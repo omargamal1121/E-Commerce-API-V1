@@ -45,19 +45,16 @@ namespace E_Commerce.Services.CategoryServices
 			_logger = logger;
 		}
 
-		public Task<Result<bool>> IsExsistAsync(int id)
-		{
-			throw new NotImplementedException();
-		}
+		
 
 		public Task<Result<CategoryDto>> CreateAsync(CreateCategotyDto categoty, string userid)
 		{
 			return _categoryCommandService.CreateAsync(categoty, userid);
 		}
 
-		public Task<Result<CategorywithdataDto>> GetCategoryByIdAsync(int id, bool? isActive = null, bool? includeDeleted = null)
+		public Task<Result<CategorywithdataDto>> GetCategoryByIdAsync(int id, bool? isActive = null, bool? includeDeleted = null,bool IsAdmin=false)
 		{
-			return _categoryQueryService.GetCategoryByIdAsync(id, isActive, includeDeleted);
+			return _categoryQueryService.GetCategoryByIdAsync(id, isActive, includeDeleted,IsAdmin);
 		}
 
 		public Task<Result<bool>> DeleteAsync(int id, string userid)
@@ -70,9 +67,9 @@ namespace E_Commerce.Services.CategoryServices
 			return _categoryCommandService.UpdateAsync(categoryid, category, userid);
 		}
 
-		public Task<Result<List<CategoryDto>>> FilterAsync(string? search, bool? isActive, bool? includeDeleted, int page, int pageSize)
+		public Task<Result<List<CategoryDto>>> FilterAsync(string? search, bool? isActive, bool? includeDeleted, int page, int pageSize, bool IsAdmin = false)
 		{
-			return _categoryQueryService.FilterAsync(search, isActive, includeDeleted, page, pageSize);
+			return _categoryQueryService.FilterAsync(search, isActive, includeDeleted, page, pageSize,IsAdmin);
 		}
 
 		public Task<Result<CategoryDto>> RestoreAsync(int id, string userid)

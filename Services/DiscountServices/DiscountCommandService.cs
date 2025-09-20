@@ -9,7 +9,7 @@ using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace E_Commerce.Services.Discount
+namespace E_Commerce.Services.DiscountServices
 {
     public class DiscountCommandService : IDiscountCommandService
     {
@@ -94,7 +94,7 @@ namespace E_Commerce.Services.Discount
                     IsActive = discount.IsActive,
                     CreatedAt = discount.CreatedAt
                 };
-
+                _cacheHelper.ClearProductCache();
                 return Result<DiscountDto>.Ok(discountDto, "Discount created successfully", 201);
             }
             catch (Exception ex)
@@ -169,7 +169,8 @@ namespace E_Commerce.Services.Discount
 
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-                
+                _cacheHelper.ClearProductCache();
+
                 _cacheHelper.ScheduleDiscountCheck(discount.Id, discount.StartDate, discount.EndDate);
 
                 var discountDto = new DiscountDto
@@ -227,6 +228,7 @@ namespace E_Commerce.Services.Discount
                 var productsids = await _unitOfWork.Product.GetAll().Where(p => p.DiscountId == id && p.DeletedAt == null).Select(p => p.Id).ToListAsync();
 
                 _backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterRemoveDiscountAsync(productsids));
+                _cacheHelper.ClearProductCache();
                 _cacheHelper.ClearProductCache();
                 return Result<bool>.Ok(true, "Discount deleted", 200);
             }

@@ -237,12 +237,12 @@ namespace E_Commerce.Services.SubCategoryServices
 					return Result<bool>.Fail("Image not found", 404);
 				}
 
-				var deleteResult = await _unitOfWork.Image.SoftDeleteAsync(imageId);
-				if (!deleteResult)
+				var deleteResult = await _imagesServices.DeleteImageAsync(imageId);
+				if (!deleteResult.Success)
 				{
 					_logger.LogError($"Failed to delete image file");
 					await transaction.RollbackAsync();
-					return Result<bool>.Fail("Can't Deleted Image", 500);
+					return Result<bool>.Fail(deleteResult.Message,deleteResult.StatusCode);
 				}
 
 

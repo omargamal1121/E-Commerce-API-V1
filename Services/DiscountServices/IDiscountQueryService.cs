@@ -1,7 +1,7 @@
 using E_Commerce.DtoModels.DiscoutDtos;
 using E_Commerce.DtoModels.Responses;
 
-namespace E_Commerce.Services.Discount
+namespace E_Commerce.Services.DiscountServices
 {
     public interface IDiscountQueryService
     {

@@ -1,8 +1,7 @@
 using E_Commerce.Interfaces;
-using E_Commerce.Services.Discount;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace E_Commerce.Services.Discount
+namespace E_Commerce.Services.DiscountServices
 {
     public static class DiscountServiceRegistration
     {

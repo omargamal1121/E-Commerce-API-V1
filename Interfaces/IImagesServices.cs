@@ -29,5 +29,7 @@ namespace E_Commerce.Interfaces
 		Task<Result<Image>> SaveMainSubCategoryImageAsync(IFormFile image, int id, string userId);
 		
 		Task<Result<string>> DeleteImageAsync(Image image);
-	}
+		Task<Result<string>> DeleteImageAsync(int imageid);
+
+    }
 }

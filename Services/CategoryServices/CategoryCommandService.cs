@@ -9,6 +9,7 @@ using E_Commerce.Services.EmailServices;
 using E_Commerce.UOW;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace E_Commerce.Services.CategoryServices
 {
@@ -17,7 +18,7 @@ namespace E_Commerce.Services.CategoryServices
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly ILogger<CategoryCommandService> _logger;
 		private readonly IAdminOpreationServices _adminopreationservices;
-		private readonly ICacheManager _cacheManager;
+
 		private readonly IBackgroundJobClient _backgroundJobClient ;
 		private readonly ICategoryCacheHelper _categoryCacheHelper;
 		private readonly ICategoryMapper _categoryMapper;
@@ -34,13 +35,13 @@ namespace E_Commerce.Services.CategoryServices
 			)
 		{
 			_categoryMapper = categoryMapper;
-			_cacheManager = cacheManager;
+
 			_categoryCacheHelper = categoryCacheHelper;
 			_backgroundJobClient = backgroundJobClient;
 			_unitOfWork = unitOfWork;
 			_logger = logger;
 			_adminopreationservices = adminopreationservices;
-			_cacheManager = cacheManager;
+		
 
 		}
 		public async Task DeactivateCategoryIfNoActiveSubcategories(int categoryId, string userId)
@@ -195,7 +196,7 @@ namespace E_Commerce.Services.CategoryServices
 					NotifyAdminOfError($"Failed to log admin operation for category '{model.Name}' (ID: {category.Id})");
 					return Result<CategoryDto>.Fail("Try Again later", 500);
 				}
-						_categoryCacheHelper.ClearCategoryCache();
+				_categoryCacheHelper.ClearCategoryCache();
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 				var categoryaftercreate = await _unitOfWork.Category.GetByIdAsync(category.Id);
@@ -407,7 +408,7 @@ namespace E_Commerce.Services.CategoryServices
 
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-						_categoryCacheHelper.ClearCategoryCache();
+				_categoryCacheHelper.ClearCategoryCache();
 
 
 				var restoredCategory = await GetCategoryByIdWithImagesAsync(id);
@@ -417,8 +418,8 @@ namespace E_Commerce.Services.CategoryServices
 					return Result<CategoryDto>.Fail("Category restored but failed to retrieve details", 500);
 				}
 
-				var categorydto = _categoryMapper.ToCategoryDto(restoredCategory);
-				return Result<CategoryDto>.Ok(categorydto, "Category restored successfully", 200);
+				
+				return Result<CategoryDto>.Ok(restoredCategory, "Category restored successfully", 200);
 			}
 			catch (Exception ex)
 			{
@@ -443,21 +444,21 @@ namespace E_Commerce.Services.CategoryServices
 		}
 
 
-		private async Task<Category?> GetCategoryByIdWithImagesAsync(int id, bool? isActive = null, bool? isDeleted = null)
+		private async Task<CategoryDto?> GetCategoryByIdWithImagesAsync(int id, bool? isActive = null, bool? isDeleted = null,bool IsAdmin = false)
 		{
-			_logger.LogInformation($"Executing {nameof(GetCategoryByIdWithImagesAsync)} for id: {id}");
+
+            _logger.LogInformation($"Executing {nameof(GetCategoryByIdWithImagesAsync)} for id: {id}");
 
 			var query = _unitOfWork.Category.GetAll();
 
 			query = query.Where(c => c.Id == id);
 
 			query = BasicFilter(query, isActive, isDeleted);
+			
 
-			var category = await query
-				.Include(c => c.Images)
-				.FirstOrDefaultAsync();
+			var category = await _categoryMapper.CategorySelector(query).FirstOrDefaultAsync();
 
-			if (category == null)
+            if (category == null)
 			{
 				_logger.LogWarning($"Category with id: {id} doesn't exist");
 				return null;
@@ -483,20 +484,79 @@ namespace E_Commerce.Services.CategoryServices
 
 			try
 			{
-				List<string> warings = new List<string>();
+				StringBuilder updates= new StringBuilder();
+                var warnings = new List<string>();
 
-				if (!string.IsNullOrWhiteSpace(category.Name))
-					existingCategory.Name = category.Name;
+                if (!string.IsNullOrWhiteSpace(category.Name?.Trim()) && category.Name.Trim() != existingCategory.Name)
+                {
+                    var trimmedName = category.Name.Trim();
+                    var nameRegex = new System.Text.RegularExpressions.Regex(@"^[a-zA-Z0-9][a-zA-Z0-9\s\-,]*[a-zA-Z0-9]$");
+                    if (!nameRegex.IsMatch(trimmedName))
+                    {
+                        warnings.Add($"Name '{trimmedName}' does not match the required format. Name will not be changed.");
+                        _logger.LogWarning($"Name update skipped - invalid format '{trimmedName}'");
+                    }
+                    else if (trimmedName.Length < 5 || trimmedName.Length > 20)
+                    {
+                        warnings.Add($"Name '{trimmedName}' must be between 5 and 20 characters. Name will not be changed.");
+                        _logger.LogWarning($"Name update skipped - invalid length '{trimmedName}'");
+                    }
+                    else
+                    {
+                        _logger.LogInformation($"Updating name from '{existingCategory.Name}' to '{trimmedName}'");
+                        var isexist = await _unitOfWork.SubCategory.IsExsistByNameAsync(category.Name);
 
-				if (!string.IsNullOrWhiteSpace(category.Description))
-					existingCategory.Description = category.Description;
 
-				if (category.DisplayOrder.HasValue)
-					existingCategory.DisplayOrder = category.DisplayOrder.Value;
+                        if (isexist)
+                        {
+                            warnings.Add($"category with name '{trimmedName}' already exists. Name will not be changed.");
+                            _logger.LogWarning($"Name update skipped - duplicate name '{trimmedName}'");
+                        }
+                        else
+                        {
+                            existingCategory.Name = trimmedName;
+                            updates.Append($"Change Name from:{existingCategory.Name} To {trimmedName}");
+
+                            _logger.LogInformation($"Name updated successfully to '{trimmedName}'");
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(category.Description?.Trim()) && category.Description.Trim() != existingCategory.Description)
+				{
+					var trimmedDescription = category.Description.Trim();
+
+					var descRegex = new System.Text.RegularExpressions.Regex(@"^[\w\s.,\-()'\""]{0,500}$");
+					if (!descRegex.IsMatch(trimmedDescription))
+					{
+						warnings.Add($"Description '{trimmedDescription}' does not match the required format. Description will not be changed.");
+						_logger.LogWarning($"Description update skipped - invalid format '{trimmedDescription}'");
+					}
+					else if (trimmedDescription.Length < 10 || trimmedDescription.Length > 50)
+					{
+						warnings.Add($"Description '{trimmedDescription}' must be between 10 and 50 characters. Description will not be changed.");
+						_logger.LogWarning($"Description update skipped - invalid length '{trimmedDescription}'");
+					}
+					else
+					{
+						_logger.LogInformation($"Updating description from '{existingCategory.Description}' to '{trimmedDescription}'");
+						existingCategory.Description = trimmedDescription;
+                        updates.Append($"Change Name Description:{existingCategory.Description} To {trimmedDescription}");
+
+                        _logger.LogInformation("Description updated successfully");
+					}
+
+					if (category.DisplayOrder.HasValue)
+					{
+						updates.Append($"Change DisplayOrder from:{existingCategory.DisplayOrder} To {category.DisplayOrder}");
+
+						existingCategory.DisplayOrder = category.DisplayOrder.Value;
+					}
+				}
 
 
 				var adminOpResult = await _adminopreationservices.AddAdminOpreationAsync(
-					"Update Category",
+					updates.ToString(),
 					Opreations.UpdateOpreation,
 					userid,
 					existingCategory.Id
@@ -515,7 +575,7 @@ namespace E_Commerce.Services.CategoryServices
 				_categoryCacheHelper.ClearCategoryCache();
 
 				var dto = _categoryMapper.ToCategoryDto(existingCategory);
-				return Result<CategoryDto>.Ok(dto, "Updated", 200, warnings: warings);
+				return Result<CategoryDto>.Ok(dto, "Updated", 200);
 			}
 
 			catch (Exception ex)

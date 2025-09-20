@@ -26,7 +26,7 @@ namespace E_Commerce.Services.ProductServices
 	public interface IProductCatalogService
 	{
 		
-		Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive, bool? deletedOnly);
+		Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive, bool? deletedOnly, bool IsAdmin = false);
 		public Task UpdateProductQuantity(int Productid  );
 		Task<Result<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId);
 		Task<Result<ProductDto>> UpdateProductAsync(int id, UpdateProductDto dto, string userId);
@@ -100,11 +100,15 @@ namespace E_Commerce.Services.ProductServices
 			_productCacheManger.ClearProductCache();
 		}
 
-		public async Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive, bool? deletedOnly)
+		public async Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive, bool? deletedOnly, bool IsAdmin = false)
 		{
-			_logger.LogInformation($"Retrieving product by id: {id}, isActive: {isActive}, deletedOnly: {deletedOnly}");
-		
-			var cached = await _productCacheManger.GetProductByIdCacheAsync<ProductDetailDto>(id,isActive,deletedOnly);
+			_logger.LogInformation($"Retrieving product by id: {id}, isActive: {isActive}, deletedOnly: {deletedOnly}, IsAdmin: {IsAdmin}");
+			if (!IsAdmin)
+			{
+				isActive = true;
+				deletedOnly = false;
+			}
+			var cached = await _productCacheManger.GetProductByIdCacheAsync<ProductDetailDto>(id, isActive, deletedOnly, IsAdmin);
 			if (cached != null)
 				return Result<ProductDetailDto>.Ok(cached, "Product retrieved from cache", 200);
 			try
@@ -129,7 +133,7 @@ namespace E_Commerce.Services.ProductServices
 					query = query.Where(p => p.IsActive==isActive);
 				}
 
-				var product = await _productMapper.maptoProductDetailDtoexpression(query)
+				var product = await _productMapper.maptoProductDetailDtoexpression(query, IsAdmin)
 					.FirstOrDefaultAsync();
 
 				if (product == null)
@@ -137,7 +141,7 @@ namespace E_Commerce.Services.ProductServices
 
 				_logger.LogInformation($"Product found: {product.Name} (ID: {product.Id})");
 
-				 _=_productCacheManger.SetProductByIdCacheAsync(id, isActive, deletedOnly, product, TimeSpan.FromMinutes(30));
+				_productCacheManger.SetProductByIdCacheAsync(id, isActive, deletedOnly, product, IsAdmin: IsAdmin, expiration: TimeSpan.FromMinutes(30));
 				return Result<ProductDetailDto>.Ok(product, "Product retrieved successfully", 200);
 			}
 			catch (Exception ex)
@@ -457,7 +461,7 @@ namespace E_Commerce.Services.ProductServices
 		public async Task<Result<List<ProductDto>>> GetProductsBySubCategoryId(int SubCategoryid, bool? isActive, bool? deletedOnly)
 		{
 			
-			var cached = await _productCacheManger.GetProductListBySubcategoryidCacheAsync<List<ProductDto>>(SubCategoryid,isActive,isActive);
+			var cached = await _productCacheManger.GetProductListBySubcategoryidCacheAsync<List<ProductDto>>(SubCategoryid, isActive, deletedOnly);
 			if (cached != null)
 				return Result<List<ProductDto>>.Ok(cached, "Products by Category (from cache)", 200);
 			try
@@ -486,7 +490,7 @@ namespace E_Commerce.Services.ProductServices
 
 				var products =await _productMapper.maptoProductDtoexpression(productsQuery)
 					.ToListAsync();
-				_=_productCacheManger.SetProductListBySubCategoryidCacheAsync(products, SubCategoryid, isActive, deletedOnly, TimeSpan.FromMinutes(30));
+				_productCacheManger.SetProductListBySubCategoryidCacheAsync(products, SubCategoryid, isActive, deletedOnly, IsAdmin: false, expiration: TimeSpan.FromMinutes(30));
 				return Result<List<ProductDto>>.Ok(products, "Products by Category", 200);
 			}
 			catch (Exception ex)

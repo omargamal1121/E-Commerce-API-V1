@@ -158,14 +158,13 @@ namespace E_Commerce.Controllers
 			
 			bool isAdmin = User?.IsInRole("Admin") == true;
 			
-			// For non-admin users, restrict to active and non-deleted products
 			if (!isAdmin)
 			{
 				isActive = true;
 				includeDeleted = false;
 			}
 			
-			var response = await _productsServices.GetProductByIdAsync(id, isActive, includeDeleted);
+			var response = await _productsServices.GetProductByIdAsync(id, isActive, includeDeleted, isAdmin);
 			return HandleResult<ProductDetailDto>(response, nameof(GetProduct), id);
 		}
 
@@ -303,9 +302,18 @@ namespace E_Commerce.Controllers
 			[FromQuery] int page = 1,
 			[FromQuery] int pageSize = 10)
 		{
-			bool isAdmin = User?.IsInRole("Admin") == true;
+			_logger.LogInformation($"Executing {nameof(GetProducts)}");
+
+			if (page <= 0 || pageSize <= 0)
+			{
+				return BadRequest(ApiResponse<List<ProductDto>>.CreateErrorResponse(
+					"Invalid pagination parameters",
+					new ErrorResponse("InvalidRequest", "Page and pageSize must be greater than 0"),
+					400));
+			}
 			
-			// For non-admin users, restrict to active and non-deleted products
+			bool isAdmin = User?.IsInRole("Admin") == true;
+
 			if (!isAdmin)
 			{
 				isActive = true;
@@ -313,7 +321,7 @@ namespace E_Commerce.Controllers
 			}
 			
 			var response = await _productsServices.AdvancedSearchAsync(
-				new AdvancedSearchDto { SearchTerm=search}, page, pageSize, isActive, includeDeleted);
+				new AdvancedSearchDto { SearchTerm=search}, page, pageSize, isActive, includeDeleted, isAdmin);
 			return HandleResult(response, nameof(GetProducts));
 		}
 
@@ -326,8 +334,18 @@ namespace E_Commerce.Controllers
 			[FromQuery] int page = 1,
 			[FromQuery] int pageSize = 10)
 		{
+			_logger.LogInformation($"Executing {nameof(GetProductsBySubCategory)} for subcategory ID: {subCategoryId}");
+
+			if (page <= 0 || pageSize <= 0)
+			{
+				return BadRequest(ApiResponse<List<ProductDto>>.CreateErrorResponse(
+					"Invalid pagination parameters",
+					new ErrorResponse("InvalidRequest", "Page and pageSize must be greater than 0"),
+					400));
+			}
+
 			bool isAdmin = User?.IsInRole("Admin") == true;
-			
+
 			// For non-admin users, restrict to active and non-deleted products
 			if (!isAdmin)
 			{
@@ -336,7 +354,7 @@ namespace E_Commerce.Controllers
 			}
 			
 			var response = await _productsServices.AdvancedSearchAsync(
-				new AdvancedSearchDto { Subcategoryid = subCategoryId }, page, pageSize, isActive, includeDeleted);
+				new AdvancedSearchDto { Subcategoryid = subCategoryId }, page, pageSize, isActive, includeDeleted, isAdmin);
 			return HandleResult(response, nameof(GetProductsBySubCategory), subCategoryId);
 		}
 
@@ -349,15 +367,13 @@ namespace E_Commerce.Controllers
 			[FromQuery] bool? includeDeleted = null)
 		{
 			bool isAdmin = User?.IsInRole("Admin") == true;
-			
-			// For non-admin users, restrict to active and non-deleted products
 			if (!isAdmin)
 			{
 				isActive = true;
 				includeDeleted = false;
 			}
 			
-			var response = await _productsServices.GetBestSellersAsync(page, pageSize, isActive, includeDeleted);
+			var response = await _productsServices.GetBestSellersAsync(page, pageSize, isActive, includeDeleted,isAdmin);
 			return HandleResult(response, nameof(GetBestSellers));
 		}
 
@@ -378,7 +394,7 @@ namespace E_Commerce.Controllers
 				includeDeleted = false;
 			}
 			
-			var response = await _productsServices.GetNewArrivalsAsync(page, pageSize, isActive, includeDeleted);
+			var response = await _productsServices.GetNewArrivalsAsync(page, pageSize, isActive, includeDeleted,isAdmin);
 			return HandleResult(response, nameof(GetNewArrivals));
 		}
 		[HttpPatch("{id}/activate")]
@@ -421,15 +437,13 @@ namespace E_Commerce.Controllers
 			}
 			
 			bool isAdmin = User?.IsInRole("Admin") == true;
-			
-			// For non-admin users, restrict to active and non-deleted products
 			if (!isAdmin)
 			{
 				isActive = true;
 				includeDeleted = false;
 			}
 			
-			var response = await _productsServices.AdvancedSearchAsync(searchDto, page, pageSize, isActive, includeDeleted);
+			var response = await _productsServices.AdvancedSearchAsync(searchDto, page, pageSize, isActive, includeDeleted,isAdmin);
 			return HandleResult(response, nameof(AdvancedSearch));
 		}
 	}

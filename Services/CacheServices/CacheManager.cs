@@ -94,13 +94,13 @@ namespace E_Commerce.Services.Cache
 				var tags = await _database.SetMembersAsync(keyTagsSet);
 				var transaction = _database.CreateTransaction();
 
-				transaction.KeyDeleteAsync(key);
-				transaction.KeyDeleteAsync(keyTagsSet);
+				_=transaction.KeyDeleteAsync(key);
+				_=transaction.KeyDeleteAsync(keyTagsSet);
 
 				foreach (var tag in tags)
 				{
 					var tagKey = $"{TAG_PREFIX}{tag}";
-					transaction.SetRemoveAsync(tagKey, key);
+					_=transaction.SetRemoveAsync(tagKey, key);
 				}
 
 				await transaction.ExecuteAsync();
@@ -136,14 +136,14 @@ namespace E_Commerce.Services.Cache
 					foreach (var t in relatedTags)
 					{
 						var fullTagKey = $"{TAG_PREFIX}{t}";
-						transaction.SetRemoveAsync(fullTagKey, keyStr);
+						_=transaction.SetRemoveAsync(fullTagKey, keyStr);
 					}
 
-					transaction.KeyDeleteAsync(keyStr);
-					transaction.KeyDeleteAsync(keyTagsSet);
+					_ = transaction.KeyDeleteAsync(keyStr);
+					_ = transaction.KeyDeleteAsync(keyTagsSet);
 				}
 
-				transaction.KeyDeleteAsync(tagKey);
+				_ = transaction.KeyDeleteAsync(tagKey);
 				await transaction.ExecuteAsync();
 
 				_logger.LogInformation("Removed {Count} cache entries for tag: {Tag}", keys.Length, tag);
@@ -186,17 +186,17 @@ namespace E_Commerce.Services.Cache
 					foreach (var tag in relatedTags)
 					{
 						var fullTagKey = $"{TAG_PREFIX}{tag}";
-						transaction.SetRemoveAsync(fullTagKey, key);
+						_ = transaction.SetRemoveAsync(fullTagKey, key);
 					}
 
-					transaction.KeyDeleteAsync(key);
-					transaction.KeyDeleteAsync(keyTagsSet);
+					_ = transaction.KeyDeleteAsync(key);
+					_ = transaction.KeyDeleteAsync(keyTagsSet);
 				}
 
 				foreach (var tag in tags)
 				{
 					var tagKey = $"{TAG_PREFIX}{tag}";
-					transaction.KeyDeleteAsync(tagKey);
+					_ = transaction.KeyDeleteAsync(tagKey);
 				}
 
 				await transaction.ExecuteAsync();

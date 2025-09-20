@@ -312,7 +312,7 @@ namespace E_Commerce.Services.Order
 					return Result<bool>.Fail("Can't find order", 404);
 				}
 
-                // Lock the order row to serialize concurrent status updates
+    
                 await _unitOfWork.context.Database.ExecuteSqlRawAsync(
                     "SELECT Id FROM Orders WHERE Id = {0} FOR UPDATE",
                     order.Id);
@@ -653,7 +653,7 @@ namespace E_Commerce.Services.Order
                     return;
                 }
 
-                // Validate status transition before changing
+
                 if (!IsValidTransition(order.Status, OrderStatus.PaymentExpired))
                 {
                     _logger.LogWarning("Cannot change order {OrderId} status to PaymentExpired from {CurrentStatus}", orderId, order.Status);

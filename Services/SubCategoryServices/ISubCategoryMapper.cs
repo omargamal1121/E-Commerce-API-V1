@@ -8,9 +8,9 @@ namespace E_Commerce.Services.SubCategoryServices
     {
         SubCategoryDto ToSubCategoryDto(SubCategory s);
 
-        public SubCategoryDtoWithData MapToSubCategoryDtoWithData(SubCategory subCategory);
+        public SubCategoryDtoWithData MapToSubCategoryDtoWithData(SubCategory subCategory, bool IsAdmin = false);
 
 		public IQueryable<SubCategoryDto> SubCategorySelector(IQueryable<SubCategory> queryable);
-        public IQueryable<SubCategoryDtoWithData> SubCategorySelectorWithData(IQueryable<SubCategory> subCategories);
+        public IQueryable<SubCategoryDtoWithData> SubCategorySelectorWithData(IQueryable<SubCategory> subCategories, bool IsAdmin = false);
     }
 }

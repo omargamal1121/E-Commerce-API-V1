@@ -25,8 +25,9 @@ using E_Commerce.Services.CategoryServcies;
 using E_Commerce.Services.CategoryServices;
 using E_Commerce.Services.Collection;
 using E_Commerce.Services.CustomerAddress;
-using E_Commerce.Services.Discount;
+using E_Commerce.Services.DiscountServices;
 using E_Commerce.Services.EmailServices;
+using E_Commerce.Services.HangFireAuth;
 using E_Commerce.Services.Order;
 using E_Commerce.Services.PaymentMethodsServices;
 using E_Commerce.Services.PaymentProccessor;
@@ -203,7 +204,7 @@ namespace E_Commerce
 					}
 				);
 			});
-			builder.Services.AddRateLimiter(async options =>
+			builder.Services.AddRateLimiter( options =>
 			{
 
 				options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
@@ -211,7 +212,7 @@ namespace E_Commerce
 						partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
 						factory: _ => new FixedWindowRateLimiterOptions
 						{
-							PermitLimit = 90,
+							PermitLimit = 250,
 							Window = TimeSpan.FromMinutes(1),
 							AutoReplenishment = true
 						}));
@@ -349,13 +350,18 @@ namespace E_Commerce
 
 			app.UseRouting();
 			app.UseRateLimiter();
-			app.UseAuthentication();
-			app.UseUserAuthentication();
+            app.UseAuthentication();        
+            app.UseAuthorization();
+            app.UseUserAuthentication();
 			app.UseMiddleware<SecurityStampMiddleware>();
 			app.UseStaticFiles();
 			app.UseResponseCaching();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new HangfireAuthFilter(builder.Configuration) }
+            });
 
-			app.UseAuthorization();
+            app.UseAuthorization();
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllers();

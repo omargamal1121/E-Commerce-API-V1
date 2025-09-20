@@ -5,7 +5,7 @@ using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace E_Commerce.Services.Discount
+namespace E_Commerce.Services.DiscountServices
 {
     public class DiscountQueryService : IDiscountQueryService
     {

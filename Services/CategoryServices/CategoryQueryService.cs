@@ -1,8 +1,9 @@
-﻿using E_Commerce.DtoModels.CategoryDtos;
+using E_Commerce.DtoModels.CategoryDtos;
 using E_Commerce.DtoModels.ImagesDtos;
 using E_Commerce.DtoModels.SubCategorydto;
 using E_Commerce.UOW;
 using Hangfire;
+using Microsoft.AspNetCore.JsonPatch.Internal;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -22,8 +23,10 @@ namespace E_Commerce.Services.CategoryServices
 			_categoryCacheHelper = categoryCacheHelper;
 			_logger = logger;
 		}
-		private IQueryable<E_Commerce.Models.Category> BasicFilter(IQueryable<E_Commerce.Models.Category> query, bool? isActive = null, bool? isDeleted = null)
+		private IQueryable<E_Commerce.Models.Category> BasicFilter(IQueryable<E_Commerce.Models.Category> query, bool? isActive = null, bool? isDeleted = null,bool IsAdmin=false)
 		{
+			if(!IsAdmin)
+				return query.Where(c=>c.IsActive&&c.DeletedAt==null);
 			if (isActive.HasValue)
 				query = query.Where(c => c.IsActive == isActive.Value);
 			if (isDeleted.HasValue)
@@ -36,12 +39,11 @@ namespace E_Commerce.Services.CategoryServices
 			return query;
 		}
 
-		private async Task<Result<List<CategoryDto>>> categoryDtos(string? word, bool? isActive = null, bool? isDeleted = null, int page = 1, int pageSize = 10)
+		private async Task<Result<List<CategoryDto>>> categoryDtos(string? word, bool? isActive = null, bool? isDeleted = null, int page = 1, int pageSize = 10,bool IsAdmin=false)
 		{
-			var cacheKey = $"category_all_{word}_{isActive}_{isDeleted}_{page}_{pageSize}";
 
 			var query = _unitOfWork.Category.GetAll();
-			query = BasicFilter(query, isActive, isDeleted);
+			query = BasicFilter(query, isActive, isDeleted,IsAdmin);
 			if (!string.IsNullOrWhiteSpace(word))
 			{
 				query = query.Where(c => EF.Functions.Like(c.Name, $"%{word}%") || EF.Functions.Like(c.Description, $"%{word}%"));
@@ -49,36 +51,40 @@ namespace E_Commerce.Services.CategoryServices
 			 query =  query.Skip((page - 1) * pageSize)
 			.Take(pageSize);
 			var result = await _categoryMapper.CategorySelector(query).ToListAsync();
-			_= _categoryCacheHelper.SetCategoryListCacheAsync(result,word,isActive,isDeleted);
+			_categoryCacheHelper.SetCategoryListCacheAsync(result, word, isActive, isDeleted, page, pageSize, IsAdmin);
 			return Result<List<CategoryDto>>.Ok(result, "Categories fetched", 200);
 		}
 
 		
-		public async Task<Result<List<CategoryDto>>> FilterAsync(string? search, bool? isActive, bool? isDeleted, int page, int pageSize)
+		public async Task<Result<List<CategoryDto>>> FilterAsync(string? search, bool? isActive, bool? isDeleted, int page, int pageSize,bool IsAdmin=false)
 		{
 			_logger.LogInformation($"Executing {nameof(FilterAsync)} with filters");
-			var cacheKey = $"category_all_{search}_{isActive}_{isDeleted}_{page}_{pageSize}";
-			var cached = await _categoryCacheHelper.GetCategoryListCacheAsync<List<CategoryDto>>(search,isActive,isDeleted);
+			var cached = await _categoryCacheHelper.GetCategoryListCacheAsync<List<CategoryDto>>(search, isActive, isDeleted, page, pageSize, IsAdmin);
 			if (cached != null)
 			{
-				_logger.LogInformation($"Cache hit for FilterAsync with key: {cacheKey}");
+				_logger.LogInformation($"Cache hit for FilterAsync ");
 				return Result<List<CategoryDto>>.Ok(cached, "Categories fetched from cache", 200);
 			}
 
-			return await categoryDtos(search, isActive, isDeleted, page, pageSize);
+			return await categoryDtos(search, isActive, isDeleted, page, pageSize, IsAdmin);
 		}
 
-		private async Task<CategorywithdataDto?> privateGetCategoryByIdAsync(int id, bool? isActive = null, bool? isDeleted = null)
+		private async Task<CategorywithdataDto?> privateGetCategoryByIdAsync(int id, bool? isActive = null, bool? isDeleted = null,bool IsAdmin=false)
 		{
 			_logger.LogInformation($"Executing {nameof(GetCategoryByIdAsync)} for id: {id}");
 
+			if(!IsAdmin)
+			{
+				isActive = true;
+				isDeleted = false;
+			}
 			var query = _unitOfWork.Category.GetAll();
 
 			query = query.Where(c => c.Id == id);
 
-			query = BasicFilter(query, isActive, isDeleted);
+			query = BasicFilter(query, isActive, isDeleted, IsAdmin);
 
-			var category = await _categoryMapper.CategorySelectorWithData(query)
+			var category = await _categoryMapper.CategorySelectorWithData(query,IsAdmin)
 				.FirstOrDefaultAsync();
 
 			if (category == null)
@@ -91,19 +97,18 @@ namespace E_Commerce.Services.CategoryServices
 			return category;
 		}
 
-		public async Task<Result<CategorywithdataDto>> GetCategoryByIdAsync(int id, bool? isActive = null, bool? IsDeleted = false)
+		public async Task<Result<CategorywithdataDto>> GetCategoryByIdAsync(int id, bool? isActive = null, bool? IsDeleted = false,bool IsAdmin=false)
 		{
 			_logger.LogInformation($"Execute: {nameof(GetCategoryByIdAsync)} in services for id: {id}, isActive: {isActive}, includeDeleted: {IsDeleted}");
 
-			var cacheKey = $"category_id:{id}_active:{isActive}_deleted:{IsDeleted}";
-			var cachedCategory = await _categoryCacheHelper.GetCategoryByIdCacheAsync<CategorywithdataDto>(id, isActive, IsDeleted);
+			var cachedCategory = await _categoryCacheHelper.GetCategoryByIdCacheAsync<CategorywithdataDto>(id, isActive, IsDeleted,IsAdmin);
 			if (cachedCategory != null)
 			{
 				_logger.LogInformation($"Cache hit for category {id} with filters");
 				return Result<CategorywithdataDto>.Ok(cachedCategory, "Category found in cache", 200);
 			}
 
-			var categoryDto = await privateGetCategoryByIdAsync(id, isActive, IsDeleted);
+			var categoryDto = await privateGetCategoryByIdAsync(id, isActive, IsDeleted,IsAdmin);
 
 			if (categoryDto == null)
 			{
@@ -111,7 +116,7 @@ namespace E_Commerce.Services.CategoryServices
 				return Result<CategorywithdataDto>.Fail($"Category with id: {id} not found", 404);
 			}
 
-			_=_categoryCacheHelper.SetCategoryByIdCacheAsync(id, isActive, IsDeleted, categoryDto);
+			 _categoryCacheHelper.SetCategoryByIdCacheAsync(id, isActive, IsDeleted, categoryDto,IsAdmin);
 			return Result<CategorywithdataDto>.Ok(categoryDto, "Category found", 200);
 		}
 	}

@@ -1,21 +1,9 @@
-﻿using AutoMapper;
-using E_Commerce.DtoModels.CategoryDtos;
+
 using E_Commerce.DtoModels.DiscoutDtos;
 using E_Commerce.DtoModels.ImagesDtos;
 using E_Commerce.DtoModels.ProductDtos;
-using E_Commerce.DtoModels.Responses;
-using E_Commerce.Enums;
-using E_Commerce.ErrorHnadling;
-using E_Commerce.Interfaces;
-using E_Commerce.Models;
-using E_Commerce.Services.AdminOpreationServices;
-using E_Commerce.Services.EmailServices;
 using E_Commerce.Services.ProductVariantServices;
-using E_Commerce.UOW;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+
 
 namespace E_Commerce.Services.ProductServices
 {
@@ -46,10 +34,10 @@ namespace E_Commerce.Services.ProductServices
 		}
 
 		// Core Product Operations
-		public async Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive = null, bool? deletedOnly = null)
+		public async Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
 		{
-			_logger.LogInformation($"Fetching product details for Product ID: {id}, IsActive: {isActive}, DeletedOnly: {deletedOnly}");
-			return await _productCatalogService.GetProductByIdAsync(id, isActive, deletedOnly);
+			_logger.LogInformation($"Fetching product details for Product ID: {id}, IsActive: {isActive}, DeletedOnly: {deletedOnly}, IsAdmin: {IsAdmin}");
+			return await _productCatalogService.GetProductByIdAsync(id, isActive, deletedOnly, IsAdmin);
 		}
 		public async Task<Result<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId)
 		{
@@ -67,26 +55,25 @@ namespace E_Commerce.Services.ProductServices
 		{
 			return await _productCatalogService.RestoreProductAsync(id, userId);
 		}
-		public async Task<Result<List<ProductDto>>> GetProductsBySubCategoryId(int subCategoryId, bool? isActive, bool? deletedOnly)
+		public async Task<Result<List<ProductDto>>> GetProductsBySubCategoryIdAsync(int subCategoryId, bool? isActive = null, bool? deletedOnly = null, int page = 1, int pageSize = 10, bool IsAdmin = false)
 		{
-			return await _productCatalogService.GetProductsBySubCategoryId(subCategoryId, isActive, deletedOnly);
+			return await _productSearchService.AdvancedSearchAsync(new AdvancedSearchDto { Subcategoryid = subCategoryId }, page, pageSize, isActive, deletedOnly, IsAdmin);
 		}
-		// Search Operations
-		public async Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null)
+		public async Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
 		{
-			return await _productSearchService.GetNewArrivalsAsync(page, pageSize, isActive, deletedOnly);
+			return await _productSearchService.GetNewArrivalsAsync(page, pageSize, isActive, deletedOnly, IsAdmin);
 		}
-		public async Task<Result<List<ProductDto>>> GetBestSellersAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null)
+		public async Task<Result<List<ProductDto>>> GetProductsAsync(string? search = null, bool? isActive = null, bool? deletedOnly = null, int page = 1, int pageSize = 10, bool IsAdmin = false)
 		{
-			return await _productSearchService.GetBestSellersAsync(page, pageSize, isActive, deletedOnly);
+			return await _productSearchService.AdvancedSearchAsync(new AdvancedSearchDto { SearchTerm = search }, page, pageSize, isActive, deletedOnly, IsAdmin);
 		}
-		public async Task<Result<List<BestSellingProductDto>>> GetBestSellersProductsWithCountAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null)
+		public async Task<Result<List<BestSellingProductDto>>> GetBestSellersProductsWithCountAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null,bool IsAdmin=false)
 		{
-			return await _productSearchService.GetBestSellerProductsWithCountAsync(isActive,deletedOnly, page, pageSize);
+			return await _productSearchService.GetBestSellerProductsWithCountAsync(isActive,deletedOnly, page, pageSize,IsAdmin);
 		}
-		public async Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page, int pageSize, bool? isActive = null, bool? deletedOnly = null)
+		public async Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
 		{
-			return await _productSearchService.AdvancedSearchAsync(searchCriteria, page, pageSize, isActive, deletedOnly);
+			return await _productSearchService.AdvancedSearchAsync(searchCriteria, page, pageSize, isActive, deletedOnly, IsAdmin);
 		}
 		// Image Operations
 		public async Task<Result<List<ImageDto>>> GetProductImagesAsync(int productId)
@@ -165,6 +152,12 @@ namespace E_Commerce.Services.ProductServices
 		public async Task<Result<List<ProductDto>>> RemoveDiscountFromProductsAsync(List<int> productIds, string userId)
 		{
 			return await _productDiscountService.RemoveDiscountFromProductsAsync(productIds, userId);
+		}
+
+
+		public async Task<Result<List<ProductDto>>> GetBestSellersAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+		{
+			return await _productSearchService.GetBestSellersAsync(page,pageSize, isActive, deletedOnly, IsAdmin);
 		}
 	}
 }

@@ -9,9 +9,9 @@ namespace E_Commerce.Services.CategoryServices
 	public interface ICategoryMapper
 	{
 		CategoryDto ToCategoryDto(Category c);
-		public IQueryable<CategorywithdataDto> CategorySelectorWithData(IQueryable<Category> categories);
+		public IQueryable<CategorywithdataDto> CategorySelectorWithData(IQueryable<Category> categories, bool IsAdmin = false);
 		public IQueryable<CategoryDto> CategorySelector(IQueryable<Category> queryable);
-		CategorywithdataDto ToCategoryWithDataDto(Category c);
+		CategorywithdataDto ToCategoryWithDataDto(Category c,bool IsAdmin=false);
 
 
 	}

@@ -2,7 +2,7 @@ using E_Commerce.DtoModels.DiscoutDtos;
 using E_Commerce.Models;
 using System.Linq.Expressions;
 
-namespace E_Commerce.Services.Discount
+namespace E_Commerce.Services.DiscountServices
 {
     public interface IDiscountMapper
     {

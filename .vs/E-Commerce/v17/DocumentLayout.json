@@ -56,7 +56,7 @@
               "RelativeDocumentMoniker": "Context\\AppDbContext.cs",
               "ToolTip": "D:\\project_fashion\\E-Commerce-API-main\\Context\\AppDbContext.cs",
               "RelativeToolTip": "Context\\AppDbContext.cs",
-              "ViewState": "AgIAABwBAAAAAAAAAAAmwC8BAAACAAAAAAAAAA==",
+              "ViewState": "AgIAABwBAAAAAAAAAAAmwC8BAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-11T01:26:24.468Z",
               "EditorCaption": ""
@@ -71,8 +71,7 @@
               "RelativeToolTip": "UOW\\UnitOfWork.cs",
               "ViewState": "AgIAAEgAAAAAAAAAAAAIwFsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-11T01:00:38.459Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-11T01:00:38.459Z"
             },
             {
               "$type": "Document",
@@ -84,8 +83,7 @@
               "RelativeToolTip": "Services\\OrderServices\\OrderQueryService.cs",
               "ViewState": "AgIAANIAAAAAAAAAAAAqwOkAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-10T16:56:39.494Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-10T16:56:39.494Z"
             },
             {
               "$type": "Document",

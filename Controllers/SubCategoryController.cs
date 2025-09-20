@@ -80,7 +80,8 @@ namespace E_Commerce.Controllers
                 effectiveIsDeleted = false;
             }
 
-            var result = await _subCategoryServices.GetSubCategoryByIdAsync(id, effectiveIsActive, effectiveIsDeleted);
+            var isAdmin = User?.IsInRole("Admin") ?? false;
+            var result = await _subCategoryServices.GetSubCategoryByIdAsync(id, effectiveIsActive, effectiveIsDeleted, isAdmin);
             return HandleResult(result, nameof(GetById), id);
         }
 
@@ -222,7 +223,8 @@ namespace E_Commerce.Controllers
             }
 
             _logger.LogInformation($"Executing {nameof(Search)} with key={key}, isActive={effectiveIsActive}, includeDeleted={effectiveIncludeDeleted}, page={page}, pageSize={pageSize}");
-            var result = await _subCategoryServices.FilterAsync(key, effectiveIsActive, effectiveIncludeDeleted, page, pageSize);
+            var isAdmin = User?.IsInRole("Admin") ?? false;
+            var result = await _subCategoryServices.FilterAsync(key, effectiveIsActive, effectiveIncludeDeleted, page, pageSize, isAdmin);
             return HandleResult(result, nameof(Search));
         }
 

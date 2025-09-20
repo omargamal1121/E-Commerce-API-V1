@@ -88,11 +88,6 @@ namespace E_Commerce.Services.ProductVariantServices
 				_backgroundJobClient.Enqueue(() => _productCatalogService.UpdateProductQuantity(variant.ProductId));
 				_logger.LogInformation($"Quantity for variant {id} increased by {addQuantity}");
                 return Result<bool>.Ok(true);
-            }catch(DbUpdateConcurrencyException e)
-            {
-                _logger.LogWarning(e, $"Error in AddQuntityAfterRestoreOrder for id: {id}");
-                await transaction.RollbackAsync();
-                return Result<bool>.Fail("Error adding quantity", 409);
             }
             catch (Exception ex)
             {

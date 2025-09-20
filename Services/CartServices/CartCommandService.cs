@@ -363,6 +363,7 @@ namespace E_Commerce.Services.CartServices
                     return Result<bool>.Fail("An error occurred while removing item from cart", 500);
                 }
 
+                cart.CheckoutDate=null;
 
 				await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();

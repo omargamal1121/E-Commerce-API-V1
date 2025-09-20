@@ -449,8 +449,6 @@ namespace E_Commerce.Services.SubCategoryServices
 			{
 				var warnings = new List<string>();
 
-				bool hasChanges = false;
-
 				if (subCategory == null)
 				{
 					return Result<SubCategoryDto>.Fail("Update data is required", 400);
@@ -461,8 +459,6 @@ namespace E_Commerce.Services.SubCategoryServices
 				if (!string.IsNullOrWhiteSpace(subCategory.Name?.Trim()) && subCategory.Name.Trim() != existingSubCategory.Name)
 				{
 					var trimmedName = subCategory.Name.Trim();
-
-					// Validate name format
 					var nameRegex = new System.Text.RegularExpressions.Regex(@"^[a-zA-Z0-9][a-zA-Z0-9\s\-,]*[a-zA-Z0-9]$");
 					if (!nameRegex.IsMatch(trimmedName))
 					{
@@ -488,7 +484,6 @@ namespace E_Commerce.Services.SubCategoryServices
 						else
 						{
 							existingSubCategory.Name = trimmedName;
-							hasChanges = true;
 							_logger.LogInformation($"Name updated successfully to '{trimmedName}'");
 						}
 					}
@@ -507,7 +502,6 @@ namespace E_Commerce.Services.SubCategoryServices
 					else
 					{
 						existingSubCategory.CategoryId = subCategory.CategoryId.Value;
-						hasChanges = true;
 						_logger.LogInformation($"CategoryId updated successfully to {subCategory.CategoryId.Value}");
 					}
 				}
@@ -531,7 +525,7 @@ namespace E_Commerce.Services.SubCategoryServices
 					{
 						_logger.LogInformation($"Updating description from '{existingSubCategory.Description}' to '{trimmedDescription}'");
 						existingSubCategory.Description = trimmedDescription;
-						hasChanges = true;
+			
 						_logger.LogInformation("Description updated successfully");
 					}
 				}
@@ -539,20 +533,14 @@ namespace E_Commerce.Services.SubCategoryServices
 
 
 
-				if (hasChanges)
-				{
+			
+				
 					existingSubCategory.ModifiedAt = DateTime.UtcNow;
 					_logger.LogInformation($"SubCategory {subCategoryId} has changes, updating ModifiedAt timestamp");
 					_logger.LogInformation($"Final entity state - Name: '{existingSubCategory.Name}', Description: '{existingSubCategory.Description}', CategoryId: {existingSubCategory.CategoryId}, IsActive: {existingSubCategory.IsActive}, ModifiedAt: {existingSubCategory.ModifiedAt}");
 
 
-					_logger.LogInformation($"Changes will be committed to database for SubCategory {subCategoryId}");
-				}
-				else
-				{
-					_logger.LogInformation($"No changes detected for SubCategory {subCategoryId}");
-				}
-
+				
 
 				var adminLog = await _adminopreationservices.AddAdminOpreationAsync(
 					$"Updated SubCategory {subCategoryId}",

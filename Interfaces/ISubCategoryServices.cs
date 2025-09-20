@@ -10,7 +10,7 @@ namespace E_Commerce.Interfaces
     public interface ISubCategoryServices
     {
 
-		Task<Result<List<SubCategoryDto>>> FilterAsync(string? search, bool? isActive, bool? isDeleted, int page, int pageSize);
+		Task<Result<List<SubCategoryDto>>> FilterAsync(string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false);
 
 		Task<Result<SubCategoryDto>> CreateAsync(CreateSubCategoryDto subCategory, string userid);
         Task<Result<bool>> DeleteAsync(int id, string userid);
@@ -21,7 +21,7 @@ namespace E_Commerce.Interfaces
         Task<Result<bool>> RemoveImageFromSubCategoryAsync(int subCategoryId, int imageId, string userId);
         Task<Result<bool>> ActivateSubCategoryAsync(int subCategoryId, string userId);
         Task<Result<bool>> DeactivateSubCategoryAsync(int subCategoryId, string userId);
-        Task<Result<SubCategoryDtoWithData>> GetSubCategoryByIdAsync(int id, bool? isActive = null, bool? isDeleted = null);
+        Task<Result<SubCategoryDtoWithData>> GetSubCategoryByIdAsync(int id, bool? isActive = null, bool? isDeleted = null, bool IsAdmin = false);
 
 		Task DeactivateSubCategoryIfAllProductsAreInactiveAsync(int subCategoryId, string userId);
     }

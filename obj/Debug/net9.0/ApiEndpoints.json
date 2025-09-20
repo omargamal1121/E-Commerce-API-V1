@@ -4055,7 +4055,7 @@
     "Parameters": [
       {
         "Name": "searchDto",
-        "Type": "E_Commerce.Services.ProductServices.AdvancedSearchDto",
+        "Type": "E_Commerce.DtoModels.ProductDtos.AdvancedSearchDto",
         "IsRequired": true
       },
       {

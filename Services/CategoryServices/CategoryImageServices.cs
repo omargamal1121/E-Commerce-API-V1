@@ -36,13 +36,11 @@ namespace E_Commerce.Services.CategoryServices
 			)
 		{
 			_categoryCommandService = categoryCommandService;
-
 			_categoryCacheHelper = categoryCacheHelper;
 			_unitOfWork = unitOfWork;
 			_backgroundJobClient = backgroundJobClient;
 			_imagesServices = imagesServices;
 			_adminopreationservices = adminopreationservices;
-
 			_mapping = mapping;
 			_logger = logger;
 		}
@@ -101,7 +99,7 @@ namespace E_Commerce.Services.CategoryServices
 				await transaction.CommitAsync();
 
 				var mapped = imageResult.Data.Select(i => new ImageDto { Id = i.Id, Url = i.Url, IsMain = i.IsMain }).ToList();
-						_categoryCacheHelper.ClearCategoryCache();
+				_categoryCacheHelper.ClearCategoryCache();
 
 				return Result<List<ImageDto>>.Ok(mapped, $"Added {imageResult.Data.Count} images to category", 200, warnings: imageResult.Warnings);
 			}
@@ -142,7 +140,7 @@ namespace E_Commerce.Services.CategoryServices
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
-						_categoryCacheHelper.ClearCategoryCache();
+				_categoryCacheHelper.ClearCategoryCache();
 
 				var mapped = new ImageDto { Id = mainImageResult.Data.Id, Url = mainImageResult.Data.Url, IsMain = mainImageResult.Data.IsMain };
 
@@ -188,7 +186,12 @@ namespace E_Commerce.Services.CategoryServices
 					return Result<bool>.Fail("Image not found", 404);
 				}
 
-				await _unitOfWork.Image.SoftDeleteAsync(imageId);
+				 var isdeleted= await _imagesServices.DeleteImageAsync(imageId);
+				if(!isdeleted.Success)
+				{
+					return Result<bool>.Fail(isdeleted.Message, isdeleted.StatusCode);
+				}
+				
 
 
 				int remainingImages = categoryData.ImagesCount - 1;
@@ -220,8 +223,7 @@ namespace E_Commerce.Services.CategoryServices
 
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-
-						_categoryCacheHelper.ClearCategoryCache();
+				_categoryCacheHelper.ClearCategoryCache();
 
 				return Result<bool>.Ok(true, "Image removed successfully", 200);
 			}

@@ -1,4 +1,4 @@
-﻿using E_Commerce.DtoModels.CollectionDtos;
+using E_Commerce.DtoModels.CollectionDtos;
 using E_Commerce.DtoModels.ImagesDtos;
 using E_Commerce.DtoModels.Responses;
 using E_Commerce.Interfaces;
@@ -53,9 +53,9 @@ namespace E_Commerce.Services.Collection
 		}
 
 
-        public async Task<Result<CollectionDto>> GetCollectionByIdAsync(int collectionId, bool? IsActive = null, bool? IsDeleted = null)
+        public async Task<Result<CollectionDto>> GetCollectionByIdAsync(int collectionId, bool? IsActive = null, bool? IsDeleted = null, bool IsAdmin = false)
         {
-            return await _collectionQueryService.GetCollectionByIdAsync(collectionId, IsActive, IsDeleted);
+            return await _collectionQueryService.GetCollectionByIdAsync(collectionId, IsActive, IsDeleted, IsAdmin);
         }
 
         public async Task<Result<CollectionSummaryDto>> CreateCollectionAsync(CreateCollectionDto collectionDto, string userid)
@@ -101,9 +101,9 @@ namespace E_Commerce.Services.Collection
 			return await _collectionCommandService.UpdateCollectionDisplayOrderAsync(collectionId, displayOrder, userid);
 		}
 
-		public async Task<Result<List<CollectionSummaryDto>>> SearchCollectionsAsync(string? searchTerm, bool? IsActive = null, bool? IsDeleted = null, int page = 1, int pagesize = 10)
+		public async Task<Result<List<CollectionSummaryDto>>> SearchCollectionsAsync(string? searchTerm, bool? IsActive = null, bool? IsDeleted = null, int page = 1, int pagesize = 10, bool IsAdmin = false)
         {
-            return await _collectionQueryService.SearchCollectionsAsync(searchTerm, IsActive, IsDeleted, page, pagesize);
+            return await _collectionQueryService.SearchCollectionsAsync(searchTerm, IsActive, IsDeleted, page, pagesize, IsAdmin);
         }
     }
-} 
+}

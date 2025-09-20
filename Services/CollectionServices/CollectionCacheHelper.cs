@@ -8,15 +8,15 @@ namespace E_Commerce.Services.Collection
     {
         private readonly IBackgroundJobClient _jobClient;
         private readonly ICacheManager _cacheManager;
-        private readonly string[] _collectionTags = new[] { "collection", "CollectionWithProduct" };
+        private readonly string[] _collectionTags = new[] { "collection", "CollectionWithProduct", "collectionlist" };
         private const string CACHEWITHDATA = "CollectionWithProduct";
-        private const string CACHELIST = "collection";
+        private const string CACHELIST = "collectionlist";
 
-        private static string GetCollectionListKey(string? search, bool? isActive, bool? isDeleted)
-            => $"collection:list_active:{isActive}_deleted:{isDeleted}_search:{search}";
+        private static string GetCollectionListKey(string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false)
+            => $"collection:list_active:{isActive}_deleted:{isDeleted}_search:{search}_page:{page}_pageSize:{pageSize}_IsAdmin:{IsAdmin}";
 
-        private static string GetCollectionByIdKey(int id, bool? isActive, bool? isDeleted)
-            => $"collection:{id}_active:{isActive}_deleted:{isDeleted}";
+        private static string GetCollectionByIdKey(int id, bool? isActive, bool? isDeleted, bool IsAdmin = false)
+            => $"collection:{id}_active:{isActive}_deleted:{isDeleted}_IsAdmin:{IsAdmin}";
 
         public CollectionCacheHelper(IBackgroundJobClient jobClient, ICacheManager cacheManager)
         {
@@ -44,27 +44,27 @@ namespace E_Commerce.Services.Collection
             _jobClient.Enqueue<IErrorNotificationService>(_ => _.SendErrorNotificationAsync(message, stackTrace));
         }
 
-        public async Task SetCollectionListCacheAsync(object data, string? search, bool? isActive, bool? isDeleted, TimeSpan? expiration = null)
+        public  void SetCollectionListCacheAsync(object data, string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false, TimeSpan? expiration = null)
         {
-            var cacheKey = GetCollectionListKey(search, isActive, isDeleted);
-            await _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { CACHELIST });
+            var cacheKey = GetCollectionListKey(search, isActive, isDeleted, page, pageSize, IsAdmin);
+            _jobClient.Enqueue(()=> _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { CACHELIST }));
         }
 
-        public async Task<T?> GetCollectionListCacheAsync<T>(string? search, bool? isActive, bool? isDeleted)
+        public async Task<T?> GetCollectionListCacheAsync<T>(string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false)
         {
-            var cacheKey = GetCollectionListKey(search, isActive, isDeleted);
+            var cacheKey = GetCollectionListKey(search, isActive, isDeleted, page, pageSize, IsAdmin);
             return await _cacheManager.GetAsync<T>(cacheKey);
         }
 
-        public async Task SetCollectionByIdCacheAsync(int id, bool? isActive, bool? isDeleted, object data, TimeSpan? expiration = null)
+        public  void SetCollectionByIdCacheAsync(int id, bool? isActive, bool? isDeleted, object data, bool IsAdmin = false, TimeSpan? expiration = null)
         {
-            var cacheKey = GetCollectionByIdKey(id, isActive, isDeleted);
-            await _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { CACHEWITHDATA });
+            var cacheKey = GetCollectionByIdKey(id, isActive, isDeleted, IsAdmin);
+            _jobClient.Enqueue(()=> _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { CACHEWITHDATA }));
         }
 
-        public async Task<T?> GetCollectionByIdCacheAsync<T>(int id, bool? isActive, bool? isDeleted)
+        public async Task<T?> GetCollectionByIdCacheAsync<T>(int id, bool? isActive, bool? isDeleted, bool IsAdmin = false)
         {
-            var cacheKey = GetCollectionByIdKey(id, isActive, isDeleted);
+            var cacheKey = GetCollectionByIdKey(id, isActive, isDeleted, IsAdmin);
             return await _cacheManager.GetAsync<T>(cacheKey);
         }
     }

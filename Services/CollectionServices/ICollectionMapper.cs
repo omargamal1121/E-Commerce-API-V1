@@ -8,8 +8,8 @@ namespace E_Commerce.Services.Collection
 {
     public interface ICollectionMapper
     {
-        CollectionDto ToCollectionDto(Models.Collection c);
-        public IQueryable<CollectionDto> CollectionSelectorWithData(IQueryable<Models.Collection> collections);
+        CollectionDto ToCollectionDto(Models.Collection c, bool IsAdmin = false);
+        public IQueryable<CollectionDto> CollectionSelectorWithData(IQueryable<Models.Collection> collections, bool IsAdmin = false);
         public IQueryable<CollectionSummaryDto> CollectionSelector(IQueryable<Models.Collection> queryable);
         CollectionSummaryDto ToCollectionSummaryDto(Models.Collection c);
     }

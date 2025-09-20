@@ -4,7 +4,7 @@ using E_Commerce.DtoModels.ProductDtos;
 using E_Commerce.DtoModels.Responses;
 using E_Commerce.ErrorHnadling;
 using E_Commerce.Services;
-using E_Commerce.Services.Discount;
+using E_Commerce.Services.DiscountServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

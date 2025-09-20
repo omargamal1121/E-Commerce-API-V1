@@ -8,7 +8,7 @@ namespace E_Commerce.Services.Collection
 {
     public class CollectionMapper : ICollectionMapper
     {
-        public IQueryable<CollectionDto> CollectionSelectorWithData(IQueryable<Models.Collection> collections)
+        public IQueryable<CollectionDto> CollectionSelectorWithData(IQueryable<Models.Collection> collections, bool IsAdmin = false)
         {
             return collections.Select(c => new CollectionDto
             {
@@ -20,14 +20,19 @@ namespace E_Commerce.Services.Collection
                 DeletedAt = c.DeletedAt,
                 ModifiedAt = c.ModifiedAt,
                 DisplayOrder = c.DisplayOrder,
-                TotalProducts = c.ProductCollections.Count(),
-                Images = c.Images.Select(i => new ImageDto
+                TotalProducts = IsAdmin
+                    ? c.ProductCollections.Count()
+                    : c.ProductCollections.Count(pc => pc.Product.IsActive && pc.Product.DeletedAt == null),
+                Images = c.Images.Where(i => i.DeletedAt == null).Select(i => new ImageDto
                 {
                     Id = i.Id,
                     Url = i.Url,
                     IsMain = i.IsMain
                 }).ToList(),
-                Products = c.ProductCollections.Where(p => p.Product.IsActive && p.Product.DeletedAt == null).Select(p => new ProductDto
+                Products = (IsAdmin
+                        ? c.ProductCollections
+                        : c.ProductCollections.Where(p => p.Product.IsActive && p.Product.DeletedAt == null))
+                    .Select(p => new ProductDto
                 {
                     Id = p.ProductId,
                     Name = p.Product.Name,
@@ -46,7 +51,7 @@ namespace E_Commerce.Services.Collection
                     DiscountName = (p.Product.Discount != null && p.Product.Discount.IsActive && p.Product.Discount.EndDate > DateTime.UtcNow) ? p.Product.Discount.Name : null,
                     DiscountPrecentage = (p.Product.Discount != null && p.Product.Discount.IsActive && p.Product.Discount.EndDate > DateTime.UtcNow) ? p.Product.Discount.DiscountPercent : 0,
                     IsActive = p.Product.IsActive,
-                }).Where(p => p.IsActive && p.DeletedAt == null).ToList()
+                }).ToList()
             });
         }
 
@@ -63,7 +68,7 @@ namespace E_Commerce.Services.Collection
                 ModifiedAt = c.ModifiedAt,
                 DisplayOrder = c.DisplayOrder,
                 TotalProducts = c.ProductCollections.Count(),
-                images = c.Images.Select(i => new ImageDto
+                images = c.Images.Where(i=>i.DeletedAt==null).Select(i => new ImageDto
                 {
                     Id = i.Id,
                     Url = i.Url,
@@ -72,7 +77,7 @@ namespace E_Commerce.Services.Collection
             });
         }
 
-        public CollectionDto ToCollectionDto(Models.Collection c) => new CollectionDto
+        public CollectionDto ToCollectionDto(Models.Collection c, bool IsAdmin = false) => new CollectionDto
         {
             Id = c.Id,
             Name = c.Name,
@@ -82,14 +87,19 @@ namespace E_Commerce.Services.Collection
             DeletedAt = c.DeletedAt,
             ModifiedAt = c.ModifiedAt,
             DisplayOrder = c.DisplayOrder,
-            TotalProducts = c.ProductCollections?.Count() ?? 0,
-            Images = c.Images?.Select(i => new ImageDto
+            TotalProducts = IsAdmin
+                ? (c.ProductCollections?.Count() ?? 0)
+                : (c.ProductCollections?.Count(pc => pc.Product.IsActive && pc.Product.DeletedAt == null) ?? 0),
+            Images = c.Images?.Where(i=>i.DeletedAt==null).Select(i => new ImageDto
             {
                 Id = i.Id,
                 Url = i.Url,
                 IsMain = i.IsMain
             }).ToList() ?? new List<ImageDto>(),
-            Products = c.ProductCollections?.Where(p => p.Product.IsActive && p.Product.DeletedAt == null).Select(p => new ProductDto
+            Products = (IsAdmin
+                    ? c.ProductCollections
+                    : c.ProductCollections?.Where(p => p.Product.IsActive && p.Product.DeletedAt == null))
+                ?.Select(p => new ProductDto
             {
                 Id = p.ProductId,
                 Name = p.Product.Name,
@@ -108,7 +118,9 @@ namespace E_Commerce.Services.Collection
                 DiscountName = (p.Product.Discount != null && p.Product.Discount.IsActive && p.Product.Discount.EndDate > DateTime.UtcNow) ? p.Product.Discount.Name : null,
                 DiscountPrecentage = (p.Product.Discount != null && p.Product.Discount.IsActive && p.Product.Discount.EndDate > DateTime.UtcNow) ? p.Product.Discount.DiscountPercent : 0,
                 IsActive = p.Product.IsActive,
-            }).Where(p => p.IsActive && p.DeletedAt == null).ToList() ?? new List<ProductDto>()
+            })
+            // For non-admins, we already filtered above by product status; keep all mapped items.
+            ?.ToList() ?? new List<ProductDto>()
         };
 
         public CollectionSummaryDto ToCollectionSummaryDto(Models.Collection c) => new CollectionSummaryDto

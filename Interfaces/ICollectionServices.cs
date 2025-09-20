@@ -7,7 +7,7 @@ namespace E_Commerce.Interfaces
 {
     public interface ICollectionServices
     {
-        Task<Result<CollectionDto>> GetCollectionByIdAsync(int collectionId, bool? IsActive = null, bool? IsDeleted = null);
+        Task<Result<CollectionDto>> GetCollectionByIdAsync(int collectionId, bool? IsActive = null, bool? IsDeleted = null, bool IsAdmin = false);
         public Task<Result<bool>> RemoveImageFromCollectionAsync(int categoryId, int imageId, string userId);
         public  Task<Result<ImageDto>> AddMainImageToCollectionAsync(int collectionid, IFormFile mainImage, string userId);
         public  Task<Result<List<ImageDto>>> AddImagesToCollectionAsync(int collectionid, List<IFormFile> images, string userId);
@@ -23,7 +23,7 @@ namespace E_Commerce.Interfaces
         public Task<Result<bool>> DeactivateCollectionAsync(int collectionId, string userId);
 
 		Task<Result<bool>> UpdateCollectionDisplayOrderAsync(int collectionId, int displayOrder, string userid);
-        public Task<Result<List<CollectionSummaryDto>>> SearchCollectionsAsync(string? searchTerm, bool? IsActive = null, bool? IsDeleted = null, int page=1,int pagesize=10);
+        public Task<Result<List<CollectionSummaryDto>>> SearchCollectionsAsync(string? searchTerm, bool? IsActive = null, bool? IsDeleted = null, int page=1,int pagesize=10, bool IsAdmin = false);
 
 
 	}

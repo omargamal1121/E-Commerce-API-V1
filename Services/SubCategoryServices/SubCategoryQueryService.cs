@@ -38,26 +38,32 @@ namespace E_Commerce.Services.SubCategoryServices
 
  
 
-        public async Task<Result<SubCategoryDtoWithData>> GetSubCategoryByIdAsync(int id, bool? isActive = null, bool? isDeleted = null)
+        public async Task<Result<SubCategoryDtoWithData>> GetSubCategoryByIdAsync(int id, bool? isActive = null, bool? isDeleted = null,bool IsAdmin=false)
         {
             _logger.LogInformation($"Execute: {nameof(GetSubCategoryByIdAsync)} in services for id: {id}, isActive: {isActive}, isDeleted: {isDeleted}");
 
+            if(!IsAdmin)
+            {
+                isActive = true;
+                isDeleted = false;
+            }
          
-            var cached = await _subCategoryCacheHelper.GetSubCategoryByIdCacheAsync<SubCategoryDtoWithData>(id,isActive, isDeleted);
+            var cached = await _subCategoryCacheHelper.GetSubCategoryByIdCacheAsync<SubCategoryDtoWithData>(id, isActive, isDeleted, IsAdmin);
             if (cached != null)
             {
                 _logger.LogInformation($"Cache hit for subcategory {id} with filters");
                 return Result<SubCategoryDtoWithData>.Ok(cached, "SubCategory found in cache", 200);
             }
 
+
             var query = _unitOfWork.SubCategory.GetAll();
 
             query = query.Where(c => c.Id == id);
 
-            query = BasicFilter(query, isActive, isDeleted);
+            query = BasicFilter(query, isActive, isDeleted,IsAdmin);
            
 
-            var subCategory =await _subCategoryMapper.SubCategorySelectorWithData(query)
+            var subCategory =await _subCategoryMapper.SubCategorySelectorWithData(query,IsAdmin)
 				.FirstOrDefaultAsync();
 
             if (subCategory == null)
@@ -65,18 +71,18 @@ namespace E_Commerce.Services.SubCategoryServices
                 _logger.LogWarning($"SubCategory with id: {id} not found");
                 return Result<SubCategoryDtoWithData>.Fail($"SubCategory with id: {id} not found", 404);
             }
-         _=   _subCategoryCacheHelper.SetSubCategoryByIdCacheAsync(id, isActive, isDeleted, subCategory, TimeSpan.FromMinutes(30));
+            _subCategoryCacheHelper.SetSubCategoryByIdCacheAsync(id, isActive, isDeleted, subCategory, IsAdmin, TimeSpan.FromMinutes(30));
 
 			return Result<SubCategoryDtoWithData>.Ok(subCategory, "SubCategory found", 200);
         }
 
 		public async Task<Result<List<SubCategoryDto>>> FilterAsync(
-	  string? search, bool? isActive = null, bool? isDeleted = null, int page = 1, int pageSize = 10)
+	  string? search, bool? isActive = null, bool? isDeleted = null, int page = 1, int pageSize = 10,bool IsAdmin=false)
 		{
 			_logger.LogInformation($"Executing {nameof(FilterAsync)} with filters");
 
 			var cachedData = await _subCategoryCacheHelper
-				.GetSubCategoryListCacheAsync<List<SubCategoryDto>>(search, isActive, isDeleted);
+				.GetSubCategoryListCacheAsync<List<SubCategoryDto>>(search, isActive, isDeleted, page, pageSize, IsAdmin);
 
 			if (cachedData != null)
 				return Result<List<SubCategoryDto>>.Ok(cachedData, "Subcategories from cache", 200);
@@ -90,7 +96,7 @@ namespace E_Commerce.Services.SubCategoryServices
 					EF.Functions.Like(sc.Description, $"%{search}%"));
 			}
 
-			query = BasicFilter(query, isActive, isDeleted);
+			query = BasicFilter(query, isActive, isDeleted,IsAdmin);
 
 			var subCategoryDtos = await _subCategoryMapper.SubCategorySelector(query)
 				.OrderBy(sc => sc.Id)
@@ -101,13 +107,18 @@ namespace E_Commerce.Services.SubCategoryServices
 			if (!subCategoryDtos.Any())
 				return Result<List<SubCategoryDto>>.Fail("No subcategories found", 404);
 
-			_ = _subCategoryCacheHelper.SetSubCategoryListCacheAsync(subCategoryDtos, search, isActive, isDeleted, TimeSpan.FromMinutes(30));
+			_subCategoryCacheHelper.SetSubCategoryListCacheAsync(subCategoryDtos, search, isActive, isDeleted, page, pageSize, IsAdmin, TimeSpan.FromMinutes(30));
+            
+            return Result<List<SubCategoryDto>>.Ok(subCategoryDtos, "Filtered subcategories retrieved", 200);
+        }
 
-			return Result<List<SubCategoryDto>>.Ok(subCategoryDtos, "Filtered subcategories retrieved", 200);
-		}
-
-		private IQueryable<SubCategory> BasicFilter(IQueryable<SubCategory> query, bool? isActive, bool? isdelete)
+		private IQueryable<SubCategory> BasicFilter(IQueryable<SubCategory> query, bool? isActive, bool? isdelete, bool IsAdmin = false)
         {
+            if(!IsAdmin)
+            {
+                isActive = true;
+                isdelete = false;
+            }
             if (isActive.HasValue)
             {
                 if (isActive.Value)

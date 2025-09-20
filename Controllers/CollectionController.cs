@@ -123,7 +123,8 @@ namespace E_Commerce.Controllers
             var result = await _collectionServices.GetCollectionByIdAsync(
                 id, 
                 isAdmin ? null : true, 
-                isAdmin ? null : false
+                isAdmin ? null : false,
+                isAdmin
             );
                 
             return CreateResponse(result, nameof(GetCollectionById), new { id });
@@ -159,7 +160,8 @@ namespace E_Commerce.Controllers
                 activeFilter, 
                 deletedFilter, 
                 page, 
-                pageSize
+                pageSize,
+                isAdmin
             );
                 
             return CreateResponse(result, nameof(SearchCollections));
@@ -280,7 +282,9 @@ namespace E_Commerce.Controllers
                 _logger.LogInformation(
                     $"Executing {nameof(GetCollectionImages)} for collection ID: {id}"
                 );
-                var collection = await _collectionServices.GetCollectionByIdAsync(id, null, null);
+                var role = GetUserRole();
+                var isAdmin = role == "Admin";
+                var collection = await _collectionServices.GetCollectionByIdAsync(id, null, null, isAdmin);
                 if (!collection.Success)
                 {
                     return CreateErrorResponse<List<ImageDto>>(collection.Message, collection.StatusCode);
@@ -440,7 +444,8 @@ namespace E_Commerce.Controllers
                 var result = await _collectionServices.GetCollectionByIdAsync(
                     id,
                     isAdmin ? null : true,
-                    isAdmin ? null : false
+                    isAdmin ? null : false,
+                    isAdmin
                 );
                 if (!result.Success)
                 {

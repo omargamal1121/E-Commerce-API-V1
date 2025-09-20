@@ -20,7 +20,7 @@ namespace E_Commerce_API.Services.SubCategoryServices
 				ModifiedAt = subCategory.ModifiedAt,
 				DeletedAt = subCategory.DeletedAt,
 				Description = subCategory.Description,
-				Images = subCategory.Images?.Select(img => new ImageDto
+				Images = subCategory.Images?.Where(i=>i.DeletedAt==null).Select(img => new ImageDto
 				{
 					Id = img.Id,
 					Url = img.Url
@@ -51,7 +51,7 @@ namespace E_Commerce_API.Services.SubCategoryServices
 			});
 		}
 
-		public	IQueryable<SubCategoryDtoWithData> SubCategorySelectorWithData(IQueryable<SubCategory> subCategories)
+		public	IQueryable<SubCategoryDtoWithData> SubCategorySelectorWithData(IQueryable<SubCategory> subCategories,bool IsAdmin=false)
 		{
 			return subCategories.Select(subCategory =>
 			new SubCategoryDtoWithData
@@ -73,7 +73,7 @@ namespace E_Commerce_API.Services.SubCategoryServices
 				Url = img.Url
 			}).ToList(),
 
-				Products = subCategory.Products.Where(p => p.IsActive && p.DeletedAt == null).Select(p => new ProductDto
+				Products = subCategory.Products.Where(p =>IsAdmin||( p.IsActive && p.DeletedAt == null)).Select(p => new ProductDto
 				{
 
 					Id = p.Id,
@@ -96,14 +96,14 @@ namespace E_Commerce_API.Services.SubCategoryServices
 				}).ToList()
 			});
 		}
-		public SubCategoryDtoWithData MapToSubCategoryDtoWithData(SubCategory subCategory)
+		public SubCategoryDtoWithData MapToSubCategoryDtoWithData(SubCategory subCategory,bool IsAdmin=false)
 		{
 			return new SubCategoryDtoWithData
 			{
 				Id = subCategory.Id,
 				Name = subCategory.Name,
 				IsActive = subCategory.IsActive,
-				Images = subCategory.Images?.Select(img => new ImageDto
+				Images = subCategory.Images?.Where(i=>i.DeletedAt==null).Select(img => new ImageDto
 				{
 					Id = img.Id,
 					Url = img.Url
@@ -112,7 +112,7 @@ namespace E_Commerce_API.Services.SubCategoryServices
 				DeletedAt = subCategory.DeletedAt,
 				CreatedAt = subCategory.CreatedAt,
 				ModifiedAt = subCategory.ModifiedAt,
-				Products = subCategory.Products?.Select(p => new ProductDto
+				Products = subCategory.Products?.Where(p => IsAdmin || (p.IsActive && p.DeletedAt == null)).Select(p => new ProductDto
 				{
 					Id = p.Id,
 					Name = p.Name,
@@ -134,12 +134,12 @@ namespace E_Commerce_API.Services.SubCategoryServices
 					DeletedAt = p.DeletedAt,
 
 
-					images = p.Images?.Select(img => new ImageDto
+					images = p.Images?.Where(i=>i.DeletedAt==null).Select(img => new ImageDto
 					{
 						Id = img.Id,
 						IsMain = img.IsMain,
 						Url = img.Url
-					}).ToList()
+					})?.ToList()
 				}).ToList()
 			};
 		}

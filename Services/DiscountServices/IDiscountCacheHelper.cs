@@ -1,4 +1,4 @@
-namespace E_Commerce.Services.Discount
+namespace E_Commerce.Services.DiscountServices
 {
     public interface IDiscountCacheHelper
     {

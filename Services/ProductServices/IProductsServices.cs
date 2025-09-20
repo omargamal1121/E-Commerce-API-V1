@@ -1,23 +1,28 @@
-﻿using E_Commerce.DtoModels.DiscoutDtos;
+using E_Commerce.DtoModels.DiscoutDtos;
 using E_Commerce.DtoModels.ImagesDtos;
 using E_Commerce.DtoModels.ProductDtos;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace E_Commerce.Services.ProductServices
 {
-	public interface IProductsServices
-	{
-		// Core product operations (delegated to ProductCatalogService)
-		Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive = null, bool? deletedOnly = null);
-		Task<Result<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId);
-		public  Task<Result<List<BestSellingProductDto>>> GetBestSellersProductsWithCountAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null);
-		Task<Result<ProductDto>> UpdateProductAsync(int id, UpdateProductDto dto, string userId);
-		Task<Result<bool>> DeleteProductAsync(int id, string userId);
-		Task<Result<bool>> RestoreProductAsync(int id, string userId);
-		Task<Result<List<ProductDto>>> GetProductsBySubCategoryId(int subCategoryId, bool? isActive, bool? deletedOnly);
-		// Search operations (delegated to ProductSearchService)
-		Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null);
-		Task<Result<List<ProductDto>>> GetBestSellersAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null);
-		Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page, int pageSize, bool? isActive = null, bool? deletedOnly = null);
+    public interface IProductsServices
+    {
+        // Core product operations (delegated to ProductCatalogService)
+        Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
+        Task<Result<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId);
+        Task<Result<List<BestSellingProductDto>>> GetBestSellersProductsWithCountAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null,bool IsAdmin=false);
+        Task<Result<ProductDto>> UpdateProductAsync(int id, UpdateProductDto dto, string userId);
+        Task<Result<bool>> DeleteProductAsync(int id, string userId);
+        Task<Result<bool>> RestoreProductAsync(int id, string userId);
+        Task<Result<List<ProductDto>>> GetProductsBySubCategoryIdAsync(int subCategoryId, bool? isActive = null, bool? deletedOnly = null, int page = 1, int pageSize = 10, bool IsAdmin = false);
+        
+        // Search operations (delegated to ProductSearchService)
+        Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
+        Task<Result<List<ProductDto>>> GetProductsAsync(string? search = null, bool? isActive = null, bool? deletedOnly = null, int page = 1, int pageSize = 10, bool IsAdmin = false);
+        Task<Result<List<ProductDto>>> GetBestSellersAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
+        Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
 		// Image operations (delegated to ProductImageService)
 		Task<Result<List<ImageDto>>> GetProductImagesAsync(int productId);
 		Task<Result<List<ImageDto>>> AddProductImagesAsync(int productId, List<IFormFile> images, string userId);

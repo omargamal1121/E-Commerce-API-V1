@@ -329,8 +329,6 @@ namespace E_Commerce
 
 			app.UseHttpsRedirection();
 
-			app.UseHangfireDashboard("/hangfire");
-
 
 			using (var scope = app.Services.CreateScope())
 			{

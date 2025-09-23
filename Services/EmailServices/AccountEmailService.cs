@@ -2,6 +2,7 @@ using E_Commerce.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
+using System.Net;
 using System.Text;
 
 namespace E_Commerce.Services.EmailServices
@@ -10,13 +11,16 @@ namespace E_Commerce.Services.EmailServices
     {
         private readonly IEmailSender _emailSender;
         private readonly UserManager<Customer> _userManager;
+        private readonly IConfiguration _configuration;
         private readonly ILogger<AccountEmailService> _logger;
 
         public AccountEmailService(
+            IConfiguration configuration,
             IEmailSender emailSender,
             UserManager<Customer> userManager,
             ILogger<AccountEmailService> logger)
         {
+            _configuration = configuration; 
             _emailSender = emailSender;
             _userManager = userManager;
             _logger = logger;
@@ -94,36 +98,46 @@ $@"
 			await _emailSender.SendEmailAsync(email, subject, message);
 		}
 
-        public async Task SendPasswordResetEmailAsync(string email,string username,string token)
+        public async Task SendPasswordResetEmailAsync(string email, string username, string token)
         {
             try
             {
-                
-
                 string subject = "Password Reset Request - Secure Your Account";
+
+ 
+ 
+                var encodedEmail = WebUtility.UrlEncode(email);
+
+              
+                var resetLink = $"{_configuration["FrontEndUrl"]}/reset-password?email={encodedEmail}&token={token}";
+
                 string message = CreateEmailTemplate(
                     "Password Reset Request",
                     $@"
-                        <h1 style='color: #dc3545; margin-bottom: 20px;'>Password Reset Request</h1>
-                        <p style='font-size: 16px; line-height: 1.6; color: #34495e;'>
-                            Hello <strong>{username}</strong>,<br>
-                            We received a request to reset your password. If this was you, please use the token below to reset your password.
-                        </p>
-                        <div style='background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); padding: 20px; border-radius: 10px; margin: 25px 0; text-align: center;'>
-                            <h3 style='color: white; margin: 0 0 15px 0;'>Your Reset Token</h3>
-                            <div style='background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; margin: 10px 0;'>
-                                <p style='font-size: 16px; font-weight: bold; color: #2c3e50; margin: 0; font-family: monospace; word-break: break-all;'>{token}</p>
-                            </div>
-                            <p style='color: white; margin: 10px 0 0 0; font-size: 14px;'>Copy this token and use it in the reset password form</p>
-                        </div>
-                        <div style='background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;'>
-                            <p style='margin: 0; color: #856404;'>
-                                <strong>Security Notice:</strong> This token is valid for 1 hour only. If you didn't request this reset, please ignore this email.
-                            </p>
-                        </div>
-                        <p style='font-size: 14px; color: #6c757d;'>
-                            For your security, if you didn't request this password reset, please contact our support team immediately.
-                        </p>"
+                <h1 style='color: #dc3545; margin-bottom: 20px;'>Password Reset Request</h1>
+                <p style='font-size: 16px; line-height: 1.6; color: #34495e;'>
+                    Hello <strong>{username}</strong>,<br>
+                    We received a request to reset your password. 
+                    If this was you, click the button below to set a new password.
+                </p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='{resetLink}' 
+                       style='background-color: #dc3545; color: white; padding: 12px 20px; 
+                              text-decoration: none; border-radius: 8px; font-size: 16px;'>
+                        Reset Password
+                    </a>
+                </div>
+                <div style='background-color: #fff3cd; padding: 15px; border-radius: 8px; 
+                            margin: 20px 0; border-left: 4px solid #ffc107;'>
+                    <p style='margin: 0; color: #856404;'>
+                        <strong>Security Notice:</strong> This link is valid for 1 hour only.
+                        If you didn't request this reset, please ignore this email.
+                    </p>
+                </div>
+                <p style='font-size: 14px; color: #6c757d;'>
+                    For your security, if you didn't request this password reset, 
+                    please contact our support team immediately.
+                </p>"
                 );
 
                 await _emailSender.SendEmailAsync(email, subject, message);
@@ -131,10 +145,11 @@ $@"
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed to send password reset email to {email}: {ex.Message}");
+                _logger.LogError(ex, $"Failed to send password reset email to {email}");
                 throw;
             }
         }
+
 
         public async Task SendPasswordResetSuccessEmailAsync(string email)
         {
@@ -176,7 +191,6 @@ $@"
             catch (Exception ex)
             {
                 _logger.LogError($"Failed to send password reset success email to {email}: {ex.Message}");
-                throw;
             }
         }
 

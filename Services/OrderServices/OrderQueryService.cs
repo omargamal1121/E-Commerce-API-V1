@@ -215,13 +215,14 @@ namespace E_Commerce.Services.Order
             bool? deleted = null,
             int page = 1,
             int pageSize = 10,
-            OrderStatus? status = null)
+            OrderStatus? status = null,
+            bool IsAdmin=false)
         {
             _logger.LogInformation(
-                "Filtering orders - UserId: {UserId}, Deleted: {Deleted}, Page: {Page}, PageSize: {PageSize}, Status: {Status}",
-                userId, deleted, page, pageSize, status);
+                "Filtering orders - UserId: {UserId}, Deleted: {Deleted}, Page: {Page}, PageSize: {PageSize}, Status: {Status}, IsAdmin: {IsAdmin}",
+                userId, deleted, page, pageSize, status,IsAdmin);
 
-            var cached = await _cacheHelper.GetOrderFilterCacheAsync(userId, deleted, page, pageSize, status);
+            var cached = await _cacheHelper.GetOrderFilterCacheAsync(userId, deleted, page, pageSize, IsAdmin,status);
             if (cached != null)
             {
                 _logger.LogInformation("Cache hit for filtered orders");
@@ -233,10 +234,13 @@ namespace E_Commerce.Services.Order
                 var query = _unitOfWork.Repository<E_Commerce.Models.Order>()
                     .GetAll();
 
+                if(!IsAdmin&& string.IsNullOrEmpty(userId))
+                      return Result<List<OrderListDto>>.Ok(new List<OrderListDto>(), "No orders found matching the criteria", 200);
+
                 if (!string.IsNullOrEmpty(userId))
                     query = query.Where(o => o.CustomerId == userId);
 
-                if (deleted.HasValue)
+                if (deleted.HasValue&&IsAdmin)
                 {
                     if (deleted.Value)
                         query = query.Where(o => o.DeletedAt != null);
@@ -259,7 +263,7 @@ namespace E_Commerce.Services.Order
                     return Result<List<OrderListDto>>.Ok(new List<OrderListDto>(), "No orders found matching the criteria", 200);
                 }
 
-                BackgroundJob.Enqueue(() => _cacheHelper.SetOrderFilterCacheAsync(userId, deleted, page, pageSize, status, orders, TimeSpan.FromMinutes(30)));
+                BackgroundJob.Enqueue(() => _cacheHelper.SetOrderFilterCacheAsync(userId, deleted, page, pageSize, status, orders, IsAdmin,TimeSpan.FromMinutes(30)));
 
                 return Result<List<OrderListDto>>.Ok(orders, "Filtered orders retrieved successfully", 200);
             }

@@ -55,11 +55,15 @@ namespace E_Commerce.Controllers
 					return BadRequest(ApiResponse<List<OrderListDto>>.CreateErrorResponse("Invalid pagination", new ErrorResponse("Invalid Data", "Page and pageSize must be greater than 0"), 400));
 				}
 
-				var role = GetUserRole();
-				var effectiveUserId = role == "Admin" ? userId : GetUserId();
+				var role = GetUserRole()== "Admin";
+				string? effectiveUserId = userId;
+
+
+                if (!role)
+					 effectiveUserId = GetUserId() ?? "Customer";
 
 				_logger.LogInformation($"Executing GetOrders: role: {role}, userId: {effectiveUserId}, deleted: {deleted}, page: {page}, size: {pageSize}, status: {status}");
-				var result = await _orderServices.FilterOrdersAsync(effectiveUserId, deleted, page, pageSize, status);
+				var result = await _orderServices.FilterOrdersAsync(effectiveUserId, deleted, page, pageSize, status,role);
 				return HandleResult(result);
 			}
 			catch (Exception ex)

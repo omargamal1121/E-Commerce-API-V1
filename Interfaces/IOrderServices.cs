@@ -12,7 +12,7 @@ namespace E_Commerce.Interfaces
 		  bool? deleted = null,
 		  int page = 1,
 		  int pageSize = 10,
-		  OrderStatus? status = null);
+		  OrderStatus? status = null,bool IsAdmin=false);
 		public  Task<Result<bool>> UpdateOrderAfterPaid(int orderId,OrderStatus orderStatus);
 		Task<Result<OrderDto>> GetOrderByIdAsync(int orderId, string userId, bool isAdmin = false);
 		public  Task<Result<OrderDto>> GetOrderByNumberAsync(string orderNumber, string userId, bool isAdmin = false);

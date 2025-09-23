@@ -9,23 +9,23 @@ namespace E_Commerce.Services.Order
         void NotifyAdminError(string message, string? stackTrace = null);
         
         // Order by ID cache methods
-        Task SetOrderByIdCacheAsync(int orderId, string userId, bool isAdmin, OrderDto order, TimeSpan? expiration = null);
+        void SetOrderByIdCacheAsync(int orderId, string userId, bool isAdmin, OrderDto order, TimeSpan? expiration = null);
         Task<OrderDto?> GetOrderByIdCacheAsync(int orderId, string userId, bool isAdmin);
         
         // Order by number cache methods
-        Task SetOrderByNumberCacheAsync(string orderNumber, string userId, bool isAdmin, OrderDto order, TimeSpan? expiration = null);
+        void SetOrderByNumberCacheAsync(string orderNumber, string userId, bool isAdmin, OrderDto order, TimeSpan? expiration = null);
         Task<OrderDto?> GetOrderByNumberCacheAsync(string orderNumber, string userId, bool isAdmin);
         
         // Order count cache methods
-        Task SetOrderCountCacheAsync(string userId, int? count, TimeSpan? expiration = null);
+        void SetOrderCountCacheAsync(string userId, int? count, TimeSpan? expiration = null);
         Task<int?> GetOrderCountCacheAsync(string userId);
         
         // Order revenue cache methods
-        Task SetOrderRevenueCacheAsync(string userId, decimal revenue, TimeSpan? expiration = null);
+        void SetOrderRevenueCacheAsync(string userId, decimal revenue, TimeSpan? expiration = null);
         Task<decimal?> GetOrderRevenueCacheAsync(string userId);
         
         // Order filter cache methods
-        Task SetOrderFilterCacheAsync(string? userId, bool? deleted, int page, int pageSize, OrderStatus? status, List<OrderListDto> orders, TimeSpan? expiration = null);
-        Task<List<OrderListDto>?> GetOrderFilterCacheAsync(string? userId, bool? deleted, int page, int pageSize, OrderStatus? status);
+        void SetOrderFilterCacheAsync(string? userId, bool? deleted, int page, int pageSize, OrderStatus? status, List<OrderListDto> orders,bool IsAdmin=false, TimeSpan? expiration = null);
+        Task<List<OrderListDto>?> GetOrderFilterCacheAsync(string? userId, bool? deleted, int page, int pageSize,bool IsAdmin=false, OrderStatus? status=null);
     }
 }

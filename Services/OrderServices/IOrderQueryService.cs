@@ -11,6 +11,6 @@ namespace E_Commerce.Services.Order
         Task<Result<decimal>> GetTotalRevenueByCustomerAsync(string userId);
         Task<Result<decimal>> GetTotalRevenueByDateRangeAsync(DateTime startDate, DateTime endDate);
         Task<Result<int?>> GetTotalOrderCountAsync(OrderStatus? status);
-        Task<Result<List<OrderListDto>>> FilterOrdersAsync(string? userId = null, bool? deleted = null, int page = 1, int pageSize = 10, OrderStatus? status = null);
+        Task<Result<List<OrderListDto>>> FilterOrdersAsync(string? userId = null, bool? deleted = null, int page = 1, int pageSize = 10, OrderStatus? status = null, bool IsAdmin = false);
     }
 }

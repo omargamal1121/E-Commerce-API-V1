@@ -85,7 +85,7 @@ namespace E_Commerce.Services.Order
         public Task<Result<int?>> GetTotalOrderCountAsync(OrderStatus? status)
             => _orderQueryService.GetTotalOrderCountAsync(status);
 
-        public Task<Result<List<OrderListDto>>> FilterOrdersAsync(string? userId = null, bool? deleted = null, int page = 1, int pageSize = 10, OrderStatus? status = null)
-            => _orderQueryService.FilterOrdersAsync(userId, deleted, page, pageSize, status);
+        public Task<Result<List<OrderListDto>>> FilterOrdersAsync(string? userId = null, bool? deleted = null, int page = 1, int pageSize = 10, OrderStatus? status = null, bool IsAdmin = false)
+            => _orderQueryService.FilterOrdersAsync(userId, deleted, page, pageSize, status,IsAdmin);
 	}
 }

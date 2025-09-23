@@ -36,7 +36,7 @@ namespace E_Commerce.Services.Order
             DeliveredAt = order.DeliveredAt,
             CancelledAt = order.CancelledAt,
             Payment=order.Payment==null?null: order.Payment.Select(p=>new PaymentDto { 
-                Status=p.Status,
+                Status=p.Status.ToString(),
                 Amount=p.Amount,
                 CreatedAt=p.CreatedAt,
                 Id=p.Id,
@@ -44,6 +44,7 @@ namespace E_Commerce.Services.Order
                 PaymentMethodId=p.PaymentMethodId,
                 PaymentProviderId= p.PaymentProviderId,
                 PaymentMethod=p.PaymentMethod.Name,
+                
             }),
             Customer = order.Customer == null ? null : new CustomerDto
             {

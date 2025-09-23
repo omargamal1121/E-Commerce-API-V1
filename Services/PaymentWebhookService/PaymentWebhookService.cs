@@ -56,13 +56,12 @@ namespace E_Commerce.Services.PaymentWebhookService
 				_logger.LogWarning("Paymob webhook has null Obj payload. Ignored.");
 				return false;
 			}
-
-			// convert to JObject for flexible parsing
 			var obj = JObject.FromObject(dto.Obj);
 
-			// validate HMAC
-			string? secretKey = _configuration["Paymob:HMAC"];
-			if (string.IsNullOrEmpty(secretKey))
+            // validate HMAC
+            string? secretKey = _configuration["Security:Paymob:HMAC"];
+
+            if (string.IsNullOrEmpty(secretKey))
 			{
 				_logger.LogError("Paymob HMAC secret key not configured");
 				return false;

@@ -1,0 +1,1354 @@
+2025-09-23 03:23:28.803 +03:00 [WRN] The foreign key property 'Customer.ImageId1' was created in shadow state because a conflicting property with the simple name 'ImageId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-09-23 03:23:30.624 +03:00 [INF] Executed DbCommand (141ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-23 03:23:31.362 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-23 03:23:31.614 +03:00 [INF] Executed DbCommand (151ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-09-23 03:23:31.678 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-09-23 03:23:31.714 +03:00 [INF] Starting data seeding...
+2025-09-23 03:23:31.794 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-09-23 03:23:32.633 +03:00 [INF] DB tables already exist. Exit install
+2025-09-23 03:23:33.298 +03:00 [INF] Executed DbCommand (139ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-09-23 03:23:33.383 +03:00 [INF] Role 'Admin' already exists.
+2025-09-23 03:23:33.542 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-09-23 03:23:33.558 +03:00 [INF] Role 'User' already exists.
+2025-09-23 03:23:33.760 +03:00 [INF] Executed DbCommand (96ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-23 03:23:33.884 +03:00 [INF] Admin user already exists. Skipping provider/method creation.
+2025-09-23 03:23:33.885 +03:00 [INF] Data seeding completed successfully.
+2025-09-23 03:23:35.982 +03:00 [INF] Now listening on: http://localhost:5069
+2025-09-23 03:23:36.091 +03:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-09-23 03:23:36.097 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-09-23 03:23:36.112 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-09-23 03:23:36.119 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-09-23 03:23:36.181 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-09-23 03:23:36.188 +03:00 [INF] Hosting environment: Development
+2025-09-23 03:23:36.194 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-09-23 03:23:36.345 +03:00 [INF] Server mrrobot:23844:e99e5915 successfully announced in 153.1665 ms
+2025-09-23 03:23:36.416 +03:00 [INF] Server mrrobot:23844:e99e5915 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-09-23 03:23:37.655 +03:00 [INF] Server mrrobot:23844:e99e5915 all the dispatchers started
+2025-09-23 03:23:41.794 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-09-23 03:23:42.098 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 306.4338ms
+2025-09-23 03:23:42.176 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-09-23 03:23:42.203 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 27.0535ms
+2025-09-23 03:23:42.230 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-09-23 03:23:42.238 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 8.1671ms
+2025-09-23 03:23:42.264 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-09-23 03:23:42.422 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 158.1156ms
+2025-09-23 03:23:43.143 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-09-23 03:23:43.382 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 238.3375ms
+2025-09-23 03:23:49.118 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE `c`.`DeletedAt` IS NOT NULL
+2025-09-23 03:23:58.316 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/Order?page=1&pageSize=5 - null null
+2025-09-23 03:23:58.326 +03:00 [WRN] Failed to determine the https port for redirect.
+2025-09-23 03:24:00.628 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 03:24:00.880 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-09-23 03:24:00.906 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/Order?page=1&pageSize=5 - 401 null application/json 2590.1475ms
+2025-09-23 03:24:07.043 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json 70
+2025-09-23 03:24:07.056 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 03:24:07.200 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-09-23 03:24:07.206 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 401 null application/json 162.9875ms
+2025-09-23 03:24:13.157 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json 70
+2025-09-23 03:24:13.218 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 03:24:13.230 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-09-23 03:24:13.265 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commerce.DtoModels.AccountDtos.LoginDTo) on controller E_Commerce.Controllers.AccountController (E-Commerce).
+2025-09-23 03:24:13.628 +03:00 [INF] In LoginAsync Method 
+2025-09-23 03:24:13.772 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-23 03:24:13.911 +03:00 [INF] 🔐 Generating Access Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 03:24:13.919 +03:00 [INF] 🔐 Generating Access Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 03:24:14.075 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-09-23 03:24:14.225 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-23 03:24:14.525 +03:00 [INF] Executed DbCommand (75ms) [Parameters=[@p22='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p23='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = Int32), @p10='?' (DbType = DateTime), @p11='?' (DbType = Boolean), @p12='?' (DbType = DateTimeOffset), @p13='?' (Size = 4000), @p14='?' (Size = 256), @p15='?' (Size = 256), @p16='?' (Size = 4000), @p17='?' (Size = 4000), @p18='?' (DbType = Boolean), @p19='?' (Size = 4000), @p20='?' (DbType = Boolean), @p21='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `ImageId1` = @p9, `LastVisit` = @p10, `LockoutEnabled` = @p11, `LockoutEnd` = @p12, `Name` = @p13, `NormalizedEmail` = @p14, `NormalizedUserName` = @p15, `PasswordHash` = @p16, `PhoneNumber` = @p17, `PhoneNumberConfirmed` = @p18, `SecurityStamp` = @p19, `TwoFactorEnabled` = @p20, `UserName` = @p21
+WHERE `Id` = @p22 AND `ConcurrencyStamp` = @p23;
+SELECT ROW_COUNT();
+2025-09-23 03:24:14.758 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-09-23 03:24:14.800 +03:00 [INF] ✅ Access Token generated successfully for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 03:24:14.806 +03:00 [INF] 🔑 Generating Refresh Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 03:24:15.038 +03:00 [INF] ✅ RefreshToken generated and stored for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 03:24:15.080 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-09-23 03:24:15.103 +03:00 [INF] Executed action E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce) in 1755.783ms
+2025-09-23 03:24:15.111 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-09-23 03:24:15.116 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 200 1251 application/json; charset=utf-8 1958.7402ms
+2025-09-23 03:24:35.260 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/Order?page=1&pageSize=5 - null null
+2025-09-23 03:24:35.278 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 03:24:35.427 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-09-23 03:24:35.443 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.OrderController.GetOrders (E-Commerce)'
+2025-09-23 03:24:35.455 +03:00 [INF] Route matched with {action = "GetOrders", controller = "Order"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[E_Commerce.DtoModels.OrderDtos.OrderListDto]]]] GetOrders(System.String, System.Nullable`1[System.Boolean], Int32, Int32, System.Nullable`1[E_Commerce.Enums.OrderStatus]) on controller E_Commerce.Controllers.OrderController (E-Commerce).
+2025-09-23 03:24:35.478 +03:00 [INF] Executing GetOrders: role: Admin, userId: , deleted: , page: 1, size: 5, status: 
+2025-09-23 03:24:35.485 +03:00 [INF] Filtering orders - UserId: null, Deleted: null, Page: 1, PageSize: 5, Status: null
+2025-09-23 03:24:35.493 +03:00 [INF] Getting cache for key: order:filter:user:all_deleted:all_page:1_size:5_status:all
+2025-09-23 03:24:35.728 +03:00 [WRN] Cache miss for key: order:filter:user:all_deleted:all_page:1_size:5_status:all
+2025-09-23 03:24:35.732 +03:00 [INF] Execute GetAll for entity Order
+2025-09-23 03:24:35.954 +03:00 [INF] Executed DbCommand (79ms) [Parameters=[@__p_1='?' (DbType = Int32), @__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`OrderNumber`, `t0`.`Name`, `t`.`Status`, `t`.`Total`, `t`.`CreatedAt`
+FROM (
+    SELECT `o`.`Id`, `o`.`CreatedAt`, `o`.`CustomerId`, `o`.`OrderNumber`, `o`.`Status`, `o`.`Total`
+    FROM `Orders` AS `o`
+    ORDER BY `o`.`CreatedAt` DESC
+    LIMIT @__p_1 OFFSET @__p_0
+) AS `t`
+INNER JOIN (
+    SELECT `a`.`Id`, `a`.`Name`
+    FROM `AspNetUsers` AS `a`
+    WHERE `a`.`Discriminator` = 'Customer'
+) AS `t0` ON `t`.`CustomerId` = `t0`.`Id`
+ORDER BY `t`.`CreatedAt` DESC
+2025-09-23 03:24:36.868 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[E_Commerce.DtoModels.OrderDtos.OrderListDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-09-23 03:24:36.879 +03:00 [INF] Executed action E_Commerce.Controllers.OrderController.GetOrders (E-Commerce) in 1418.5407ms
+2025-09-23 03:24:36.915 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.OrderController.GetOrders (E-Commerce)'
+2025-09-23 03:24:36.930 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/Order?page=1&pageSize=5 - 200 921 application/json; charset=utf-8 1670.7216ms
+2025-09-23 03:24:40.887 +03:00 [INF] Setting cache for key: order:filter:user:all_deleted:all_page:1_size:5_status:all
+2025-09-23 03:24:41.156 +03:00 [INF] Cache set successfully for key: order:filter:user:all_deleted:all_page:1_size:5_status:all with tags: [order]
+2025-09-23 03:24:59.796 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/Order/number/ORD-20250920205512-9414 - null null
+2025-09-23 03:24:59.880 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 03:25:00.038 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-09-23 03:25:00.068 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.OrderController.GetOrderByNumber (E-Commerce)'
+2025-09-23 03:25:00.077 +03:00 [INF] Route matched with {action = "GetOrderByNumber", controller = "Order"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.OrderDtos.OrderDto]]] GetOrderByNumber(System.String) on controller E_Commerce.Controllers.OrderController (E-Commerce).
+2025-09-23 03:25:00.091 +03:00 [INF] Executing GetOrderByNumber for number: ORD-20250920205512-9414
+2025-09-23 03:25:00.097 +03:00 [INF] Getting order by number: ORD-20250920205512-9414 for user: ac03a6c3-9450-420a-9e6e-ea8902c018c5, IsAdmin: true
+2025-09-23 03:25:00.100 +03:00 [INF] Getting cache for key: order:number:ORD-20250920205512-9414_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:25:00.316 +03:00 [WRN] Cache miss for key: order:number:ORD-20250920205512-9414_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:25:00.341 +03:00 [INF] Checking if order ORD-20250920205512-9414 exists for user
+2025-09-23 03:25:00.494 +03:00 [INF] Executed DbCommand (77ms) [Parameters=[@__ordernumber_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Orders` AS `o`
+    WHERE (`o`.`OrderNumber` = @__ordernumber_0) AND `o`.`DeletedAt` IS NULL)
+2025-09-23 03:25:00.518 +03:00 [INF] Execute GetAll for entity Order
+2025-09-23 03:25:00.732 +03:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-09-23 03:25:00.976 +03:00 [INF] Executed DbCommand (128ms) [Parameters=[@__8__locals1_orderNumber_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t0`.`Id`, `t0`.`CreatedAt`, `t0`.`ModifiedAt`, `t0`.`OrderNumber`, `t0`.`Status`, `t0`.`Subtotal`, `t0`.`TaxAmount`, `t0`.`ShippingCost`, `t0`.`DiscountAmount`, `t0`.`Total`, `t0`.`Notes`, `t0`.`DeletedAt`, `t0`.`ShippedAt`, `t0`.`DeliveredAt`, `t0`.`CancelledAt`, `t0`.`Id0`, `t0`.`Id1`, `p`.`Id`, `p`.`Amount`, `p`.`CreatedAt`, `p`.`CustomerId`, `p`.`DeletedAt`, `p`.`ModifiedAt`, `p`.`OrderId`, `p`.`PaymentDate`, `p`.`PaymentMethodId`, `p`.`PaymentProviderId`, `p`.`ProviderOrderId`, `p`.`RowVersion`, `p`.`Status`, `p`.`TransactionId`, `p0`.`Status`, `p0`.`Amount`, `p0`.`CreatedAt`, `p0`.`Id`, `p0`.`PaymentDate`, `p0`.`PaymentMethodId`, `p0`.`PaymentProviderId`, `t0`.`c`, `t0`.`Name`, `t0`.`Email`, `t0`.`PhoneNumber`, `t0`.`AdditionalNotes`, `t0`.`AddressType`, `t0`.`City`, `t0`.`Country`, `t0`.`CreatedAt0`, `t0`.`CustomerId`, `t0`.`StreetAddress`, `t0`.`State`, `t0`.`PhoneNumber0`, `t0`.`IsDefault`, `t0`.`ModifiedAt0`, `t0`.`PostalCode`, `t1`.`Id`, `t1`.`CreatedAt`, `t1`.`ModifiedAt`, `t1`.`Quantity`, `t1`.`UnitPrice`, `t1`.`TotalPrice`, `t1`.`OrderedAt`, `t1`.`Id0`, `t1`.`Name`, `t1`.`Price`, `t1`.`IsActive`, `t1`.`FinalPrice`, `t1`.`DiscountPrecentage`, `t1`.`MainImageUrl`, `t1`.`Id1`, `t1`.`Color`, `t1`.`CreatedAt0`, `t1`.`ModifiedAt0`, `t1`.`Size`, `t1`.`DeletedAt`, `t1`.`Length`, `t1`.`Waist`, `t1`.`Id2`, `t1`.`Id3`
+FROM (
+    SELECT `o`.`Id`, `o`.`CreatedAt`, `o`.`ModifiedAt`, `o`.`OrderNumber`, `o`.`Status`, `o`.`Subtotal`, `o`.`TaxAmount`, `o`.`ShippingCost`, `o`.`DiscountAmount`, `o`.`Total`, `o`.`Notes`, `o`.`DeletedAt`, `o`.`ShippedAt`, `o`.`DeliveredAt`, `o`.`CancelledAt`, FALSE AS `c`, `t`.`Id` AS `Id0`, `t`.`Name`, `t`.`Email`, `t`.`PhoneNumber`, `c`.`Id` AS `Id1`, `c`.`AdditionalNotes`, `c`.`AddressType`, `c`.`City`, `c`.`Country`, `c`.`CreatedAt` AS `CreatedAt0`, `c`.`CustomerId`, `c`.`StreetAddress`, `c`.`State`, `c`.`PhoneNumber` AS `PhoneNumber0`, `c`.`IsDefault`, `c`.`ModifiedAt` AS `ModifiedAt0`, `c`.`PostalCode`
+    FROM `Orders` AS `o`
+    INNER JOIN (
+        SELECT `a`.`Id`, `a`.`Email`, `a`.`PhoneNumber`, `a`.`Name`
+        FROM `AspNetUsers` AS `a`
+        WHERE `a`.`Discriminator` = 'Customer'
+    ) AS `t` ON `o`.`CustomerId` = `t`.`Id`
+    INNER JOIN `CustomerAddresses` AS `c` ON `o`.`CustomerAddressId` = `c`.`Id`
+    WHERE `o`.`OrderNumber` = @__8__locals1_orderNumber_0
+    LIMIT 1
+) AS `t0`
+LEFT JOIN `Payments` AS `p` ON `t0`.`Id` = `p`.`OrderId`
+LEFT JOIN `Payments` AS `p0` ON `t0`.`Id` = `p0`.`OrderId`
+LEFT JOIN (
+    SELECT `o0`.`Id`, `o0`.`CreatedAt`, `o0`.`ModifiedAt`, `o0`.`Quantity`, `o0`.`UnitPrice`, `o0`.`TotalPrice`, `o0`.`OrderedAt`, `p1`.`Id` AS `Id0`, `p1`.`Name`, `p1`.`Price`, `p1`.`IsActive`, CASE
+        WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN ROUND(`p1`.`Price` - ((`d`.`DiscountPercent` / 100.0) * `p1`.`Price`))
+        ELSE `p1`.`Price`
+    END AS `FinalPrice`, CASE
+        WHEN (`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`DiscountPercent`
+        ELSE 0.0
+    END AS `DiscountPrecentage`, COALESCE((
+        SELECT `i`.`Url`
+        FROM `Images` AS `i`
+        WHERE (`p1`.`Id` = `i`.`ProductId`) AND `i`.`DeletedAt` IS NULL
+        LIMIT 1), '') AS `MainImageUrl`, `o0`.`ProductVariantId` AS `Id1`, `p2`.`Color`, COALESCE(`p2`.`CreatedAt`, TIMESTAMP '0001-01-01 00:00:00') AS `CreatedAt0`, COALESCE(`p2`.`ModifiedAt`, TIMESTAMP '0001-01-01 00:00:00') AS `ModifiedAt0`, `p2`.`Size`, `p2`.`DeletedAt`, COALESCE(`p2`.`Length`, 0) AS `Length`, COALESCE(`p2`.`Waist`, 0) AS `Waist`, `d`.`Id` AS `Id2`, `p2`.`Id` AS `Id3`, `o0`.`OrderId`
+    FROM `OrderItem` AS `o0`
+    INNER JOIN `Products` AS `p1` ON `o0`.`ProductId` = `p1`.`Id`
+    LEFT JOIN `Discount` AS `d` ON `p1`.`DiscountId` = `d`.`Id`
+    INNER JOIN `ProductVariants` AS `p2` ON `o0`.`ProductVariantId` = `p2`.`Id`
+) AS `t1` ON `t0`.`Id` = `t1`.`OrderId`
+ORDER BY `t0`.`Id`, `t0`.`Id0`, `t0`.`Id1`, `p`.`Id`, `p0`.`Id`, `t1`.`Id`, `t1`.`Id0`, `t1`.`Id2`
+2025-09-23 03:25:01.933 +03:00 [INF] Order ORD-20250920205512-9414 retrieved successfully for user ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 03:25:01.942 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.OrderDtos.OrderDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-09-23 03:25:01.963 +03:00 [INF] Executed action E_Commerce.Controllers.OrderController.GetOrderByNumber (E-Commerce) in 1882.4025ms
+2025-09-23 03:25:01.975 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.OrderController.GetOrderByNumber (E-Commerce)'
+2025-09-23 03:25:01.982 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/Order/number/ORD-20250920205512-9414 - 200 2119 application/json; charset=utf-8 2185.085ms
+2025-09-23 03:25:04.401 +03:00 [INF] Setting cache for key: order:number:ORD-20250920205512-9414_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:25:04.762 +03:00 [INF] Cache set successfully for key: order:number:ORD-20250920205512-9414_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:26:09.765 +03:00 [INF] Setting cache for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 03:26:10.003 +03:00 [INF] Cache set successfully for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False with tags: [subcategorylist]
+2025-09-23 03:26:12.747 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 03:26:12.972 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 03:26:13.176 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 03:26:13.370 +03:00 [INF] Setting cache for key: collection:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 03:26:13.396 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 03:26:13.468 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 03:26:13.470 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 03:26:13.480 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 03:26:13.480 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 03:26:13.609 +03:00 [INF] Cache set successfully for key: collection:6_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 03:26:13.690 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 03:26:13.696 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 03:26:13.699 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 03:26:13.704 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 03:26:15.903 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 03:26:16.131 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 03:26:16.190 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 03:26:16.421 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 03:26:19.505 +03:00 [INF] Setting cache for key: order:filter:user:all_deleted:all_page:1_size:200_status:all
+2025-09-23 03:26:19.781 +03:00 [INF] Cache set successfully for key: order:filter:user:all_deleted:all_page:1_size:200_status:all with tags: [order]
+2025-09-23 03:26:22.707 +03:00 [INF] Setting cache for key: order:filter:user:all_deleted:all_page:1_size:50_status:all
+2025-09-23 03:26:22.896 +03:00 [INF] Setting cache for key: order:id:172_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:26:22.955 +03:00 [INF] Cache set successfully for key: order:filter:user:all_deleted:all_page:1_size:50_status:all with tags: [order]
+2025-09-23 03:26:23.129 +03:00 [INF] Cache set successfully for key: order:id:172_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:26:23.167 +03:00 [INF] Setting cache for key: order:id:171_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:26:23.391 +03:00 [INF] Cache set successfully for key: order:id:171_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:26:23.772 +03:00 [INF] Setting cache for key: order:id:176_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:26:23.843 +03:00 [INF] Setting cache for key: order:id:175_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:26:23.852 +03:00 [INF] Setting cache for key: order:id:166_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:26:23.998 +03:00 [INF] Cache set successfully for key: order:id:176_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:26:24.072 +03:00 [INF] Cache set successfully for key: order:id:175_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:26:24.079 +03:00 [INF] Cache set successfully for key: order:id:166_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:26:25.203 +03:00 [INF] Setting cache for key: order:id:173_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:26:25.429 +03:00 [INF] Cache set successfully for key: order:id:173_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:26:25.751 +03:00 [INF] Setting cache for key: order:id:180_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:26:25.858 +03:00 [INF] Setting cache for key: order:id:135_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:26:25.983 +03:00 [INF] Cache set successfully for key: order:id:180_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:26:26.119 +03:00 [INF] Cache set successfully for key: order:id:135_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:26:26.120 +03:00 [INF] Setting cache for key: order:id:142_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:26:26.344 +03:00 [INF] Cache set successfully for key: order:id:142_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:26:26.696 +03:00 [INF] Setting cache for key: order:id:136_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:26:26.754 +03:00 [INF] Setting cache for key: order:id:168_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:26:26.755 +03:00 [INF] Setting cache for key: order:id:148_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:26:26.922 +03:00 [INF] Cache set successfully for key: order:id:136_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:26:26.982 +03:00 [INF] Cache set successfully for key: order:id:168_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:26:26.986 +03:00 [INF] Cache set successfully for key: order:id:148_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:26:28.415 +03:00 [INF] Setting cache for key: order:id:141_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:26:28.459 +03:00 [INF] Setting cache for key: order:id:150_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:26:28.645 +03:00 [INF] Cache set successfully for key: order:id:141_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:26:28.683 +03:00 [INF] Cache set successfully for key: order:id:150_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:26:30.877 +03:00 [INF] Setting cache for key: order:id:159_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:26:30.880 +03:00 [INF] Setting cache for key: order:id:152_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:26:31.108 +03:00 [INF] Cache set successfully for key: order:id:159_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:26:31.119 +03:00 [INF] Cache set successfully for key: order:id:152_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:51:29.368 +03:00 [WRN] The foreign key property 'Customer.ImageId1' was created in shadow state because a conflicting property with the simple name 'ImageId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-09-23 03:51:31.004 +03:00 [INF] Executed DbCommand (111ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-23 03:51:31.690 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-23 03:51:31.858 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-09-23 03:51:31.891 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-09-23 03:51:31.911 +03:00 [INF] Starting data seeding...
+2025-09-23 03:51:31.939 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-09-23 03:51:32.153 +03:00 [INF] DB tables already exist. Exit install
+2025-09-23 03:51:32.625 +03:00 [INF] Executed DbCommand (111ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-09-23 03:51:32.684 +03:00 [INF] Role 'Admin' already exists.
+2025-09-23 03:51:32.846 +03:00 [INF] Executed DbCommand (88ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-09-23 03:51:33.074 +03:00 [INF] Role 'User' already exists.
+2025-09-23 03:51:33.234 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-23 03:51:33.330 +03:00 [INF] Admin user already exists. Skipping provider/method creation.
+2025-09-23 03:51:33.384 +03:00 [INF] Data seeding completed successfully.
+2025-09-23 03:51:34.795 +03:00 [INF] Now listening on: http://localhost:5069
+2025-09-23 03:51:35.065 +03:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-09-23 03:51:35.108 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-09-23 03:51:35.110 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-09-23 03:51:35.124 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-09-23 03:51:35.156 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-09-23 03:51:35.188 +03:00 [INF] Hosting environment: Development
+2025-09-23 03:51:35.322 +03:00 [INF] Server mrrobot:6380:eada551f successfully announced in 158.7337 ms
+2025-09-23 03:51:35.742 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-09-23 03:51:37.031 +03:00 [INF] Server mrrobot:6380:eada551f is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-09-23 03:51:38.579 +03:00 [INF] Server mrrobot:6380:eada551f all the dispatchers started
+2025-09-23 03:52:03.527 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-09-23 03:52:04.858 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 1335.2418ms
+2025-09-23 03:52:06.238 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json 70
+2025-09-23 03:52:07.473 +03:00 [WRN] Failed to determine the https port for redirect.
+2025-09-23 03:52:07.862 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 03:52:08.142 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-09-23 03:52:08.256 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 401 null application/json 2017.1063ms
+2025-09-23 03:52:14.926 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json 70
+2025-09-23 03:52:14.978 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 03:52:15.133 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-09-23 03:52:15.168 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commerce.DtoModels.AccountDtos.LoginDTo) on controller E_Commerce.Controllers.AccountController (E-Commerce).
+2025-09-23 03:52:15.734 +03:00 [INF] In LoginAsync Method 
+2025-09-23 03:52:16.241 +03:00 [INF] Executed DbCommand (118ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-23 03:52:16.420 +03:00 [INF] 🔐 Generating Access Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 03:52:16.442 +03:00 [INF] 🔐 Generating Access Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 03:52:16.611 +03:00 [INF] Executed DbCommand (75ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-09-23 03:52:16.765 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-23 03:52:17.123 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@p22='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p23='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = Int32), @p10='?' (DbType = DateTime), @p11='?' (DbType = Boolean), @p12='?' (DbType = DateTimeOffset), @p13='?' (Size = 4000), @p14='?' (Size = 256), @p15='?' (Size = 256), @p16='?' (Size = 4000), @p17='?' (Size = 4000), @p18='?' (DbType = Boolean), @p19='?' (Size = 4000), @p20='?' (DbType = Boolean), @p21='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `ImageId1` = @p9, `LastVisit` = @p10, `LockoutEnabled` = @p11, `LockoutEnd` = @p12, `Name` = @p13, `NormalizedEmail` = @p14, `NormalizedUserName` = @p15, `PasswordHash` = @p16, `PhoneNumber` = @p17, `PhoneNumberConfirmed` = @p18, `SecurityStamp` = @p19, `TwoFactorEnabled` = @p20, `UserName` = @p21
+WHERE `Id` = @p22 AND `ConcurrencyStamp` = @p23;
+SELECT ROW_COUNT();
+2025-09-23 03:52:17.406 +03:00 [INF] Executed DbCommand (78ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-09-23 03:52:17.448 +03:00 [INF] ✅ Access Token generated successfully for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 03:52:17.462 +03:00 [INF] 🔑 Generating Refresh Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 03:52:17.632 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/swagger-ui.css - null null
+2025-09-23 03:52:17.633 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.css - null null
+2025-09-23 03:52:17.670 +03:00 [INF] Sending file. Request path: '/index.css'. Physical path: 'N/A'
+2025-09-23 03:52:17.676 +03:00 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2025-09-23 03:52:17.686 +03:00 [INF] ✅ RefreshToken generated and stored for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 03:52:17.693 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.css - 200 202 text/css 59.4334ms
+2025-09-23 03:52:17.699 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/swagger-ui.css - 200 154948 text/css 66.7526ms
+2025-09-23 03:52:17.718 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/swagger-ui-bundle.js - null null
+2025-09-23 03:52:17.737 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-09-23 03:52:17.760 +03:00 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
+2025-09-23 03:52:17.768 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/swagger-ui-bundle.js - 200 1466324 text/javascript 50.1267ms
+2025-09-23 03:52:17.769 +03:00 [INF] Executed action E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce) in 2584.7539ms
+2025-09-23 03:52:17.779 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-09-23 03:52:17.784 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 200 1251 application/json; charset=utf-8 2858.3977ms
+2025-09-23 03:52:17.799 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/swagger-ui-standalone-preset.js - null null
+2025-09-23 03:52:17.801 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-09-23 03:52:17.817 +03:00 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
+2025-09-23 03:52:17.821 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 19.5678ms
+2025-09-23 03:52:17.823 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/swagger-ui-standalone-preset.js - 200 229223 text/javascript 23.7988ms
+2025-09-23 03:52:18.253 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-09-23 03:52:18.262 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 9.326ms
+2025-09-23 03:52:18.301 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-09-23 03:52:18.346 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 44.1042ms
+2025-09-23 03:52:22.300 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-09-23 03:52:22.351 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/favicon-32x32.png - null null
+2025-09-23 03:52:22.367 +03:00 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2025-09-23 03:52:22.373 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/favicon-32x32.png - 200 628 image/png 21.1936ms
+2025-09-23 03:52:22.470 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 169.5868ms
+2025-09-23 03:52:31.760 +03:00 [INF] Setting cache for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 03:52:31.854 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 03:52:31.857 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 03:52:31.922 +03:00 [INF] Setting cache for key: collection:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 03:52:32.098 +03:00 [INF] Cache set successfully for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False with tags: [subcategorylist]
+2025-09-23 03:52:32.104 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 03:52:32.108 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 03:52:32.234 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 03:52:32.257 +03:00 [INF] Cache set successfully for key: collection:6_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 03:52:32.440 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 03:52:32.443 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 03:52:32.473 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 03:52:32.710 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 03:52:32.734 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 03:52:35.002 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 03:52:35.002 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 03:52:35.425 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 03:52:35.440 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 03:52:41.419 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/Order/number/ORD-20250920205512-9414 - null null
+2025-09-23 03:52:41.849 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 03:52:42.002 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-09-23 03:52:42.012 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.OrderController.GetOrderByNumber (E-Commerce)'
+2025-09-23 03:52:42.025 +03:00 [INF] Route matched with {action = "GetOrderByNumber", controller = "Order"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.OrderDtos.OrderDto]]] GetOrderByNumber(System.String) on controller E_Commerce.Controllers.OrderController (E-Commerce).
+2025-09-23 03:52:42.047 +03:00 [INF] Executing GetOrderByNumber for number: ORD-20250920205512-9414
+2025-09-23 03:52:42.055 +03:00 [INF] Getting order by number: ORD-20250920205512-9414 for user: ac03a6c3-9450-420a-9e6e-ea8902c018c5, IsAdmin: true
+2025-09-23 03:52:42.066 +03:00 [INF] Getting cache for key: order:number:ORD-20250920205512-9414_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:52:42.330 +03:00 [INF] Cache hit for key: order:number:ORD-20250920205512-9414_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:52:42.409 +03:00 [INF] Cache hit for order number ORD-20250920205512-9414
+2025-09-23 03:52:42.413 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.OrderDtos.OrderDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-09-23 03:52:42.482 +03:00 [INF] Executed action E_Commerce.Controllers.OrderController.GetOrderByNumber (E-Commerce) in 449.4491ms
+2025-09-23 03:52:42.491 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.OrderController.GetOrderByNumber (E-Commerce)'
+2025-09-23 03:52:42.497 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/Order/number/ORD-20250920205512-9414 - 200 2117 application/json; charset=utf-8 1078.4241ms
+2025-09-23 03:55:40.393 +03:00 [INF] Setting cache for key: order:number:ORD-20250920205512-9414_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 03:55:40.638 +03:00 [INF] Cache set successfully for key: order:number:ORD-20250920205512-9414_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 03:55:40.822 +03:00 [INF] Setting cache for key: Product:list_active:_deleted:_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100___pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 03:55:41.208 +03:00 [INF] Cache set successfully for key: Product:list_active:_deleted:_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100___pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 04:04:26.822 +03:00 [WRN] The foreign key property 'Customer.ImageId1' was created in shadow state because a conflicting property with the simple name 'ImageId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-09-23 04:04:32.683 +03:00 [INF] Executed DbCommand (91ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-23 04:04:33.821 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-23 04:04:34.108 +03:00 [INF] Executed DbCommand (80ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-09-23 04:04:34.156 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-09-23 04:04:34.262 +03:00 [INF] Starting data seeding...
+2025-09-23 04:04:34.322 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-09-23 04:04:34.934 +03:00 [INF] DB tables already exist. Exit install
+2025-09-23 04:04:35.885 +03:00 [INF] Executed DbCommand (193ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-09-23 04:04:36.664 +03:00 [INF] Role 'Admin' already exists.
+2025-09-23 04:04:36.828 +03:00 [INF] Executed DbCommand (81ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-09-23 04:04:37.136 +03:00 [INF] Role 'User' already exists.
+2025-09-23 04:04:37.449 +03:00 [INF] Executed DbCommand (85ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-23 04:04:38.385 +03:00 [INF] Admin user already exists. Skipping provider/method creation.
+2025-09-23 04:04:38.818 +03:00 [INF] Data seeding completed successfully.
+2025-09-23 04:04:58.257 +03:00 [WRN] The foreign key property 'Customer.ImageId1' was created in shadow state because a conflicting property with the simple name 'ImageId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-09-23 04:05:00.078 +03:00 [INF] Executed DbCommand (77ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-23 04:05:00.754 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-23 04:05:00.926 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-09-23 04:05:01.027 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-09-23 04:05:01.118 +03:00 [INF] Starting data seeding...
+2025-09-23 04:05:01.174 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-09-23 04:05:01.516 +03:00 [INF] DB tables already exist. Exit install
+2025-09-23 04:05:02.214 +03:00 [INF] Executed DbCommand (128ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-09-23 04:05:02.299 +03:00 [INF] Role 'Admin' already exists.
+2025-09-23 04:05:02.460 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-09-23 04:05:03.536 +03:00 [INF] Role 'User' already exists.
+2025-09-23 04:05:03.968 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-23 04:05:04.091 +03:00 [INF] Admin user already exists. Skipping provider/method creation.
+2025-09-23 04:05:04.104 +03:00 [INF] Data seeding completed successfully.
+2025-09-23 04:05:05.485 +03:00 [INF] Now listening on: http://localhost:5069
+2025-09-23 04:05:05.626 +03:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-09-23 04:05:05.824 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-09-23 04:05:06.285 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger - null null
+2025-09-23 04:05:06.625 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-09-23 04:05:07.235 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-09-23 04:05:07.433 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger - 301 0 null 1149.4443ms
+2025-09-23 04:05:08.184 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-09-23 04:05:08.203 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-09-23 04:05:08.234 +03:00 [INF] Hosting environment: Development
+2025-09-23 04:05:08.354 +03:00 [INF] Server mrrobot:19992:57654944 successfully announced in 166.4713 ms
+2025-09-23 04:05:08.401 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-09-23 04:05:08.583 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 379.8421ms
+2025-09-23 04:05:08.642 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-09-23 04:05:08.664 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-09-23 04:05:09.135 +03:00 [INF] Server mrrobot:19992:57654944 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-09-23 04:05:09.268 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-09-23 04:05:09.305 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 662.9061ms
+2025-09-23 04:05:09.487 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 822.5302ms
+2025-09-23 04:05:09.603 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 335.0804ms
+2025-09-23 04:05:10.104 +03:00 [INF] Server mrrobot:19992:57654944 all the dispatchers started
+2025-09-23 04:05:10.149 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-09-23 04:05:10.414 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 264.3448ms
+2025-09-23 04:06:31.410 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json 70
+2025-09-23 04:06:31.756 +03:00 [WRN] Failed to determine the https port for redirect.
+2025-09-23 04:06:32.251 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 04:06:33.242 +03:00 [INF] Executed DbCommand (68ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-09-23 04:06:33.655 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 401 null application/json 2244.9332ms
+2025-09-23 04:06:40.947 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json 70
+2025-09-23 04:06:40.971 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 04:06:40.981 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-09-23 04:06:41.027 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commerce.DtoModels.AccountDtos.LoginDTo) on controller E_Commerce.Controllers.AccountController (E-Commerce).
+2025-09-23 04:06:42.208 +03:00 [INF] In LoginAsync Method 
+2025-09-23 04:06:42.429 +03:00 [INF] Executed DbCommand (104ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-23 04:06:43.178 +03:00 [INF] 🔐 Generating Access Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:06:43.195 +03:00 [INF] 🔐 Generating Access Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:06:43.392 +03:00 [INF] Executed DbCommand (76ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-09-23 04:06:44.438 +03:00 [INF] Executed DbCommand (76ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-23 04:06:44.998 +03:00 [INF] Executed DbCommand (75ms) [Parameters=[@p22='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p23='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = Int32), @p10='?' (DbType = DateTime), @p11='?' (DbType = Boolean), @p12='?' (DbType = DateTimeOffset), @p13='?' (Size = 4000), @p14='?' (Size = 256), @p15='?' (Size = 256), @p16='?' (Size = 4000), @p17='?' (Size = 4000), @p18='?' (DbType = Boolean), @p19='?' (Size = 4000), @p20='?' (DbType = Boolean), @p21='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `ImageId1` = @p9, `LastVisit` = @p10, `LockoutEnabled` = @p11, `LockoutEnd` = @p12, `Name` = @p13, `NormalizedEmail` = @p14, `NormalizedUserName` = @p15, `PasswordHash` = @p16, `PhoneNumber` = @p17, `PhoneNumberConfirmed` = @p18, `SecurityStamp` = @p19, `TwoFactorEnabled` = @p20, `UserName` = @p21
+WHERE `Id` = @p22 AND `ConcurrencyStamp` = @p23;
+SELECT ROW_COUNT();
+2025-09-23 04:06:45.284 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-09-23 04:06:45.354 +03:00 [INF] ✅ Access Token generated successfully for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:06:45.372 +03:00 [INF] 🔑 Generating Refresh Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:06:45.617 +03:00 [INF] ✅ RefreshToken generated and stored for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:06:45.755 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-09-23 04:06:45.900 +03:00 [INF] Executed action E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce) in 4827.4229ms
+2025-09-23 04:06:46.369 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-09-23 04:06:46.375 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 200 1251 application/json; charset=utf-8 5428.1608ms
+2025-09-23 04:07:02.864 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/Order/number/ORD-20250920205512-9414 - null null
+2025-09-23 04:07:03.060 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 04:07:03.212 +03:00 [INF] Executed DbCommand (68ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-09-23 04:07:03.223 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.OrderController.GetOrderByNumber (E-Commerce)'
+2025-09-23 04:07:03.245 +03:00 [INF] Route matched with {action = "GetOrderByNumber", controller = "Order"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.OrderDtos.OrderDto]]] GetOrderByNumber(System.String) on controller E_Commerce.Controllers.OrderController (E-Commerce).
+2025-09-23 04:07:03.311 +03:00 [INF] Executing GetOrderByNumber for number: ORD-20250920205512-9414
+2025-09-23 04:07:03.337 +03:00 [INF] Getting order by number: ORD-20250920205512-9414 for user: ac03a6c3-9450-420a-9e6e-ea8902c018c5, IsAdmin: true
+2025-09-23 04:07:03.364 +03:00 [INF] Getting cache for key: order:number:ORD-20250920205512-9414_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 04:07:03.622 +03:00 [INF] Cache hit for key: order:number:ORD-20250920205512-9414_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 04:07:03.688 +03:00 [INF] Cache hit for order number ORD-20250920205512-9414
+2025-09-23 04:07:03.695 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.OrderDtos.OrderDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-09-23 04:07:03.761 +03:00 [INF] Executed action E_Commerce.Controllers.OrderController.GetOrderByNumber (E-Commerce) in 496.813ms
+2025-09-23 04:07:03.775 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.OrderController.GetOrderByNumber (E-Commerce)'
+2025-09-23 04:07:03.782 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/Order/number/ORD-20250920205512-9414 - 200 2117 application/json; charset=utf-8 917.3677ms
+2025-09-23 04:07:28.449 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/Order/number/ORD-20250920060933-5549 - null null
+2025-09-23 04:07:28.481 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 04:07:28.665 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-09-23 04:07:28.692 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.OrderController.GetOrderByNumber (E-Commerce)'
+2025-09-23 04:07:28.699 +03:00 [INF] Route matched with {action = "GetOrderByNumber", controller = "Order"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.OrderDtos.OrderDto]]] GetOrderByNumber(System.String) on controller E_Commerce.Controllers.OrderController (E-Commerce).
+2025-09-23 04:07:28.747 +03:00 [INF] Executing GetOrderByNumber for number: ORD-20250920060933-5549
+2025-09-23 04:07:28.761 +03:00 [INF] Getting order by number: ORD-20250920060933-5549 for user: ac03a6c3-9450-420a-9e6e-ea8902c018c5, IsAdmin: true
+2025-09-23 04:07:28.764 +03:00 [INF] Getting cache for key: order:number:ORD-20250920060933-5549_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 04:07:29.074 +03:00 [WRN] Cache miss for key: order:number:ORD-20250920060933-5549_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 04:07:29.082 +03:00 [INF] Checking if order ORD-20250920060933-5549 exists for user
+2025-09-23 04:07:29.243 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__ordernumber_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `Orders` AS `o`
+    WHERE (`o`.`OrderNumber` = @__ordernumber_0) AND `o`.`DeletedAt` IS NULL)
+2025-09-23 04:07:29.261 +03:00 [INF] Execute GetAll for entity Order
+2025-09-23 04:07:29.779 +03:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-09-23 04:07:30.096 +03:00 [INF] Executed DbCommand (115ms) [Parameters=[@__8__locals1_orderNumber_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t0`.`Id`, `t0`.`CreatedAt`, `t0`.`ModifiedAt`, `t0`.`OrderNumber`, `t0`.`Status`, `t0`.`Subtotal`, `t0`.`TaxAmount`, `t0`.`ShippingCost`, `t0`.`DiscountAmount`, `t0`.`Total`, `t0`.`Notes`, `t0`.`DeletedAt`, `t0`.`ShippedAt`, `t0`.`DeliveredAt`, `t0`.`CancelledAt`, `t0`.`Id0`, `t0`.`Id1`, `p`.`Id`, `p`.`Amount`, `p`.`CreatedAt`, `p`.`CustomerId`, `p`.`DeletedAt`, `p`.`ModifiedAt`, `p`.`OrderId`, `p`.`PaymentDate`, `p`.`PaymentMethodId`, `p`.`PaymentProviderId`, `p`.`ProviderOrderId`, `p`.`RowVersion`, `p`.`Status`, `p`.`TransactionId`, `t1`.`Status`, `t1`.`Amount`, `t1`.`CreatedAt`, `t1`.`Id`, `t1`.`PaymentDate`, `t1`.`PaymentMethodId`, `t1`.`PaymentProviderId`, `t1`.`PaymentMethod`, `t1`.`Id0`, `t0`.`c`, `t0`.`Name`, `t0`.`Email`, `t0`.`PhoneNumber`, `t0`.`AdditionalNotes`, `t0`.`AddressType`, `t0`.`City`, `t0`.`Country`, `t0`.`CreatedAt0`, `t0`.`CustomerId`, `t0`.`StreetAddress`, `t0`.`State`, `t0`.`PhoneNumber0`, `t0`.`IsDefault`, `t0`.`ModifiedAt0`, `t0`.`PostalCode`, `t2`.`Id`, `t2`.`CreatedAt`, `t2`.`ModifiedAt`, `t2`.`Quantity`, `t2`.`UnitPrice`, `t2`.`TotalPrice`, `t2`.`OrderedAt`, `t2`.`Id0`, `t2`.`Name`, `t2`.`Price`, `t2`.`IsActive`, `t2`.`FinalPrice`, `t2`.`DiscountPrecentage`, `t2`.`MainImageUrl`, `t2`.`Id1`, `t2`.`Color`, `t2`.`CreatedAt0`, `t2`.`ModifiedAt0`, `t2`.`Size`, `t2`.`DeletedAt`, `t2`.`Length`, `t2`.`Waist`, `t2`.`Id2`, `t2`.`Id3`
+FROM (
+    SELECT `o`.`Id`, `o`.`CreatedAt`, `o`.`ModifiedAt`, `o`.`OrderNumber`, `o`.`Status`, `o`.`Subtotal`, `o`.`TaxAmount`, `o`.`ShippingCost`, `o`.`DiscountAmount`, `o`.`Total`, `o`.`Notes`, `o`.`DeletedAt`, `o`.`ShippedAt`, `o`.`DeliveredAt`, `o`.`CancelledAt`, FALSE AS `c`, `t`.`Id` AS `Id0`, `t`.`Name`, `t`.`Email`, `t`.`PhoneNumber`, `c`.`Id` AS `Id1`, `c`.`AdditionalNotes`, `c`.`AddressType`, `c`.`City`, `c`.`Country`, `c`.`CreatedAt` AS `CreatedAt0`, `c`.`CustomerId`, `c`.`StreetAddress`, `c`.`State`, `c`.`PhoneNumber` AS `PhoneNumber0`, `c`.`IsDefault`, `c`.`ModifiedAt` AS `ModifiedAt0`, `c`.`PostalCode`
+    FROM `Orders` AS `o`
+    INNER JOIN (
+        SELECT `a`.`Id`, `a`.`Email`, `a`.`PhoneNumber`, `a`.`Name`
+        FROM `AspNetUsers` AS `a`
+        WHERE `a`.`Discriminator` = 'Customer'
+    ) AS `t` ON `o`.`CustomerId` = `t`.`Id`
+    INNER JOIN `CustomerAddresses` AS `c` ON `o`.`CustomerAddressId` = `c`.`Id`
+    WHERE `o`.`OrderNumber` = @__8__locals1_orderNumber_0
+    LIMIT 1
+) AS `t0`
+LEFT JOIN `Payments` AS `p` ON `t0`.`Id` = `p`.`OrderId`
+LEFT JOIN (
+    SELECT `p0`.`Status`, `p0`.`Amount`, `p0`.`CreatedAt`, `p0`.`Id`, `p0`.`PaymentDate`, `p0`.`PaymentMethodId`, `p0`.`PaymentProviderId`, `p1`.`Name` AS `PaymentMethod`, `p1`.`Id` AS `Id0`, `p0`.`OrderId`
+    FROM `Payments` AS `p0`
+    INNER JOIN `PaymentMethods` AS `p1` ON `p0`.`PaymentMethodId` = `p1`.`Id`
+) AS `t1` ON `t0`.`Id` = `t1`.`OrderId`
+LEFT JOIN (
+    SELECT `o0`.`Id`, `o0`.`CreatedAt`, `o0`.`ModifiedAt`, `o0`.`Quantity`, `o0`.`UnitPrice`, `o0`.`TotalPrice`, `o0`.`OrderedAt`, `p2`.`Id` AS `Id0`, `p2`.`Name`, `p2`.`Price`, `p2`.`IsActive`, CASE
+        WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN ROUND(`p2`.`Price` - ((`d`.`DiscountPercent` / 100.0) * `p2`.`Price`))
+        ELSE `p2`.`Price`
+    END AS `FinalPrice`, CASE
+        WHEN (`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`DiscountPercent`
+        ELSE 0.0
+    END AS `DiscountPrecentage`, COALESCE((
+        SELECT `i`.`Url`
+        FROM `Images` AS `i`
+        WHERE (`p2`.`Id` = `i`.`ProductId`) AND `i`.`DeletedAt` IS NULL
+        LIMIT 1), '') AS `MainImageUrl`, `o0`.`ProductVariantId` AS `Id1`, `p3`.`Color`, COALESCE(`p3`.`CreatedAt`, TIMESTAMP '0001-01-01 00:00:00') AS `CreatedAt0`, COALESCE(`p3`.`ModifiedAt`, TIMESTAMP '0001-01-01 00:00:00') AS `ModifiedAt0`, `p3`.`Size`, `p3`.`DeletedAt`, COALESCE(`p3`.`Length`, 0) AS `Length`, COALESCE(`p3`.`Waist`, 0) AS `Waist`, `d`.`Id` AS `Id2`, `p3`.`Id` AS `Id3`, `o0`.`OrderId`
+    FROM `OrderItem` AS `o0`
+    INNER JOIN `Products` AS `p2` ON `o0`.`ProductId` = `p2`.`Id`
+    LEFT JOIN `Discount` AS `d` ON `p2`.`DiscountId` = `d`.`Id`
+    INNER JOIN `ProductVariants` AS `p3` ON `o0`.`ProductVariantId` = `p3`.`Id`
+) AS `t2` ON `t0`.`Id` = `t2`.`OrderId`
+ORDER BY `t0`.`Id`, `t0`.`Id0`, `t0`.`Id1`, `p`.`Id`, `t1`.`Id`, `t1`.`Id0`, `t2`.`Id`, `t2`.`Id0`, `t2`.`Id2`
+2025-09-23 04:07:31.658 +03:00 [INF] Order ORD-20250920060933-5549 retrieved successfully for user ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:07:31.732 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.OrderDtos.OrderDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-09-23 04:07:32.030 +03:00 [INF] Executed action E_Commerce.Controllers.OrderController.GetOrderByNumber (E-Commerce) in 3321.4665ms
+2025-09-23 04:07:32.149 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.OrderController.GetOrderByNumber (E-Commerce)'
+2025-09-23 04:07:32.162 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/Order/number/ORD-20250920060933-5549 - 200 2123 application/json; charset=utf-8 3712.7347ms
+2025-09-23 04:08:18.947 +03:00 [INF] Setting cache for key: order:number:ORD-20250920060933-5549_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 04:08:19.260 +03:00 [INF] Cache set successfully for key: order:number:ORD-20250920060933-5549_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 04:38:49.308 +03:00 [WRN] The foreign key property 'Customer.ImageId1' was created in shadow state because a conflicting property with the simple name 'ImageId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-09-23 04:38:51.132 +03:00 [INF] Executed DbCommand (111ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-23 04:38:51.901 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-09-23 04:38:52.079 +03:00 [INF] Executed DbCommand (86ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-09-23 04:38:52.195 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-09-23 04:38:52.223 +03:00 [INF] Starting data seeding...
+2025-09-23 04:38:52.283 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-09-23 04:38:52.737 +03:00 [INF] DB tables already exist. Exit install
+2025-09-23 04:38:53.187 +03:00 [INF] Executed DbCommand (101ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-09-23 04:38:53.244 +03:00 [INF] Role 'Admin' already exists.
+2025-09-23 04:38:53.389 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-09-23 04:38:53.397 +03:00 [INF] Role 'User' already exists.
+2025-09-23 04:38:53.558 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-23 04:38:53.648 +03:00 [INF] Admin user already exists. Skipping provider/method creation.
+2025-09-23 04:38:53.651 +03:00 [INF] Data seeding completed successfully.
+2025-09-23 04:38:54.883 +03:00 [INF] Now listening on: http://localhost:5069
+2025-09-23 04:38:54.981 +03:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-09-23 04:38:55.309 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-09-23 04:38:55.428 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-09-23 04:38:55.436 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-09-23 04:38:55.488 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-09-23 04:38:55.649 +03:00 [INF] Server mrrobot:12080:39425776 successfully announced in 152.8709 ms
+2025-09-23 04:38:55.903 +03:00 [INF] Hosting environment: Development
+2025-09-23 04:38:55.912 +03:00 [INF] Server mrrobot:12080:39425776 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-09-23 04:38:55.915 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-09-23 04:38:55.978 +03:00 [INF] Server mrrobot:12080:39425776 all the dispatchers started
+2025-09-23 04:38:56.106 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-09-23 04:38:56.318 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 212.7753ms
+2025-09-23 04:38:56.408 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-09-23 04:38:56.426 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 18.0988ms
+2025-09-23 04:38:56.454 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-09-23 04:38:56.465 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 10.923ms
+2025-09-23 04:38:56.497 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-09-23 04:38:56.535 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 37.5659ms
+2025-09-23 04:38:57.570 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-09-23 04:38:57.750 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 180.0219ms
+2025-09-23 04:39:06.778 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json 70
+2025-09-23 04:39:06.787 +03:00 [WRN] Failed to determine the https port for redirect.
+2025-09-23 04:39:06.925 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 04:39:07.120 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-09-23 04:39:07.227 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 401 null application/json 449.0933ms
+2025-09-23 04:39:15.145 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json 70
+2025-09-23 04:39:15.161 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 04:39:15.169 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-09-23 04:39:15.192 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commerce.DtoModels.AccountDtos.LoginDTo) on controller E_Commerce.Controllers.AccountController (E-Commerce).
+2025-09-23 04:39:15.665 +03:00 [INF] In LoginAsync Method 
+2025-09-23 04:39:15.849 +03:00 [INF] Executed DbCommand (77ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-23 04:39:16.273 +03:00 [INF] 🔐 Generating Access Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:39:16.294 +03:00 [INF] 🔐 Generating Access Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:39:16.486 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-09-23 04:39:16.649 +03:00 [INF] Executed DbCommand (75ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-23 04:39:16.979 +03:00 [INF] Executed DbCommand (85ms) [Parameters=[@p22='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p23='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = Int32), @p10='?' (DbType = DateTime), @p11='?' (DbType = Boolean), @p12='?' (DbType = DateTimeOffset), @p13='?' (Size = 4000), @p14='?' (Size = 256), @p15='?' (Size = 256), @p16='?' (Size = 4000), @p17='?' (Size = 4000), @p18='?' (DbType = Boolean), @p19='?' (Size = 4000), @p20='?' (DbType = Boolean), @p21='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `ImageId1` = @p9, `LastVisit` = @p10, `LockoutEnabled` = @p11, `LockoutEnd` = @p12, `Name` = @p13, `NormalizedEmail` = @p14, `NormalizedUserName` = @p15, `PasswordHash` = @p16, `PhoneNumber` = @p17, `PhoneNumberConfirmed` = @p18, `SecurityStamp` = @p19, `TwoFactorEnabled` = @p20, `UserName` = @p21
+WHERE `Id` = @p22 AND `ConcurrencyStamp` = @p23;
+SELECT ROW_COUNT();
+2025-09-23 04:39:17.213 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-09-23 04:39:17.236 +03:00 [INF] ✅ Access Token generated successfully for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:39:17.241 +03:00 [INF] 🔑 Generating Refresh Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:39:17.465 +03:00 [INF] ✅ RefreshToken generated and stored for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:39:17.559 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-09-23 04:39:17.743 +03:00 [INF] Executed action E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce) in 2536.0798ms
+2025-09-23 04:39:17.922 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-09-23 04:39:17.931 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 200 1251 application/json; charset=utf-8 2785.466ms
+2025-09-23 04:47:06.294 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json 70
+2025-09-23 04:47:06.309 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 04:47:06.313 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-09-23 04:47:06.316 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commerce.DtoModels.AccountDtos.LoginDTo) on controller E_Commerce.Controllers.AccountController (E-Commerce).
+2025-09-23 04:47:06.327 +03:00 [INF] In LoginAsync Method 
+2025-09-23 04:47:06.478 +03:00 [INF] Executed DbCommand (75ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-23 04:47:06.587 +03:00 [INF] 🔐 Generating Access Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:47:06.589 +03:00 [INF] 🔐 Generating Access Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:47:06.781 +03:00 [INF] Executed DbCommand (104ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-09-23 04:47:07.476 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-23 04:47:07.652 +03:00 [INF] Executed DbCommand (75ms) [Parameters=[@p22='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p23='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = Int32), @p10='?' (DbType = DateTime), @p11='?' (DbType = Boolean), @p12='?' (DbType = DateTimeOffset), @p13='?' (Size = 4000), @p14='?' (Size = 256), @p15='?' (Size = 256), @p16='?' (Size = 4000), @p17='?' (Size = 4000), @p18='?' (DbType = Boolean), @p19='?' (Size = 4000), @p20='?' (DbType = Boolean), @p21='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `ImageId1` = @p9, `LastVisit` = @p10, `LockoutEnabled` = @p11, `LockoutEnd` = @p12, `Name` = @p13, `NormalizedEmail` = @p14, `NormalizedUserName` = @p15, `PasswordHash` = @p16, `PhoneNumber` = @p17, `PhoneNumberConfirmed` = @p18, `SecurityStamp` = @p19, `TwoFactorEnabled` = @p20, `UserName` = @p21
+WHERE `Id` = @p22 AND `ConcurrencyStamp` = @p23;
+SELECT ROW_COUNT();
+2025-09-23 04:47:07.852 +03:00 [INF] Executed DbCommand (86ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-09-23 04:47:07.934 +03:00 [INF] ✅ Access Token generated successfully for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:47:07.935 +03:00 [INF] 🔑 Generating Refresh Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:47:08.147 +03:00 [INF] ✅ RefreshToken generated and stored for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:47:08.154 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-09-23 04:47:08.206 +03:00 [INF] Executed action E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce) in 1885.2252ms
+2025-09-23 04:47:08.265 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-09-23 04:47:08.272 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 200 1251 application/json; charset=utf-8 1978.2685ms
+2025-09-23 04:47:58.608 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/Account/refresh-token - null null
+2025-09-23 04:47:58.616 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 04:47:58.627 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.AccountController.RefreshTokenAsync (E-Commerce)'
+2025-09-23 04:47:58.637 +03:00 [INF] Route matched with {action = "RefreshTokenAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.TokenDtos.TokensDto]]] RefreshTokenAsync() on controller E_Commerce.Controllers.AccountController (E-Commerce).
+2025-09-23 04:47:58.667 +03:00 [INF] In RefreshTokenAsync Method
+2025-09-23 04:47:58.673 +03:00 [INF] 🔄 RefreshTokenAsync started with token: 6HH685FiX7BWMp6bprxELF4eSI3GnyTGX94jlzd6LbMZyzKoTcwaq-6PZU6lWoVcQQPsexVyozUH93mw0VFkSQ
+2025-09-23 04:47:58.675 +03:00 [INF] 🔍 Validating refresh token: 6HH685FiX7BWMp6bprxELF4eSI3GnyTGX94jlzd6LbMZyzKoTcwaq-6PZU6lWoVcQQPsexVyozUH93mw0VFkSQ
+2025-09-23 04:47:59.039 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__userIdStored_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userIdStored_0))
+2025-09-23 04:47:59.070 +03:00 [INF] ✅ Refresh token is valid for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:47:59.548 +03:00 [INF] 🗑️ Successfully removed RefreshToken for token: 6HH685FiX7BWMp6bprxELF4eSI3GnyTGX94jlzd6LbMZyzKoTcwaq-6PZU6lWoVcQQPsexVyozUH93mw0VFkSQ
+2025-09-23 04:47:59.560 +03:00 [INF] 🔐 Generating Access Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:47:59.726 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__p_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__p_0)
+LIMIT 1
+2025-09-23 04:47:59.736 +03:00 [INF] 🔐 Generating Access Token for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:47:59.885 +03:00 [INF] Executed DbCommand (76ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-09-23 04:48:00.035 +03:00 [INF] Executed DbCommand (76ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`ImageId1`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-09-23 04:48:00.187 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[@p22='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p23='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = Int32), @p10='?' (DbType = DateTime), @p11='?' (DbType = Boolean), @p12='?' (DbType = DateTimeOffset), @p13='?' (Size = 4000), @p14='?' (Size = 256), @p15='?' (Size = 256), @p16='?' (Size = 4000), @p17='?' (Size = 4000), @p18='?' (DbType = Boolean), @p19='?' (Size = 4000), @p20='?' (DbType = Boolean), @p21='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `ImageId1` = @p9, `LastVisit` = @p10, `LockoutEnabled` = @p11, `LockoutEnd` = @p12, `Name` = @p13, `NormalizedEmail` = @p14, `NormalizedUserName` = @p15, `PasswordHash` = @p16, `PhoneNumber` = @p17, `PhoneNumberConfirmed` = @p18, `SecurityStamp` = @p19, `TwoFactorEnabled` = @p20, `UserName` = @p21
+WHERE `Id` = @p22 AND `ConcurrencyStamp` = @p23;
+SELECT ROW_COUNT();
+2025-09-23 04:48:00.339 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-09-23 04:48:00.348 +03:00 [INF] ✅ Access Token generated successfully for User ID: ac03a6c3-9450-420a-9e6e-ea8902c018c5
+2025-09-23 04:48:00.351 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-09-23 04:48:00.357 +03:00 [INF] Executed action E_Commerce.Controllers.AccountController.RefreshTokenAsync (E-Commerce) in 1718.3054ms
+2025-09-23 04:48:00.359 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.AccountController.RefreshTokenAsync (E-Commerce)'
+2025-09-23 04:48:00.369 +03:00 [INF] The response could not be cached for this request.
+2025-09-23 04:48:00.371 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/Account/refresh-token - 200 1248 application/json; charset=utf-8 1763.1001ms
+2025-09-23 04:48:10.215 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/Account/refresh-token - null null
+2025-09-23 04:48:10.240 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 04:48:10.242 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.AccountController.RefreshTokenAsync (E-Commerce)'
+2025-09-23 04:48:10.246 +03:00 [INF] Route matched with {action = "RefreshTokenAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.TokenDtos.TokensDto]]] RefreshTokenAsync() on controller E_Commerce.Controllers.AccountController (E-Commerce).
+2025-09-23 04:48:10.255 +03:00 [INF] In RefreshTokenAsync Method
+2025-09-23 04:48:10.256 +03:00 [INF] 🔄 RefreshTokenAsync started with token: 6HH685FiX7BWMp6bprxELF4eSI3GnyTGX94jlzd6LbMZyzKoTcwaq-6PZU6lWoVcQQPsexVyozUH93mw0VFkSQ
+2025-09-23 04:48:10.258 +03:00 [INF] 🔍 Validating refresh token: 6HH685FiX7BWMp6bprxELF4eSI3GnyTGX94jlzd6LbMZyzKoTcwaq-6PZU6lWoVcQQPsexVyozUH93mw0VFkSQ
+2025-09-23 04:48:10.475 +03:00 [WRN] ❌ Refresh token is invalid or expired
+2025-09-23 04:48:10.491 +03:00 [WRN] Failed to refresh token. Removing refresh token.
+2025-09-23 04:48:10.713 +03:00 [WRN] ⚠️ Failed to remove RefreshToken for token: 6HH685FiX7BWMp6bprxELF4eSI3GnyTGX94jlzd6LbMZyzKoTcwaq-6PZU6lWoVcQQPsexVyozUH93mw0VFkSQ
+2025-09-23 04:48:11.587 +03:00 [INF] Executing UnauthorizedObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-09-23 04:48:11.611 +03:00 [INF] Executed action E_Commerce.Controllers.AccountController.RefreshTokenAsync (E-Commerce) in 1357.3166ms
+2025-09-23 04:48:11.675 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.AccountController.RefreshTokenAsync (E-Commerce)'
+2025-09-23 04:48:11.693 +03:00 [INF] The response could not be cached for this request.
+2025-09-23 04:48:11.718 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/Account/refresh-token - 401 712 application/json; charset=utf-8 1503.2333ms
+2025-09-23 05:00:09.691 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:00:09.973 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:00:13.913 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:00:14.067 +03:00 [INF] Setting cache for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:00:14.129 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:00:14.283 +03:00 [INF] Cache set successfully for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False with tags: [subcategorylist]
+2025-09-23 05:00:17.170 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:00:17.414 +03:00 [INF] Setting cache for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:00:17.653 +03:00 [INF] Setting cache for key: collection:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:17.736 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 05:00:17.745 +03:00 [INF] Cache set successfully for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False with tags: [subcategorylist]
+2025-09-23 05:00:17.852 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:18.223 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:00:18.224 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:00:18.245 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:18.446 +03:00 [INF] Cache set successfully for key: collection:6_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:00:18.471 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:00:18.485 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:00:18.488 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:00:18.488 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:00:21.071 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:00:21.461 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:00:41.629 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:00:41.854 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:00:41.929 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:41.939 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:41.945 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:42.243 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:00:42.306 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:00:42.321 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:00:42.322 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:00:42.489 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:00:44.678 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:00:44.900 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:00:44.971 +03:00 [INF] Setting cache for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:00:45.105 +03:00 [INF] Setting cache for key: collection:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:45.115 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:00:45.116 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:00:45.243 +03:00 [INF] Cache set successfully for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False with tags: [subcategorylist]
+2025-09-23 05:00:45.279 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:45.403 +03:00 [INF] Cache set successfully for key: collection:6_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:00:45.411 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 05:00:45.411 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:00:45.501 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:00:48.182 +03:00 [INF] Setting cache for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:00:48.192 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:00:48.462 +03:00 [INF] Cache set successfully for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False with tags: [subcategorylist]
+2025-09-23 05:00:48.466 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:00:48.572 +03:00 [INF] Setting cache for key: collection:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:48.681 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:00:48.713 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:00:48.805 +03:00 [INF] Cache set successfully for key: collection:6_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:00:48.854 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:48.894 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:00:48.928 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 05:00:49.073 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:00:51.340 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:51.359 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:51.556 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:00:51.607 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:00:51.692 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:00:51.778 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:00:51.860 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:51.956 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:51.960 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:00:52.003 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:_search:_page:1_pageSize:10_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:00:52.106 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:00:52.170 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:00:52.242 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:52.461 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:00:52.647 +03:00 [INF] Setting cache for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:00:52.793 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:00:52.957 +03:00 [INF] Cache set successfully for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False with tags: [subcategorylist]
+2025-09-23 05:00:53.117 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:00:54.363 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:00:54.556 +03:00 [INF] Setting cache for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:00:54.576 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:00:54.763 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:00:54.771 +03:00 [INF] Cache set successfully for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False with tags: [subcategorylist]
+2025-09-23 05:00:54.844 +03:00 [INF] Setting cache for key: collection:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:54.940 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:00:54.981 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 05:00:55.060 +03:00 [INF] Cache set successfully for key: collection:6_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:00:55.166 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:00:55.558 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:55.852 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:00:55.903 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:00:56.104 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:00:57.327 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:00:57.549 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:07:58.526 +03:00 [INF] Setting cache for key: collection:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:07:58.750 +03:00 [INF] Cache set successfully for key: collection:6_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:08:00.670 +03:00 [INF] Setting cache for key: collection:3_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:08:00.892 +03:00 [INF] Cache set successfully for key: collection:3_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:08:03.212 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:08:04.220 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:09:32.880 +03:00 [INF] Setting cache for key: order:filter:user:all_deleted:all_page:1_size:200_status:all
+2025-09-23 05:09:33.183 +03:00 [INF] Cache set successfully for key: order:filter:user:all_deleted:all_page:1_size:200_status:all with tags: [order]
+2025-09-23 05:09:33.530 +03:00 [INF] Setting cache for key: order:id:176_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:33.672 +03:00 [INF] Setting cache for key: order:id:180_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:33.751 +03:00 [INF] Setting cache for key: order:id:177_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:33.800 +03:00 [INF] Cache set successfully for key: order:id:176_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:34.011 +03:00 [INF] Cache set successfully for key: order:id:180_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:34.029 +03:00 [INF] Cache set successfully for key: order:id:177_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:34.425 +03:00 [INF] Setting cache for key: order:id:179_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:34.654 +03:00 [INF] Cache set successfully for key: order:id:179_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:34.885 +03:00 [INF] Setting cache for key: order:id:175_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:34.979 +03:00 [INF] Setting cache for key: order:id:170_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:34.997 +03:00 [INF] Setting cache for key: order:id:174_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:35.108 +03:00 [INF] Cache set successfully for key: order:id:175_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:35.201 +03:00 [INF] Cache set successfully for key: order:id:170_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:35.217 +03:00 [INF] Cache set successfully for key: order:id:174_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:36.719 +03:00 [INF] Setting cache for key: order:id:178_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:36.790 +03:00 [INF] Setting cache for key: order:id:172_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:36.810 +03:00 [INF] Setting cache for key: order:id:173_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:36.937 +03:00 [INF] Setting cache for key: order:id:166_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:37.056 +03:00 [INF] Cache set successfully for key: order:id:178_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:37.074 +03:00 [INF] Cache set successfully for key: order:id:172_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:37.079 +03:00 [INF] Cache set successfully for key: order:id:173_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:37.235 +03:00 [INF] Cache set successfully for key: order:id:166_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:37.280 +03:00 [INF] Setting cache for key: order:id:167_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:37.339 +03:00 [INF] Setting cache for key: order:id:171_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:37.400 +03:00 [INF] Setting cache for key: order:id:159_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:37.639 +03:00 [INF] Cache set successfully for key: order:id:167_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:37.654 +03:00 [INF] Cache set successfully for key: order:id:171_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:37.663 +03:00 [INF] Cache set successfully for key: order:id:159_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:37.756 +03:00 [INF] Setting cache for key: order:id:157_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:37.937 +03:00 [INF] Setting cache for key: order:id:169_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:37.977 +03:00 [INF] Cache set successfully for key: order:id:157_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:38.172 +03:00 [INF] Cache set successfully for key: order:id:169_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:38.416 +03:00 [INF] Setting cache for key: order:id:133_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:38.667 +03:00 [INF] Setting cache for key: order:id:134_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True
+2025-09-23 05:09:38.689 +03:00 [INF] Cache set successfully for key: order:id:133_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:09:38.885 +03:00 [INF] Cache set successfully for key: order:id:134_user:ac03a6c3-9450-420a-9e6e-ea8902c018c5_admin:True with tags: [order]
+2025-09-23 05:12:34.893 +03:00 [INF] Setting cache for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:12:34.934 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:12:34.995 +03:00 [INF] Setting cache for key: collection:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:12:35.117 +03:00 [INF] Cache set successfully for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False with tags: [subcategorylist]
+2025-09-23 05:12:35.152 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:12:35.281 +03:00 [INF] Cache set successfully for key: collection:6_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:12:35.357 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:12:35.509 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:12:35.575 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:12:35.661 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 05:12:35.926 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:12:35.942 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 05:12:35.997 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:12:36.223 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:12:36.464 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:12:36.688 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:12:37.471 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:12:37.599 +03:00 [INF] Setting cache for key: collection:3_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:12:37.691 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:12:37.825 +03:00 [INF] Cache set successfully for key: collection:3_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:12:38.024 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:12:38.246 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:12:38.427 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:12:38.723 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:13:30.184 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:13:30.414 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:13:32.091 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:13:34.119 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:17:34.417 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:17:34.778 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:17:37.771 +03:00 [INF] Setting cache for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:17:37.857 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:17:37.922 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:17:37.922 +03:00 [INF] Setting cache for key: collection:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:17:38.127 +03:00 [INF] Setting cache for key: collection:3_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:17:38.170 +03:00 [INF] Cache set successfully for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False with tags: [subcategorylist]
+2025-09-23 05:17:38.174 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 05:17:38.185 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 05:17:38.190 +03:00 [INF] Cache set successfully for key: collection:6_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:17:38.420 +03:00 [INF] Cache set successfully for key: collection:3_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:17:40.273 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:17:40.495 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:17:48.939 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:17:49.490 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 05:18:09.620 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:18:10.078 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 05:18:20.191 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:18:20.500 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 05:18:43.751 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:18:43.974 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:18:52.738 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:18:53.091 +03:00 [INF] Setting cache for key: collection:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:18:53.099 +03:00 [INF] Setting cache for key: product:4:variants:search:color::length::waist::size::active:True:deleted:False
+2025-09-23 05:18:53.107 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:18:53.107 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:18:53.280 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:18:53.763 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:18:53.927 +03:00 [INF] Cache set successfully for key: collection:8_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:18:54.419 +03:00 [INF] Setting cache for key: variant:6
+2025-09-23 05:18:54.464 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:18:54.464 +03:00 [INF] Cache set successfully for key: product:4:variants:search:color::length::waist::size::active:True:deleted:False with tags: [product:4, variantdata]
+2025-09-23 05:18:55.048 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:18:55.263 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:18:55.294 +03:00 [INF] Cache set successfully for key: variant:6 with tags: [product:4, variantdata]
+2025-09-23 05:19:44.220 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:19:44.434 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:_search:_page:1_pageSize:10_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:19:44.765 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:19:44.984 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:19:45.720 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:19:45.733 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:19:45.933 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:19:45.949 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:19:45.998 +03:00 [INF] Setting cache for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:19:46.217 +03:00 [INF] Cache set successfully for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False with tags: [subcategorylist]
+2025-09-23 05:19:46.722 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:19:46.973 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:20:07.841 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:20:07.861 +03:00 [INF] Setting cache for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:20:08.060 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:_search:_page:1_pageSize:10_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:20:08.083 +03:00 [INF] Cache set successfully for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False with tags: [subcategorylist]
+2025-09-23 05:21:05.016 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:21:05.230 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:21:08.044 +03:00 [INF] Setting cache for key: subcategory:5_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:21:08.268 +03:00 [INF] Cache set successfully for key: subcategory:5_active:True_deleted:False_IsAdmin:False with tags: [subcategorywithdata]
+2025-09-23 05:21:12.023 +03:00 [INF] Setting cache for key: variant:23
+2025-09-23 05:21:12.237 +03:00 [INF] Cache set successfully for key: variant:23 with tags: [product:13, variantdata]
+2025-09-23 05:22:02.815 +03:00 [INF] Setting cache for key: collection:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:22:03.043 +03:00 [INF] Cache set successfully for key: collection:8_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:26:54.941 +03:00 [INF] Setting cache for key: collection:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:26:55.126 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:26:55.294 +03:00 [INF] Cache set successfully for key: collection:6_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:26:55.348 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:26:55.611 +03:00 [INF] Setting cache for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:26:55.827 +03:00 [INF] Cache set successfully for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False with tags: [subcategorylist]
+2025-09-23 05:26:56.026 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:26:56.242 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 05:26:56.445 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:26:56.859 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:26:58.627 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:26:58.716 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:26:58.762 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:26:58.843 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:26:58.884 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:26:58.935 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:26:58.974 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:26:59.101 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:27:00.670 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:27:00.894 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_50_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:27:01.499 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:27:01.567 +03:00 [INF] Setting cache for key: collection:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:27:01.572 +03:00 [INF] Setting cache for key: product:18:variants:search:color::length::waist::size::active:True:deleted:False
+2025-09-23 05:27:01.718 +03:00 [INF] Setting cache for key: variant:24
+2025-09-23 05:27:01.772 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:27:01.892 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:27:01.923 +03:00 [INF] Cache set successfully for key: collection:8_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:27:01.929 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:27:01.957 +03:00 [INF] Cache set successfully for key: product:18:variants:search:color::length::waist::size::active:True:deleted:False with tags: [product:18, variantdata]
+2025-09-23 05:27:02.022 +03:00 [INF] Cache set successfully for key: variant:24 with tags: [product:18, variantdata]
+2025-09-23 05:27:02.085 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:27:02.293 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:27:02.556 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:27:02.771 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:27:40.725 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:27:40.866 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:27:40.953 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:27:41.113 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 05:27:43.441 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:27:43.660 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:27:46.043 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:27:46.251 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:27:46.259 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:27:46.334 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:27:46.442 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:27:46.497 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:27:46.553 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:27:46.672 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:27:49.150 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:27:49.404 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:28:09.978 +03:00 [INF] Setting cache for key: collection:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:28:09.978 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:28:09.992 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:28:10.209 +03:00 [INF] Cache set successfully for key: collection:8_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:28:10.209 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:28:10.209 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:28:10.979 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:28:11.343 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:28:48.546 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[@__productid_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`CreatedAt`, `t`.`DeletedAt`, `t`.`Description`, `t`.`DiscountId`, `t`.`Gender`, `t`.`IsActive`, `t`.`ModifiedAt`, `t`.`Name`, `t`.`Price`, `t`.`Quantity`, `t`.`RowVersion`, `t`.`SubCategoryId`, `t`.`fitType`, `p0`.`Id`, `p0`.`Color`, `p0`.`CreatedAt`, `p0`.`DeletedAt`, `p0`.`IsActive`, `p0`.`Length`, `p0`.`ModifiedAt`, `p0`.`ProductId`, `p0`.`Quantity`, `p0`.`RowVersion`, `p0`.`Size`, `p0`.`Waist`
+FROM (
+    SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`DeletedAt`, `p`.`Description`, `p`.`DiscountId`, `p`.`Gender`, `p`.`IsActive`, `p`.`ModifiedAt`, `p`.`Name`, `p`.`Price`, `p`.`Quantity`, `p`.`RowVersion`, `p`.`SubCategoryId`, `p`.`fitType`
+    FROM `Products` AS `p`
+    WHERE (`p`.`Id` = @__productid_0) AND `p`.`DeletedAt` IS NULL
+    LIMIT 1
+) AS `t`
+LEFT JOIN `ProductVariants` AS `p0` ON `t`.`Id` = `p0`.`ProductId`
+ORDER BY `t`.`Id`
+2025-09-23 05:28:48.731 +03:00 [INF] Removing cache by tags: [variantlist, variantdata]
+2025-09-23 05:28:48.871 +03:00 [INF] Removing cache by tags: [order]
+2025-09-23 05:28:48.997 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Int32), @p2='?' (Size = 8) (DbType = Binary)], CommandType='"Text"', CommandTimeout='30']
+UPDATE `Products` SET `Quantity` = @p0
+WHERE `Id` = @p1 AND `RowVersion` IS NULL;
+SELECT `RowVersion`
+FROM `Products`
+WHERE ROW_COUNT() = 1 AND `Id` = @p1;
+2025-09-23 05:28:51.162 +03:00 [INF] Removed 8 cache entries for tags: [variantlist, variantdata]
+2025-09-23 05:29:15.510 +03:00 [INF] Removed 118 cache entries for tags: [order]
+2025-09-23 05:32:36.558 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/Products?search=string&isActive=true&includeDeleted=true&page=1&pageSize=10 - null null
+2025-09-23 05:32:36.564 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 05:32:36.569 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.ProductController.GetProducts (E-Commerce)'
+2025-09-23 05:32:36.589 +03:00 [INF] Route matched with {action = "GetProducts", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[E_Commerce.DtoModels.ProductDtos.ProductDto]]]] GetProducts(System.String, System.Nullable`1[System.Boolean], System.Nullable`1[System.Boolean], Int32, Int32) on controller E_Commerce.Controllers.ProductController (E-Commerce).
+2025-09-23 05:32:36.620 +03:00 [INF] Executing GetProducts
+2025-09-23 05:32:36.646 +03:00 [INF] Getting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":"string","Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_10_True_False_pageSize:10_page:1_tag:AdvancedSearch_IsAdmin:False
+2025-09-23 05:32:36.874 +03:00 [WRN] Cache miss for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":"string","Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_10_True_False_pageSize:10_page:1_tag:AdvancedSearch_IsAdmin:False
+2025-09-23 05:32:37.062 +03:00 [INF] Execute GetAll for entity Product
+2025-09-23 05:32:37.355 +03:00 [INF] Executed DbCommand (84ms) [Parameters=[@__8__locals1_searchCriteria_SearchTerm_0_contains='?' (Size = 20), @__8__locals1_searchCriteria_SearchTerm_0_contains_1='?' (Size = 50), @__p_2='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`Name`, `t`.`Description`, `t`.`Quantity`, `t`.`Gender`, `t`.`SubCategoryId`, `t`.`Price`, `t`.`CreatedAt`, `t`.`ModifiedAt`, `t`.`DeletedAt`, `t`.`fitType`, `t`.`IsActive`, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `t`.`Price` - ((`d`.`DiscountPercent` / 100.0) * `t`.`Price`)
+    ELSE `t`.`Price`
+END, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`EndDate`
+    ELSE NULL
+END, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`Name`
+    ELSE NULL
+END, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`DiscountPercent`
+    ELSE 0.0
+END, `d`.`Id`, `t0`.`Id`, `t0`.`Url`
+FROM (
+    SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`DeletedAt`, `p`.`Description`, `p`.`DiscountId`, `p`.`Gender`, `p`.`IsActive`, `p`.`ModifiedAt`, `p`.`Name`, `p`.`Price`, `p`.`Quantity`, `p`.`SubCategoryId`, `p`.`fitType`
+    FROM `Products` AS `p`
+    WHERE (`p`.`IsActive` AND (`p`.`DeletedAt` IS NULL)) AND ((`p`.`Name` LIKE @__8__locals1_searchCriteria_SearchTerm_0_contains) OR (`p`.`Description` LIKE @__8__locals1_searchCriteria_SearchTerm_0_contains_1))
+    ORDER BY `p`.`Name`
+    LIMIT @__p_2 OFFSET @__p_1
+) AS `t`
+LEFT JOIN `Discount` AS `d` ON `t`.`DiscountId` = `d`.`Id`
+LEFT JOIN (
+    SELECT `i`.`Id`, `i`.`Url`, `i`.`ProductId`
+    FROM `Images` AS `i`
+    WHERE `i`.`DeletedAt` IS NULL
+) AS `t0` ON `t`.`Id` = `t0`.`ProductId`
+ORDER BY `t`.`Name`, `t`.`Id`, `d`.`Id`
+2025-09-23 05:32:38.226 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[E_Commerce.DtoModels.ProductDtos.ProductDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-09-23 05:32:38.238 +03:00 [INF] Executed action E_Commerce.Controllers.ProductController.GetProducts (E-Commerce) in 1637.6687ms
+2025-09-23 05:32:38.241 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.ProductController.GetProducts (E-Commerce)'
+2025-09-23 05:32:38.243 +03:00 [INF] The response could not be cached for this request.
+2025-09-23 05:32:38.244 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/Products?search=string&isActive=true&includeDeleted=true&page=1&pageSize=10 - 200 658 application/json; charset=utf-8 1685.999ms
+2025-09-23 05:33:11.770 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/Products/1/Variants - null null
+2025-09-23 05:33:11.813 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-09-23 05:33:11.814 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.ProductVariantController.SearchVariants (E-Commerce)'
+2025-09-23 05:33:11.825 +03:00 [INF] Route matched with {action = "SearchVariants", controller = "ProductVariant"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[E_Commerce.DtoModels.ProductDtos.ProductVariantDto]]]] SearchVariants(Int32, System.String, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32], System.Nullable`1[E_Commerce.Enums.VariantSize], System.Nullable`1[System.Boolean], System.Nullable`1[System.Boolean]) on controller E_Commerce.Controllers.ProductVariantController (E-Commerce).
+2025-09-23 05:33:11.845 +03:00 [INF] Searching variants for product 1 with filters: color=, length=, waist=, size=, isActive=True, deletedOnly=False
+2025-09-23 05:33:11.847 +03:00 [INF] Getting cache for key: product:1:variants:search:color::length::waist::size::active:True:deleted:False
+2025-09-23 05:33:12.061 +03:00 [WRN] Cache miss for key: product:1:variants:search:color::length::waist::size::active:True:deleted:False
+2025-09-23 05:33:12.066 +03:00 [INF] Execute GetAll for entity ProductVariant
+2025-09-23 05:33:12.272 +03:00 [INF] Executed DbCommand (93ms) [Parameters=[@__productId_0='?' (DbType = Int32), @__isActive_Value_1='?' (DbType = Boolean)], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`Color`, `p`.`CreatedAt`, `p`.`DeletedAt`, `p`.`IsActive`, `p`.`Length`, `p`.`ModifiedAt`, `p`.`ProductId`, `p`.`Quantity`, `p`.`RowVersion`, `p`.`Size`, `p`.`Waist`
+FROM `ProductVariants` AS `p`
+WHERE ((`p`.`ProductId` = @__productId_0) AND (`p`.`IsActive` = @__isActive_Value_1)) AND `p`.`DeletedAt` IS NULL
+2025-09-23 05:33:12.550 +03:00 [INF] Caching search results for product 1
+2025-09-23 05:33:13.443 +03:00 [INF] Successfully retrieved 9 variants for product 1
+2025-09-23 05:33:13.446 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[E_Commerce.DtoModels.ProductDtos.ProductVariantDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-09-23 05:33:13.454 +03:00 [INF] Executed action E_Commerce.Controllers.ProductVariantController.SearchVariants (E-Commerce) in 1624.7615ms
+2025-09-23 05:33:13.466 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.ProductVariantController.SearchVariants (E-Commerce)'
+2025-09-23 05:33:13.479 +03:00 [INF] The response could not be cached for this request.
+2025-09-23 05:33:13.494 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/Products/1/Variants - 200 1770 application/json; charset=utf-8 1723.8108ms
+2025-09-23 05:36:22.071 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:36:22.417 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:36:22.486 +03:00 [INF] Setting cache for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:36:22.632 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:36:22.754 +03:00 [INF] Setting cache for key: collection:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:36:22.754 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:36:22.955 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:36:23.185 +03:00 [INF] Cache set successfully for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False with tags: [subcategorylist]
+2025-09-23 05:36:23.272 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 05:36:23.285 +03:00 [INF] Cache set successfully for key: collection:6_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:36:23.313 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:36:24.173 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:36:24.456 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:36:26.218 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:36:26.254 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:36:26.287 +03:00 [INF] Setting cache for key: collection:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:36:26.340 +03:00 [INF] Setting cache for key: product:18:variants:search:color::length::waist::size::active:True:deleted:False
+2025-09-23 05:36:26.581 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:36:27.109 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:36:27.329 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:36:27.416 +03:00 [INF] Cache set successfully for key: collection:8_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:36:27.446 +03:00 [INF] Cache set successfully for key: product:18:variants:search:color::length::waist::size::active:True:deleted:False with tags: [product:18, variantdata]
+2025-09-23 05:36:30.333 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:36:30.664 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:36:30.752 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:36:30.752 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:36:30.820 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:36:30.888 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:36:30.969 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:36:31.036 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:36:33.616 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:36:33.837 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:37:04.565 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:37:04.701 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:37:04.791 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:37:05.130 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:37:05.170 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:37:05.187 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:37:08.265 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:37:08.547 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:37:10.201 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:37:10.244 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:37:10.249 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:37:10.417 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:37:10.460 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:37:10.465 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:37:11.456 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:37:11.850 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:37:28.236 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:37:28.451 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:37:28.632 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:37:28.632 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:37:28.766 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:37:28.865 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:37:28.867 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:37:28.991 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:37:31.303 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:37:31.602 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:37:39.483 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:37:39.785 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:37:41.949 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:37:42.026 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:37:42.165 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:37:42.241 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:37:42.391 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:37:42.607 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:37:44.199 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:37:44.454 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:37:54.180 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:37:54.571 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:37:54.634 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:37:54.706 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:37:54.804 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:37:54.972 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:37:56.282 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:37:56.336 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:37:56.497 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:37:56.557 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:37:56.627 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:37:56.842 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:37:56.889 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:37:57.103 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:37:58.770 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:37:59.096 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:38:05.335 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:38:05.558 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:38:05.803 +03:00 [INF] Setting cache for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:38:06.099 +03:00 [INF] Cache set successfully for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False with tags: [subcategorylist]
+2025-09-23 05:40:09.159 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:40:09.426 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:41:02.011 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:41:02.494 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:41:02.672 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:41:02.709 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:41:03.324 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:41:03.471 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:41:03.911 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:41:03.961 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:41:04.921 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:41:05.488 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:42:13.382 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:42:14.443 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:42:16.173 +03:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-09-23 05:42:16.417 +03:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_100_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-09-23 05:42:18.579 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:42:18.795 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:42:19.273 +03:00 [INF] Setting cache for key: collection:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:42:19.482 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:42:19.523 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:42:19.942 +03:00 [INF] Cache set successfully for key: collection:8_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:42:19.952 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:42:19.965 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:42:56.770 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:42:56.809 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:42:56.815 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:42:56.982 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:42:57.025 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:42:57.036 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:43:02.094 +03:00 [INF] Setting cache for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:43:02.264 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:43:02.602 +03:00 [INF] Cache set successfully for key: subcategory:list_active:True_deleted:False_Search:_page:1_pageSize:10_IsAdmin:False with tags: [subcategorylist]
+2025-09-23 05:43:02.619 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:43:02.869 +03:00 [INF] Setting cache for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False
+2025-09-23 05:43:03.213 +03:00 [INF] Cache set successfully for key: collection:list_active:True_deleted:False_search:_page:1_pageSize:10_IsAdmin:False with tags: [collectionlist]
+2025-09-23 05:43:03.894 +03:00 [INF] Setting cache for key: collection:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:43:03.981 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:43:03.992 +03:00 [INF] Setting cache for key: category:6_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:43:04.228 +03:00 [INF] Cache set successfully for key: collection:6_active:True_deleted:False_IsAdmin:False with tags: [CollectionWithProduct]
+2025-09-23 05:43:04.231 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:43:04.602 +03:00 [INF] Cache set successfully for key: category:6_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:43:06.241 +03:00 [INF] Setting cache for key: category:4_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:43:06.310 +03:00 [INF] Setting cache for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False
+2025-09-23 05:43:06.349 +03:00 [INF] Setting cache for key: category:8_active:True_deleted:False_IsAdmin:False
+2025-09-23 05:43:06.455 +03:00 [INF] Cache set successfully for key: category:4_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]
+2025-09-23 05:43:06.528 +03:00 [INF] Cache set successfully for key: category:list_active:True_deleted:False_search:_page:1_pageSize:50_IsAdmin:False with tags: [categorylist]
+2025-09-23 05:43:06.575 +03:00 [INF] Cache set successfully for key: category:8_active:True_deleted:False_IsAdmin:False with tags: [categorywithdata]

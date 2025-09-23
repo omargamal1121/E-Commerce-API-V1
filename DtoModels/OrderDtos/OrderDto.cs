@@ -1,4 +1,5 @@
 using E_Commerce.DtoModels.CartDtos;
+using E_Commerce.DtoModels.CustomerAddressDtos;
 using E_Commerce.DtoModels.ImagesDtos;
 using E_Commerce.DtoModels.ProductDtos;
 using E_Commerce.DtoModels.Shared;
@@ -45,7 +46,8 @@ namespace E_Commerce.DtoModels.OrderDtos
 		public string FullName { get; set; } = string.Empty;
 		public string Email { get; set; } = string.Empty;
 		public string PhoneNumber { get; set; } = string.Empty;
-		public string Address { get; set; }= string.Empty;
+
+		public  CustomerAddressDto customerAddress { get; set; }
 
 	}
 
@@ -65,7 +67,7 @@ namespace E_Commerce.DtoModels.OrderDtos
     {
         public string CustomerId { get; set; } = string.Empty;
         public int PaymentMethodId { get; set; }
-        public PaymentMethodDto? PaymentMethod { get; set; }
+        public string? PaymentMethod { get; set; }
         public int PaymentProviderId { get; set; }
         public PaymentProviderDto? PaymentProvider { get; set; }
         public decimal Amount { get; set; }

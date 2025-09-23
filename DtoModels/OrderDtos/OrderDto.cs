@@ -73,7 +73,7 @@ namespace E_Commerce.DtoModels.OrderDtos
         public decimal Amount { get; set; }
         public DateTime PaymentDate { get; set; }
         public int OrderId { get; set; }
-        public PaymentStatus Status { get; set; } 
+        public string Status { get; set; } 
     }
 
     

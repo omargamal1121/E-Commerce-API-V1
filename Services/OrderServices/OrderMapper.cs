@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using E_Commerce.DtoModels.CustomerAddressDtos;
 using E_Commerce.DtoModels.OrderDtos;
 using E_Commerce.DtoModels.ProductDtos;
 using E_Commerce.Models;
@@ -42,14 +43,32 @@ namespace E_Commerce.Services.Order
                 PaymentDate=p.PaymentDate,
                 PaymentMethodId=p.PaymentMethodId,
                 PaymentProviderId= p.PaymentProviderId,
+                PaymentMethod=p.PaymentMethod.Name,
             }),
             Customer = order.Customer == null ? null : new CustomerDto
             {
                 Id = order.Customer.Id,
                 FullName = order.Customer.Name,
                 Email = order.Customer.Email,
-                PhoneNumber = order.Customer.PhoneNumber
+                PhoneNumber = order.Customer.PhoneNumber,
+                customerAddress= new CustomerAddressDto
+                {
+                    Id=order.CustomerAddress.Id,
+                    AdditionalNotes=order.CustomerAddress.AdditionalNotes,
+                    AddressType=order.CustomerAddress.AddressType,
+                    City= order.CustomerAddress.City,
+                    Country= order.CustomerAddress.Country,
+                    CreatedAt = order.CustomerAddress.CreatedAt,
+                    CustomerId= order.CustomerAddress.CustomerId,
+                    StreetAddress = order.CustomerAddress.StreetAddress,
+                    State= order.CustomerAddress.State,
+                    PhoneNumber= order.CustomerAddress.PhoneNumber,
+                    IsDefault= order.CustomerAddress.IsDefault,
+                    ModifiedAt= order.CustomerAddress.ModifiedAt,
+                    PostalCode= order.CustomerAddress.PostalCode,
+                }
             },
+            
 
             Items = order.Items.Select(item => new OrderItemDto
             {
@@ -70,7 +89,7 @@ namespace E_Commerce.Services.Order
                     FinalPrice = (item.Product.Discount != null && item.Product.Discount.IsActive && (item.Product.Discount.DeletedAt == null) && (item.Product.Discount.EndDate > DateTime.UtcNow)) ? Math.Round(item.Product.Price - (((item.Product.Discount.DiscountPercent) / 100) * item.Product.Price)) : item.Product.Price,
                     DiscountPrecentage = (item.Product.Discount != null && item.Product.Discount.IsActive && item.Product.Discount.EndDate > DateTime.UtcNow) ? item.Product.Discount.DiscountPercent : 0,
 
-                    MainImageUrl = item.Product.Images.FirstOrDefault(img => img.DeletedAt == null).Url ?? string.Empty,
+					MainImageUrl = item.Product.Images.FirstOrDefault(img => img.DeletedAt == null).Url ?? string.Empty,
                     productVariantForCartDto = new ProductVariantForCartDto
                     {
                         Id = item.ProductVariantId,

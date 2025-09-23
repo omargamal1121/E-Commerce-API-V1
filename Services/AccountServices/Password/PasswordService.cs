@@ -81,7 +81,6 @@ namespace E_Commerce.Services.AccountServices.Password
 				var user = await _userManager.FindByEmailAsync(email);
                 if (user != null)
                 {
-
 			    	var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 				    var encodedToken = System.Net.WebUtility.UrlEncode(token);
 					_backgroundJobClient.Enqueue<IAccountEmailService>(e =>

@@ -9592,9 +9592,8 @@
             "type": "string",
             "nullable": true
           },
-          "address": {
-            "type": "string",
-            "nullable": true
+          "customerAddress": {
+            "$ref": "#/components/schemas/CustomerAddressDto"
           }
         },
         "additionalProperties": false
@@ -10534,7 +10533,8 @@
             "format": "int32"
           },
           "paymentMethod": {
-            "$ref": "#/components/schemas/PaymentMethodDto"
+            "type": "string",
+            "nullable": true
           },
           "paymentProviderId": {
             "type": "integer",

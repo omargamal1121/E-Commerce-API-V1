@@ -156,7 +156,6 @@ D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\staticwebassets.build.
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\staticwebassets.build.json.cache
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\staticwebassets.development.json
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\staticwebassets.build.endpoints.json
-D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\swae.build.ex.cache
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\staticwebassets.upToDateCheck.txt
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\E-Commerce.csproj.Up2Date
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\E-Commerce.dll
@@ -164,3 +163,4 @@ D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\refint\E-Commerce.dll
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\E-Commerce.pdb
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\E-Commerce.genruntimeconfig.cache
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\ref\E-Commerce.dll
+D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\swae.build.ex.cache

@@ -10,6 +10,11 @@ namespace E_Commerce.Services.ProductServices
     public interface IProductsServices
     {
         // Core product operations (delegated to ProductCatalogService)
+        Task<Result<int>> CountProductsAsync(
+        bool? isActive = null,
+        bool? isDelete = null,
+        bool? inStock = null,
+        bool isAdmin = false);
         Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
         Task<Result<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId);
         Task<Result<List<BestSellingProductDto>>> GetBestSellersProductsWithCountAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null,bool IsAdmin=false);

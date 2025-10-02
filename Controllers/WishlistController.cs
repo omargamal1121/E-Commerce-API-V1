@@ -11,8 +11,9 @@ using E_Commerce.Services;
 namespace E_Commerce.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
-    public class WishlistController : ControllerBase
+    public class WishlistController : BaseController
     {
         private readonly IWishlistService _wishlistService;
         private readonly ILogger<WishlistController> _logger;
@@ -23,40 +24,8 @@ namespace E_Commerce.Controllers
             _logger = logger;
         }
 
-        private string GetUserId()
-        {
-            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
-        }
-
-        private List<string> GetModelErrors()
-        {
-            return ModelState.Values
-                .SelectMany(v => v.Errors)
-                .Select(e => e.ErrorMessage)
-                .ToList();
-        }
-
-        private ActionResult<ApiResponse<T>> HandleResult<T>(Result<T> result, string? actionName = null, int? id = null)
-        {
-            var apiResponse = result.Success
-                ? ApiResponse<T>.CreateSuccessResponse(result.Message, result.Data, result.StatusCode, warnings: result.Warnings)
-                : ApiResponse<T>.CreateErrorResponse(result.Message, new ErrorResponse("Error", result.Message), result.StatusCode, warnings: result.Warnings);
-
-            return result.StatusCode switch
-            {
-                200 => Ok(apiResponse),
-                201 => actionName != null && id.HasValue ? CreatedAtAction(actionName, new { id }, apiResponse) : StatusCode(201, apiResponse),
-                400 => BadRequest(apiResponse),
-                401 => Unauthorized(apiResponse),
-                404 => NotFound(apiResponse),
-                409 => Conflict(apiResponse),
-                _ => StatusCode(result.StatusCode, apiResponse)
-            };
-        }
-
-        // GET: api/wishlist
         [HttpGet]
-        [Authorize(Roles = "Customer,Admin")]
+
         public async Task<ActionResult<ApiResponse<List<E_Commerce.DtoModels.ProductDtos.WishlistItemDto>>>> GetWishlist([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
         {
             try
@@ -70,13 +39,7 @@ namespace E_Commerce.Controllers
                 }
 
                 var userId = GetUserId();
-                if (string.IsNullOrWhiteSpace(userId))
-                {
-                    return Unauthorized(ApiResponse<string>.CreateErrorResponse(
-                        "Authentication required",
-                        new ErrorResponse("Unauthorized", "User is not authenticated"),
-                        401));
-                }
+              
 
                 var result = await _wishlistService.GetWishlistAsync(userId, page, pageSize);
                 return HandleResult(result);
@@ -90,7 +53,7 @@ namespace E_Commerce.Controllers
 
         // POST: api/wishlist/{productId}
         [HttpPost("{productId:int}")]
-        [Authorize(Roles = "Customer,Admin")]
+
         public async Task<ActionResult<ApiResponse<bool>>> AddToWishlist([FromRoute] int productId)
         {
             try
@@ -104,14 +67,7 @@ namespace E_Commerce.Controllers
                 }
 
                 var userId = GetUserId();
-                if (string.IsNullOrWhiteSpace(userId))
-                {
-                    return Unauthorized(ApiResponse<string>.CreateErrorResponse(
-                        "Authentication required",
-                        new ErrorResponse("Unauthorized", "User is not authenticated"),
-                        401));
-                }
-
+               
                 var result = await _wishlistService.AddAsync(userId, productId);
                 return HandleResult(result, nameof(AddToWishlist));
             }
@@ -124,7 +80,7 @@ namespace E_Commerce.Controllers
 
         // DELETE: api/wishlist/{productId}
         [HttpDelete("{productId:int}")]
-        [Authorize(Roles = "Customer,Admin")]
+   
         public async Task<ActionResult<ApiResponse<bool>>> RemoveFromWishlist([FromRoute] int productId)
         {
             try
@@ -138,13 +94,7 @@ namespace E_Commerce.Controllers
                 }
 
                 var userId = GetUserId();
-                if (string.IsNullOrWhiteSpace(userId))
-                {
-                    return Unauthorized(ApiResponse<string>.CreateErrorResponse(
-                        "Authentication required",
-                        new ErrorResponse("Unauthorized", "User is not authenticated"),
-                        401));
-                }
+              
 
                 var result = await _wishlistService.RemoveAsync(userId, productId);
                 return HandleResult(result, nameof(RemoveFromWishlist), productId);
@@ -158,19 +108,13 @@ namespace E_Commerce.Controllers
 
         // DELETE: api/wishlist
         [HttpDelete]
-        [Authorize(Roles = "Customer,Admin")]
+
         public async Task<ActionResult<ApiResponse<bool>>> ClearWishlist()
         {
             try
             {
                 var userId = GetUserId();
-                if (string.IsNullOrWhiteSpace(userId))
-                {
-                    return Unauthorized(ApiResponse<string>.CreateErrorResponse(
-                        "Authentication required",
-                        new ErrorResponse("Unauthorized", "User is not authenticated"),
-                        401));
-                }
+              
 
                 var result = await _wishlistService.ClearAsync(userId);
                 return HandleResult(result, nameof(ClearWishlist));
@@ -182,9 +126,8 @@ namespace E_Commerce.Controllers
             }
         }
 
-        // GET: api/wishlist/contains/{productId}
         [HttpGet("contains/{productId:int}")]
-        [Authorize(Roles = "Customer,Admin")]
+
         public async Task<ActionResult<ApiResponse<bool>>> IsInWishlist([FromRoute] int productId)
         {
             try

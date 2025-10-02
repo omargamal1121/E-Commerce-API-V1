@@ -62,7 +62,7 @@ namespace E_Commerce.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
+                    Name = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Description = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -263,6 +263,7 @@ namespace E_Commerce.Migrations
                     SubCategoryId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     DiscountId = table.Column<int>(type: "int", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "binary(8)", rowVersion: true, nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     fitType = table.Column<int>(type: "int", nullable: false),
                     Gender = table.Column<int>(type: "int", nullable: false),
@@ -328,25 +329,25 @@ namespace E_Commerce.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Images_Collections_CollectionId",
                         column: x => x.CollectionId,
                         principalTable: "Collections",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Images_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Images_SubCategories_SubCategoryId",
                         column: x => x.SubCategoryId,
                         principalTable: "SubCategories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -416,8 +417,9 @@ namespace E_Commerce.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Color = table.Column<string>(type: "longtext", nullable: false)
+                    Color = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    RowVersion = table.Column<byte[]>(type: "binary(8)", rowVersion: true, nullable: true),
                     Size = table.Column<int>(type: "int", nullable: true),
                     Waist = table.Column<int>(type: "int", nullable: true),
                     Length = table.Column<int>(type: "int", nullable: true),
@@ -793,6 +795,7 @@ namespace E_Commerce.Migrations
                     ProductVariantId = table.Column<int>(type: "int", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    RowVersion = table.Column<byte[]>(type: "binary(8)", rowVersion: true, nullable: true),
                     AddedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     ModifiedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -845,6 +848,7 @@ namespace E_Commerce.Migrations
                     DeliveredAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CancelledAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     RestockedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "binary(8)", rowVersion: true, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     ModifiedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
@@ -941,6 +945,7 @@ namespace E_Commerce.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    RowVersion = table.Column<byte[]>(type: "binary(8)", rowVersion: true, nullable: true),
                     CustomerId = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PaymentMethodId = table.Column<int>(type: "int", nullable: false),
@@ -991,6 +996,7 @@ namespace E_Commerce.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    RowVersion = table.Column<byte[]>(type: "binary(8)", rowVersion: true, nullable: true),
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     CustomerId = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -1048,7 +1054,7 @@ namespace E_Commerce.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ProviderOrderId = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    RawData = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
+                    RawData = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     HmacVerified = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     ErrorMessage = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
@@ -1170,9 +1176,9 @@ namespace E_Commerce.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CartItems_CartId",
+                name: "IX_CartItems_CartId_ProductId_ProductVariantId",
                 table: "CartItems",
-                column: "CartId");
+                columns: new[] { "CartId", "ProductId", "ProductVariantId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_CartItems_ProductId",
@@ -1183,6 +1189,17 @@ namespace E_Commerce.Migrations
                 name: "IX_CartItems_ProductVariantId",
                 table: "CartItems",
                 column: "ProductVariantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Categories_Name",
+                table: "Categories",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Collections_Name",
+                table: "Collections",
+                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CustomerAddresses_CustomerId",
@@ -1250,6 +1267,11 @@ namespace E_Commerce.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_Status",
+                table: "Orders",
+                column: "Status");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PaymentMethods_PaymentProviderId",
                 table: "PaymentMethods",
                 column: "PaymentProviderId");
@@ -1263,6 +1285,12 @@ namespace E_Commerce.Migrations
                 name: "IX_Payments_OrderId",
                 table: "Payments",
                 column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payments_OrderId_Status_PaymentMethodId",
+                table: "Payments",
+                columns: new[] { "OrderId", "Status", "PaymentMethodId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_PaymentMethodId",
@@ -1290,9 +1318,14 @@ namespace E_Commerce.Migrations
                 column: "CollectionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductInventory_ProductId",
+                name: "IX_ProductCollections_ProductId_CollectionId",
+                table: "ProductCollections",
+                columns: new[] { "ProductId", "CollectionId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductInventory_ProductId_WarehouseId",
                 table: "ProductInventory",
-                column: "ProductId");
+                columns: new[] { "ProductId", "WarehouseId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductInventory_WarehouseId",
@@ -1305,9 +1338,15 @@ namespace E_Commerce.Migrations
                 column: "DiscountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_SubCategoryId",
+                name: "IX_Products_Name",
                 table: "Products",
-                column: "SubCategoryId");
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_SubCategoryId_DiscountId",
+                table: "Products",
+                columns: new[] { "SubCategoryId", "DiscountId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductVariants_ProductId",
@@ -1315,9 +1354,20 @@ namespace E_Commerce.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductVariants_ProductId_Color_Size_Waist_Length",
+                table: "ProductVariants",
+                columns: new[] { "ProductId", "Color", "Size", "Waist", "Length" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ReturnRequestProducts_ProductId",
                 table: "ReturnRequestProducts",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReturnRequestProducts_ReturnRequestId_ProductId",
+                table: "ReturnRequestProducts",
+                columns: new[] { "ReturnRequestId", "ProductId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReturnRequests_CustomerId",
@@ -1330,9 +1380,9 @@ namespace E_Commerce.Migrations
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_CustomerId",
+                name: "IX_Reviews_CustomerId_ProductId",
                 table: "Reviews",
-                column: "CustomerId");
+                columns: new[] { "CustomerId", "ProductId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_ProductId",
@@ -1350,9 +1400,15 @@ namespace E_Commerce.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WishlistItems_CustomerId",
+                name: "IX_Warehouses_Name",
+                table: "Warehouses",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WishlistItems_CustomerId_ProductId",
                 table: "WishlistItems",
-                column: "CustomerId");
+                columns: new[] { "CustomerId", "ProductId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_WishlistItems_ProductId",

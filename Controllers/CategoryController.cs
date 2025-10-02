@@ -16,48 +16,22 @@ namespace E_Commerce.Controllers
 {
 	[Route("api/categories")]
 	[ApiController]
-	public class CategoriesController : ControllerBase
+	public class CategoriesController : BaseController
 	{
 		private readonly ICategoryServices _categoryServices;
 		private readonly ILogger<CategoriesController> _logger;
-		private readonly ICategoryLinkBuilder _linkBuilder;
 
 		public CategoriesController(
 			ICategoryLinkBuilder linkBuilder,
 			ICategoryServices categoryServices,
-			ILogger<CategoriesController> logger)
+			ILogger<CategoriesController> logger):base(linkBuilder)
 		{
-			_linkBuilder = linkBuilder;
+			
 			_categoryServices = categoryServices;
 			_logger = logger;
 		}
 
-		private ActionResult<ApiResponse<T>> HandleResult<T>(Result<T> result, string apiname, int? id = null)
-		{
-			var links = _linkBuilder.MakeRelSelf(_linkBuilder.GenerateLinks(id), apiname);
-			ApiResponse<T> apiResponse;
-			if (result.Success)
-			{
-				apiResponse = ApiResponse<T>.CreateSuccessResponse(result.Message, result.Data, result.StatusCode, warnings: result.Warnings, links: links);
-			}
-			else
-			{
-				var errorResponse = (result.Warnings != null && result.Warnings.Count > 0)
-					? new ErrorResponse("Error", result.Warnings)
-					: new ErrorResponse("Error", result.Message);
-				apiResponse = ApiResponse<T>.CreateErrorResponse(result.Message, errorResponse, result.StatusCode, warnings: result.Warnings, links: links);
-			}
-
-			switch (result.StatusCode)
-			{
-				case 200: return Ok(apiResponse);
-				case 201: return StatusCode(201, apiResponse);
-				case 400: return BadRequest(apiResponse);
-				case 401: return Unauthorized(apiResponse);
-				case 409: return Conflict(apiResponse);
-				default: return StatusCode(result.StatusCode, apiResponse);
-			}
-		}
+		
 
 		// RESTful endpoints
 		/// <summary>
@@ -78,12 +52,12 @@ namespace E_Commerce.Controllers
 			{
 				return BadRequest(ApiResponse<CategorywithdataDto>.CreateErrorResponse("Invalid category ID", new ErrorResponse("Validation", new List<string> { "Category ID must be greater than 0" }), 400));
 			}
-			
-			// Role-based filtering
-			bool isAdmin = User?.IsInRole("Admin") ?? false;
-			
-			
-			var result = await _categoryServices.GetCategoryByIdAsync(id, isActive, includeDeleted,isAdmin);
+
+            // Role-based filtering
+            bool isAdmin = HasManagementRole();
+
+
+            var result = await _categoryServices.GetCategoryByIdAsync(id, isActive, includeDeleted,isAdmin);
 			return HandleResult(result, "GetCategoryById", id);
 		}
 
@@ -101,14 +75,14 @@ namespace E_Commerce.Controllers
 			[FromQuery] int pageSize = 10)
 		{
 			_logger.LogInformation($"Executing {nameof(GetCategories)} with search: {search}, isActive: {isActive}, isDeleted: {isDeleted}, page: {page}");
-			
-			// Role-based filtering
-			bool isAdmin = User?.IsInRole("Admin") ?? false;
-			
-			
-			
-			// Admins can use any filters, regular users get fixed filters
-			var searchResult = await _categoryServices.FilterAsync(search, isActive, isDeleted, page, pageSize,isAdmin);
+
+            // Role-based filtering
+            bool isAdmin = HasManagementRole();
+
+
+
+            // Admins can use any filters, regular users get fixed filters
+            var searchResult = await _categoryServices.FilterAsync(search, isActive, isDeleted, page, pageSize,isAdmin);
 			return HandleResult(searchResult, "GetCategories");
 		}
 
@@ -119,7 +93,7 @@ namespace E_Commerce.Controllers
 		/// Create a new category
 		/// </summary>
 		[HttpPost]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		[ActionName(nameof(CreateAsync))]
 		public async Task<ActionResult<ApiResponse<CategoryDto>>> CreateAsync([FromBody] CreateCategotyDto categoryDto)
 		{
@@ -137,7 +111,7 @@ namespace E_Commerce.Controllers
 				return BadRequest(ApiResponse<CategoryDto>.CreateErrorResponse("Validation failed", new ErrorResponse("Invalid Data", errors)));
 			}
 			
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId = GetUserId();
 			if (string.IsNullOrWhiteSpace(userId))
 			{
 				return Unauthorized(ApiResponse<CategoryDto>.CreateErrorResponse("User authentication required", new ErrorResponse("Authentication", new List<string> { "User ID is required" }), 401));
@@ -151,7 +125,7 @@ namespace E_Commerce.Controllers
 		/// Update a category
 		/// </summary>
 		[HttpPut("{id}")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		[ActionName(nameof(UpdateAsync))]
 		public async Task<ActionResult<ApiResponse<CategoryDto>>> UpdateAsync(int id, [FromBody] UpdateCategoryDto categoryDto)
 		{
@@ -174,7 +148,7 @@ namespace E_Commerce.Controllers
 				return BadRequest(ApiResponse<CategoryDto>.CreateErrorResponse("Validation failed", new ErrorResponse("Invalid Data", errors)));
 			}
 			
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId = GetUserId();
 			if (string.IsNullOrWhiteSpace(userId))
 			{
 				return Unauthorized(ApiResponse<CategoryDto>.CreateErrorResponse("User authentication required", new ErrorResponse("Authentication", new List<string> { "User ID is required" }), 401));
@@ -188,7 +162,7 @@ namespace E_Commerce.Controllers
 		/// Delete a category
 		/// </summary>
 		[HttpDelete("{id}")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		[ActionName(nameof(DeleteAsync))]
 		public async Task<ActionResult<ApiResponse<bool>>> DeleteAsync(int id)
 		{
@@ -201,11 +175,8 @@ namespace E_Commerce.Controllers
 				
 			}
 			
-			var userId = HttpContext.Items["UserId"]?.ToString();
-			if (string.IsNullOrWhiteSpace(userId))
-			{
-				return Unauthorized(ApiResponse<bool>.CreateErrorResponse("User authentication required", new ErrorResponse("Authentication", new List<string> { "User ID is required" }), 401));
-			}
+			var userId = GetUserId();
+		
 			
 			var result = await _categoryServices.DeleteAsync(id, userId);
 			return HandleResult(result, nameof(DeleteAsync));
@@ -215,7 +186,7 @@ namespace E_Commerce.Controllers
 		/// Add images to a category (both main and additional images)
 		/// </summary>
 		[HttpPost("{id}/images")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		[ActionName(nameof(AddImagesToCategoryAsync))]
 		public async Task<ActionResult<ApiResponse<List<ImageDto>>>> AddImagesToCategoryAsync(int id, [FromForm] AddImagesDto images)
 		{
@@ -232,11 +203,8 @@ namespace E_Commerce.Controllers
 				return BadRequest(ApiResponse<List<ImageDto>>.CreateErrorResponse("Images are required", new ErrorResponse("Validation", new List<string> { "At least one image is required." }), 400));
 			}
 			
-			var userId = HttpContext.Items["UserId"]?.ToString();
-			if (string.IsNullOrWhiteSpace(userId))
-			{
-				return Unauthorized(ApiResponse<List<ImageDto>>.CreateErrorResponse("User authentication required", new ErrorResponse("Authentication", new List<string> { "User ID is required" }), 401));
-			}
+			var userId = GetUserId();
+		
 			
 			var result = await _categoryServices.AddImagesToCategoryAsync(id, images.Images, userId);
 			return HandleResult(result, nameof(AddImagesToCategoryAsync), id);
@@ -246,7 +214,7 @@ namespace E_Commerce.Controllers
 		/// Add a main image to a category
 		/// </summary>
 		[HttpPost("{id}/images/main")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		[ActionName(nameof(AddMainImageAsync))]
 		public async Task<ActionResult<ApiResponse<ImageDto>>> AddMainImageAsync(int id, [FromForm] AddMainImageDto mainImage)
 		{
@@ -263,11 +231,8 @@ namespace E_Commerce.Controllers
 				return BadRequest(ApiResponse<ImageDto>.CreateErrorResponse("Image is required", new ErrorResponse("Validation", new List<string> { "Main image is required." }), 400));
 			}
 			
-			var userId = HttpContext.Items["UserId"]?.ToString();
-			if (string.IsNullOrWhiteSpace(userId))
-			{
-				return Unauthorized(ApiResponse<ImageDto>.CreateErrorResponse("User authentication required", new ErrorResponse("Authentication", new List<string> { "User ID is required" }), 401));
-			}
+			var userId = GetUserId();
+		
 			
 			var result = await _categoryServices.AddMainImageToCategoryAsync(id, mainImage.Image, userId);
 			return HandleResult(result, nameof(AddMainImageAsync), id);
@@ -277,7 +242,7 @@ namespace E_Commerce.Controllers
 		/// Remove an image from a category
 		/// </summary>
 		[HttpDelete("{id}/images/{imageId}")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		[ActionName(nameof(RemoveImageAsync))]
 		public async Task<ActionResult<ApiResponse<bool>>> RemoveImageAsync(int id, int imageId)
 		{
@@ -286,19 +251,16 @@ namespace E_Commerce.Controllers
 			// Enhanced validation
 			if (id <= 0)
 			{
-				return BadRequest(ApiResponse<CategoryDto>.CreateErrorResponse("Invalid category ID", new ErrorResponse("Validation", new List<string> { "Category ID must be greater than 0" }), 400));
+				return BadRequest(ApiResponse<bool>.CreateErrorResponse("Invalid category ID", new ErrorResponse("Validation", new List<string> { "Category ID must be greater than 0" }), 400));
 			}
 			
 			if (imageId <= 0)
 			{
-				return BadRequest(ApiResponse<CategoryDto>.CreateErrorResponse("Invalid image ID", new ErrorResponse("Validation", new List<string> { "Image ID must be greater than 0" }), 400));
+				return BadRequest(ApiResponse<bool>.CreateErrorResponse("Invalid image ID", new ErrorResponse("Validation", new List<string> { "Image ID must be greater than 0" }), 400));
 			}
 			
-			var userId = HttpContext.Items["UserId"]?.ToString();
-			if (string.IsNullOrWhiteSpace(userId))
-			{
-				return Unauthorized(ApiResponse<CategoryDto>.CreateErrorResponse("User authentication required", new ErrorResponse("Authentication", new List<string> { "User ID is required" }), 401));
-			}
+			var userId = GetUserId();
+		
 			
 			var result = await _categoryServices.RemoveImageFromCategoryAsync(id, imageId, userId);
 			return HandleResult(result, nameof(RemoveImageAsync), id);
@@ -308,7 +270,7 @@ namespace E_Commerce.Controllers
 		/// Activate a category
 		/// </summary>
 		[HttpPatch("{id}/activate")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		[ActionName(nameof(ActivateCategoryAsync))]
 		public async Task<ActionResult<ApiResponse<bool>>> ActivateCategoryAsync(int id)
 		{
@@ -320,11 +282,8 @@ namespace E_Commerce.Controllers
 				return BadRequest(ApiResponse<bool>.CreateErrorResponse("Invalid category ID", new ErrorResponse("Validation", new List<string> { "Category ID must be greater than 0" }), 400));
 			}
 			
-			var userId = HttpContext.Items["UserId"]?.ToString();
-			if (string.IsNullOrWhiteSpace(userId))
-			{
-				return Unauthorized(ApiResponse<bool>.CreateErrorResponse("User authentication required", new ErrorResponse("Authentication", new List<string> { "User ID is required" }), 401));
-			}
+			var userId = GetUserId();
+		
 			
 			var result = await _categoryServices.ActivateCategoryAsync(id, userId);
 			return HandleResult(result, nameof(ActivateCategoryAsync), id);
@@ -334,7 +293,7 @@ namespace E_Commerce.Controllers
 		/// Deactivate a category
 		/// </summary>
 		[HttpPatch("{id}/deactivate")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		[ActionName(nameof(DeactivateCategoryAsync))]
 		public async Task<ActionResult<ApiResponse<bool>>> DeactivateCategoryAsync(int id)
 		{
@@ -346,11 +305,8 @@ namespace E_Commerce.Controllers
 				return BadRequest(ApiResponse<bool>.CreateErrorResponse("Invalid category ID", new ErrorResponse("Validation", new List<string> { "Category ID must be greater than 0" }), 400));
 			}
 			
-			var userId = HttpContext.Items["UserId"]?.ToString();
-			if (string.IsNullOrWhiteSpace(userId))
-			{
-				return Unauthorized(ApiResponse<bool>.CreateErrorResponse("User authentication required", new ErrorResponse("Authentication", new List<string> { "User ID is required" }), 401));
-			}
+			var userId = GetUserId();
+		
 			
 			var result = await _categoryServices.DeactivateCategoryAsync(id, userId);
 			return HandleResult(result, nameof(DeactivateCategoryAsync), id);
@@ -360,7 +316,7 @@ namespace E_Commerce.Controllers
 		/// Restore a deleted category
 		/// </summary>
 		[HttpPatch("{id}/restore")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		[ActionName(nameof(RestoreCategoryAsync))]
 		public async Task<ActionResult<ApiResponse<CategoryDto>>> RestoreCategoryAsync(int id)
 		{
@@ -372,12 +328,8 @@ namespace E_Commerce.Controllers
 				return BadRequest(ApiResponse<CategoryDto>.CreateErrorResponse("Invalid category ID", new ErrorResponse("Validation", new List<string> { "Category ID must be greater than 0" }), 400));
 			}
 			
-			var userId = HttpContext.Items["UserId"]?.ToString();
-			if (string.IsNullOrWhiteSpace(userId))
-			{
-				return Unauthorized(ApiResponse<CategoryDto>.CreateErrorResponse("User authentication required", new ErrorResponse("Authentication", new List<string> { "User ID is required" }), 401));
-			}
-			
+			var userId = GetUserId();
+		
 			var result = await _categoryServices.RestoreAsync(id, userId);
 			return HandleResult(result, nameof(RestoreCategoryAsync), id);
 		}

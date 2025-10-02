@@ -45,7 +45,6 @@ namespace E_Commerce.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("ItemId")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("ModifiedAt")
@@ -835,8 +834,7 @@ namespace E_Commerce.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("RawData")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
+                        .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ReceiptNumber")
                         .HasMaxLength(100)
@@ -1553,9 +1551,6 @@ namespace E_Commerce.Migrations
                     b.Property<int?>("ImageId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ImageId1")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("LastVisit")
                         .HasColumnType("datetime(6)");
 
@@ -1563,7 +1558,7 @@ namespace E_Commerce.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasIndex("ImageId1");
+                    b.HasIndex("ImageId");
 
                     b.HasDiscriminator().HasValue("Customer");
                 });
@@ -2016,7 +2011,7 @@ namespace E_Commerce.Migrations
                 {
                     b.HasOne("E_Commerce.Models.Image", "Image")
                         .WithMany()
-                        .HasForeignKey("ImageId1");
+                        .HasForeignKey("ImageId");
 
                     b.Navigation("Image");
                 });

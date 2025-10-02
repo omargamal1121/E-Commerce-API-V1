@@ -1,13 +1,14 @@
+﻿using E_Commerce.DtoModels.PaymentDtos;
 using E_Commerce.DtoModels.Responses;
 using E_Commerce.ErrorHnadling;
 using E_Commerce.Models;
+using E_Commerce.Services.PaymentWebhookService;
 using E_Commerce.UOW;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 using System.Collections.Generic;
-using E_Commerce.DtoModels.PaymentDtos;
-using E_Commerce.Services.PaymentWebhookService;
+using System.Security.Cryptography;
+using System.Text.Json;
 
 namespace E_Commerce.Controllers
 {
@@ -27,12 +28,25 @@ namespace E_Commerce.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Receive([FromQuery]string HMAC,[FromBody] PaymobWebhookDto payload)
-        {
+        public async Task<IActionResult> Receive(
+            [FromQuery] string? hmac, 
+            [FromBody] PaymobWebhookDto? payload)
+         {
             try
             {
-                await _paymentWebhookService.HandlePaymobAsync(payload,HMAC);
-                return Ok();
+                
+                if (string.IsNullOrWhiteSpace(hmac))
+                {
+                    return BadRequest("Missing HMAC parameter");
+                }
+
+                if (payload == null)
+                {
+                    return BadRequest("Invalid payload");
+                }
+                bool success = await _paymentWebhookService.HandlePaymobAsync(payload, hmac);
+
+                return success ? Ok() : BadRequest("Webhook processing failed");
             }
             catch (Exception ex)
             {

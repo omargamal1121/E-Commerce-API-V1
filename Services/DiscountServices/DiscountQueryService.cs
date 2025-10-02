@@ -1,5 +1,6 @@
 using E_Commerce.DtoModels.DiscoutDtos;
 using E_Commerce.DtoModels.Responses;
+using E_Commerce.Models;
 using E_Commerce.UOW;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
@@ -14,14 +15,17 @@ namespace E_Commerce.Services.DiscountServices
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDiscountCacheHelper _cacheHelper;
         private readonly IDiscountMapper _mapper;
+        private readonly IDiscountBackgroundJopMethod _backgroundJopMethod;
 
         public DiscountQueryService(
+            IDiscountBackgroundJopMethod backgroundJopMethod,
             ILogger<DiscountQueryService> logger,
             IBackgroundJobClient backgroundJobClient,
             IUnitOfWork unitOfWork,
             IDiscountCacheHelper cacheHelper,
             IDiscountMapper mapper)
         {
+            _backgroundJopMethod = backgroundJopMethod;
             _logger = logger;
             _backgroundJobClient = backgroundJobClient;
             _unitOfWork = unitOfWork;
@@ -29,111 +33,71 @@ namespace E_Commerce.Services.DiscountServices
             _mapper = mapper;
         }
 
-        public async Task<Result<List<DiscountDto>>> GetAllAsync()
+        private IQueryable<Discount> BasicFilter(IQueryable<Discount> query,bool? isactive,bool? isdelete,bool isadmin)
         {
-            try
-            {
-                var discounts = await _unitOfWork.Repository<Models.Discount>().GetAll().AsNoTracking()
-                    .Where(d => d.DeletedAt == null)
-                    .Select(_mapper.DiscountDtoSelector)
-                    .ToListAsync();
 
-                if (!discounts.Any())
-                    return Result<List<DiscountDto>>.Fail("No discounts found", 404);
-
-                return Result<List<DiscountDto>>.Ok(discounts, "All discounts retrieved successfully", 200);
-            }
-            catch (Exception ex)
+            if (!isadmin)
             {
-                _logger.LogError(ex, "Error in GetAllAsync");
-                _cacheHelper.NotifyAdminError($"Error in GetAllAsync: {ex.Message}", ex.StackTrace);
-                return Result<List<DiscountDto>>.Fail("Error retrieving discounts", 500);
+                isactive = true;
+                isdelete = false;
             }
+            if (isdelete.HasValue)
+            {
+                if (isdelete.Value)
+                    query = query.Where(d => d.DeletedAt != null);
+                else
+                    query = query.Where(d => d.DeletedAt == null);
+            }
+            if (isactive.HasValue)
+                query = query.Where(d => d.IsActive == isactive.Value);
+
+            return query;
+
         }
 
-        public async Task<Result<DiscountDto>> GetDiscountByIdAsync(int id, bool? isActive = null, bool? isDeleted = false)
+       
+        public async Task<Result<DiscountDto>> GetDiscountByIdAsync(int id, bool? isActive = null, bool? isDeleted = false,bool isAdmin=false)
         {
             try
             {
+                var discountdto= await _cacheHelper.GetCacheAsync(id, isActive, isDeleted, isAdmin);
+                if(discountdto != null)
+                    return Result<DiscountDto>.Ok(discountdto, "Discount retrieved from cache", 200);
                 var query = _unitOfWork.Repository<Models.Discount>().GetAll().AsNoTracking().Where(d => d.Id == id);
 
-                if (isDeleted.HasValue)
-                {
-                    if (isDeleted.Value)
-                        query = query.Where(d => d.DeletedAt != null);
-                    else
-                        query = query.Where(d => d.DeletedAt == null);
-                }
-                if (isActive.HasValue)
-                    query = query.Where(d => d.IsActive == isActive.Value);
-
+                query=BasicFilter(query,isActive,isDeleted,isAdmin);
                 var discount = await query
                     .Select(_mapper.DiscountDtoSelector)
                     .FirstOrDefaultAsync();
 
                 if (discount == null)
                     return Result<DiscountDto>.Fail("Discount not found", 404);
+                _cacheHelper.SetCache(discount, id, isActive, isDeleted, isAdmin);
 
                 return Result<DiscountDto>.Ok(discount, "Discount retrieved successfully", 200);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error in GetDiscountByIdAsync for id: {id}");
-                _cacheHelper.NotifyAdminError($"Error in GetDiscountByIdAsync for id {id}: {ex.Message}", ex.StackTrace);
+                _backgroundJopMethod.NotifyAdminError($"Error in GetDiscountByIdAsync for id {id}: {ex.Message}", ex.StackTrace);
                 return Result<DiscountDto>.Fail("Error retrieving discount", 500);
             }
         }
 
-        public async Task<Result<List<DiscountDto>>> GetDiscountByNameAsync(string name, bool? isActive = null, bool? isDeleted = null)
+        public async Task<Result<List<DiscountDto>>> FilterAsync(string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool isAdmin=false)
         {
             try
             {
-                var query = _unitOfWork.Repository<Models.Discount>().GetAll().AsNoTracking()
-                    .Where(d => d.Name.Contains(name) || d.Description.Contains(name));
-                if (isDeleted.HasValue)
-                {
-                    if (isDeleted.Value)
-                        query = query.Where(d => d.DeletedAt != null);
-                    else
-                        query = query.Where(d => d.DeletedAt == null);
-                }
-                if (isActive.HasValue)
-                    query = query.Where(d => d.IsActive == isActive.Value);
-                var discount = await query
-                    .Select(_mapper.DiscountDtoSelector)
-                    .ToListAsync();
-
-                if (discount == null)
-                    return Result<List<DiscountDto>>.Fail("Discount not found", 404);
-                return Result<List<DiscountDto>>.Ok(discount, "Discount retrieved successfully", 200);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error in GetDiscountByNameAsync for name: {name}");
-                _cacheHelper.NotifyAdminError($"Error in GetDiscountByNameAsync for name {name}: {ex.Message}", ex.StackTrace);
-                return Result<List<DiscountDto>>.Fail("Error retrieving discount", 500);
-            }
-        }
-
-        public async Task<Result<List<DiscountDto>>> FilterAsync(string? search, bool? isActive, bool? isDeleted, int page, int pageSize, string role)
-        {
-            try
-            {
+                var cachedDiscounts = await _cacheHelper.GetCacheAsync( isActive, isDeleted,search, isAdmin, page, pageSize);
+                if (cachedDiscounts != null)
+                    return Result<List<DiscountDto>>.Ok(cachedDiscounts, "Discounts retrieved from cache", 200);
                 var query = _unitOfWork.Repository<Models.Discount>().GetAll().AsNoTracking();
 
-                if (isDeleted.HasValue)
-                {
-                    if (isDeleted.Value)
-                        query = query.Where(d => d.DeletedAt != null);
-                    else
-                        query = query.Where(d => d.DeletedAt == null);
-                }
-
+                query = BasicFilter(query, isActive, isDeleted, isAdmin);
                 if (!string.IsNullOrWhiteSpace(search))
                     query = query.Where(d => d.Name.Contains(search) || d.Description.Contains(search));
 
-                if (isActive.HasValue)
-                    query = query.Where(d => d.IsActive == isActive.Value);
+
 
                 var totalCount = await query.CountAsync();
 
@@ -144,91 +108,108 @@ namespace E_Commerce.Services.DiscountServices
                     .Select(_mapper.DiscountDtoSelector)
                     .ToListAsync();
 
+
                 if (!discounts.Any())
                     return Result<List<DiscountDto>>.Fail("No discounts found matching criteria", 404);
 
+
+                _cacheHelper.SetCache(discounts, isActive, isDeleted, search, isAdmin, page, pageSize);
                 return Result<List<DiscountDto>>.Ok(discounts, $"Found {discounts.Count} discounts out of {totalCount}", 200);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in FilterAsync");
-                _cacheHelper.NotifyAdminError($"Error in FilterAsync: {ex.Message}", ex.StackTrace);
+                _backgroundJopMethod.NotifyAdminError($"Error in FilterAsync: {ex.Message}", ex.StackTrace);
                 return Result<List<DiscountDto>>.Fail("Error filtering discounts", 500);
             }
         }
 
-        public async Task<Result<List<DiscountDto>>> GetActiveDiscountsAsync()
+        public async Task<Result<List<DiscountDto>>> GetActiveDiscountsAsync(int page=10,int pagesize=10)
         {
             try
             {
+               var cache=await _cacheHelper.GetCacheAsync(isActive: true, isDeleted: false, IsAdmin: false, page:page,PageSize:pagesize);
+                if(cache != null)
+                    return Result<List<DiscountDto>>.Ok(cache, "Active discounts retrieved from cache", 200);
                 var now = DateTime.UtcNow;
                 var discounts = await _unitOfWork.Repository<Models.Discount>().GetAll().AsNoTracking()
                     .Where(d => d.DeletedAt == null &&
                         d.IsActive &&
                         d.StartDate <= now &&
-                        d.EndDate >= now)
+                        d.EndDate >= now).Skip((page-1) * pagesize).Take(pagesize)
                     .Select(_mapper.DiscountDtoSelector)
                     .ToListAsync();
 
                 if (!discounts.Any())
                     return Result<List<DiscountDto>>.Fail("No active discounts found", 404);
 
+                _cacheHelper.SetCache(discounts, isActive: true, isDeleted: false, IsAdmin: false, page: page, PageSize: pagesize);
+
                 return Result<List<DiscountDto>>.Ok(discounts, "Active discounts retrieved successfully", 200);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in GetActiveDiscountsAsync");
-                _cacheHelper.NotifyAdminError($"Error in GetActiveDiscountsAsync: {ex.Message}", ex.StackTrace);
+                _backgroundJopMethod.NotifyAdminError($"Error in GetActiveDiscountsAsync: {ex.Message}", ex.StackTrace);
                 return Result<List<DiscountDto>>.Fail("Error retrieving active discounts", 500);
             }
         }
 
-        public async Task<Result<List<DiscountDto>>> GetExpiredDiscountsAsync()
+        public async Task<Result<List<DiscountDto>>> GetExpiredDiscountsAsync(int page=1,int pagesize=10)
         {
             try
             {
+                var cache = await _cacheHelper.GetCacheAsync(isActive: null, isDeleted: false, "Expired");
+                if (cache != null)
+                    return Result<List<DiscountDto>>.Ok(cache, "Expired discounts retrieved from cache", 200);
                 var now = DateTime.UtcNow;
 
                 var expiredDiscounts = await _unitOfWork.Repository<Models.Discount>().GetAll().AsNoTracking()
                     .Where(d => d.DeletedAt == null && d.EndDate < now)
-                    .OrderByDescending(d => d.EndDate)
+                    .OrderByDescending(d => d.EndDate).Skip((page-1)*pagesize).Take(pagesize)
                     .Select(_mapper.DiscountDtoSelector)
                     .ToListAsync();
 
                 if (expiredDiscounts.Count == 0)
                     return Result<List<DiscountDto>>.Ok(new List<DiscountDto>(), "No expired discounts found", 200);
 
+
+                _cacheHelper.SetCache(expiredDiscounts, isActive: null, isDeleted: false, "Expired", page: page, PageSize: pagesize);
                 return Result<List<DiscountDto>>.Ok(expiredDiscounts, "Expired discounts retrieved successfully", 200);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in GetExpiredDiscountsAsync");
-                _cacheHelper.NotifyAdminError($"Error in GetExpiredDiscountsAsync: {ex.Message}", ex.StackTrace);
+                _backgroundJopMethod.NotifyAdminError($"Error in GetExpiredDiscountsAsync: {ex.Message}", ex.StackTrace);
                 return Result<List<DiscountDto>>.Fail("Error retrieving expired discounts", 500);
             }
         }
 
-        public async Task<Result<List<DiscountDto>>> GetUpcomingDiscountsAsync()
+        public async Task<Result<List<DiscountDto>>> GetUpcomingDiscountsAsync(int page=1,int pagesize=10)
         {
             try
             {
+                var cache = await _cacheHelper.GetCacheAsync(isActive: null, isDeleted: false, "Upcoming", page: page, PageSize: pagesize);
+                if (cache != null)
+                    return Result<List<DiscountDto>>.Ok(cache, "Upcoming discounts retrieved from cache", 200);
                 var now = DateTime.UtcNow;
 
                 var upcomingDiscounts = await _unitOfWork.Repository<Models.Discount>().GetAll().AsNoTracking()
                     .Where(d => d.DeletedAt == null && d.StartDate > now)
-                    .OrderBy(d => d.StartDate)
+                    .OrderBy(d => d.StartDate).Skip((page - 1) * pagesize).Take(pagesize)
                     .Select(_mapper.DiscountDtoSelector)
                     .ToListAsync();
 
                 if (upcomingDiscounts.Count == 0)
                     return Result<List<DiscountDto>>.Ok(new List<DiscountDto>(), "No upcoming discounts found", 200);
+                _cacheHelper.SetCache(upcomingDiscounts, isActive: null, isDeleted: false, "Upcoming", page: page, PageSize: pagesize);
 
                 return Result<List<DiscountDto>>.Ok(upcomingDiscounts, "Upcoming discounts retrieved successfully", 200);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in GetUpcomingDiscountsAsync");
-                _cacheHelper.NotifyAdminError($"Error in GetUpcomingDiscountsAsync: {ex.Message}", ex.StackTrace);
+                _backgroundJopMethod.NotifyAdminError($"Error in GetUpcomingDiscountsAsync: {ex.Message}", ex.StackTrace);
                 return Result<List<DiscountDto>>.Fail("Error retrieving upcoming discounts", 500);
             }
         }
@@ -250,7 +231,7 @@ namespace E_Commerce.Services.DiscountServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error in GetDiscountsByCategoryAsync for categoryId: {categoryId}");
-                _cacheHelper.NotifyAdminError($"Error in GetDiscountsByCategoryAsync for categoryId {categoryId}: {ex.Message}", ex.StackTrace);
+                _backgroundJopMethod.NotifyAdminError($"Error in GetDiscountsByCategoryAsync for categoryId {categoryId}: {ex.Message}", ex.StackTrace);
                 return Result<List<DiscountDto>>.Fail("Error retrieving category discounts", 500);
             }
         }
@@ -283,7 +264,7 @@ namespace E_Commerce.Services.DiscountServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error in IsDiscountValidAsync for id: {id}");
-                _cacheHelper.NotifyAdminError($"Error in IsDiscountValidAsync for id {id}: {ex.Message}", ex.StackTrace);
+                _backgroundJopMethod.NotifyAdminError($"Error in IsDiscountValidAsync for id {id}: {ex.Message}", ex.StackTrace);
                 return Result<bool>.Fail("Error validating discount", 500);
             }
         }
@@ -308,7 +289,7 @@ namespace E_Commerce.Services.DiscountServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error in CalculateDiscountedPriceAsync for discountId: {discountId}");
-                _cacheHelper.NotifyAdminError($"Error in CalculateDiscountedPriceAsync for discountId {discountId}: {ex.Message}", ex.StackTrace);
+                _backgroundJopMethod.NotifyAdminError($"Error in CalculateDiscountedPriceAsync for discountId {discountId}: {ex.Message}", ex.StackTrace);
                 return Result<decimal>.Fail("Error calculating discounted price", 500);
             }
         }

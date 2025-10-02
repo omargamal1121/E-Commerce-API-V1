@@ -20,41 +20,18 @@ namespace E_Commerce.Controllers
 {
 	[Route("api/[controller]s")]
 	[ApiController]
-	public class ProductController : ControllerBase
+	public class ProductController : BaseController
 	{
 		private readonly IProductsServices _productsServices;
 		private readonly ILogger<ProductController> _logger;
-		public ProductController(IProductsServices productsServices, ILogger<ProductController> logger)
+		public ProductController(IProductsServices productsServices, ILogger<ProductController> logger, IProductLinkBuilder linkBuilder):base(linkBuilder)
 		{
 			_productsServices = productsServices;
+
 			_logger = logger;
 		}
 
-		private ActionResult<ApiResponse<T>> HandleResult<T>(Result<T> result, string actionName = null, int? id = null) 
-		{
-			var apiResponse = result.Success
-				? ApiResponse<T>.CreateSuccessResponse(result.Message, result.Data, result.StatusCode, warnings: result.Warnings)
-				: ApiResponse<T>.CreateErrorResponse(result.Message, new ErrorResponse("Error", result.Message), result.StatusCode, warnings: result.Warnings);
-
-			switch (result.StatusCode)
-			{
-				case 200:
-					return Ok(apiResponse);
-				case 201:
-					return actionName != null && id.HasValue ? CreatedAtAction(actionName, new { id }, apiResponse) : StatusCode(201, apiResponse);
-				case 400:
-					return BadRequest(apiResponse);
-				case 401:
-					return Unauthorized(apiResponse);
-				case 404:
-					return NotFound(apiResponse);
-				case 409:
-					return Conflict(apiResponse);
-				default:
-					return StatusCode(result.StatusCode, apiResponse);
-			}
-		}
-
+	
 		
 
 
@@ -66,84 +43,72 @@ namespace E_Commerce.Controllers
 		}
 
 		[HttpPost("{id}/Discount")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<bool>>> AddDiscountToProduct(int id, [FromBody] int DiscountId)
 		{
 			if (!ModelState.IsValid || DiscountId <= 0)
 			{
-				var errors = string.Join(", ", ModelState.Values
-					.SelectMany(v => v.Errors)
-					.Select(e => e.ErrorMessage)
-					.ToList());
+				var errors =GetModelErrors();
 				_logger.LogError($"Validation Errors: {errors}");
-				return BadRequest(ApiResponse<ProductDetailDto>.CreateErrorResponse("Invalid Discount data", new ErrorResponse("Invalid data", errors ?? "Invalid Discount ID")));
+				return BadRequest(ApiResponse<ProductDetailDto>.CreateErrorResponse("Invalid Discount data", new ErrorResponse("Invalid data", errors	)));
 			}
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId = GetUserId();
 			var response = await _productsServices.AddDiscountToProductAsync(id, DiscountId, userId);
 			return HandleResult(response, nameof(AddDiscountToProduct), id);
 		}
 
 		[HttpPut("{id}/Discount")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<bool>>> UpdateProductDiscount(int id, [FromBody] int DiscountId)
 		{
 			if (!ModelState.IsValid || DiscountId <= 0)
 			{
-				var errors = string.Join(", ", ModelState.Values
-					.SelectMany(v => v.Errors)
-					.Select(e => e.ErrorMessage)
-					.ToList());
+				var errors = GetModelErrors();
 				_logger.LogError($"Validation Errors: {errors}");
-				return BadRequest(ApiResponse<ProductDetailDto>.CreateErrorResponse("Invalid Discount data", new ErrorResponse("Invalid data", errors ?? "Invalid Discount ID")));
+				return BadRequest(ApiResponse<ProductDetailDto>.CreateErrorResponse("Invalid Discount data", new ErrorResponse("Invalid data", errors)));
 			}
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId = GetUserId();
 			var response = await _productsServices.UpdateProductDiscountAsync(id, DiscountId, userId);
 			return HandleResult(response, nameof(UpdateProductDiscount), id);
 		}
 
 		[HttpDelete("{id}/Discount")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<bool>>> RemoveDiscountFromProduct(int id)
 		{
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId = GetUserId();
 			var response = await _productsServices.RemoveDiscountFromProductAsync(id, userId);
 			return HandleResult(response, nameof(RemoveDiscountFromProduct), id);
 		}
 
 		[HttpPost("bulk/Discount")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<List<ProductDto>>>> ApplyDiscountToProducts([FromBody] ApplyDiscountToProductsDto dto)
 		{
 			if (!ModelState.IsValid)
 			{
-				var errors = string.Join(", ", ModelState.Values
-					.SelectMany(v => v.Errors)
-					.Select(e => e.ErrorMessage)
-					.ToList());
+				var errors = GetModelErrors();
 				_logger.LogError($"Validation Errors: {errors}");
 				return BadRequest(ApiResponse<List<ProductDto>>.CreateErrorResponse("Invalid data", new ErrorResponse("Invalid data", errors)));
 			}
 
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId = GetUserId();
 			var response = await _productsServices.ApplyDiscountToProductsAsync(dto, userId);
 			return HandleResult(response, nameof(ApplyDiscountToProducts));
 		}
 
 		[HttpDelete("bulk/Discount")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<List<ProductDto>>>> RemoveDiscountFromProducts([FromBody] List<int> productIds)
 		{
 			if (!ModelState.IsValid || productIds == null || !productIds.Any())
 			{
-				var errors = string.Join(", ", ModelState.Values
-					.SelectMany(v => v.Errors)
-					.Select(e => e.ErrorMessage)
-					.ToList());
+				var errors = GetModelErrors();
 				_logger.LogError($"Validation Errors: {errors}");
-				return BadRequest(ApiResponse<List<ProductDto>>.CreateErrorResponse("Invalid data", new ErrorResponse("Invalid data", errors ?? "Product IDs cannot be null or empty")));
+				return BadRequest(ApiResponse<List<ProductDto>>.CreateErrorResponse("Invalid data", new ErrorResponse("Invalid data", errors )));
 			}
 
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId = GetUserId();
 			var response = await _productsServices.RemoveDiscountFromProductsAsync(productIds, userId);
 			return HandleResult(response, nameof(RemoveDiscountFromProducts));
 		}
@@ -156,7 +121,7 @@ namespace E_Commerce.Controllers
 		{
 			_logger.LogInformation($"Executing {nameof(GetProduct)} for ID: {id}");
 			
-			bool isAdmin = User?.IsInRole("Admin") == true;
+			bool isAdmin = HasManagementRole();
 			
 			if (!isAdmin)
 			{
@@ -169,49 +134,43 @@ namespace E_Commerce.Controllers
 		}
 
 		[HttpPost]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<ProductDto>>> CreateProduct(CreateProductDto model)
 		{
 			_logger.LogInformation($"Executing {nameof(CreateProduct)}");
 			if (!ModelState.IsValid)
 			{
-				var errors = string.Join(", ", ModelState.Values
-					.SelectMany(v => v.Errors)
-					.Select(e => e.ErrorMessage)
-					.ToList());
+				var errors =GetModelErrors();
 				_logger.LogError($"Validation Errors: {errors}");
 				return BadRequest(ApiResponse<ProductDto>.CreateErrorResponse("Check on data", new ErrorResponse("Invalid data", errors)));
 			}
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId = GetUserId();
 			var response = await _productsServices.CreateProductAsync(model, userId);
 			return HandleResult<ProductDto>(response, nameof(CreateProduct), response.Data?.Id);
 		}
 		[HttpPut("{id}")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<ProductDto>>> UpdateProduct(int id, UpdateProductDto model)
 		{
 			_logger.LogInformation($"Executing {nameof(UpdateProduct)} for ID: {id}");
 			if (!ModelState.IsValid)
 			{
-				var errors = string.Join(", ", ModelState.Values
-					.SelectMany(v => v.Errors)
-					.Select(e => e.ErrorMessage)
-					.ToList());
+				var errors = GetModelErrors();
 				_logger.LogError($"Validation Errors: {errors}");
-				return BadRequest(ApiResponse<ProductDto>.CreateErrorResponse("", new ErrorResponse("Invalid data", errors)));
+				return BadRequest(ApiResponse<ProductDto>.CreateErrorResponse("Invalid request", new ErrorResponse("Invalid data", errors)));
 			}
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId = GetUserId();
 			var response = await _productsServices.UpdateProductAsync(id, model, userId);
 			return HandleResult<ProductDto>(response, nameof(UpdateProduct), id);
 		}
 
 		[HttpDelete("{id}")]
 		[ActionName(nameof(DeleteProduct))]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<bool>>> DeleteProduct(int id)
 		{
 			_logger.LogInformation($"Executing {nameof(DeleteProduct)} for ID: {id}");
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId = GetUserId();
 			var response = await _productsServices.DeleteProductAsync(id, userId);
 			return HandleResult<bool>(response, nameof(DeleteProduct), id);
 		}
@@ -219,19 +178,16 @@ namespace E_Commerce.Controllers
 		
 
 		[HttpPatch("{id}/restore")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<bool>>> RestoreProductAsync(int id)
 		{
 			if (!ModelState.IsValid)
 			{
-				var errors = string.Join(", ", ModelState.Values
-					.SelectMany(v => v.Errors)
-					.Select(e => e.ErrorMessage)
-					.ToList());
+				var errors = GetModelErrors();
 				_logger.LogError($"Validation Errors: {errors}");
-				return BadRequest(ApiResponse<ProductDto>.CreateErrorResponse("", new ErrorResponse("Invalid data", errors)));
+				return BadRequest(ApiResponse<ProductDto>.CreateErrorResponse("Invalid request", new ErrorResponse("Invalid data", errors)));
 			}
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId = GetUserId();
 			var result = await _productsServices.RestoreProductAsync(id, userId);
 			return HandleResult(result, nameof(RestoreProductAsync), id);
 		}
@@ -245,47 +201,41 @@ namespace E_Commerce.Controllers
 		}
 
 		[HttpPost("{id}/images")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<List<ImageDto>>>> AddProductImages(int id, [FromForm] List<IFormFile> images)
 		{
 			if (!ModelState.IsValid || images == null || !images.Any())
 			{
-				var errors = string.Join(", ", ModelState.Values
-					.SelectMany(v => v.Errors)
-					.Select(e => e.ErrorMessage)
-					.ToList());
+				var errors = GetModelErrors();
 				_logger.LogError($"Validation Errors: {errors}");
-				return BadRequest(ApiResponse<List<ImageDto>>.CreateErrorResponse("Invalid image data", new ErrorResponse("Invalid data", errors ?? "No images provided")));
+				return BadRequest(ApiResponse<List<ImageDto>>.CreateErrorResponse("Invalid image data", new ErrorResponse("Invalid data", errors )));
 			}
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId = GetUserId();
 			var response = await _productsServices.AddProductImagesAsync(id, images, userId);
 			return HandleResult(response, nameof(AddProductImages), id);
 		}
 
 		[HttpDelete("{id}/images/{imageId}")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<bool>>> RemoveProductImage(int id, int imageId)
 		{
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId = GetUserId();
 			var response = await _productsServices.RemoveProductImageAsync(id, imageId, userId);
 			return HandleResult(response, nameof(RemoveProductImage), id);
 		}
 
 		[HttpPost("{id}/main-image")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<ImageDto>>> UploadAndSetMainImage(int id, [FromForm] CreateImageDto mainImage)
 		{
 			if (!ModelState.IsValid || mainImage?.Files == null || !mainImage.Files.Any())
 			{
-				var errors = string.Join(", ", ModelState.Values
-					.SelectMany(v => v.Errors)
-					.Select(e => e.ErrorMessage)
-					.ToList());
+				var errors = GetModelErrors();
 				_logger.LogError($"Validation Errors: {errors}");
-				return BadRequest(ApiResponse<bool>.CreateErrorResponse("Invalid image data", new ErrorResponse("Invalid data", errors ?? "No main image provided")));
+				return BadRequest(ApiResponse<bool>.CreateErrorResponse("Invalid image data", new ErrorResponse("Invalid data", errors )));
 			}
 
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId = GetUserId();
 			var response = await _productsServices.UploadAndSetMainImageAsync(id, mainImage.Files.First(), userId);
 			return HandleResult(response, nameof(UploadAndSetMainImage), id);
 		}
@@ -312,7 +262,7 @@ namespace E_Commerce.Controllers
 					400));
 			}
 			
-			bool isAdmin = User?.IsInRole("Admin") == true;
+			bool isAdmin = HasManagementRole();
 
 			if (!isAdmin)
 			{
@@ -344,7 +294,7 @@ namespace E_Commerce.Controllers
 					400));
 			}
 
-			bool isAdmin = User?.IsInRole("Admin") == true;
+			bool isAdmin = HasManagementRole();
 
 			// For non-admin users, restrict to active and non-deleted products
 			if (!isAdmin)
@@ -366,7 +316,7 @@ namespace E_Commerce.Controllers
 			[FromQuery] bool? isActive = null,
 			[FromQuery] bool? includeDeleted = null)
 		{
-			bool isAdmin = User?.IsInRole("Admin") == true;
+			bool isAdmin = HasManagementRole();
 			if (!isAdmin)
 			{
 				isActive = true;
@@ -385,7 +335,7 @@ namespace E_Commerce.Controllers
 			[FromQuery] bool? isActive = null,
 			[FromQuery] bool? includeDeleted = null)
 		{
-			bool isAdmin = User?.IsInRole("Admin") == true;
+			bool isAdmin = HasManagementRole();
 			
 			// For non-admin users, restrict to active and non-deleted products
 			if (!isAdmin)
@@ -398,26 +348,38 @@ namespace E_Commerce.Controllers
 			return HandleResult(response, nameof(GetNewArrivals));
 		}
 		[HttpPatch("{id}/activate")]
-		[Authorize(Roles = "Admin")]
-		public async Task<ActionResult<ApiResponse<bool>>> ActiveProduct(int id)
+		[Authorize(Roles = "Admin,SuperAdmin")]
+		public async Task<ActionResult<ApiResponse<bool>>> ActivateProduct(int id)
 		{
-			string userId = HttpContext.Items["UserId"]?.ToString();
+			string userId = GetUserId();
 			var response = await _productsServices.ActivateProductAsync(id, userId);
-			return HandleResult(response, nameof(ActiveProduct), id);
+			return HandleResult(response, nameof(ActivateProduct), id);
 		}
 
 		[HttpPatch("{id}/deactivate")]
-		[Authorize(Roles = "Admin")]
-		public async Task<ActionResult<ApiResponse<bool>>> DeActiveProduct(int id)
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        public async Task<ActionResult<ApiResponse<bool>>> DeactivateProduct(int id)
 		{
-			string userId = HttpContext.Items["UserId"]?.ToString();
+			string userId = GetUserId();
 			var response = await _productsServices.DeactivateProductAsync(id, userId);
-			return HandleResult(response, nameof(DeActiveProduct), id);
+			return HandleResult(response, nameof(DeactivateProduct), id);
+		}
+        [Authorize(Roles = "Admin,SuperAdmin")]
+		[HttpGet("Count")]
+        public async Task<ActionResult< ApiResponse<int>>> CountProductsAsync(
+            bool? isActive = null,
+            bool? isDelete = null,
+            bool? inStock = null)
+		{
+			var count= await _productsServices.CountProductsAsync(isActive, isDelete, inStock,true);
+			return HandleResult(count,nameof(CountProductsAsync));
+			
 		}
 
 
 
-		[HttpPost("advanced-search")]
+
+        [HttpPost("advanced-search")]
 		[AllowAnonymous]
 		public async Task<ActionResult<ApiResponse<List<ProductDto>>>> AdvancedSearch(
 			[FromBody] AdvancedSearchDto searchDto,
@@ -428,15 +390,12 @@ namespace E_Commerce.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				var errors = string.Join(", ", ModelState.Values
-					.SelectMany(v => v.Errors)
-					.Select(e => e.ErrorMessage)
-					.ToList());
+				var errors =GetModelErrors();
 				_logger.LogError($"Validation Errors: {errors}");
 				return BadRequest(ApiResponse<List<ProductDto>>.CreateErrorResponse("Invalid search criteria", new ErrorResponse("Invalid data", errors)));
 			}
-			
-			bool isAdmin = User?.IsInRole("Admin") == true;
+
+			bool isAdmin = HasManagementRole();
 			if (!isAdmin)
 			{
 				isActive = true;
@@ -446,5 +405,6 @@ namespace E_Commerce.Controllers
 			var response = await _productsServices.AdvancedSearchAsync(searchDto, page, pageSize, isActive, includeDeleted,isAdmin);
 			return HandleResult(response, nameof(AdvancedSearch));
 		}
-	}
+       
+    }
 }

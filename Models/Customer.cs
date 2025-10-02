@@ -1,6 +1,7 @@
 ﻿using E_Commerce.Enums;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_Commerce.Models
 {
@@ -28,6 +29,7 @@ namespace E_Commerce.Models
 		public ICollection<AdminOperationsLog> adminOperationsLogs{ get; set; } = new List<AdminOperationsLog>();
 		public ICollection<UserOperationsLog>  userOperationsLogs { get; set; } = new List<UserOperationsLog>();
 
+		[ForeignKey("Image")]
 		public int? ImageId { get; set; }   
 		public Image? Image { get; set; }
 

@@ -1,0 +1,568 @@
+2025-10-02 03:55:06.839 +03:00 [INF] Executed DbCommand (80ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-10-02 03:55:07.572 +03:00 [INF] Executed DbCommand (77ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-10-02 03:55:07.785 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-10-02 03:55:07.819 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-02 03:55:07.838 +03:00 [INF] Starting data seeding...
+2025-10-02 03:55:07.872 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-02 03:55:08.056 +03:00 [INF] DB tables already exist. Exit install
+2025-10-02 03:55:08.527 +03:00 [INF] Executed DbCommand (101ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 03:55:08.597 +03:00 [INF] Role 'Admin' already exists.
+2025-10-02 03:55:08.744 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 03:55:08.758 +03:00 [INF] Role 'User' already exists.
+2025-10-02 03:55:08.905 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 03:55:08.915 +03:00 [INF] Role 'SuperAdmin' already exists.
+2025-10-02 03:55:09.059 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 03:55:09.067 +03:00 [INF] Role 'DeliveryCompany' already exists.
+2025-10-02 03:55:09.236 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 03:55:09.480 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 03:55:09.724 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-10-02 03:55:09.766 +03:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-10-02 03:55:09.914 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 03:55:10.089 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 03:55:10.250 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-10-02 03:55:10.262 +03:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-10-02 03:55:10.407 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 03:55:10.584 +03:00 [INF] Executed DbCommand (68ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-10-02 03:55:10.595 +03:00 [INF] Execute GetAll for entity PaymentProvider
+2025-10-02 03:55:10.798 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-10-02 03:55:10.824 +03:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-10-02 03:55:10.947 +03:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-10-02 03:55:10.953 +03:00 [INF] Data seeding completed successfully.
+2025-10-02 03:55:12.233 +03:00 [INF] Now listening on: http://localhost:5069
+2025-10-02 03:55:12.350 +03:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-10-02 03:55:12.352 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-10-02 03:55:12.355 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-10-02 03:55:12.356 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-10-02 03:55:12.372 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-02 03:55:12.378 +03:00 [INF] Hosting environment: Development
+2025-10-02 03:55:12.392 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-10-02 03:55:12.543 +03:00 [INF] Server mrrobot:11856:b965715e successfully announced in 152.4367 ms
+2025-10-02 03:55:12.548 +03:00 [INF] Server mrrobot:11856:b965715e is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-10-02 03:55:12.573 +03:00 [INF] Server mrrobot:11856:b965715e all the dispatchers started
+2025-10-02 03:55:14.164 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-10-02 03:55:14.367 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 203.1257ms
+2025-10-02 03:55:14.528 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-10-02 03:55:14.541 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 12.6644ms
+2025-10-02 03:55:14.924 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-02 03:55:14.927 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-10-02 03:55:14.940 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 15.4712ms
+2025-10-02 03:55:15.007 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 79.5427ms
+2025-10-02 03:55:15.192 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-10-02 03:55:15.387 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 195.2977ms
+2025-10-02 03:56:12.160 +03:00 [INF] Request starting HTTP/1.1 PATCH http://localhost:5069/api/UserManagement/Remove-role/70d4bcbc-fadb-4d6d-8e54-40409e80b5ce?role=SuperAdmin - null null
+2025-10-02 03:56:12.208 +03:00 [INF] CORS policy execution successful.
+2025-10-02 03:56:12.213 +03:00 [WRN] Failed to determine the https port for redirect.
+2025-10-02 03:56:12.438 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 03:56:12.629 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 03:56:12.648 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.UserManagementController.RemoveRoleToUserAsync (E-Commerce)'
+2025-10-02 03:56:12.687 +03:00 [INF] Route matched with {action = "AddRoleToUserAsync", controller = "UserManagement"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[System.Boolean]]] RemoveRoleToUserAsync(System.String, System.String) on controller E_Commerce.Controllers.UserManagementController (E-Commerce).
+2025-10-02 03:56:12.826 +03:00 [INF] In GetUsersAsync Method 
+2025-10-02 03:56:12.835 +03:00 [INF] Attempting to remove role 'SuperAdmin' from user with Id '70d4bcbc-fadb-4d6d-8e54-40409e80b5ce'
+2025-10-02 03:56:13.010 +03:00 [INF] Executed DbCommand (85ms) [Parameters=[@__p_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__p_0)
+LIMIT 1
+2025-10-02 03:56:13.189 +03:00 [INF] Executed DbCommand (81ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 03:56:13.373 +03:00 [INF] Executed DbCommand (85ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 03:56:13.538 +03:00 [INF] Executed DbCommand (83ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-10-02 03:56:13.845 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 03:56:13.929 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 03:56:14.042 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-10-02 03:56:14.136 +03:00 [INF] Executed DbCommand (80ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 03:56:14.537 +03:00 [INF] Executed DbCommand (100ms) [Parameters=[@p0='?' (Size = 255), @p1='?' (Size = 255), @p23='?' (Size = 255), @p2='?' (DbType = Int32), @p3='?' (DbType = Int32), @p4='?' (Size = 4000), @p24='?' (Size = 4000), @p5='?' (DbType = DateTime), @p6='?' (DbType = DateTime), @p7='?' (Size = 256), @p8='?' (DbType = Boolean), @p9='?' (DbType = Int32), @p10='?' (DbType = Int32), @p11='?' (DbType = DateTime), @p12='?' (DbType = Boolean), @p13='?' (DbType = DateTimeOffset), @p14='?' (Size = 4000), @p15='?' (Size = 256), @p16='?' (Size = 256), @p17='?' (Size = 4000), @p18='?' (Size = 4000), @p19='?' (DbType = Boolean), @p20='?' (Size = 4000), @p21='?' (DbType = Boolean), @p22='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+DELETE FROM `AspNetUserRoles`
+WHERE `RoleId` = @p0 AND `UserId` = @p1;
+SELECT ROW_COUNT();
+
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p2, `Age` = @p3, `ConcurrencyStamp` = @p4, `CreateAt` = @p5, `DeletedAt` = @p6, `Email` = @p7, `EmailConfirmed` = @p8, `Gender` = @p9, `ImageId` = @p10, `LastVisit` = @p11, `LockoutEnabled` = @p12, `LockoutEnd` = @p13, `Name` = @p14, `NormalizedEmail` = @p15, `NormalizedUserName` = @p16, `PasswordHash` = @p17, `PhoneNumber` = @p18, `PhoneNumberConfirmed` = @p19, `SecurityStamp` = @p20, `TwoFactorEnabled` = @p21, `UserName` = @p22
+WHERE `Id` = @p23 AND `ConcurrencyStamp` = @p24;
+SELECT ROW_COUNT();
+2025-10-02 03:56:14.691 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-10-02 03:56:14.711 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-10-02 03:56:14.867 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-10-02 03:56:15.332 +03:00 [INF] Executed DbCommand (108ms) [Parameters=[@p0='?' (Size = 255), @p1='?' (DbType = DateTime), @p2='?' (DbType = DateTime), @p3='?' (Size = 4000), @p4='?' (Size = 4000), @p5='?' (DbType = DateTime), @p6='?' (DbType = Int32), @p7='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-10-02 03:56:15.461 +03:00 [INF] Role 'SuperAdmin' successfully removed from user '70d4bcbc-fadb-4d6d-8e54-40409e80b5ce'
+2025-10-02 03:56:15.482 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 03:56:15.522 +03:00 [INF] Executed action E_Commerce.Controllers.UserManagementController.RemoveRoleToUserAsync (E-Commerce) in 2816.7646ms
+2025-10-02 03:56:15.530 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.UserManagementController.RemoveRoleToUserAsync (E-Commerce)'
+2025-10-02 03:56:15.538 +03:00 [INF] Request finished HTTP/1.1 PATCH http://localhost:5069/api/UserManagement/Remove-role/70d4bcbc-fadb-4d6d-8e54-40409e80b5ce?role=SuperAdmin - 200 122 application/json; charset=utf-8 3378.3288ms
+2025-10-02 03:56:29.721 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/UserManagement/user/70d4bcbc-fadb-4d6d-8e54-40409e80b5ce - null null
+2025-10-02 03:56:29.747 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 03:56:29.904 +03:00 [INF] Executed DbCommand (75ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 03:56:29.919 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce)'
+2025-10-02 03:56:29.944 +03:00 [INF] Route matched with {action = "GetUserByIdAsync", controller = "UserManagement"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.Services.AccountServices.UserMangment.UserQueryServiece+Userdto]]] GetUserByIdAsync(System.String) on controller E_Commerce.Controllers.UserManagementController (E-Commerce).
+2025-10-02 03:56:29.976 +03:00 [INF] In GetUsersAsync Method 
+2025-10-02 03:56:30.142 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[@__id_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__id_0)
+LIMIT 1
+2025-10-02 03:56:30.432 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__customer_Id_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__customer_Id_0
+2025-10-02 03:56:30.442 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.Services.AccountServices.UserMangment.UserQueryServiece+Userdto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 03:56:30.458 +03:00 [INF] Executed action E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce) in 496.5446ms
+2025-10-02 03:56:30.463 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce)'
+2025-10-02 03:56:30.467 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/UserManagement/user/70d4bcbc-fadb-4d6d-8e54-40409e80b5ce - 200 319 application/json; charset=utf-8 746.5097ms
+2025-10-02 04:00:12.839 +03:00 [INF] 3 servers were removed due to timeout
+2025-10-02 04:01:20.030 +03:00 [INF] Request starting HTTP/1.1 PATCH http://localhost:5069/api/UserManagement/add-role/70d4bcbc-fadb-4d6d-8e54-40409e80b5ce?role=SuperAdmin - null null
+2025-10-02 04:01:20.037 +03:00 [INF] CORS policy execution successful.
+2025-10-02 04:01:20.045 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 04:01:20.198 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 04:01:20.315 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.UserManagementController.AddRoleToUserAsync (E-Commerce)'
+2025-10-02 04:01:20.338 +03:00 [INF] Route matched with {action = "AddRoleToUserAsync", controller = "UserManagement"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[System.Boolean]]] AddRoleToUserAsync(System.String, System.String) on controller E_Commerce.Controllers.UserManagementController (E-Commerce).
+2025-10-02 04:01:20.388 +03:00 [INF] In GetUsersAsync Method 
+2025-10-02 04:01:20.395 +03:00 [INF] Attempting to add role 'SuperAdmin' to user with Id '70d4bcbc-fadb-4d6d-8e54-40409e80b5ce'
+2025-10-02 04:01:20.540 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__p_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__p_0)
+LIMIT 1
+2025-10-02 04:01:20.689 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 04:01:21.006 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 04:01:21.092 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-10-02 04:01:21.185 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 04:01:21.286 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-10-02 04:01:21.378 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 04:01:21.555 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[@p0='?' (Size = 255), @p1='?' (Size = 255), @p23='?' (Size = 255), @p2='?' (DbType = Int32), @p3='?' (DbType = Int32), @p4='?' (Size = 4000), @p24='?' (Size = 4000), @p5='?' (DbType = DateTime), @p6='?' (DbType = DateTime), @p7='?' (Size = 256), @p8='?' (DbType = Boolean), @p9='?' (DbType = Int32), @p10='?' (DbType = Int32), @p11='?' (DbType = DateTime), @p12='?' (DbType = Boolean), @p13='?' (DbType = DateTimeOffset), @p14='?' (Size = 4000), @p15='?' (Size = 256), @p16='?' (Size = 256), @p17='?' (Size = 4000), @p18='?' (Size = 4000), @p19='?' (DbType = Boolean), @p20='?' (Size = 4000), @p21='?' (DbType = Boolean), @p22='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `AspNetUserRoles` (`RoleId`, `UserId`)
+VALUES (@p0, @p1);
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p2, `Age` = @p3, `ConcurrencyStamp` = @p4, `CreateAt` = @p5, `DeletedAt` = @p6, `Email` = @p7, `EmailConfirmed` = @p8, `Gender` = @p9, `ImageId` = @p10, `LastVisit` = @p11, `LockoutEnabled` = @p12, `LockoutEnd` = @p13, `Name` = @p14, `NormalizedEmail` = @p15, `NormalizedUserName` = @p16, `PasswordHash` = @p17, `PhoneNumber` = @p18, `PhoneNumberConfirmed` = @p19, `SecurityStamp` = @p20, `TwoFactorEnabled` = @p21, `UserName` = @p22
+WHERE `Id` = @p23 AND `ConcurrencyStamp` = @p24;
+SELECT ROW_COUNT();
+2025-10-02 04:01:21.644 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-10-02 04:01:21.648 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-10-02 04:01:21.653 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-10-02 04:01:22.031 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@p0='?' (Size = 255), @p1='?' (DbType = DateTime), @p2='?' (DbType = DateTime), @p3='?' (Size = 4000), @p4='?' (Size = 4000), @p5='?' (DbType = DateTime), @p6='?' (DbType = Int32), @p7='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-10-02 04:01:22.113 +03:00 [INF] Role 'SuperAdmin' successfully added to user '70d4bcbc-fadb-4d6d-8e54-40409e80b5ce'
+2025-10-02 04:01:22.125 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 04:01:22.140 +03:00 [INF] Executed action E_Commerce.Controllers.UserManagementController.AddRoleToUserAsync (E-Commerce) in 1794.8207ms
+2025-10-02 04:01:22.152 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.UserManagementController.AddRoleToUserAsync (E-Commerce)'
+2025-10-02 04:01:22.163 +03:00 [INF] Request finished HTTP/1.1 PATCH http://localhost:5069/api/UserManagement/add-role/70d4bcbc-fadb-4d6d-8e54-40409e80b5ce?role=SuperAdmin - 200 122 application/json; charset=utf-8 2132.858ms
+2025-10-02 04:01:29.565 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/UserManagement/user/70d4bcbc-fadb-4d6d-8e54-40409e80b5ce - null null
+2025-10-02 04:01:29.575 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 04:01:30.027 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 04:01:30.047 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce)'
+2025-10-02 04:01:30.056 +03:00 [INF] Route matched with {action = "GetUserByIdAsync", controller = "UserManagement"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.Services.AccountServices.UserMangment.UserQueryServiece+Userdto]]] GetUserByIdAsync(System.String) on controller E_Commerce.Controllers.UserManagementController (E-Commerce).
+2025-10-02 04:01:30.078 +03:00 [INF] In GetUsersAsync Method 
+2025-10-02 04:01:30.230 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__id_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__id_0)
+LIMIT 1
+2025-10-02 04:01:30.390 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__customer_Id_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__customer_Id_0
+2025-10-02 04:01:30.403 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.Services.AccountServices.UserMangment.UserQueryServiece+Userdto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 04:01:30.412 +03:00 [INF] Executed action E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce) in 338.5262ms
+2025-10-02 04:01:30.437 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce)'
+2025-10-02 04:01:30.442 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/UserManagement/user/70d4bcbc-fadb-4d6d-8e54-40409e80b5ce - 200 332 application/json; charset=utf-8 876.2177ms
+2025-10-02 04:01:55.381 +03:00 [INF] Request starting HTTP/1.1 DELETE http://localhost:5069/api/UserManagement/delete-user/70d4bcbc-fadb-4d6d-8e54-40409e80b5ce - null null
+2025-10-02 04:01:55.387 +03:00 [INF] CORS policy execution successful.
+2025-10-02 04:01:55.389 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 04:01:55.535 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 04:01:55.567 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.UserManagementController.DeleteUserAccountAsync (E-Commerce)'
+2025-10-02 04:01:55.600 +03:00 [INF] Route matched with {action = "DeleteUserAccountAsync", controller = "UserManagement"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[System.Boolean]]] DeleteUserAccountAsync(System.String) on controller E_Commerce.Controllers.UserManagementController (E-Commerce).
+2025-10-02 04:01:55.609 +03:00 [INF] In DeleteUserAccountAsync Method 
+2025-10-02 04:01:55.770 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__p_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__p_0)
+LIMIT 1
+2025-10-02 04:01:56.062 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-10-02 04:01:56.157 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 04:01:56.337 +03:00 [INF] Executed DbCommand (80ms) [Parameters=[@p21='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p22='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = DateTime), @p10='?' (DbType = Boolean), @p11='?' (DbType = DateTimeOffset), @p12='?' (Size = 4000), @p13='?' (Size = 256), @p14='?' (Size = 256), @p15='?' (Size = 4000), @p16='?' (Size = 4000), @p17='?' (DbType = Boolean), @p18='?' (Size = 4000), @p19='?' (DbType = Boolean), @p20='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `LastVisit` = @p9, `LockoutEnabled` = @p10, `LockoutEnd` = @p11, `Name` = @p12, `NormalizedEmail` = @p13, `NormalizedUserName` = @p14, `PasswordHash` = @p15, `PhoneNumber` = @p16, `PhoneNumberConfirmed` = @p17, `SecurityStamp` = @p18, `TwoFactorEnabled` = @p19, `UserName` = @p20
+WHERE `Id` = @p21 AND `ConcurrencyStamp` = @p22;
+SELECT ROW_COUNT();
+2025-10-02 04:01:56.438 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-10-02 04:01:56.448 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-10-02 04:01:56.454 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-10-02 04:01:56.820 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@p0='?' (Size = 255), @p1='?' (DbType = DateTime), @p2='?' (DbType = DateTime), @p3='?' (Size = 4000), @p4='?' (Size = 4000), @p5='?' (DbType = DateTime), @p6='?' (DbType = Int32), @p7='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-10-02 04:01:56.912 +03:00 [INF] User 70d4bcbc-fadb-4d6d-8e54-40409e80b5ce soft deleted
+2025-10-02 04:01:56.918 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 04:01:56.929 +03:00 [INF] Executed action E_Commerce.Controllers.UserManagementController.DeleteUserAccountAsync (E-Commerce) in 1323.4269ms
+2025-10-02 04:01:56.936 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.UserManagementController.DeleteUserAccountAsync (E-Commerce)'
+2025-10-02 04:01:56.941 +03:00 [INF] Request finished HTTP/1.1 DELETE http://localhost:5069/api/UserManagement/delete-user/70d4bcbc-fadb-4d6d-8e54-40409e80b5ce - 200 122 application/json; charset=utf-8 1559.1898ms
+2025-10-02 04:04:31.608 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json-patch+json 63
+2025-10-02 04:04:31.619 +03:00 [INF] CORS policy execution successful.
+2025-10-02 04:04:31.666 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 04:04:31.834 +03:00 [INF] Executed DbCommand (81ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 04:04:31.845 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-10-02 04:04:31.859 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commerce.DtoModels.AccountDtos.LoginDTo) on controller E_Commerce.Controllers.AccountController (E-Commerce).
+2025-10-02 04:04:32.246 +03:00 [INF] In LoginAsync Method 
+2025-10-02 04:04:32.404 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 04:04:32.543 +03:00 [INF] 🔐 Generating Access Token for User ID: 70d4bcbc-fadb-4d6d-8e54-40409e80b5ce
+2025-10-02 04:04:32.550 +03:00 [INF] 🔐 Generating Access Token for User ID: 70d4bcbc-fadb-4d6d-8e54-40409e80b5ce
+2025-10-02 04:04:32.702 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-10-02 04:04:32.859 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 04:04:33.023 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@p21='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p22='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = DateTime), @p10='?' (DbType = Boolean), @p11='?' (DbType = DateTimeOffset), @p12='?' (Size = 4000), @p13='?' (Size = 256), @p14='?' (Size = 256), @p15='?' (Size = 4000), @p16='?' (Size = 4000), @p17='?' (DbType = Boolean), @p18='?' (Size = 4000), @p19='?' (DbType = Boolean), @p20='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `LastVisit` = @p9, `LockoutEnabled` = @p10, `LockoutEnd` = @p11, `Name` = @p12, `NormalizedEmail` = @p13, `NormalizedUserName` = @p14, `PasswordHash` = @p15, `PhoneNumber` = @p16, `PhoneNumberConfirmed` = @p17, `SecurityStamp` = @p18, `TwoFactorEnabled` = @p19, `UserName` = @p20
+WHERE `Id` = @p21 AND `ConcurrencyStamp` = @p22;
+SELECT ROW_COUNT();
+2025-10-02 04:04:33.246 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-10-02 04:04:33.387 +03:00 [INF] ✅ Access Token generated successfully for User ID: 70d4bcbc-fadb-4d6d-8e54-40409e80b5ce
+2025-10-02 04:04:33.393 +03:00 [INF] 🔑 Generating Refresh Token for User ID: 70d4bcbc-fadb-4d6d-8e54-40409e80b5ce
+2025-10-02 04:04:33.717 +03:00 [INF] ✅ RefreshToken generated and stored for User ID: 70d4bcbc-fadb-4d6d-8e54-40409e80b5ce
+2025-10-02 04:04:33.756 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 04:04:33.770 +03:00 [INF] Executed action E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce) in 1902.4982ms
+2025-10-02 04:04:33.854 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-10-02 04:04:33.935 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 200 1271 application/json; charset=utf-8 2327.7007ms
+2025-10-02 04:32:32.735 +03:00 [INF] Executed DbCommand (114ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-10-02 04:32:33.507 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-10-02 04:32:33.729 +03:00 [INF] Executed DbCommand (94ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-10-02 04:32:33.779 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-02 04:32:33.808 +03:00 [INF] Starting data seeding...
+2025-10-02 04:32:33.867 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-02 04:32:34.116 +03:00 [INF] DB tables already exist. Exit install
+2025-10-02 04:32:34.939 +03:00 [INF] Executed DbCommand (126ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 04:32:35.046 +03:00 [INF] Role 'Admin' already exists.
+2025-10-02 04:32:35.213 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 04:32:35.240 +03:00 [INF] Role 'User' already exists.
+2025-10-02 04:32:35.384 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 04:32:35.403 +03:00 [INF] Role 'SuperAdmin' already exists.
+2025-10-02 04:32:35.545 +03:00 [INF] Executed DbCommand (68ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 04:32:35.558 +03:00 [INF] Role 'DeliveryCompany' already exists.
+2025-10-02 04:32:35.751 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 04:32:36.080 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 04:32:36.386 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-10-02 04:32:36.476 +03:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-10-02 04:32:36.633 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 04:32:36.795 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 04:32:36.953 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-10-02 04:32:36.976 +03:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-10-02 04:32:37.126 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 04:32:37.287 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-10-02 04:32:37.308 +03:00 [INF] Execute GetAll for entity PaymentProvider
+2025-10-02 04:32:37.561 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-10-02 04:32:37.576 +03:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-10-02 04:32:37.712 +03:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-10-02 04:32:37.743 +03:00 [INF] Data seeding completed successfully.
+2025-10-02 04:32:39.446 +03:00 [INF] Now listening on: http://localhost:5069
+2025-10-02 04:32:39.706 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-10-02 04:32:39.897 +03:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-10-02 04:32:39.992 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-10-02 04:32:40.022 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-10-02 04:32:40.037 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-10-02 04:32:40.088 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-02 04:32:40.170 +03:00 [INF] Hosting environment: Development
+2025-10-02 04:32:40.183 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-10-02 04:32:40.305 +03:00 [INF] Server mrrobot:9520:43a69fe6 successfully announced in 198.6346 ms
+2025-10-02 04:32:40.335 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 627.5637ms
+2025-10-02 04:32:40.360 +03:00 [INF] Server mrrobot:9520:43a69fe6 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-10-02 04:32:40.362 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-10-02 04:32:40.385 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-10-02 04:32:40.476 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-02 04:32:40.644 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 281.8201ms
+2025-10-02 04:32:40.973 +03:00 [INF] Server mrrobot:9520:43a69fe6 all the dispatchers started
+2025-10-02 04:32:41.159 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 773.8205ms
+2025-10-02 04:32:41.194 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 717.8248ms
+2025-10-02 04:32:42.107 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-10-02 04:32:42.573 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 466.1004ms
+2025-10-02 04:34:22.443 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json-patch+json 60
+2025-10-02 04:34:22.461 +03:00 [INF] CORS policy execution successful.
+2025-10-02 04:34:22.471 +03:00 [WRN] Failed to determine the https port for redirect.
+2025-10-02 04:34:22.659 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 04:34:22.683 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-10-02 04:34:22.745 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commerce.DtoModels.AccountDtos.LoginDTo) on controller E_Commerce.Controllers.AccountController (E-Commerce).
+2025-10-02 04:34:23.350 +03:00 [INF] In LoginAsync Method 
+2025-10-02 04:34:23.509 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 04:34:23.992 +03:00 [INF] Executed DbCommand (81ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-10-02 04:34:24.167 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 04:34:24.466 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@p21='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p22='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = DateTime), @p10='?' (DbType = Boolean), @p11='?' (DbType = DateTimeOffset), @p12='?' (Size = 4000), @p13='?' (Size = 256), @p14='?' (Size = 256), @p15='?' (Size = 4000), @p16='?' (Size = 4000), @p17='?' (DbType = Boolean), @p18='?' (Size = 4000), @p19='?' (DbType = Boolean), @p20='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `LastVisit` = @p9, `LockoutEnabled` = @p10, `LockoutEnd` = @p11, `Name` = @p12, `NormalizedEmail` = @p13, `NormalizedUserName` = @p14, `PasswordHash` = @p15, `PhoneNumber` = @p16, `PhoneNumberConfirmed` = @p17, `SecurityStamp` = @p18, `TwoFactorEnabled` = @p19, `UserName` = @p20
+WHERE `Id` = @p21 AND `ConcurrencyStamp` = @p22;
+SELECT ROW_COUNT();
+2025-10-02 04:34:24.563 +03:00 [INF] Executing UnauthorizedObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 04:34:24.623 +03:00 [INF] Executed action E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce) in 1847.4562ms
+2025-10-02 04:34:24.640 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-10-02 04:34:24.660 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 401 674 application/json; charset=utf-8 2216.9812ms
+2025-10-02 04:34:33.396 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json-patch+json 63
+2025-10-02 04:34:33.409 +03:00 [INF] CORS policy execution successful.
+2025-10-02 04:34:33.444 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 04:34:33.459 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-10-02 04:34:33.462 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commerce.DtoModels.AccountDtos.LoginDTo) on controller E_Commerce.Controllers.AccountController (E-Commerce).
+2025-10-02 04:34:33.662 +03:00 [INF] In LoginAsync Method 
+2025-10-02 04:34:33.810 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 04:34:34.304 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-10-02 04:34:34.472 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 04:34:34.638 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@p21='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p22='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = DateTime), @p10='?' (DbType = Boolean), @p11='?' (DbType = DateTimeOffset), @p12='?' (Size = 4000), @p13='?' (Size = 256), @p14='?' (Size = 256), @p15='?' (Size = 4000), @p16='?' (Size = 4000), @p17='?' (DbType = Boolean), @p18='?' (Size = 4000), @p19='?' (DbType = Boolean), @p20='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `LastVisit` = @p9, `LockoutEnabled` = @p10, `LockoutEnd` = @p11, `Name` = @p12, `NormalizedEmail` = @p13, `NormalizedUserName` = @p14, `PasswordHash` = @p15, `PhoneNumber` = @p16, `PhoneNumberConfirmed` = @p17, `SecurityStamp` = @p18, `TwoFactorEnabled` = @p19, `UserName` = @p20
+WHERE `Id` = @p21 AND `ConcurrencyStamp` = @p22;
+SELECT ROW_COUNT();
+2025-10-02 04:34:34.670 +03:00 [INF] Login failed: Account deleted for og4381146@gmail.com
+2025-10-02 04:34:34.677 +03:00 [INF] Executing BadRequestObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 04:34:34.686 +03:00 [INF] Executed action E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce) in 1209.6557ms
+2025-10-02 04:34:34.697 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-10-02 04:34:34.701 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 400 674 application/json; charset=utf-8 1305.689ms
+2025-10-02 04:37:40.798 +03:00 [INF] 1 servers were removed due to timeout

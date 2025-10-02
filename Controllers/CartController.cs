@@ -12,7 +12,7 @@ namespace E_Commerce.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class CartController : ControllerBase
+    public class CartController : BaseController
     {
         private readonly ICartServices _cartServices;
         private readonly ILogger<CartController> _logger;
@@ -23,43 +23,11 @@ namespace E_Commerce.Controllers
             _logger = logger;
         }
 
-        private string GetCurrentUserId()
-        {
-            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
-        }
+ 
 
-        private List<string> GetModelErrors()
-        {
-            return ModelState.Values
-                .SelectMany(v => v.Errors)
-                .Select(e => e.ErrorMessage)
-                .ToList();
-        }
+   
 
-        private ActionResult<ApiResponse<T>> HandleResult<T>(Result<T> result, string? actionName = null, int? id = null)
-        {
-            var apiResponse = result.Success
-                ? ApiResponse<T>.CreateSuccessResponse(result.Message, result.Data, result.StatusCode, warnings: result.Warnings)
-                : ApiResponse<T>.CreateErrorResponse(result.Message, new ErrorResponse("Error", result.Message), result.StatusCode, warnings: result.Warnings);
-
-            switch (result.StatusCode)
-            {
-                case 200:
-                    return Ok(apiResponse);
-                case 201:
-                    return actionName != null && id.HasValue ? CreatedAtAction(actionName, new { id }, apiResponse) : StatusCode(201, apiResponse);
-                case 400:
-                    return BadRequest(apiResponse);
-                case 401:
-                    return Unauthorized(apiResponse);
-                case 404:
-                    return NotFound(apiResponse);
-                case 409:
-                    return Conflict(apiResponse);
-                default:
-                    return StatusCode(result.StatusCode, apiResponse);
-            }
-        }
+      
 
         /// <summary>
         /// Get the current user's cart
@@ -70,7 +38,7 @@ namespace E_Commerce.Controllers
         {
             try
             {
-                var userId = HttpContext.Items["UserId"].ToString();
+                var userId = GetUserId();
 
                 _logger.LogInformation("Executing GetCart");
                 var result = await _cartServices.GetCartAsync(userId);
@@ -100,7 +68,7 @@ namespace E_Commerce.Controllers
                     return BadRequest(ApiResponse<bool>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
                 }
 
-                var userId = GetCurrentUserId();
+                var userId = GetUserId();
                 if (string.IsNullOrEmpty(userId))
                 {
                     return Unauthorized(ApiResponse<bool>.CreateErrorResponse("Unauthorized", new ErrorResponse("Unauthorized", "User not authenticated"), 401));
@@ -136,7 +104,7 @@ namespace E_Commerce.Controllers
                     return BadRequest(ApiResponse<bool>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
                 }
 
-                var userId = GetCurrentUserId();
+                var userId = GetUserId();
                 if (string.IsNullOrEmpty(userId))
                 {
                     return Unauthorized(ApiResponse<bool>.CreateErrorResponse("Unauthorized", new ErrorResponse("Unauthorized", "User not authenticated"), 401));
@@ -170,7 +138,7 @@ namespace E_Commerce.Controllers
                     return BadRequest(ApiResponse<bool>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
                 }
 
-                var userId = GetCurrentUserId();
+                var userId = GetUserId();
                 if (string.IsNullOrEmpty(userId))
                 {
                     return Unauthorized(ApiResponse<bool>.CreateErrorResponse("Unauthorized", new ErrorResponse("Unauthorized", "User not authenticated"), 401));
@@ -196,7 +164,7 @@ namespace E_Commerce.Controllers
         {
             try
             {
-                var userId = GetCurrentUserId();
+                var userId = GetUserId();
                 if (string.IsNullOrEmpty(userId))
                 {
                     return Unauthorized(ApiResponse<bool>.CreateErrorResponse("Unauthorized", new ErrorResponse("Unauthorized", "User not authenticated"), 401));
@@ -218,7 +186,7 @@ namespace E_Commerce.Controllers
         {
             try
             {
-                var userId = GetCurrentUserId();
+                var userId = GetUserId();
                 if (string.IsNullOrEmpty(userId))
                 {
                     return Unauthorized(ApiResponse<bool>.CreateErrorResponse("Unauthorized", new ErrorResponse("Unauthorized", "User not authenticated"), 401));

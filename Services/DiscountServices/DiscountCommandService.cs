@@ -19,8 +19,10 @@ namespace E_Commerce.Services.DiscountServices
         private readonly IAdminOpreationServices _adminOperationServices;
         private readonly IDiscountCacheHelper _cacheHelper;
         private readonly ICartServices _cartServices;
+        private readonly IDiscountBackgroundJopMethod _discountBackgroundJopMethod;
 
         public DiscountCommandService(
+            IDiscountBackgroundJopMethod discountBackgroundJopMethod,
             ILogger<DiscountCommandService> logger,
             IBackgroundJobClient backgroundJobClient,
             IUnitOfWork unitOfWork,
@@ -28,6 +30,7 @@ namespace E_Commerce.Services.DiscountServices
             IDiscountCacheHelper cacheHelper,
             ICartServices cartServices)
         {
+            _discountBackgroundJopMethod = discountBackgroundJopMethod;
             _logger = logger;
             _backgroundJobClient = backgroundJobClient;
             _unitOfWork = unitOfWork;
@@ -81,7 +84,7 @@ namespace E_Commerce.Services.DiscountServices
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
-                _cacheHelper.ScheduleDiscountCheck(discount.Id, discount.StartDate, discount.EndDate);
+                _discountBackgroundJopMethod.ScheduleDiscountCheck(discount.Id, discount.StartDate, discount.EndDate);
 
                 var discountDto = new DiscountDto
                 {
@@ -100,7 +103,7 @@ namespace E_Commerce.Services.DiscountServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error in CreateDiscountAsync for discount {dto.Name}");
-                _cacheHelper.NotifyAdminError($"Error in CreateDiscountAsync for discount {dto.Name}: {ex.Message}", ex.StackTrace);
+                _discountBackgroundJopMethod.NotifyAdminError($"Error in CreateDiscountAsync for discount {dto.Name}: {ex.Message}", ex.StackTrace);
                 return Result<DiscountDto>.Fail("Error creating discount", 500);
             }
         }
@@ -171,7 +174,7 @@ namespace E_Commerce.Services.DiscountServices
                 await transaction.CommitAsync();
                 _cacheHelper.ClearProductCache();
 
-                _cacheHelper.ScheduleDiscountCheck(discount.Id, discount.StartDate, discount.EndDate);
+                _discountBackgroundJopMethod.ScheduleDiscountCheck(discount.Id, discount.StartDate, discount.EndDate);
 
                 var discountDto = new DiscountDto
                 {
@@ -192,7 +195,7 @@ namespace E_Commerce.Services.DiscountServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error in UpdateDiscountAsync for id: {id}");
-                _cacheHelper.NotifyAdminError($"Error in UpdateDiscountAsync for id {id}: {ex.Message}", ex.StackTrace);
+                _discountBackgroundJopMethod.NotifyAdminError($"Error in UpdateDiscountAsync for id {id}: {ex.Message}", ex.StackTrace);
                 return Result<DiscountDto>.Fail("Error updating discount", 500);
             }
         }
@@ -235,7 +238,7 @@ namespace E_Commerce.Services.DiscountServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error in DeleteDiscountAsync for id: {id}");
-                _cacheHelper.NotifyAdminError($"Error in DeleteDiscountAsync for id {id}: {ex.Message}", ex.StackTrace);
+                _discountBackgroundJopMethod.NotifyAdminError($"Error in DeleteDiscountAsync for id {id}: {ex.Message}", ex.StackTrace);
                 return Result<bool>.Fail("Error deleting discount", 500);
             }
         }
@@ -288,7 +291,7 @@ namespace E_Commerce.Services.DiscountServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error in RestoreDiscountAsync for id: {id}");
-                _cacheHelper.NotifyAdminError($"Error in RestoreDiscountAsync for id {id}: {ex.Message}", ex.StackTrace);
+                _discountBackgroundJopMethod.NotifyAdminError($"Error in RestoreDiscountAsync for id {id}: {ex.Message}", ex.StackTrace);
                 return Result<DiscountDto>.Fail("Error restoring discount", 500);
             }
         }
@@ -340,7 +343,7 @@ namespace E_Commerce.Services.DiscountServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error in ActivateDiscountAsync for id: {id}");
-                _cacheHelper.NotifyAdminError($"Error in ActivateDiscountAsync for id {id}: {ex.Message}", ex.StackTrace);
+                _discountBackgroundJopMethod.NotifyAdminError($"Error in ActivateDiscountAsync for id {id}: {ex.Message}", ex.StackTrace);
                 return Result<bool>.Fail("Error activating discount", 500);
             }
         }
@@ -387,7 +390,7 @@ namespace E_Commerce.Services.DiscountServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error in DeactivateDiscountAsync for id: {id}");
-                _cacheHelper.NotifyAdminError($"Error in DeactivateDiscountAsync for id {id}: {ex.Message}", ex.StackTrace);
+                _discountBackgroundJopMethod.NotifyAdminError($"Error in DeactivateDiscountAsync for id {id}: {ex.Message}", ex.StackTrace);
 
                 return Result<bool>.Fail("Error deactivating discount", 500);
             }
@@ -453,7 +456,7 @@ namespace E_Commerce.Services.DiscountServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error in UpdateCartPricesOnDiscountChange for discountId: {discountId}");
-                _cacheHelper.NotifyAdminError($"Error in UpdateCartPricesOnDiscountChange for discountId {discountId}: {ex.Message}", ex.StackTrace);
+                _discountBackgroundJopMethod.NotifyAdminError($"Error in UpdateCartPricesOnDiscountChange for discountId {discountId}: {ex.Message}", ex.StackTrace);
                 return Result<bool>.Fail("Error updating cart prices", 500);
             }
         }

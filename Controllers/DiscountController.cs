@@ -13,8 +13,8 @@ namespace E_Commerce.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize(Roles = "Admin")]
-	public class DiscountController : ControllerBase
+	[Authorize(Roles = "Admin,SuperAdmin")]
+	public class DiscountController : BaseController
 	{
 		private readonly IDiscountService _discountService;
 		private readonly ILogger<DiscountController> _logger;
@@ -25,31 +25,7 @@ namespace E_Commerce.Controllers
 			_logger = logger;
 		}
 
-		private ActionResult<ApiResponse<T>> HandleResult<T>(Result<T> result, string? actionName = null, int? id = null)
-		{
-			var apiResponse = result.Success
-				? ApiResponse<T>.CreateSuccessResponse(result.Message, result.Data, result.StatusCode, warnings: result.Warnings)
-				: ApiResponse<T>.CreateErrorResponse(result.Message, new ErrorResponse("Error", result.Message), result.StatusCode, warnings: result.Warnings);
-
-			switch (result.StatusCode)
-			{
-				case 200:
-					return Ok(apiResponse);
-				case 201:
-					return actionName != null && id.HasValue ? CreatedAtAction(actionName, new { id }, apiResponse) : StatusCode(201, apiResponse);
-				case 400:
-					return BadRequest(apiResponse);
-				case 401:
-					return Unauthorized(apiResponse);
-				case 404:
-					return NotFound(apiResponse);
-				case 409:
-					return Conflict(apiResponse);
-				default:
-					return StatusCode(result.StatusCode, apiResponse);
-			}
-		}
-
+		
 	
 		[HttpGet("{id}")]
 		[ActionName(nameof(GetByIdAsync))]
@@ -88,7 +64,7 @@ namespace E_Commerce.Controllers
 				return BadRequest(ApiResponse<DiscountDto>.CreateErrorResponse("Check on data", new ErrorResponse("Invalid data", errors)));
 			}
 
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId =  GetUserId();
 			var response = await _discountService.CreateDiscountAsync(model, userId);
 			return HandleResult<DiscountDto>(response, nameof(GetByIdAsync), response.Data?.Id);
 		}
@@ -100,15 +76,12 @@ namespace E_Commerce.Controllers
 			_logger.LogInformation($"Executing {nameof(UpdateAsync)} for ID: {id}");
 			if (!ModelState.IsValid)
 			{
-				var errors = string.Join(", ", ModelState.Values
-					.SelectMany(v => v.Errors)
-					.Select(e => e.ErrorMessage)
-					.ToList());
+				var errors = GetModelErrors();
 				_logger.LogError($"Validation Errors: {errors}");
 				return BadRequest(ApiResponse<DiscountDto>.CreateErrorResponse("", new ErrorResponse("Invalid data", errors)));
 			}
 
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId = GetUserId();
 			var response = await _discountService.UpdateDiscountAsync(id, model, userId);
 			return HandleResult<DiscountDto>(response, nameof(GetByIdAsync), id);
 		}
@@ -126,7 +99,7 @@ namespace E_Commerce.Controllers
 				));
 			}
 			_logger.LogInformation($"Executing {nameof(DeleteAsync)} for ID: {id}");
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId =  GetUserId();
 			var response = await _discountService.DeleteDiscountAsync(id, userId);
 			return HandleResult<bool>(response, nameof(GetByIdAsync), id);
 		}
@@ -144,7 +117,7 @@ namespace E_Commerce.Controllers
 				));
 			}
 			_logger.LogInformation($"Executing {nameof(RestoreAsync)} for ID: {id}");
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId =  GetUserId();
 			var response = await _discountService.RestoreDiscountAsync(id, userId);
 			return HandleResult<DiscountDto>(response, nameof(GetByIdAsync), id);
 		}
@@ -170,7 +143,7 @@ namespace E_Commerce.Controllers
 				));
 			}
 
-			var role = User.FindFirst(ClaimTypes.Role)?.Value ?? "User";
+			var role = HasManagementRole();
 			var response = await _discountService.FilterAsync(search, isActive, includeDeleted, page, pageSize, role);
 			return HandleResult<List<DiscountDto>>(response, nameof(FilterAsync));
 		}
@@ -180,22 +153,22 @@ namespace E_Commerce.Controllers
 		[HttpGet("expired")]
 		[ActionName(nameof(GetExpiredAsync))]
 		[ResponseCache(Duration = 60)]
-		public async Task<ActionResult<ApiResponse<List<DiscountDto>>>> GetExpiredAsync()
+		public async Task<ActionResult<ApiResponse<List<DiscountDto>>>> GetExpiredAsync([FromQuery]int page = 1,[FromQuery] int pagesize = 10)
 		{
 			_logger.LogInformation($"Executing {nameof(GetExpiredAsync)}");
 			
-			var response = await _discountService.GetExpiredDiscountsAsync();
+			var response = await _discountService.GetExpiredDiscountsAsync(page,pagesize);
 			return HandleResult<List<DiscountDto>>(response, nameof(GetExpiredAsync));
 		}
 
 		[HttpGet("upcoming")]
 		[ActionName(nameof(GetUpcomingAsync))]
 		[ResponseCache(Duration = 60)]
-		public async Task<ActionResult<ApiResponse<List<DiscountDto>>>> GetUpcomingAsync()
+		public async Task<ActionResult<ApiResponse<List<DiscountDto>>>> GetUpcomingAsync([FromQuery] int page = 1, [FromQuery] int pagesize = 10)
 		{
 			_logger.LogInformation($"Executing {nameof(GetUpcomingAsync)}");
 
-			var response = await _discountService.GetUpcomingDiscountsAsync();
+			var response = await _discountService.GetUpcomingDiscountsAsync(page,pagesize);
 			return HandleResult<List<DiscountDto>>(response, nameof(GetUpcomingAsync));
 		}
 
@@ -231,9 +204,9 @@ namespace E_Commerce.Controllers
 				));
 			}
 			_logger.LogInformation($"Executing {nameof(ActivateAsync)} for ID: {id}");
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId =  GetUserId();
 			var response = await _discountService.ActivateDiscountAsync(id, userId);
-			return HandleResult<bool>(response, nameof(GetByIdAsync), id);
+			return HandleResult<bool>(response, nameof(ActivateAsync), id);
 		}
 
 		[HttpPatch("{id}/deactivate")]
@@ -249,9 +222,9 @@ namespace E_Commerce.Controllers
 				));
 			}
 			_logger.LogInformation($"Executing {nameof(DeactivateAsync)} for ID: {id}");
-			var userId = HttpContext.Items["UserId"]?.ToString();
+			var userId =  GetUserId();
 			var response = await _discountService.DeactivateDiscountAsync(id, userId);
-			return HandleResult<bool>(response, nameof(GetByIdAsync), id);
+			return HandleResult<bool>(response, nameof(DeactivateAsync), id);
 		}
 
 	}

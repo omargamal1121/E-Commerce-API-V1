@@ -10,7 +10,7 @@ namespace E_Commerce.Controllers
 {
 		[Route("api/[Controller]")]
 		[ApiController]
-		[Authorize(Roles ="Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 	
 	public class AdminOperationController : ControllerBase
 	{

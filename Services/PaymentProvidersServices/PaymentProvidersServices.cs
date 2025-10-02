@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using E_Commerce.Services.AdminOperationServices;
+using Microsoft.IdentityModel.Tokens;
 
 namespace E_Commerce.Services.PaymentProvidersServices
 {
@@ -125,6 +126,7 @@ namespace E_Commerce.Services.PaymentProvidersServices
 					return Result<PaymentProviderDto>.Fail("Failed to add admin operation", 500);
 				}
 
+				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
 				// Clear cache after successful commit
@@ -248,7 +250,12 @@ namespace E_Commerce.Services.PaymentProvidersServices
 						Name = p.Name,
 						IsDeleted = p.DeletedAt != null,
 						CreatedAt = p.CreatedAt ?? DateTime.MinValue,
-						UpdatedAt = p.ModifiedAt
+						UpdatedAt = p.ModifiedAt,
+						ApiEndpoint = p.ApiEndpoint,
+						Hmac= p.Hmac,
+						IframeId = p.IframeId,
+						 PrivateKey = p.PrivateKey,
+						 PublicKey = p.PublicKey,	
 					})
 					.FirstOrDefaultAsync();
 
@@ -344,8 +351,8 @@ namespace E_Commerce.Services.PaymentProvidersServices
 					return Result<bool>.Fail("Payment provider not found or deleted");
 				}
 
-				// Check for duplicate name (case-insensitive)
-				if (paymentprovider.Name.ToLower() != dto.Name.ToLower())
+				
+				if (!dto.Name.IsNullOrEmpty()&&paymentprovider.Name.ToLower() != dto.Name.ToLower())
 				{
 					var nameExists = await _unitOfWork.Repository<PaymentProvider>().GetAll()
 						.AnyAsync(p => p.Name.ToLower() == dto.Name.ToLower() && p.Id != id && p.DeletedAt == null);
@@ -366,37 +373,37 @@ namespace E_Commerce.Services.PaymentProvidersServices
 					paymentprovider.Name = dto.Name;
 				}
 
-				if (!string.Equals(paymentprovider.ApiEndpoint, dto.ApiEndpoint))
+				if (!dto.ApiEndpoint.IsNullOrEmpty()&&!string.Equals(paymentprovider.ApiEndpoint, dto.ApiEndpoint))
 				{
 					updatedFields.Add($"ApiEndpoint changed from '{paymentprovider.ApiEndpoint}' to '{dto.ApiEndpoint}'");
 					paymentprovider.ApiEndpoint = dto.ApiEndpoint;
 				}
 
-				if (!string.Equals(paymentprovider.PublicKey, dto.PublicKey))
+				if (!dto.PublicKey.IsNullOrEmpty() && !string.Equals(paymentprovider.PublicKey, dto.PublicKey))
 				{
 					updatedFields.Add($"PublicKey changed");
 					paymentprovider.PublicKey = dto.PublicKey;
 				}
 
-				if (!string.Equals(paymentprovider.PrivateKey, dto.PrivateKey))
+				if (!dto.PrivateKey.IsNullOrEmpty() && !string.Equals(paymentprovider.PrivateKey, dto.PrivateKey))
 				{
 					updatedFields.Add($"PrivateKey changed");
 					paymentprovider.PrivateKey = dto.PrivateKey;
 				}
 
-				if (!string.Equals(paymentprovider.Hmac, dto.Hmac))
+				if (!dto.Hmac.IsNullOrEmpty() && !string.Equals(paymentprovider.Hmac, dto.Hmac))
 				{
 					updatedFields.Add($"Hmac changed");
 					paymentprovider.Hmac = dto.Hmac;
 				}
 
-				if (!string.Equals(paymentprovider.IframeId, dto.IframeId))
+				if (!dto.IframeId.IsNullOrEmpty() && !string.Equals(paymentprovider.IframeId, dto.IframeId))
 				{
 					updatedFields.Add($"IframeId changed from '{paymentprovider.IframeId}' to '{dto.IframeId}'");
 					paymentprovider.IframeId = dto.IframeId;
 				}
 
-				if (paymentprovider.Provider != dto.PaymentProvider)
+				if ( paymentprovider.Provider != dto.PaymentProvider)
 				{
 					updatedFields.Add($"Provider changed from '{paymentprovider.Provider}' to '{dto.PaymentProvider}'");
 					paymentprovider.Provider = dto.PaymentProvider;
@@ -491,6 +498,17 @@ namespace E_Commerce.Services.PaymentProvidersServices
 		public string Name { get; set; }          
 		public bool IsDeleted { get; set; }   
 		public DateTime CreatedAt { get; set; }     
-		public DateTime? UpdatedAt { get; set; }   
-	}
+		public DateTime? UpdatedAt { get; set; }
+
+        public string ApiEndpoint { get; set; } = string.Empty;
+
+        [StringLength(200, ErrorMessage = "Public Key is too long.")]
+        public string? PublicKey { get; set; }
+
+        [StringLength(200, ErrorMessage = "Private Key is too long.")]
+        public string? PrivateKey { get; set; }
+        public string? Hmac { get; set; }
+        public PaymentProviderEnums PaymentProvider { get; set; }
+        public string? IframeId { get; set; }
+    }
 }

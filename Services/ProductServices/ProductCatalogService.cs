@@ -25,8 +25,14 @@ namespace E_Commerce.Services.ProductServices
 {
 	public interface IProductCatalogService
 	{
-		
-		Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive, bool? deletedOnly, bool IsAdmin = false);
+
+		Task<Result<int>> CountProductsAsync(
+		bool? isActive = null,
+		bool? isDelete = null,
+		bool? inStock = null,
+		bool isAdmin = false);
+
+        Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive, bool? deletedOnly, bool IsAdmin = false);
 		public Task UpdateProductQuantity(int Productid  );
 		Task<Result<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId);
 		Task<Result<ProductDto>> UpdateProductAsync(int id, UpdateProductDto dto, string userId);
@@ -151,8 +157,50 @@ namespace E_Commerce.Services.ProductServices
 				return Result<ProductDetailDto>.Fail("Error retrieving product", 500);
 			}
 		}
-		
-		public async Task<Result<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId)
+
+        public async Task<Result<int>> CountProductsAsync(
+        bool? isActive = null,
+        bool? isDelete = null,
+        bool? inStock = null,
+        bool isAdmin = false)
+        {
+            _logger.LogInformation(
+                "Execute {Method}_isActive:{IsActive}_isDelete:{IsDelete}_inStock:{InStock}_isAdmin:{IsAdmin}",
+                nameof(CountProductsAsync),
+                isActive,
+                isDelete,
+                inStock,
+                isAdmin
+            );
+
+            if (!isAdmin)
+            {
+                isActive = true;
+				isDelete = false;
+				inStock = true;
+            }
+
+            var query = _unitOfWork.Product.GetAll();
+
+  
+            if (isDelete.HasValue)
+                query = isDelete.Value
+                    ? query.Where(p => p.DeletedAt != null)
+                    : query.Where(p => p.DeletedAt == null);
+
+            if (isActive.HasValue)
+                query = query.Where(p => p.IsActive == isActive);
+
+            // Filter by stock
+            if (inStock.HasValue)
+                query = inStock.Value
+                    ? query.Where(p => p.Quantity != 0)
+                    : query.Where(p => p.Quantity == 0);
+
+            return Result<int>.Ok(await query.CountAsync());
+        }
+
+        public async Task<Result<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId)
 		{
 			if (dto == null)
 			{

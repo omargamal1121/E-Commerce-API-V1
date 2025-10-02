@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using E_Commerce.Services.EmailServices;
 
 namespace E_Commerce.Services.PaymentWebhookService
 {
@@ -18,13 +19,13 @@ namespace E_Commerce.Services.PaymentWebhookService
 
 	public class PaymentWebhookService : IPaymentWebhookService
 	{
+		private readonly IErrorNotificationService _errorNotificationService;
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly ILogger<PaymentWebhookService> _logger;
 		private readonly IPaymentServices _paymentServices;
 		private readonly IOrderServices _orderServices;
 		private readonly IConfiguration _configuration;
 
-		// Paymob fields order (as per docs)
 		private static readonly string[] HmacFieldsOrder = new[]
 		{
 			"amount_cents", "created_at", "currency", "error_occured", "has_parent_transaction",
@@ -34,12 +35,14 @@ namespace E_Commerce.Services.PaymentWebhookService
 		};
 
 		public PaymentWebhookService(
+			IErrorNotificationService errorNotificationService,
 			IOrderServices orderServices,
 			IPaymentServices paymentServices,
 			IUnitOfWork unitOfWork,
 			ILogger<PaymentWebhookService> logger,
 			IConfiguration configuration)
 		{
+			_errorNotificationService = errorNotificationService;
 			_orderServices = orderServices;
 			_paymentServices = paymentServices;
 			_unitOfWork = unitOfWork;
@@ -60,8 +63,8 @@ namespace E_Commerce.Services.PaymentWebhookService
 
             // validate HMAC
             string? secretKey = _configuration["Security:Paymob:HMAC"];
-
-            if (string.IsNullOrEmpty(secretKey))
+			_logger.LogInformation(secretKey);
+			if (string.IsNullOrEmpty(secretKey))
 			{
 				_logger.LogError("Paymob HMAC secret key not configured");
 				return false;
@@ -71,29 +74,26 @@ namespace E_Commerce.Services.PaymentWebhookService
 			if (!isValid)
 			{
 				_logger.LogError("HMAC validation failed for Paymob webhook TxnId={TxnId}", dto.Obj.Id);
-				return false; // reject
+				return false;
 			}
 
-			// Start transaction
-			using var transaction = await _unitOfWork.BeginTransactionAsync();
 			
 			try
 			{
 				var webhookResult = await ProcessWebhookData(dto);
 				if (!webhookResult.Success)
 				{
-					await transaction.RollbackAsync();
+		
 					return false;
 				}
 					await _unitOfWork.CommitAsync();
-				await transaction.CommitAsync();
 				_logger.LogInformation("Successfully processed Paymob webhook for Order {OrderId}", webhookResult.OrderId);
 				return true;
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, "Error while handling Paymob webhook");
-				await transaction.RollbackAsync();
+				_=_errorNotificationService.SendErrorNotificationAsync(ex.Message);
 				return false;
 			}
 		}
@@ -101,6 +101,7 @@ namespace E_Commerce.Services.PaymentWebhookService
 		private async Task<(bool Success, int OrderId)> ProcessWebhookData(PaymobWebhookDto dto)
 		{
 			var transaction = dto.Obj;
+		
 			var webhook = new PaymentWebhook
 			{
 				TransactionId = transaction.Id,
@@ -143,7 +144,6 @@ namespace E_Commerce.Services.PaymentWebhookService
 				webhook.OrderId = localOrderId;
 			}
 
-			// Idempotency check
 			bool isExist = await _unitOfWork.Repository<PaymentWebhook>()
 				.GetAll()
 				.AnyAsync(w => w.WebhookUniqueKey == webhook.WebhookUniqueKey);
@@ -151,7 +151,7 @@ namespace E_Commerce.Services.PaymentWebhookService
 			if (isExist)
 			{
 				_logger.LogWarning("Duplicate webhook detected with key: {WebhookUniqueKey}", webhook.WebhookUniqueKey);
-				return (true, localOrderId); // Success but already processed
+				return (true, localOrderId); 
 			}
 
 			await _unitOfWork.Repository<PaymentWebhook>().CreateAsync(webhook);
@@ -159,10 +159,10 @@ namespace E_Commerce.Services.PaymentWebhookService
 			if (localOrderId <= 0)
 			{
 				_logger.LogWarning("Webhook could not be linked to a local order. TxnId: {TxnId}", transaction.Id);
-				return (true, 0); // Success but no order to update
+				return (true, 0); 
 			}
 
-			// Update payment and order status
+		
 			var updateResult = await UpdatePaymentAndOrderStatus(transaction, localOrderId);
 			if (!updateResult.Success)
 			{
@@ -173,29 +173,88 @@ namespace E_Commerce.Services.PaymentWebhookService
 			return (true, localOrderId);
 		}
 
-		private async Task<int> ExtractAndValidateOrderId(PaymobTransactionObj transaction)
-		{
-			if (string.IsNullOrWhiteSpace(transaction.Order?.MerchantOrderId) ||
-				!int.TryParse(transaction.Order.MerchantOrderId, out var parsedOrderId))
-			{
-				return 0;
-			}
+        private async Task<int> ExtractAndValidateOrderId(PaymobTransactionObj transaction)
+        {
+            var merchantOrderNumber = transaction.Order?.MerchantOrderId;
 
-			// Validate that the order exists in our database
-			var orderExists = await _unitOfWork.Repository<Models.Order>()
-				.GetAll()
-				.AnyAsync(o => o.Id == parsedOrderId);
+            if (string.IsNullOrWhiteSpace(merchantOrderNumber))
+                return 0;
 
-			if (!orderExists)
-			{
-				_logger.LogWarning("Order {OrderId} not found in database", parsedOrderId);
-				return 0;
-			}
+            var order = await _unitOfWork.Repository<Models.Order>()
+                .GetAll()
+                .FirstOrDefaultAsync(o => o.OrderNumber == merchantOrderNumber);
 
-			return parsedOrderId;
-		}
+            return order?.Id ?? 0;
+        }
 
-		private async Task<(bool Success, int? PaymentId)> UpdatePaymentAndOrderStatus(PaymobTransactionObj transaction, int localOrderId)
+
+        private bool VerifyPaymobHmac(JObject obj, string receivedHmac, string secretKey)
+        {
+            try
+            {
+				var sb = new StringBuilder();
+                _logger.LogInformation("=== HMAC Field Extraction ===");
+
+                foreach (var field in HmacFieldsOrder)
+                {
+                    string[] parts = field.Split('.');
+                    JToken? current = obj;
+
+                    foreach (var part in parts)
+                    {
+                        if (current == null || current.Type == JTokenType.Null)
+                        {
+                            current = null;
+                            break;
+                        }
+                        current = current[part];
+                    }
+
+                    string fieldValue = "";
+                    if (current == null || current.Type == JTokenType.Null)
+                    {
+                        fieldValue = "";
+                    }
+                    else if (current.Type == JTokenType.Boolean)
+                    {
+                        fieldValue = current.Value<bool>() ? "true" : "false";
+                    }
+                    else
+                    {
+                        fieldValue = current.ToString();
+                    }
+
+                    sb.Append(fieldValue);
+                    _logger.LogDebug("HMAC Field '{Field}': '{Value}' (Type: {Type})",
+                        field,
+                        fieldValue,
+                        current?.Type.ToString() ?? "null");
+                }
+
+                var dataToHash = sb.ToString();
+                _logger.LogInformation("Final HMAC string: '{DataToHash}'", dataToHash);
+                _logger.LogInformation("HMAC string length: {Length}", dataToHash.Length);
+
+                using var hmac = new HMACSHA512(Encoding.UTF8.GetBytes(secretKey));
+                var hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(dataToHash));
+                var calculatedHmac = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+
+                _logger.LogInformation("Calculated HMAC: {CalculatedHmac}", calculatedHmac);
+                _logger.LogInformation("Received HMAC: {ReceivedHmac}", receivedHmac);
+
+                bool isValid = string.Equals(calculatedHmac, receivedHmac, StringComparison.OrdinalIgnoreCase);
+                _logger.LogInformation("HMAC validation result: {IsValid}", isValid);
+
+                return isValid;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error calculating HMAC for Paymob webhook");
+                return false;
+            }
+        }
+       
+        private async Task<(bool Success, int? PaymentId)> UpdatePaymentAndOrderStatus(PaymobTransactionObj transaction, int localOrderId)
 		{
 			PaymentStatus status = PaymentStatus.Failed;
 			OrderStatus orderStatus = OrderStatus.PendingPayment;
@@ -207,7 +266,7 @@ namespace E_Commerce.Services.PaymentWebhookService
 			else if (transaction.Success)
 			{
 				status = PaymentStatus.Completed;
-				orderStatus = OrderStatus.Processing;
+				orderStatus = OrderStatus.Confirmed;
 			}
 
 			var paymentResult = await _paymentServices.UpdatePaymentAfterPaid(
@@ -232,53 +291,7 @@ namespace E_Commerce.Services.PaymentWebhookService
 			return (true, paymentResult.Data);
 		}
 
-		private bool VerifyPaymobHmac(JObject obj, string receivedHmac, string secretKey)
-		{
-			try
-			{
-				var sb = new StringBuilder();
-				foreach (var field in HmacFieldsOrder)
-				{
-					string[] parts = field.Split('.');
-					JToken? current = obj;
-					foreach (var part in parts)
-					{
-						if (current == null || current.Type == JTokenType.Null)
-						{
-							current = null;
-							break;
-						}
-						current = current[part];
-					}
-
-					if (current == null || current.Type == JTokenType.Null)
-					{
-						sb.Append("");
-					}
-					else if (current.Type == JTokenType.Boolean)
-					{
-						sb.Append(current.Value<bool>() ? "true" : "false");
-					}
-					else
-					{
-						sb.Append(current.ToString());
-					}
-				}
-
-				var dataToHash = sb.ToString();
-
-				using var hmac = new HMACSHA512(Encoding.UTF8.GetBytes(secretKey));
-				var hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(dataToHash));
-				var calculatedHmac = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-
-				return string.Equals(calculatedHmac, receivedHmac, StringComparison.OrdinalIgnoreCase);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, "Error calculating HMAC for Paymob webhook");
-				return false;
-			}
-		}
+	
 
 		private string? ExtractAuthorizationCode(PaymobTransactionObj obj) =>
 			obj.SourceData?.SubType == "card" ? $"AUTH_{obj.Id}" : null;

@@ -1,0 +1,136 @@
+2025-10-02 03:53:50.488 +03:00 [INF] Executed DbCommand (80ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-10-02 03:53:51.264 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-10-02 03:53:51.433 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-10-02 03:53:51.455 +03:00 [INF] Applying migration '20251002005320_updateadminopreation'.
+2025-10-02 03:53:52.291 +03:00 [INF] Executed DbCommand (325ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE `AspNetUsers` DROP FOREIGN KEY `FK_AspNetUsers_Images_ImageId1`;
+2025-10-02 03:53:52.407 +03:00 [INF] Executed DbCommand (108ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE `AspNetUsers` DROP INDEX `IX_AspNetUsers_ImageId1`;
+2025-10-02 03:53:52.616 +03:00 [INF] Executed DbCommand (201ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE `AspNetUsers` DROP COLUMN `ImageId1`;
+2025-10-02 03:53:52.724 +03:00 [INF] Executed DbCommand (104ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE `adminOperationsLogs` MODIFY COLUMN `ItemId` longtext CHARACTER SET utf8mb4 NULL;
+2025-10-02 03:53:52.865 +03:00 [INF] Executed DbCommand (131ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX `IX_AspNetUsers_ImageId` ON `AspNetUsers` (`ImageId`);
+2025-10-02 03:53:53.013 +03:00 [INF] Executed DbCommand (142ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE `AspNetUsers` ADD CONSTRAINT `FK_AspNetUsers_Images_ImageId` FOREIGN KEY (`ImageId`) REFERENCES `Images` (`Id`);
+2025-10-02 03:53:53.087 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('20251002005320_updateadminopreation', '8.0.13');
+2025-10-02 03:53:53.172 +03:00 [INF] Starting data seeding...
+2025-10-02 03:53:53.197 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-02 03:53:53.387 +03:00 [INF] DB tables already exist. Exit install
+2025-10-02 03:53:53.881 +03:00 [INF] Executed DbCommand (102ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 03:53:53.941 +03:00 [INF] Role 'Admin' already exists.
+2025-10-02 03:53:54.083 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 03:53:54.090 +03:00 [INF] Role 'User' already exists.
+2025-10-02 03:53:54.233 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 03:53:54.241 +03:00 [INF] Role 'SuperAdmin' already exists.
+2025-10-02 03:53:54.384 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 03:53:54.402 +03:00 [INF] Role 'DeliveryCompany' already exists.
+2025-10-02 03:53:54.607 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 03:53:54.947 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 03:53:55.177 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-10-02 03:53:55.200 +03:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-10-02 03:53:55.379 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 03:53:55.529 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 03:53:55.674 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-10-02 03:53:55.681 +03:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-10-02 03:53:55.822 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 03:53:55.990 +03:00 [INF] Executed DbCommand (75ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-10-02 03:53:56.012 +03:00 [INF] Execute GetAll for entity PaymentProvider
+2025-10-02 03:53:56.235 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-10-02 03:53:56.245 +03:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-10-02 03:53:56.315 +03:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-10-02 03:53:56.326 +03:00 [INF] Data seeding completed successfully.
+2025-10-02 03:53:57.640 +03:00 [INF] Now listening on: http://localhost:5069
+2025-10-02 03:53:57.758 +03:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-10-02 03:53:57.771 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-10-02 03:53:57.775 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-10-02 03:53:57.786 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-10-02 03:53:57.803 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-02 03:53:57.816 +03:00 [INF] Hosting environment: Development
+2025-10-02 03:53:57.820 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-10-02 03:53:57.961 +03:00 [INF] Server mrrobot:19280:4dcb7d05 successfully announced in 148.6877 ms
+2025-10-02 03:53:57.965 +03:00 [INF] Server mrrobot:19280:4dcb7d05 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-10-02 03:53:58.005 +03:00 [INF] Server mrrobot:19280:4dcb7d05 all the dispatchers started
+2025-10-02 03:53:58.339 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-10-02 03:53:58.584 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 245.2736ms
+2025-10-02 03:53:58.876 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-10-02 03:53:58.886 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 9.382ms
+2025-10-02 03:53:58.956 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-02 03:53:58.970 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 13.8355ms
+2025-10-02 03:53:58.975 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-10-02 03:53:59.092 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 116.8995ms
+2025-10-02 03:53:59.506 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-10-02 03:53:59.766 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 259.7815ms
+2025-10-02 03:55:06.847 +03:00 [INF] Executed DbCommand (79ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-10-02 03:55:07.565 +03:00 [INF] Executed DbCommand (82ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-10-02 03:55:07.735 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-10-02 03:55:07.751 +03:00 [INF] No migrations were applied. The database is already up to date.

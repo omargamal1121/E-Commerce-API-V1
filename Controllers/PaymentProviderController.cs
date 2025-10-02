@@ -11,14 +11,15 @@ namespace E_Commerce.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PaymentProviderController : ControllerBase
+    [Authorize(Roles ="SuperAdmin")]
+    public class PaymentProviderController : BaseController
     {
         private readonly IPaymentProvidersServices _paymentProviderService;
         private readonly ILogger<PaymentProviderController> _logger;
 
         public PaymentProviderController(
             ILogger<PaymentProviderController> logger,
-            IPaymentProvidersServices paymentProviderService)
+            IPaymentProvidersServices paymentProviderService):base(null)
         {
             _logger = logger;
             _paymentProviderService = paymentProviderService;

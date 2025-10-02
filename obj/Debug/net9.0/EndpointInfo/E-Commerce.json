@@ -2792,17 +2792,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoListApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoListApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoListApiResponse"
                 }
               }
             }
@@ -2812,17 +2812,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoListApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoListApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoListApiResponse"
                 }
               }
             }
@@ -2883,17 +2883,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -2903,17 +2903,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -2923,17 +2923,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -2983,17 +2983,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3003,17 +3003,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3023,17 +3023,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3043,17 +3043,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3125,17 +3125,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3145,17 +3145,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3165,17 +3165,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3185,17 +3185,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3205,17 +3205,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3352,17 +3352,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3372,17 +3372,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3392,17 +3392,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3551,17 +3551,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3571,17 +3571,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3629,17 +3629,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3649,17 +3649,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3698,17 +3698,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/Int32ApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/Int32ApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/Int32ApiResponse"
                 }
               }
             }
@@ -3718,17 +3718,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/Int32ApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/Int32ApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/Int32ApiResponse"
                 }
               }
             }
@@ -3778,17 +3778,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3798,17 +3798,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3818,17 +3818,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -3838,17 +3838,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/CustomerAddressDtoApiResponse"
                 }
               }
             }
@@ -4178,6 +4178,26 @@
         "tags": [
           "Discount"
         ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pagesize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -4206,6 +4226,26 @@
       "get": {
         "tags": [
           "Discount"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pagesize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -4599,17 +4639,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/OrderWithPaymentDtoApiResponse"
+                  "$ref": "#/components/schemas/OrderAfterCreatedtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OrderWithPaymentDtoApiResponse"
+                  "$ref": "#/components/schemas/OrderAfterCreatedtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OrderWithPaymentDtoApiResponse"
+                  "$ref": "#/components/schemas/OrderAfterCreatedtoApiResponse"
                 }
               }
             }
@@ -4767,44 +4807,6 @@
         }
       }
     },
-    "/api/Order/count": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/Int32NullableApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Int32NullableApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Int32NullableApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/Order/revenue/{userid}": {
       "get": {
         "tags": [
@@ -4813,13 +4815,6 @@
         "parameters": [
           {
             "name": "userId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userid",
             "in": "path",
             "required": true,
             "schema": {
@@ -4891,6 +4886,51 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DecimalApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Order/Count": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderStatus"
+            }
+          },
+          {
+            "name": "IsDeleted",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32ApiResponse"
                 }
               }
             }
@@ -5630,7 +5670,7 @@
         ],
         "parameters": [
           {
-            "name": "HMAC",
+            "name": "hmac",
             "in": "query",
             "schema": {
               "type": "string"
@@ -6800,6 +6840,58 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Products/Count": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "isActive",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isDelete",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "inStock",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32ApiResponse"
                 }
               }
             }
@@ -8029,6 +8121,538 @@
         "responses": {
           "200": {
             "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UserManagement/users": {
+      "get": {
+        "tags": [
+          "UserManagement"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phonenumber",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "IsActive",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isDeleted",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserdtoListApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserdtoListApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserdtoListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UserManagement/user/{id}": {
+      "get": {
+        "tags": [
+          "UserManagement"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserdtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserdtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserdtoApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UserManagement/roles": {
+      "get": {
+        "tags": [
+          "UserManagement"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UserManagement/add-role/{id}": {
+      "patch": {
+        "tags": [
+          "UserManagement"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UserManagement/Remove-role/{id}": {
+      "patch": {
+        "tags": [
+          "UserManagement"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UserManagement/lock-user/{id}": {
+      "patch": {
+        "tags": [
+          "UserManagement"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UserManagement/unlock-user/{id}": {
+      "patch": {
+        "tags": [
+          "UserManagement"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UserManagement/delete-user/{id}": {
+      "delete": {
+        "tags": [
+          "UserManagement"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
             "content": {
               "text/plain": {
                 "schema": {
@@ -10028,51 +10652,6 @@
         },
         "additionalProperties": false
       },
-      "Int32NullableApiResponse": {
-        "type": "object",
-        "properties": {
-          "statuscode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "responseBody": {
-            "$ref": "#/components/schemas/Int32NullableResponseBody"
-          }
-        },
-        "additionalProperties": false
-      },
-      "Int32NullableResponseBody": {
-        "type": "object",
-        "properties": {
-          "errors": {
-            "$ref": "#/components/schemas/ErrorResponse"
-          },
-          "warnings": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "data": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "links": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LinkDto"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "Int32ResponseBody": {
         "type": "object",
         "properties": {
@@ -10137,6 +10716,63 @@
           "password": {
             "minLength": 1,
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrderAfterCreatedto": {
+        "type": "object",
+        "properties": {
+          "orderNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "orderId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrderAfterCreatedtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "statuscode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "responseBody": {
+            "$ref": "#/components/schemas/OrderAfterCreatedtoResponseBody"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrderAfterCreatedtoResponseBody": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "$ref": "#/components/schemas/ErrorResponse"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/OrderAfterCreatedto"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -10446,62 +11082,6 @@
         },
         "additionalProperties": false
       },
-      "OrderWithPaymentDto": {
-        "type": "object",
-        "properties": {
-          "order": {
-            "$ref": "#/components/schemas/OrderDto"
-          },
-          "paymentUrl": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "OrderWithPaymentDtoApiResponse": {
-        "type": "object",
-        "properties": {
-          "statuscode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "responseBody": {
-            "$ref": "#/components/schemas/OrderWithPaymentDtoResponseBody"
-          }
-        },
-        "additionalProperties": false
-      },
-      "OrderWithPaymentDtoResponseBody": {
-        "type": "object",
-        "properties": {
-          "errors": {
-            "$ref": "#/components/schemas/ErrorResponse"
-          },
-          "warnings": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "data": {
-            "$ref": "#/components/schemas/OrderWithPaymentDto"
-          },
-          "links": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LinkDto"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "PaymentDto": {
         "type": "object",
         "properties": {
@@ -10598,6 +11178,10 @@
           "paymentProviderid": {
             "type": "integer",
             "format": "int32"
+          },
+          "integrationid": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -10723,6 +11307,33 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "apiEndpoint": {
+            "type": "string",
+            "nullable": true
+          },
+          "publicKey": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "privateKey": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "hmac": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentProvider": {
+            "$ref": "#/components/schemas/PaymentProviderEnums"
+          },
+          "iframeId": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -10956,9 +11567,14 @@
             "type": "string",
             "nullable": true
           },
-          "panLast4": {
+          "pan": {
             "type": "string",
             "nullable": true
+          },
+          "panLast4": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -10982,6 +11598,44 @@
           },
           "currency": {
             "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "errorOccured": {
+            "type": "boolean"
+          },
+          "hasParentTransaction": {
+            "type": "boolean"
+          },
+          "integrationId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "is3DSecure": {
+            "type": "boolean"
+          },
+          "isAuth": {
+            "type": "boolean"
+          },
+          "isCapture": {
+            "type": "boolean"
+          },
+          "isRefunded": {
+            "type": "boolean"
+          },
+          "isStandalonePayment": {
+            "type": "boolean"
+          },
+          "isVoided": {
+            "type": "boolean"
+          },
+          "owner": {
+            "type": "integer",
+            "format": "int64",
             "nullable": true
           },
           "order": {
@@ -11838,6 +12492,53 @@
         },
         "additionalProperties": false
       },
+      "StringListApiResponse": {
+        "type": "object",
+        "properties": {
+          "statuscode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "responseBody": {
+            "$ref": "#/components/schemas/StringListResponseBody"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StringListResponseBody": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "$ref": "#/components/schemas/ErrorResponse"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "StringResponseBody": {
         "type": "object",
         "properties": {
@@ -12461,6 +13162,140 @@
           },
           "data": {
             "$ref": "#/components/schemas/UploadPhotoResponseDto"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Userdto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "lastVisit": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserdtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "statuscode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "responseBody": {
+            "$ref": "#/components/schemas/UserdtoResponseBody"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserdtoListApiResponse": {
+        "type": "object",
+        "properties": {
+          "statuscode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "responseBody": {
+            "$ref": "#/components/schemas/UserdtoListResponseBody"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserdtoListResponseBody": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "$ref": "#/components/schemas/ErrorResponse"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Userdto"
+            },
+            "nullable": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserdtoResponseBody": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "$ref": "#/components/schemas/ErrorResponse"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/Userdto"
           },
           "links": {
             "type": "array",

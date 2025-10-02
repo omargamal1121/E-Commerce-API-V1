@@ -4,6 +4,7 @@ using E_Commerce.DtoModels.Responses;
 using E_Commerce.DtoModels.TokenDtos;
 using E_Commerce.ErrorHnadling;
 using E_Commerce.Interfaces;
+using E_Commerce.Models;
 using E_Commerce.Services;
 using E_Commerce.Services.AccountServices.AccountManagement;
 using E_Commerce.Services.AccountServices.Authentication;
@@ -11,6 +12,7 @@ using E_Commerce.Services.AccountServices.Password;
 using E_Commerce.Services.AccountServices.Profile;
 using E_Commerce.Services.AccountServices.Registration;
 using E_Commerce.Services.AccountServices.Shared;
+using E_Commerce.Services.AccountServices.UserMangment;
 using E_Commerce.Services.EmailServices;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
@@ -22,6 +24,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using static E_Commerce.Services.AccountServices.UserMangment.UserQueryServiece;
 
 namespace E_Commerce.Controllers
 {
@@ -30,20 +35,20 @@ namespace E_Commerce.Controllers
 	/// </summary>
 	[Route("api/[controller]")]
 	[ApiController]
-	public class AccountController : ControllerBase
+	public class AccountController : BaseController
 	{
 		private readonly ILogger<AccountController> _logger;
-		private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthenticationService _authenticationService;
 		private readonly IRegistrationService _registrationService;
 		private readonly IProfileService _profileService;
 		private readonly IPasswordService _passwordService;
 		private readonly IAccountManagementService _accountManagementService;
 		private readonly IBackgroundJobClient _backgroundJobClient;
-		private readonly IAccountLinkBuilder _linkBuilder;
 		private readonly IErrorNotificationService _errorNotificationService;
 
 		public AccountController(
-			IBackgroundJobClient backgroundJobClient,
+	
+            IBackgroundJobClient backgroundJobClient,
 			IAccountLinkBuilder linkBuilder,
 			IAuthenticationService authenticationService,
 			IRegistrationService registrationService,
@@ -51,10 +56,9 @@ namespace E_Commerce.Controllers
 			IPasswordService passwordService,
 			IAccountManagementService accountManagementService,
 			ILogger<AccountController> logger,
-			IErrorNotificationService errorNotificationService)
+			IErrorNotificationService errorNotificationService):base(linkBuilder)
 		{
 			_backgroundJobClient = backgroundJobClient ?? throw new ArgumentNullException(nameof(backgroundJobClient));
-			_linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
 			_authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
 			_registrationService = registrationService ?? throw new ArgumentNullException(nameof(registrationService));
 			_profileService = profileService ?? throw new ArgumentNullException(nameof(profileService));
@@ -64,10 +68,13 @@ namespace E_Commerce.Controllers
 			_errorNotificationService = errorNotificationService ?? throw new ArgumentNullException(nameof(errorNotificationService));
 		}
 
-		/// <summary>
-		/// Authenticates a user and returns JWT tokens
-		/// </summary>
-		[EnableRateLimiting("login")]
+
+
+
+        /// <summary>
+        /// Authenticates a user and returns JWT tokens
+        /// </summary>
+        [EnableRateLimiting("login")]
 		[HttpPost("login")]
 		[ActionName(nameof(LoginAsync))]
 		[ProducesResponseType(typeof(ApiResponse<TokensDto>), StatusCodes.Status200OK)]
@@ -120,7 +127,7 @@ namespace E_Commerce.Controllers
 				}
 
 				var result = await _registrationService.RegisterAsync(usermodel);
-				return HandleResult<RegisterResponse>(result, actionName: nameof(RegisterAsync));
+				return HandleResult<RegisterResponse>(result,  nameof(RegisterAsync));
 			}
 			catch (Exception ex)
 			{
@@ -142,10 +149,10 @@ namespace E_Commerce.Controllers
 			{
 
 				_logger.LogInformation($"In {nameof(GetProfileAsync)} Method ");
-				string userid = HttpContext.Items["UserId"].ToString();
+				string userid = GetUserId();
 				
 				var result = await _profileService.GetProfileAsync(userid);
-				return HandleResult<ProfileDto>(result, actionName: nameof(RegisterAsync));
+				return HandleResult<ProfileDto>(result,  nameof(RegisterAsync));
 			}
 			catch (Exception ex)
 			{
@@ -209,7 +216,7 @@ namespace E_Commerce.Controllers
 					return BadRequest(ApiResponse<bool>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
 				}
 
-				string? userid = GetIdFromToken();
+				string? userid = GetUserId();
 				if (userid.IsNullOrEmpty())
 				{
 					_logger.LogError("Can't find userid in token");
@@ -248,8 +255,7 @@ namespace E_Commerce.Controllers
 					_logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
 					return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", $"errors:{string.Join(", ", errors)}"), 400));
 				}
-				string userid=HttpContext
-					.Items["UserId"]?.ToString();
+				string userid=GetUserId();
 				_logger.LogInformation($"In {nameof(ChangeEmailAsync)} Method");
 				var result = await _profileService.ChangeEmailAsync(NewEmail, userid);
 				return HandleResult<ChangeEmailResultDto>(result, nameof(ChangeEmailAsync)) ;
@@ -277,7 +283,7 @@ namespace E_Commerce.Controllers
 			{
 				_logger.LogInformation($"In {nameof(LogoutAsync)} Method");
 
-				string? userid = GetIdFromToken();
+				string? userid = GetUserId();
 				if (userid.IsNullOrEmpty())
 				{
 					_logger.LogError("Can't find userid in token");
@@ -309,7 +315,7 @@ namespace E_Commerce.Controllers
 			try
 			{
 				_logger.LogInformation($"In {nameof(DeleteAsync)} Method");
-				string? userid = GetIdFromToken();
+				string? userid = GetUserId();
 				if (userid.IsNullOrEmpty())
 				{
 					_logger.LogError("Can't Get Userid from token");
@@ -348,7 +354,7 @@ namespace E_Commerce.Controllers
 				}
 
 				_logger.LogInformation($"Executing {nameof(UploadPhotoAsync)}");
-				string? id = GetIdFromToken();
+				string? id = GetUserId();
 				if (id.IsNullOrEmpty())
 				{
 					_logger.LogError("Can't find userid in token");
@@ -485,42 +491,8 @@ namespace E_Commerce.Controllers
 			}
 		}
 
-		private string? GetIdFromToken()
-		{
-			return HttpContext.Items["UserId"]?.ToString();
-		}
-
-		private List<string> GetModelErrors()
-		{
-			return ModelState.SelectMany(x => x.Value.Errors.Select(e => e.ErrorMessage)).ToList();
-		}
-
-		private ActionResult<ApiResponse<T>> HandleResult<T>(Result<T> result, string? actionName = null, int? id = null)
-		{
-
-			var linkes= _linkBuilder.GenerateLinks(id);
-			var apiResponse = result.Success
-				? ApiResponse<T>.CreateSuccessResponse(result.Message, result.Data, result.StatusCode, warnings: result.Warnings,links: linkes)
-				: ApiResponse<T>.CreateErrorResponse(result.Message, new ErrorResponse("Error", result.Message), result.StatusCode, warnings: result.Warnings,links: linkes);
-
-			switch (result.StatusCode)
-			{
-				case 200:
-					return Ok(apiResponse);
-				case 201:
-					return actionName != null && id.HasValue ? CreatedAtAction(actionName, new { id }, apiResponse) : StatusCode(201, apiResponse);
-				case 400:
-					return BadRequest(apiResponse);
-				case 401:
-					return Unauthorized(apiResponse);
-				case 404:
-					return NotFound(apiResponse);
-				case 409:
-					return Conflict(apiResponse);
-				default:
-					return StatusCode(result.StatusCode, apiResponse);
-			}
-		}
-
+	
+		
+		
 	}
 }

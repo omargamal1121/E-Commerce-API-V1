@@ -147,7 +147,7 @@ namespace E_Commerce
 				var apiKey = config.GetValue<string>("ApiKey");
 				var apiSecret = config.GetValue<string>("ApiSecret");
 
-				//	var account = new Account("dud4kxeix", "639515651354965", "hSR3PAJNAlRkGHHEk1GuH1rfD1U");
+			
 				var account = new Account(cloudName, apiKey, apiSecret);
 				return new Cloudinary(account);
 			});

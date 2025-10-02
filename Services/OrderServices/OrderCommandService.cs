@@ -108,7 +108,7 @@ namespace E_Commerce.Services.Order
             Dispose(false);
         }
 
-        public async Task<Result<OrderWithPaymentDto>> CreateOrderFromCartAsync(string userId, CreateOrderDto orderDto)
+        public async Task<Result<OrderAfterCreatedto>> CreateOrderFromCartAsync(string userId, CreateOrderDto orderDto)
         {
             _logger.LogInformation("Creating order from cart for user: {UserId}", userId);
 
@@ -119,22 +119,22 @@ namespace E_Commerce.Services.Order
                 #region Validate User and Cart
                 var user = await _userManager.FindByIdAsync(userId);
                 if (user == null)
-                    return Result<OrderWithPaymentDto>.Fail("UnAuthorized", 401);
+                    return Result<OrderAfterCreatedto>.Fail("UnAuthorized", 401);
 
                 if (!await _unitOfWork.Cart.IsExsistByUserId(userId))
-                    return Result<OrderWithPaymentDto>.Fail("Cart is empty", 400);
+                    return Result<OrderAfterCreatedto>.Fail("Cart is empty", 400);
 
                 if (!await _unitOfWork.CustomerAddress.IsExsistByIdAndUserIdAsync(orderDto.AddressId, userId))
-                    return Result<OrderWithPaymentDto>.Fail("Address doesn't exist", 400);
+                    return Result<OrderAfterCreatedto>.Fail("Address doesn't exist", 400);
 
                 var cartResult = await _cartServices.GetCartAsync(userId);
                 if (!cartResult.Success || cartResult.Data == null || cartResult.Data.IsEmpty)
-                    return Result<OrderWithPaymentDto>.Fail("Cart is empty", 400);
+                    return Result<OrderAfterCreatedto>.Fail("Cart is empty", 400);
 
                 var cart = cartResult.Data;
 
                 if (cart.CheckoutDate == null || cart.CheckoutDate.Value.AddDays(7) < DateTime.UtcNow)
-                    return Result<OrderWithPaymentDto>.Fail("Please checkout before creating order", 400);
+                    return Result<OrderAfterCreatedto>.Fail("Please checkout before creating order", 400);
 				#endregion
 
 				#region Check Stock Availability (without reducing yet)
@@ -155,7 +155,7 @@ namespace E_Commerce.Services.Order
 					if (variant == null || variant.Quantity < item.Quantity)
 					{
 						await transaction.RollbackAsync();
-						return Result<OrderWithPaymentDto>.Fail(
+						return Result<OrderAfterCreatedto>.Fail(
 							$"Product '{item.Product.Name}' is not available in required quantity. " +
 							$"Requested: {item.Quantity}, Available: {(variant?.Quantity ?? 0)}",
 							400
@@ -186,7 +186,7 @@ namespace E_Commerce.Services.Order
                 if (createdOrder == null)
                 {
                     await transaction.RollbackAsync();
-                    return Result<OrderWithPaymentDto>.Fail("Failed to create order", 500);
+                    return Result<OrderAfterCreatedto>.Fail("Failed to create order", 500);
                 }
                 await _unitOfWork.CommitAsync();
 
@@ -214,7 +214,7 @@ namespace E_Commerce.Services.Order
 						if (variant.Quantity < item.Quantity)
 						{
 							await transaction.RollbackAsync();
-							return Result<OrderWithPaymentDto>.Fail(
+							return Result<OrderAfterCreatedto>.Fail(
 								$"Insufficient stock for product '{item.Product.Name}'. " +
 								$"Requested: {item.Quantity}, Available: {variant.Quantity}",
 								400
@@ -225,7 +225,7 @@ namespace E_Commerce.Services.Order
 						if (!removeResult.Success)
 						{
 							await transaction.RollbackAsync();
-							return Result<OrderWithPaymentDto>.Fail(
+							return Result<OrderAfterCreatedto>.Fail(
 								$"Failed to reduce stock for product '{item.Product.Name}': No Enough Quntity",
 								409
 							);
@@ -255,42 +255,35 @@ namespace E_Commerce.Services.Order
                 #endregion
 
                 #region Prepare Response
-                var mappedOrderDto = await _unitOfWork.Order
-                    .GetAll()
-                    .Where(o => o.Id == createdOrder.Id)
-                    .Select(OrderMapper.OrderSelector)
-                    .FirstOrDefaultAsync();
+              
 
-                if (mappedOrderDto == null)
-                {
-                    _logger.LogError("Failed to retrieve created order DTO for order {OrderId}", createdOrder.Id);
-                    return Result<OrderWithPaymentDto>.Fail("Failed to retrieve created order", 500);
-                }
+            
 
                 RemoveCacheAndRelated();
 
-                var response = new OrderWithPaymentDto { Order = mappedOrderDto };
+                var response = new OrderAfterCreatedto { OrderId=createdOrder.Id,
+                OrderNumber=order.OrderNumber};
 
                 _backgroundJobClient.Schedule(
                     () => ExpireUnpaidOrderInBackground(createdOrder.Id),
                     TimeSpan.FromHours(2)
                 );
 
-                return Result<OrderWithPaymentDto>.Ok(response, "Order created successfully", 201);
+                return Result<OrderAfterCreatedto>.Ok(response, "Order created successfully", 201);
                 #endregion
             }
             catch (DbUpdateConcurrencyException e)
             {
                 await transaction.RollbackAsync();
                 _logger.LogWarning(e, "Concurrency conflict while creating order for user {UserId}", userId);
-                return Result<OrderWithPaymentDto>.Fail("Order was modified by another process.", 409);
+                return Result<OrderAfterCreatedto>.Fail("Order was modified by another process.", 409);
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Exception while creating order for user {UserId}", userId);
                 _cacheHelper.NotifyAdminError($"Exception creating order for user {userId}: {ex.Message}", ex.StackTrace);
-                return Result<OrderWithPaymentDto>.Fail("An error occurred while creating the order", 500);
+                return Result<OrderAfterCreatedto>.Fail("An error occurred while creating the order", 500);
             }
         }
 
@@ -348,7 +341,7 @@ namespace E_Commerce.Services.Order
 					_backgroundJobClient.Enqueue(() => ReduceQuantityOfProduct(itemsToReduce));
 				}
 
-				RemoveCacheAndRelated();
+				_backgroundJobClient.Enqueue(()=> RemoveCacheAndRelated()) ;
 
 				_logger.LogInformation("Updated order {OrderId} to {Status} after payment", orderId, order.Status);
 				return Result<bool>.Ok(true, "Order updated after payment", 200);
@@ -399,10 +392,10 @@ namespace E_Commerce.Services.Order
             {
 				OrderStatus.PendingPayment => target is OrderStatus.Confirmed or OrderStatus.PaymentExpired or OrderStatus.CancelledByUser or OrderStatus.CancelledByAdmin,
 				OrderStatus.Confirmed => target is OrderStatus.Processing or OrderStatus.CancelledByAdmin,
-				OrderStatus.Processing => target is OrderStatus.Shipped or OrderStatus.CancelledByAdmin, // optional depending on policy
+				OrderStatus.Processing => target is OrderStatus.Shipped or OrderStatus.CancelledByAdmin, 
 				OrderStatus.Shipped => target is OrderStatus.Delivered,
 				OrderStatus.Delivered => target is OrderStatus.Complete or OrderStatus.Returned or OrderStatus.Refunded,
-				OrderStatus.PaymentExpired => target is OrderStatus.CancelledByAdmin or OrderStatus.CancelledByUser, // allow back to PendingPayment only if retry supported
+				OrderStatus.PaymentExpired => target is OrderStatus.CancelledByAdmin or OrderStatus.CancelledByUser,
 				_ => false
 
 			};
@@ -414,6 +407,8 @@ namespace E_Commerce.Services.Order
             OrderStatus target,
             string operationTitle,
             string successMessage,
+            bool IsSysyem=false,
+            bool IsAdmin=false,
             string? notes = null)
         {
             await using var transaction = await _unitOfWork.BeginTransactionAsync();
@@ -427,24 +422,64 @@ namespace E_Commerce.Services.Order
                     "SELECT Id FROM Orders WHERE Id = {0} FOR UPDATE",
                     order.Id);
 
+               
                 if (!IsValidTransition(order.Status, target))
                     return Result<bool>.Fail("Invalid status transition", 400);
+
+                var oldstatus = order.Status;
                 order.Status = target;
+                if (!IsSysyem)
+                {
+                    if (!IsAdmin)
+                    {
+                        if (target == OrderStatus.CancelledByUser)
+                        {
+
+                            var log = await _userOpreationServices.AddUserOpreationAsync(
+                             $"{operationTitle} order {orderId} from {oldstatus} to {target}",
+                             Opreations.UpdateOpreation,
+                             adminId,
+                             orderId);
+
+
+                            if (!log.Success)
+                            {
+                                _logger.LogWarning("User log failed while {Op} order {OrderId}: {Msg}", operationTitle, orderId, log.Message);
+                                _cacheHelper.NotifyAdminError($"User log failed while {operationTitle} order {orderId}: {log.Message}");
+                            }
+                        }
+                        else
+                        {
+                            var log = await _adminOperationServices.AddAdminOpreationAsync(
+                            $"{operationTitle} order {orderId}from {oldstatus} to {target}",
+                            Opreations.UpdateOpreation,
+                            adminId,
+                            orderId);
+
+                            if (!log.Success)
+                            {
+                                _logger.LogWarning("Admin log failed while {Op} order {OrderId}: {Msg}", operationTitle, orderId, log.Message);
+                                _cacheHelper.NotifyAdminError($"User log failed while {operationTitle} order {orderId}: {log.Message}");
+                            }
+
+                        }
+                    }
+
+
+                }
+                else
+                {
+                    _logger.LogInformation($"Change Order Status from {oldstatus} to {target}");
+                }
+
+
                 if (target == OrderStatus.Shipped)
                     order.ShippedAt = DateTime.UtcNow;
 
                 if (target == OrderStatus.Delivered)
                     order.DeliveredAt = DateTime.UtcNow;
 
-                var log = await _adminOperationServices.AddAdminOpreationAsync(
-                    $"{operationTitle} order {orderId}",
-                    Opreations.UpdateOpreation,
-                    adminId,
-                    orderId);
-
-                if (!log.Success)
-                    _logger.LogWarning("Admin log failed while {Op} order {OrderId}: {Msg}", operationTitle, orderId, log.Message);
-
+            
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 				RemoveCacheAndRelated();
@@ -465,35 +500,68 @@ namespace E_Commerce.Services.Order
             }
         }
 
-        public Task<Result<bool>> ConfirmOrderAsync(int orderId, string adminId, string? notes = null)
-            => UpdateStatusAsync(orderId, adminId, OrderStatus.Confirmed, "Confirmed", "Order confirmed", notes);
+        public async Task<Result<int>> CountOrdersAsync(
+      OrderStatus?status=null,
+     bool? isDelete = null,
+     bool isAdmin = false)
+        {
+            _logger.LogInformation(
+                "Execute {Method}_Status:{IsActive}_isDelete:{IsDelete}_isAdmin:{IsAdmin}",
+                nameof(CountOrdersAsync),
+                status,
+                isDelete,
+                isAdmin
+            );
+
+            if (!isAdmin)
+            {
+                isDelete = false;
+            }
+
+            var query = _unitOfWork.Order.GetAll();
+
+            if (isDelete.HasValue)
+                query = isDelete.Value
+                    ? query.Where(p => p.DeletedAt != null)
+                    : query.Where(p => p.DeletedAt == null);
+
+            if(status.HasValue)
+            query= query.Where(o => o.Status == status);
+
+
+
+            return Result<int>.Ok(await query.CountAsync());
+        }
+
+        public Task<Result<bool>> ConfirmOrderAsync(int orderId, string adminId, bool IsSysyem = false, bool IsAdmin = false, string? notes = null)
+            => UpdateStatusAsync(orderId, adminId, OrderStatus.Confirmed, "Confirmed", "Order confirmed",IsSysyem,IsAdmin,notes: notes);
 
         public Task<Result<bool>> ProcessOrderAsync(int orderId, string adminId, string? notes = null)
-            => UpdateStatusAsync(orderId, adminId, OrderStatus.Processing, "Processing", "Order set to processing", notes);
+            => UpdateStatusAsync(orderId, adminId, OrderStatus.Processing, "Processing", "Order set to processing",notes: notes);
 
         public Task<Result<bool>> RefundOrderAsync(int orderId, string adminId, string? notes = null)
-            => UpdateStatusAsync(orderId, adminId, OrderStatus.Refunded, "Refunded", "Order refunded", notes);
+            => UpdateStatusAsync(orderId, adminId, OrderStatus.Refunded, "Refunded", "Order refunded",notes: notes);
 
         public Task<Result<bool>> ReturnOrderAsync(int orderId, string adminId, string? notes = null)
-            => UpdateStatusAsync(orderId, adminId, OrderStatus.Returned, "Returned", "Order marked as returned", notes);
+            => UpdateStatusAsync(orderId, adminId, OrderStatus.Returned, "Returned", "Order marked as returned",notes: notes);
 
-        public Task<Result<bool>> ExpirePaymentAsync(int orderId, string adminId, string? notes = null)
-            => UpdateStatusAsync(orderId, adminId, OrderStatus.PaymentExpired, "Payment expired", "Order payment expired", notes);
+        public Task<Result<bool>> ExpirePaymentAsync(int orderId, string adminId, bool IsSysyem = false, bool IsAdmin = false, string? notes = null)
+            => UpdateStatusAsync(orderId, adminId, OrderStatus.PaymentExpired, "Payment expired", "Order payment expired",IsSysyem,IsAdmin, notes);
 
         public Task<Result<bool>> CompleteOrderAsync(int orderId, string adminId, string? notes = null)
-            => UpdateStatusAsync(orderId, adminId, OrderStatus.Complete, "Completed", "Order completed", notes);
+            => UpdateStatusAsync(orderId, adminId, OrderStatus.Complete, "Completed", "Order completed",notes: notes);
 
         public Task<Result<bool>> ShipOrderAsync(int orderId, string adminId, string? notes = null)
-            => UpdateStatusAsync(orderId, adminId, OrderStatus.Shipped, "Shipped", "Order shipped successfully", notes);
+            => UpdateStatusAsync(orderId, adminId, OrderStatus.Shipped, "Shipped", "Order shipped successfully",notes: notes);
 
         public Task<Result<bool>> DeliverOrderAsync(int orderId, string adminId, string? notes = null)
-            => UpdateStatusAsync(orderId, adminId, OrderStatus.Delivered, "Delivered", "Order delivered successfully", notes);
+            => UpdateStatusAsync(orderId, adminId, OrderStatus.Delivered, "Delivered", "Order delivered successfully",notes: notes);
 
         public Task<Result<bool>> ShipOrderAsync(int orderId, string userId)
-            => UpdateStatusAsync(orderId, userId, OrderStatus.Shipped, "Shipped", "Order shipped successfully", null);
+            => UpdateStatusAsync(orderId, userId, OrderStatus.Shipped, "Shipped", "Order shipped successfully",notes: null);
 
         public Task<Result<bool>> DeliverOrderAsync(int orderId, string userId)
-            => UpdateStatusAsync(orderId, userId, OrderStatus.Delivered, "Delivered", "Order delivered successfully", null);
+            => UpdateStatusAsync(orderId, userId, OrderStatus.Delivered, "Delivered", "Order delivered successfully",notes: null);
 
         public async Task<Result<bool>> CancelOrderByCustomerAsync(int orderId, string userId)
         {

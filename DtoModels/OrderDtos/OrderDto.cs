@@ -39,6 +39,12 @@ namespace E_Commerce.DtoModels.OrderDtos
 		public string? PaymentUrl { get; set; } 
 	}
 
+    public class OrderAfterCreatedto
+    {
+        public string OrderNumber { get; set; } = string.Empty;
+		public int OrderId { get; set; }
+
+	}
 	public class CustomerDto
 	{
 

@@ -36,11 +36,13 @@ namespace E_Commerce.Services.PayMobServices
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly UserManager<Customer> _userManager;
 		private readonly HttpClient _httpClient;
+		private IConfiguration _configuration;
 		private readonly object _tokenLock = new object();
 		private string _token = string.Empty;
 		private DateTime _tokenGeneratedAt = DateTime.MinValue;
 
 		public PayMobServices(
+			IConfiguration configuration,
 			UserManager<Customer> userManager, 
 			IUnitOfWork unitOfWork, 
 			ILogger<PayMobServices> logger, 
@@ -48,6 +50,7 @@ namespace E_Commerce.Services.PayMobServices
 			IBackgroundJobClient backgroundJobClient,
 			HttpClient httpClient)
 		{
+			_configuration = configuration;
 			_userManager = userManager;
 			_unitOfWork = unitOfWork;
 			_logger = logger;
@@ -60,7 +63,6 @@ namespace E_Commerce.Services.PayMobServices
 		{
 			lock (_tokenLock)
 			{
-				// Check if token is still valid (with 5-minute buffer)
 				if (!string.IsNullOrEmpty(_token) && _tokenGeneratedAt.AddMinutes(55) > DateTime.UtcNow)
 				{
 					return true;
@@ -349,7 +351,7 @@ namespace E_Commerce.Services.PayMobServices
 					amount_cents = (int)(dto.Amount * 100),
 					currency = "EGP",
 					delivery_needed = true,
-					merchant_order_num = dto.Ordernumber
+                    merchant_order_id = dto.Ordernumber
 				};
 
 				var paymobOrderId = await CreateOrderInPaymobAsync(paymobOrderRequest);
@@ -376,13 +378,17 @@ namespace E_Commerce.Services.PayMobServices
 
 				_logger.LogInformation("Using integration ID: {IntegrationId} for payment method: {PaymentMethod}", integrationId, dto.PaymentMethod);
 
-				var paymentKeyRequest = new PaymentKeyContent
+				string redirection_url = _configuration["Security:Paymob:redirection_url"]??"";
+				_logger.LogInformation(redirection_url);
+
+                var paymentKeyRequest = new PaymentKeyContent
 				{
 					amount_cents = amountInCents,
 					auth_token = _token,
 					expiration = expires,
 					order_id = paymobOrderId,
 					integration_id = integrationId,
+					redirection_url=redirection_url,
 					billing_data = new billing_data
 					{
 						city = address.City ?? "NA",
@@ -395,6 +401,8 @@ namespace E_Commerce.Services.PayMobServices
 						email = user.Email,
 						phone_number = user.PhoneNumber
 					}
+					,
+
 				};
 
 				var paymentKey = await GeneratePaymentKeyAsync(paymentKeyRequest, dto.PaymentMethod);
@@ -490,7 +498,7 @@ namespace E_Commerce.Services.PayMobServices
 			public decimal amount_cents { get; set; }
 			public string currency { get; set; } = "EGP";
 			public string auth_token { get; set; } = string.Empty;
-            public string? merchant_order_num{ get; set; }
+            public string? merchant_order_id { get; set; }
 		}
 
 		public class PaymentKeyContent
@@ -501,6 +509,7 @@ namespace E_Commerce.Services.PayMobServices
 			public int expiration { get; set; } = 1000;
 			public int order_id { get; set; }
 			public string integration_id { get; set; } = string.Empty;
+			public string redirection_url { get; set; }
 			public billing_data billing_data { get; set; } = new billing_data();
 		}
 		public class PaymentLinkResult

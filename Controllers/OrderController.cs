@@ -13,12 +13,12 @@ namespace E_Commerce.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	public class OrderController : ControllerBase
+	public class OrderController : BaseController
 	{
 		private readonly IOrderServices _orderServices;
 		private readonly ILogger<OrderController> _logger;
 
-		public OrderController(IOrderServices orderServices, ILogger<OrderController> logger)
+		public OrderController(IOrderServices orderServices, ILogger<OrderController> logger):base(null)
 		{
 			_orderServices = orderServices;
 			_logger = logger;
@@ -33,7 +33,7 @@ namespace E_Commerce.Controllers
 		/// - Customers automatically filter to their own orders
 		/// </summary>
 		[HttpGet]
-		[Authorize(Roles = "User,Admin")]
+		[Authorize(Roles = "User,Admin,SuperAdmin,DeliveryCompany")]
 		public async Task<ActionResult<ApiResponse<List<OrderListDto>>>> GetOrders(
 			[FromQuery] string? userId = null,
 			[FromQuery] bool? deleted = null,
@@ -55,12 +55,12 @@ namespace E_Commerce.Controllers
 					return BadRequest(ApiResponse<List<OrderListDto>>.CreateErrorResponse("Invalid pagination", new ErrorResponse("Invalid Data", "Page and pageSize must be greater than 0"), 400));
 				}
 
-				var role = GetUserRole()== "Admin";
+				var role = HasManagementRole();
 				string? effectiveUserId = userId;
 
 
                 if (!role)
-					 effectiveUserId = GetUserId() ?? "Customer";
+					 effectiveUserId = GetUserId();
 
 				_logger.LogInformation($"Executing GetOrders: role: {role}, userId: {effectiveUserId}, deleted: {deleted}, page: {page}, size: {pageSize}, status: {status}");
 				var result = await _orderServices.FilterOrdersAsync(effectiveUserId, deleted, page, pageSize, status,role);
@@ -80,15 +80,15 @@ namespace E_Commerce.Controllers
 		/// - Admins can access any order
 		/// </summary>
 		[HttpGet("{orderId}")]
-		[Authorize(Roles = "User,Admin")]
+		[Authorize(Roles = "User,Admin,SuperAdmin,DeliveryCompany")]
 		public async Task<ActionResult<ApiResponse<OrderDto>>> GetOrder(int orderId)
 		{
 			try
 			{
 				_logger.LogInformation($"Executing GetOrder for ID: {orderId}");
 				var userId = GetUserId();
-				var isadmin = GetUserRole() == "Admin";
-				var result = await _orderServices.GetOrderByIdAsync(orderId, userId,isadmin);
+                var isadmin = HasManagementRole();
+                var result = await _orderServices.GetOrderByIdAsync(orderId, userId,isadmin);
 				return HandleResult(result);
 			}
 			catch (Exception ex)
@@ -104,8 +104,8 @@ namespace E_Commerce.Controllers
 		/// - Creates order from customer's cart
 		/// </summary>
 		[HttpPost]
-		[Authorize(Roles = "User,Admin")]
-		public async Task<ActionResult<ApiResponse<OrderWithPaymentDto>>> CreateOrder([FromBody] CreateOrderDto orderDto)
+		[Authorize(Roles = "User,Admin,SuperAdmin,DeliveryCompany")]
+		public async Task<ActionResult<ApiResponse<OrderAfterCreatedto>>> CreateOrder([FromBody] CreateOrderDto orderDto)
 		{
 			try
 			{
@@ -113,18 +113,18 @@ namespace E_Commerce.Controllers
 				{
 					var errors = GetModelErrors();
 					_logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-					return BadRequest(ApiResponse<OrderWithPaymentDto>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
+					return BadRequest(ApiResponse<OrderAfterCreatedto>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
 				}
 
 				_logger.LogInformation("Executing CreateOrder");
 				var userId = GetUserId();
 				var result = await _orderServices.CreateOrderFromCartAsync(userId, orderDto);
-				return HandleResult(result, nameof(CreateOrder), result.Success ? result.Data?.Order.OrderNumber : null);
+				return HandleResult(result, nameof(CreateOrder) );
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Error in CreateOrder: {ex.Message}");
-				return StatusCode(500, ApiResponse<OrderWithPaymentDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while creating the order"), 500));
+				return StatusCode(500, ApiResponse<OrderAfterCreatedto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while creating the order"), 500));
 			}
 		}
 
@@ -135,26 +135,25 @@ namespace E_Commerce.Controllers
 		/// - Customers can only cancel their own orders
 		/// </summary>
 		[HttpPut("{orderId}/status")]
-		[Authorize(Roles = "User,Admin")]
+		[Authorize(Roles = "User,Admin,SuperAdmin,DeliveryCompany")]
 		public async Task<ActionResult<ApiResponse<bool>>> UpdateOrderStatus(int orderId, [FromBody] OrderStatusNoteDto body, [FromQuery] OrderStatus status)
 		{
 			try
 			{
-				var role = GetUserRole();
 				var actorId = GetUserId();
 
-				if (role == "Admin")
+				if (HasManagementRole())
 				{
 					Result<bool> result = status switch
 					{
-						OrderStatus.Confirmed => await _orderServices.ConfirmOrderAsync(orderId, actorId, body?.Notes),
+						OrderStatus.Confirmed => await _orderServices.ConfirmOrderAsync(orderId, actorId,false,true, body?.Notes),
 						OrderStatus.Processing => await _orderServices.ProcessOrderAsync(orderId, actorId, body?.Notes),
 						OrderStatus.Shipped => await _orderServices.ShipOrderAsync(orderId, actorId),
 						OrderStatus.Delivered => await _orderServices.DeliverOrderAsync(orderId, actorId),
 						OrderStatus.Complete => await _orderServices.CompleteOrderAsync(orderId, actorId, body?.Notes),
 						OrderStatus.Refunded => await _orderServices.RefundOrderAsync(orderId, actorId, body?.Notes),
 						OrderStatus.Returned => await _orderServices.ReturnOrderAsync(orderId, actorId, body?.Notes),
-						OrderStatus.PaymentExpired => await _orderServices.ExpirePaymentAsync(orderId, actorId, body?.Notes),
+						OrderStatus.PaymentExpired => await _orderServices.ExpirePaymentAsync(orderId, actorId,false,true, body?.Notes),
 						OrderStatus.CancelledByAdmin => await _orderServices.CancelOrderByAdminAsync(orderId, actorId),
 						_ => Result<bool>.Fail("Unsupported status for admin endpoint", 400)
 					};
@@ -186,15 +185,15 @@ namespace E_Commerce.Controllers
 		/// GET /api/order/number/{orderNumber}
 		/// </summary>
 		[HttpGet("number/{orderNumber}")]
-		[Authorize(Roles = "User,Admin")]
+		[Authorize(Roles = "User,Admin,SuperAdmin,DeliveryCompany")]
 		public async Task<ActionResult<ApiResponse<OrderDto>>> GetOrderByNumber(string orderNumber)
 		{
 			try
 			{
 				_logger.LogInformation($"Executing GetOrderByNumber for number: {orderNumber}");
 				var userId = GetUserId();
-				var isadmin = GetUserRole() == "Admin";
-				var result = await _orderServices.GetOrderByNumberAsync(orderNumber, userId,isadmin);
+                var isAdmin = HasManagementRole();
+                var result = await _orderServices.GetOrderByNumberAsync(orderNumber, userId,isAdmin);
 				return HandleResult(result);
 			}
 			catch (Exception ex)
@@ -210,26 +209,26 @@ namespace E_Commerce.Controllers
 		/// - Admins can get count for any user
 		/// - Customers get their own count
 		/// </summary>
-		[HttpGet("count")]
-		[Authorize(Roles = "User,Admin")]
-		public async Task<ActionResult<ApiResponse<int?>>> GetOrderCount([FromQuery] string? userId = null)
-		{
-			try
-			{
-				_logger.LogInformation("Executing GetOrderCount");
-				var role = GetUserRole();
-				var effectiveUserId = role == "Admin" ? userId : GetUserId();
+		//[HttpGet("count")]
+		//[Authorize(Roles = "User,Admin")]
+		//public async Task<ActionResult<ApiResponse<int?>>> GetOrderCount([FromQuery] string? userId = null)
+		//{
+		//	try
+		//	{
+		//		_logger.LogInformation("Executing GetOrderCount");
+		//		var role = GetUserRole();
+		//		var effectiveUserId = role == "Admin" ? userId : GetUserId();
 
 
-				var result = await _orderServices.GetOrderCountByCustomerAsync(effectiveUserId ?? GetUserId());
-				return HandleResult(result);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError($"Error in GetOrderCount: {ex.Message}");
-				return StatusCode(500, ApiResponse<int?>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while getting order count"), 500));
-			}
-		}
+		//		var result = await _orderServices.GetOrderCountByCustomerAsync(effectiveUserId ?? GetUserId());
+		//		return HandleResult(result);
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		_logger.LogError($"Error in GetOrderCount: {ex.Message}");
+		//		return StatusCode(500, ApiResponse<int?>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while getting order count"), 500));
+		//	}
+		//}
 
 		/// <summary>
 		/// Get revenue statistics (RESTful)
@@ -239,13 +238,13 @@ namespace E_Commerce.Controllers
 		/// </summary>
 		[HttpGet("revenue/{userid}")]
 		[Authorize(Roles = "User,Admin")]
-		public async Task<ActionResult<ApiResponse<decimal>>> GetRevenueOfCustomer([FromQuery] string? userId = null)
+		public async Task<ActionResult<ApiResponse<decimal>>> GetRevenueOfCustomer([FromRoute] string userId)
 		{
 			try
 			{
 				_logger.LogInformation("Executing GetRevenue");
-				var role = GetUserRole();
-				var effectiveUserId = role == "Admin" ? userId : GetUserId();
+				
+				var effectiveUserId = HasManagementRole() ? userId : GetUserId();
 
 				var result = await _orderServices.GetTotalRevenueByCustomerAsync(effectiveUserId);
 				return HandleResult(result);
@@ -257,7 +256,7 @@ namespace E_Commerce.Controllers
 			}
 		}
 		[HttpGet("revenue")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<decimal>>> GetRevenue(DateTime start, DateTime end)
 		{
 			try
@@ -277,53 +276,21 @@ namespace E_Commerce.Controllers
 
 		#endregion
 
-		#region Helper Methods
+	
 
-		private string GetUserId()
+
+		
+		[HttpGet("Count")]
+		[Authorize(Roles = "Admin,SuperAdmin,DeliveryCompany")]
+		public async Task<ActionResult<ApiResponse<int>>> CountOrdersAsync([FromQuery] OrderStatus? status = null,
+		  [FromQuery] bool? IsDeleted = null)
 		{
-			return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
-		}
+            _logger.LogInformation("Executing CountOrdersAsync");
+			return HandleResult( await _orderServices.CountOrdersAsync(status, IsDeleted, true));
 
-		private string GetUserRole()
-		{
-			return User.FindFirst(ClaimTypes.Role)?.Value ?? "Customer";
-		}
 
-		private List<string> GetModelErrors()
-		{
-			return ModelState.Values
-				.SelectMany(v => v.Errors)
-				.Select(e => e.ErrorMessage)
-				.ToList();
-		}
+        }
 
-		private ActionResult<ApiResponse<T>> HandleResult<T>(Result<T> result, string? actionName = null, object? routeValues = null)
-		{
-			var apiResponse = result.Success
-				? ApiResponse<T>.CreateSuccessResponse(result.Message, result.Data, result.StatusCode, warnings: result.Warnings)
-				: ApiResponse<T>.CreateErrorResponse(result.Message, new ErrorResponse("Error", result.Message), result.StatusCode, warnings: result.Warnings);
 
-			switch (result.StatusCode)
-			{
-				case 200:
-					return Ok(apiResponse);
-				case 201:
-					return actionName != null && routeValues != null
-						? CreatedAtAction(actionName, routeValues, apiResponse)
-						: StatusCode(201, apiResponse);
-				case 400:
-					return BadRequest(apiResponse);
-				case 401:
-					return Unauthorized(apiResponse);
-				case 404:
-					return NotFound(apiResponse);
-				case 409:
-					return Conflict(apiResponse);
-				default:
-					return StatusCode(result.StatusCode, apiResponse);
-			}
-		}
-
-		#endregion
 	}
 }

@@ -51,10 +51,10 @@ namespace E_Commerce.Services.AccountServices.Profile
         {
             _logger.LogInformation($"Executing {nameof(ChangeEmailAsync)} for user ID: {userid}");
             var user = await _userManager.FindByIdAsync(userid);
-            if (user == null)
+            if (user == null || user.DeletedAt != null)
             {
                 _logger.LogWarning("Change email failed: User not found.");
-                return Result<ChangeEmailResultDto>.Fail("User not found.", 401);
+                return Result<ChangeEmailResultDto>.Fail("User not found.", 404);
             }
             if (string.IsNullOrWhiteSpace(newEmail))
             {
@@ -134,7 +134,7 @@ namespace E_Commerce.Services.AccountServices.Profile
                 }
                 await using var transaction = await _unitOfWork.BeginTransactionAsync();
                 var customer = await _userManager.FindByIdAsync(id);
-                if (customer == null)
+                if (customer == null||customer.DeletedAt!=null)
                 {
                     _logger.LogError($"User not found with ID: {id}", id);
                     return Result<UploadPhotoResponseDto>.Fail("Can't Found User with this id", 401);
@@ -221,7 +221,7 @@ namespace E_Commerce.Services.AccountServices.Profile
 			try
 			{
 				var user = await _userManager.FindByIdAsync(userId);
-				if (user == null)
+				if (user == null || user.DeletedAt != null)
 				{
 					_logger.LogWarning("Get profile failed: User not found.");
 					return Result<ProfileDto>.Fail("User not found.", 404);

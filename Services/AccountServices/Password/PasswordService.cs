@@ -33,43 +33,41 @@ namespace E_Commerce.Services.AccountServices.Password
             _errorNotificationService = errorNotificationService;
         }
 
-        public async Task<Result<bool>> ChangePasswordAsync(
-            string userid,
-            string oldPassword,
-            string newPassword
-        )
+        public async Task<Result<bool>> ChangePasswordAsync(string userid, string oldPassword, string newPassword)
         {
             try
             {
                 var user = await _userManager.FindByIdAsync(userid);
-                if (user == null)
+                if (user == null || user.DeletedAt != null)
                 {
-                    _logger.LogWarning("Change password failed: User not found.");
-                    return Result<bool>.Fail("User not found.", 401);
+                    _logger.LogWarning("Change password failed: User {UserId} not found or deleted.", userid);
+                    return Result<bool>.Fail("User not found.", 404);
                 }
+
                 if (oldPassword.Equals(newPassword))
                 {
-                    _logger.LogWarning("Change password failed: New password same as old password");
+                    _logger.LogWarning("Change password failed: User {UserId} tried same old password.", userid);
                     return Result<bool>.Fail("Can't use the same password.", 400);
                 }
+
                 var result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
                 if (!result.Succeeded)
                 {
-                    var errorMessages = string.Join("\nError: ", result.Errors.Select(e => e.Description));
-                    _logger.LogError($"Failed to change password: {errorMessages}");
-                    return Result<bool>.Fail($"Errors: {errorMessages}", 400);
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    _logger.LogError("Change password failed for {UserId}. Errors: {Errors}", userid, errors);
+                    return Result<bool>.Fail($"Errors: {errors}", 400);
                 }
-                _backgroundJobClient.Enqueue<PasswordService>(s => s.RemoveUserTokensAsync(userid));
-                _backgroundJobClient.Enqueue(() => _accountEmailService.SendEmailAfterChangePassAsync(user.UserName,user.Email));
-                _logger.LogInformation("Password changed successfully.");
+
+                _backgroundJobClient.Enqueue(() => _refreshTokenService.RemoveRefreshTokenAsync(userid));
+                _backgroundJobClient.Enqueue(() => _accountEmailService.SendEmailAfterChangePassAsync(user.UserName, user.Email));
+
+                _logger.LogInformation("Password changed successfully for user {UserId}", userid);
                 return Result<bool>.Ok(true, "Password changed successfully.", 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in ChangePasswordAsync: {ex}");
-                BackgroundJob.Enqueue<IErrorNotificationService>(e =>
-                    e.SendErrorNotificationAsync(ex.Message, ex.StackTrace)
-                );
+                _logger.LogError(ex, "Exception in ChangePasswordAsync for user {UserId}", userid);
+                _backgroundJobClient.Enqueue(() => _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
                 return Result<bool>.Fail("An unexpected error occurred.", 500);
             }
         }
@@ -78,74 +76,61 @@ namespace E_Commerce.Services.AccountServices.Password
         {
             try
             {
-				var user = await _userManager.FindByEmailAsync(email);
-                if (user != null)
+                var user = await _userManager.FindByEmailAsync(email);
+
+                if (user != null && user.DeletedAt == null)
                 {
-			    	var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-				    var encodedToken = System.Net.WebUtility.UrlEncode(token);
-					_backgroundJobClient.Enqueue<IAccountEmailService>(e =>
-                        e.SendPasswordResetEmailAsync(user.Email,user.UserName,encodedToken)
-                    );
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var encodedToken = System.Net.WebUtility.UrlEncode(token);
+
+                    _backgroundJobClient.Enqueue(() =>
+                        _accountEmailService.SendPasswordResetEmailAsync(user.Email, user.UserName, encodedToken));
                 }
-                return Result<bool>.Ok(true, " a reset link has been sent.", 200);
+
+                // Always return success (don't reveal user existence)
+                return Result<bool>.Ok(true, "If the email exists, a reset link has been sent.", 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in RequestPasswordResetAsync");
-				_backgroundJobClient.Enqueue<IErrorNotificationService>(e =>
-                    e.SendErrorNotificationAsync(ex.Message, ex.StackTrace)
-                );
+                _logger.LogError(ex, "Error in RequestPasswordResetAsync for email {Email}", email);
+                _backgroundJobClient.Enqueue(() => _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
                 return Result<bool>.Fail("An error occurred while requesting password reset.", 500);
             }
         }
 
-        public async Task<Result<bool>> ResetPasswordAsync(
-            string email,
-            string token,
-            string newPassword
-        )
+        public async Task<Result<bool>> ResetPasswordAsync(string email, string token, string newPassword)
         {
             try
             {
                 var user = await _userManager.FindByEmailAsync(email);
-                if (user == null)
+
+                if (user == null || user.DeletedAt != null)
                 {
-                    _logger.LogWarning($"Password reset attempted for non-existent email: {email}");
-					return Result<bool>.Ok(true, "Confirmation email has been resent. Please check your inbox.", 200);
-				}
+                    _logger.LogWarning("Password reset requested for non-existent or deleted user {Email}", email);
+                    // Same behavior: don't reveal user existence
+                    return Result<bool>.Ok(true, "If your account exists, you will receive a confirmation email.", 200);
+                }
+
                 var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
                 if (!result.Succeeded)
                 {
                     var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                    _logger.LogWarning($"Password reset failed for {email}: {errors}");
+                    _logger.LogWarning("Password reset failed for {Email}. Errors: {Errors}", email, errors);
                     return Result<bool>.Fail($"Reset Failed: {errors}", 400);
                 }
-                BackgroundJob.Enqueue<IAccountEmailService>(e =>
-                    e.SendPasswordResetSuccessEmailAsync(email)
-                );
-                BackgroundJob.Enqueue<PasswordService>(s => s.RemoveUserTokensAsync(user.Id));
+
+                _backgroundJobClient.Enqueue(() => _accountEmailService.SendPasswordResetSuccessEmailAsync(email));
+                _backgroundJobClient.Enqueue(() => _refreshTokenService.RemoveRefreshTokenAsync(user.Id));
+
+                _logger.LogInformation("Password reset successful for user {Email}", email);
                 return Result<bool>.Ok(true, "Password has been reset successfully.", 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in ResetPasswordAsync");
-                BackgroundJob.Enqueue<IErrorNotificationService>(e =>
-                    e.SendErrorNotificationAsync(ex.Message, ex.StackTrace)
-                );
+                _logger.LogError(ex, "Error in ResetPasswordAsync for {Email}", email);
+                _backgroundJobClient.Enqueue(() => _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
                 return Result<bool>.Fail("An error occurred while resetting password.", 500);
             }
         }
-
-        public async Task RemoveUserTokensAsync(string userid)
-        {
-            try
-            {
-                await _refreshTokenService.RemoveRefreshTokenAsync(userid);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in RemoveUserTokensAsync: {ex.Message}");
-            }
-        }
     }
-} 
+}

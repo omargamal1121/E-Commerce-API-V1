@@ -6,8 +6,8 @@ namespace E_Commerce.Services.AdminOperationServices
 {
 	public interface IAdminOpreationServices
 	{
-		public Task<Result< AdminOperationsLog>> AddAdminOpreationAsync(string description, Opreations opreation, string userid, int itemid);
-		public Task<Result<AdminOperationsLog>> AddAdminOpreationAsync(string description, Opreations opreation, string userid, List<int> itemids);
+		Task<Result< AdminOperationsLog>> AddAdminOpreationAsync(string description, Opreations opreation, string userid, int itemid);
+		Task<Result<AdminOperationsLog>> AddAdminOpreationAsync(string description, Opreations opreation, string userid, List<int> itemids);
 		Task<Result<List<OpreationDto>>> GetAllOpreationsAsync(string? userid = null, string? name = null, Opreations? opreation = null);
 
 

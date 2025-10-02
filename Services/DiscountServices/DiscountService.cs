@@ -16,10 +16,6 @@ namespace E_Commerce.Services.DiscountServices
             _discountQueryService = discountQueryService ?? throw new ArgumentNullException(nameof(discountQueryService));
         }
 
-		public async Task<Result<List<DiscountDto>>> GetAllAsync()
-		{
-            return await _discountQueryService.GetAllAsync();
-        }
 
         public async Task<Result<DiscountDto>> GetDiscountByIdAsync(int id, bool? isActive = null, bool? isDeleted = null)
         {
@@ -46,24 +42,24 @@ namespace E_Commerce.Services.DiscountServices
             return await _discountCommandService.RestoreDiscountAsync(id, userId);
         }
 
-        public async Task<Result<List<DiscountDto>>> FilterAsync(string? search, bool? isActive, bool? isDeleted, int page, int pageSize, string role)
+        public async Task<Result<List<DiscountDto>>> FilterAsync(string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool isAdmin)
         {
-            return await _discountQueryService.FilterAsync(search, isActive, isDeleted, page, pageSize, role);
+            return await _discountQueryService.FilterAsync(search, isActive, isDeleted, page, pageSize, isAdmin);
 		}
 
-		public async Task<Result<List<DiscountDto>>> GetActiveDiscountsAsync()
+		public async Task<Result<List<DiscountDto>>> GetActiveDiscountsAsync(int page = 1, int pagesize = 10)
 		{
-            return await _discountQueryService.GetActiveDiscountsAsync();
+            return await _discountQueryService.GetActiveDiscountsAsync(page,pagesize);
 		}
 
-		public async Task<Result<List<DiscountDto>>> GetExpiredDiscountsAsync()
+		public async Task<Result<List<DiscountDto>>> GetExpiredDiscountsAsync(int page = 1, int pagesize = 10)
 		{
-            return await _discountQueryService.GetExpiredDiscountsAsync();
+            return await _discountQueryService.GetExpiredDiscountsAsync(page,pagesize);
         }
 
-		public async Task<Result<List<DiscountDto>>> GetUpcomingDiscountsAsync()
+		public async Task<Result<List<DiscountDto>>> GetUpcomingDiscountsAsync(int page = 1, int pagesize = 10)
 		{
-            return await _discountQueryService.GetUpcomingDiscountsAsync();
+            return await _discountQueryService.GetUpcomingDiscountsAsync(page,pagesize);
         }
 
 		public async Task<Result<List<DiscountDto>>> GetDiscountsByCategoryAsync(int categoryId)
@@ -81,10 +77,6 @@ namespace E_Commerce.Services.DiscountServices
             return await _discountCommandService.DeactivateDiscountAsync(id, userId);
         }
 
-        public async Task<Result<List<DiscountDto>>> GetDiscountByNameAsync(string name, bool? isActive = null, bool? isDeleted = null)
-        {
-            return await _discountQueryService.GetDiscountByNameAsync(name, isActive, isDeleted);
-		}
 
 		public async Task<Result<bool>> IsDiscountValidAsync(int id)
 		{

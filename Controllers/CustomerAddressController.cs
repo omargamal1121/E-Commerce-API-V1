@@ -14,7 +14,7 @@ namespace E_Commerce.Controllers
 	[ApiController]
 	[Route("api/[controller]")]
 	[Authorize]
-	public class CustomerAddressController : ControllerBase
+	public class CustomerAddressController : BaseController
 	{
 		private readonly ILogger<CustomerAddressController> _logger;
 		private readonly ICustomerAddressServices _addressServices;
@@ -33,59 +33,17 @@ namespace E_Commerce.Controllers
 			_errorNotificationService = errorNotificationService;
 		}
 
-		private string GetUserId()
-		{
-			return HttpContext.Items["UserId"]?.ToString() ?? 
-				   User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? 
-				   throw new UnauthorizedAccessException("User ID not found");
-		}
+	
 
-		private string GetUserRole()
-		{
-			return User.FindFirst(ClaimTypes.Role)?.Value ?? "User";
-		}
-
-		private List<string> GetModelErrors()
-		{
-			return ModelState.Values
-				.SelectMany(v => v.Errors)
-				.Select(e => e.ErrorMessage)
-				.ToList();
-		}
-
-		private ActionResult<ApiResponse<T>> HandleResult<T>(Result<T> result, string? actionName = null, int? id = null)
-		{
-			var apiResponse = result.Success
-				? ApiResponse<T>.CreateSuccessResponse(result.Message, result.Data, result.StatusCode, warnings: result.Warnings)
-				: ApiResponse<T>.CreateErrorResponse(result.Message, new ErrorResponse("Error", result.Message), result.StatusCode, warnings: result.Warnings);
-
-			switch (result.StatusCode)
-			{
-				case 200:
-					return Ok(apiResponse);
-				case 201:
-					return actionName != null && id.HasValue ? CreatedAtAction(actionName, new { id }, apiResponse) : StatusCode(201, apiResponse);
-				case 400:
-					return BadRequest(apiResponse);
-				case 401:
-					return Unauthorized(apiResponse);
-				case 404:
-					return NotFound(apiResponse);
-				case 409:
-					return Conflict(apiResponse);
-				default:
-					return StatusCode(result.StatusCode, apiResponse);
-			}
-		}
-
+		
 		/// <summary>
 		/// Get all addresses for the current customer
 		/// </summary>
 		[HttpGet]
 		[ActionName(nameof(GetCustomerAddresses))]
 		[ProducesResponseType(typeof(ApiResponse<List<CustomerAddressDto>>), StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status401Unauthorized)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
+		[ProducesResponseType(typeof(ApiResponse<List<CustomerAddressDto>>), StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(typeof(ApiResponse<List<CustomerAddressDto>>), StatusCodes.Status500InternalServerError)]
 		public async Task<ActionResult<ApiResponse<List<CustomerAddressDto>>>> GetCustomerAddresses()
 		{
 			try
@@ -109,10 +67,10 @@ namespace E_Commerce.Controllers
 		[HttpGet("{id}")]
 		[ActionName(nameof(GetAddressById))]
 		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status401Unauthorized)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status403Forbidden)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status404NotFound)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status500InternalServerError)]
 		public async Task<ActionResult<ApiResponse<CustomerAddressDto>>> GetAddressById(int id)
 		{
 			try
@@ -136,9 +94,9 @@ namespace E_Commerce.Controllers
 		[HttpGet("default")]
 		[ActionName(nameof(GetDefaultAddress))]
 		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status401Unauthorized)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status404NotFound)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status500InternalServerError)]
 		public async Task<ActionResult<ApiResponse<CustomerAddressDto>>> GetDefaultAddress()
 		{
 			try
@@ -162,9 +120,9 @@ namespace E_Commerce.Controllers
 		[HttpPost]
 		[ActionName(nameof(CreateAddress))]
 		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status201Created)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status401Unauthorized)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status500InternalServerError)]
 		public async Task<ActionResult<ApiResponse<CustomerAddressDto>>> CreateAddress([FromBody] CreateCustomerAddressDto addressDto)
 		{
 			try
@@ -196,11 +154,11 @@ namespace E_Commerce.Controllers
 		[HttpPut("{id}")]
 		[ActionName(nameof(UpdateAddress))]
 		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status401Unauthorized)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status403Forbidden)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status404NotFound)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status500InternalServerError)]
 		public async Task<ActionResult<ApiResponse<CustomerAddressDto>>> UpdateAddress(int id, [FromBody] UpdateCustomerAddressDto addressDto)
 		{
 			try
@@ -284,8 +242,8 @@ namespace E_Commerce.Controllers
 		[HttpGet("type/{addressType}")]
 		[ActionName(nameof(GetAddressesByType))]
 		[ProducesResponseType(typeof(ApiResponse<List<CustomerAddressDto>>), StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status401Unauthorized)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status500InternalServerError)]
 		public async Task<ActionResult<ApiResponse<List<CustomerAddressDto>>>> GetAddressesByType(string addressType)
 		{
 			try
@@ -309,8 +267,8 @@ namespace E_Commerce.Controllers
 		[HttpGet("search")]
 		[ActionName(nameof(SearchAddresses))]
 		[ProducesResponseType(typeof(ApiResponse<List<CustomerAddressDto>>), StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status401Unauthorized)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status500InternalServerError)]
 		public async Task<ActionResult<ApiResponse<List<CustomerAddressDto>>>> SearchAddresses([FromQuery] string searchTerm)
 		{
 			try
@@ -334,8 +292,8 @@ namespace E_Commerce.Controllers
 		[HttpGet("count")]
 		[ActionName(nameof(GetAddressCount))]
 		[ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status401Unauthorized)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
+		[ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status500InternalServerError)]
 		public async Task<ActionResult<ApiResponse<int?>>> GetAddressCount()
 		{
 			try
@@ -357,20 +315,20 @@ namespace E_Commerce.Controllers
 		/// Get address with customer details (Admin only)
 		/// </summary>
 		[HttpGet("{id}/with-customer")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		[ActionName(nameof(GetAddressWithCustomer))]
 		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status401Unauthorized)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status403Forbidden)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status404NotFound)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(typeof(ApiResponse<CustomerAddressDto>), StatusCodes.Status500InternalServerError)]
 		public async Task<ActionResult<ApiResponse<CustomerAddressDto>>> GetAddressWithCustomer(int id)
 		{
 			try
 			{
 				_logger.LogInformation($"Executing GetAddressWithCustomer for address ID: {id}");
-				var userRole = GetUserRole();
-				var result = await _addressServices.GetAddressWithCustomerAsync(id, userRole);
+				var userRole = HasManagementRole();
+				var result = await _addressServices.GetAddressWithCustomerAsync(id, "Admin");
 				return HandleResult(result, nameof(GetAddressWithCustomer), id);
 			}
 			catch (Exception ex)

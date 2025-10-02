@@ -7,6 +7,7 @@ using E_Commerce.Services.EmailServices;
 using E_Commerce.UOW;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using PaymentMethod = E_Commerce.Models.PaymentMethod;
 
@@ -67,6 +68,12 @@ namespace E_Commerce.Services.PaymentMethodsServices
 					return Result<PaymentMethodDto>.Fail($"CreatePaymentMethod called with null DTO by user { userid}");
 				}
 
+				var providersisexsist = await _unitOfWork.Repository<PaymentProvider>().GetAll().AnyAsync(i => i.Id == paymentdto.PaymentProviderid);
+				if(!providersisexsist)
+				{
+                    return Result<PaymentMethodDto>.Fail("Invalid Provider id", 400);
+                }
+
 				var paymentmethod = new PaymentMethod
 				{
 					Name = paymentdto.Name,
@@ -79,6 +86,14 @@ namespace E_Commerce.Services.PaymentMethodsServices
 				_logger.LogInformation("Creating payment method: {PaymentMethod}", paymentmethod.Name);
 
 				var aftercreating = await _unitOfWork.Repository<PaymentMethod>().CreateAsync(paymentmethod);
+				await _unitOfWork.CommitAsync();
+
+				if(aftercreating==null)
+				{
+					 await transaction.RollbackAsync();
+                    return Result<PaymentMethodDto>.Fail("Failed to add Payment Method operation", 500);
+
+                }
 
 				_logger.LogInformation("Payment method created successfully with ID {Id}", aftercreating.Id);
 
@@ -90,6 +105,7 @@ namespace E_Commerce.Services.PaymentMethodsServices
 				}
 
 				_logger.LogInformation("Admin operation logged for payment method {Id}", aftercreating.Id);
+				 await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 				_backgroundJobClient.Enqueue(() => _cacheService.RemoveByTagAsync(PAYMENTMETHODCACGE));
 				return Result<PaymentMethodDto>.Ok(new PaymentMethodDto { Name =aftercreating.Name,
@@ -130,10 +146,14 @@ namespace E_Commerce.Services.PaymentMethodsServices
 					_logger.LogWarning("Payment method with ID {Id} not found", id);
 					return Result<bool>.Fail($"Payment method with ID {id} not found");
 				}
+				if(!paymentdto.Name.IsNullOrEmpty())
 
 				existingPaymentMethod.Name = paymentdto.Name;
+				if(paymentdto.Method!=0)
 				existingPaymentMethod.Method = paymentdto.Method;
+				if(existingPaymentMethod.PaymentProviderId!=0)
 				existingPaymentMethod.PaymentProviderId = paymentdto.PaymentProviderid;
+				if(!paymentdto.Integrationid.IsNullOrEmpty())
 				existingPaymentMethod.IntegrationId= paymentdto.Integrationid;
 
 
@@ -149,6 +169,7 @@ namespace E_Commerce.Services.PaymentMethodsServices
 				}
 
 				_logger.LogInformation("Admin operation logged for payment method update {Id}", id);
+				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
 				_backgroundJobClient.Enqueue(() => _cacheService.RemoveByTagAsync(PAYMENTMETHODCACGE));
@@ -196,7 +217,8 @@ namespace E_Commerce.Services.PaymentMethodsServices
 				_logger.LogInformation("Admin operation logged for payment method removal {Id}", id);
 
 				_backgroundJobClient.Enqueue(() => _cacheService.RemoveByTagAsync(PAYMENTMETHODCACGE));
-				return Result<bool>.Ok(true);
+                await _unitOfWork.CommitAsync();
+                return Result<bool>.Ok(true);
 			}
 			catch (Exception ex)
 			{
@@ -391,7 +413,9 @@ namespace E_Commerce.Services.PaymentMethodsServices
 						Name = p.Name,
 						IsActive = p.IsActive,
 						PaymentProviderid= p.PaymentProviderId,
-						paymentMethod = p.Method.ToString()
+						paymentMethod = p.Method.ToString(),
+						Integrationid =p.IntegrationId??""
+						
 						
 					})
 					.ToListAsync();
@@ -456,6 +480,7 @@ namespace E_Commerce.Services.PaymentMethodsServices
 		public bool IsActive { get; set; }
 		public string paymentMethod { get; set; }
 		public int PaymentProviderid { get; set; }
+		public string Integrationid { get; set; }
 
 	}
 	public class Updatepaymentmethoddto

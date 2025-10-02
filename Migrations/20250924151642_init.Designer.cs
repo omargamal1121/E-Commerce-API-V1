@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250911165452_updatepaymen")]
-    partial class updatepaymen
+    [Migration("20250924151642_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -838,8 +838,7 @@ namespace E_Commerce.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("RawData")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
+                        .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ReceiptNumber")
                         .HasMaxLength(100)

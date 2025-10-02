@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250911142554_update-delete-behavior")]
-    partial class updatedeletebehavior
+    [Migration("20251002005320_updateadminopreation")]
+    partial class updateadminopreation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,7 +48,6 @@ namespace E_Commerce.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("ItemId")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("ModifiedAt")
@@ -655,6 +654,9 @@ namespace E_Commerce.Migrations
 
                     b.HasIndex("PaymentProviderId");
 
+                    b.HasIndex("OrderId", "Status", "PaymentMethodId")
+                        .IsUnique();
+
                     b.ToTable("Payments");
                 });
 
@@ -835,8 +837,7 @@ namespace E_Commerce.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("RawData")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
+                        .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ReceiptNumber")
                         .HasMaxLength(100)
@@ -919,6 +920,11 @@ namespace E_Commerce.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("binary(8)");
 
                     b.Property<int>("SubCategoryId")
                         .HasColumnType("int");
@@ -1012,7 +1018,7 @@ namespace E_Commerce.Migrations
 
                     b.Property<string>("Color")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -1049,6 +1055,9 @@ namespace E_Commerce.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("ProductId", "Color", "Size", "Waist", "Length")
+                        .IsUnique();
 
                     b.ToTable("ProductVariants");
                 });
@@ -1545,9 +1554,6 @@ namespace E_Commerce.Migrations
                     b.Property<int?>("ImageId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ImageId1")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("LastVisit")
                         .HasColumnType("datetime(6)");
 
@@ -1555,7 +1561,7 @@ namespace E_Commerce.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasIndex("ImageId1");
+                    b.HasIndex("ImageId");
 
                     b.HasDiscriminator().HasValue("Customer");
                 });
@@ -2008,7 +2014,7 @@ namespace E_Commerce.Migrations
                 {
                     b.HasOne("E_Commerce.Models.Image", "Image")
                         .WithMany()
-                        .HasForeignKey("ImageId1");
+                        .HasForeignKey("ImageId");
 
                     b.Navigation("Image");
                 });

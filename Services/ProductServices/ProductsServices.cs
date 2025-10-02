@@ -159,5 +159,10 @@ namespace E_Commerce.Services.ProductServices
 		{
 			return await _productSearchService.GetBestSellersAsync(page,pageSize, isActive, deletedOnly, IsAdmin);
 		}
+
+		public async Task<Result<int>> CountProductsAsync(bool? isActive = null, bool? isDelete = null, bool? inStock = null, bool isAdmin = false)
+		{
+			return await _productCatalogService.CountProductsAsync(isActive,isDelete, inStock, isAdmin);
+		}
 	}
 }

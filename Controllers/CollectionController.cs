@@ -16,7 +16,7 @@ namespace E_Commerce.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CollectionController : ControllerBase
+    public class CollectionController : BaseController
     {
         private readonly ICollectionServices _collectionServices;
         private readonly ILogger<CollectionController> _logger;
@@ -31,81 +31,30 @@ namespace E_Commerce.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        private string GetUserId() =>
-            HttpContext.Items?["UserId"].ToString()??string.Empty;
+        
 
-        private string GetUserRole() => User.FindFirst(ClaimTypes.Role)?.Value ?? "User";
+       
 
-        private ActionResult<ApiResponse<T>> CreateResponse<T>(
-            Result<T> result,
-            string? actionName = null,
-            object? routeValues = null
-        )
-        {
-            if (!result.Success)
-            {
-                var errorResponse = ApiResponse<T>.CreateErrorResponse(
-                    result.Message,
-                    new ErrorResponse("Error", result.Message),
-                    result.StatusCode,
-                    warnings: result.Warnings
-                );
-                return StatusCode(result.StatusCode, errorResponse);
-            }
+    
 
-            var successResponse = ApiResponse<T>.CreateSuccessResponse(
-                result.Message,
-                result.Data,
-                result.StatusCode,
-                warnings: result.Warnings
-            );
-
-            return result.StatusCode switch
-            {
-                200 => Ok(successResponse),
-                201 => actionName != null 
-                    ? CreatedAtAction(actionName, routeValues, successResponse) 
-                    : StatusCode(201, successResponse),
-                400 => BadRequest(successResponse),
-                401 => Unauthorized(successResponse),
-                403 => Forbid(),
-                404 => NotFound(successResponse),
-                409 => Conflict(successResponse),
-                _ => StatusCode(result.StatusCode, successResponse),
-            };
-        }
-
-        private ActionResult<ApiResponse<T>> CreateErrorResponse<T>(
-            string message,
-            int statusCode,
-            List<string>? errors = null)
-        {
-            var errorResponse = ApiResponse<T>.CreateErrorResponse(
-                message,
-                new ErrorResponse("Error", errors ?? new List<string> { message }),
-                statusCode
-            );
-            return StatusCode(statusCode, errorResponse);
-        }
-
-        private List<string> GetModelErrors()
-        {
-            return ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-        }
+     
+       
 
         [HttpPatch("activate/{id}")]
+        [Authorize(Roles ="Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<bool>>> ActiveAsync(int id)
 		{
 			var userid = HttpContext?.Items["UserId"]?.ToString();
 			var response = await _collectionServices.ActivateCollectionAsync(id, userid);
-			return CreateResponse  (response,nameof(ActiveAsync),id);
+			return HandleResult  (response,nameof(ActiveAsync),id);
         }
         [HttpPatch("dactivate/{id}")]
-		public async Task<ActionResult<ApiResponse<bool>>> DeactiveAsync(int id)
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        public async Task<ActionResult<ApiResponse<bool>>> DeactiveAsync(int id)
 		{
 			var userid = HttpContext?.Items["UserId"]?.ToString();
 			var response = await _collectionServices.DeactivateCollectionAsync(id, userid);
-			return CreateResponse  (response,nameof(ActiveAsync),id);
+			return HandleResult  (response,nameof(ActiveAsync),id);
         }
         #region Public Read Operations (Anonymous)
         /// <summary>
@@ -117,8 +66,8 @@ namespace E_Commerce.Controllers
         {
             _logger.LogInformation($"Executing {nameof(GetCollectionById)} for ID: {id}");
             
-            var role = GetUserRole();
-            var isAdmin = role == "Admin";
+          
+            var isAdmin = HasManagementRole();
           
             var result = await _collectionServices.GetCollectionByIdAsync(
                 id, 
@@ -127,7 +76,7 @@ namespace E_Commerce.Controllers
                 isAdmin
             );
                 
-            return CreateResponse(result, nameof(GetCollectionById), new { id });
+            return HandleResult(result, nameof(GetCollectionById),  id );
         }
 
    
@@ -148,10 +97,9 @@ namespace E_Commerce.Controllers
                 $"Executing {nameof(SearchCollections)} for term: {searchTerm} with pagination: page {page}, size {pageSize}"
             );
             
-            var role = GetUserRole();
-            var isAdmin = role == "Admin";
-            
-            // For non-admin users, only show active and non-deleted collections
+
+            var isAdmin = HasManagementRole();
+
             var activeFilter = isAdmin ? isActive : true;
             var deletedFilter = isAdmin ? isDeleted : false;
             
@@ -164,7 +112,7 @@ namespace E_Commerce.Controllers
                 isAdmin
             );
                 
-            return CreateResponse(result, nameof(SearchCollections));
+            return HandleResult(result, nameof(SearchCollections));
         }
         #endregion
 
@@ -173,7 +121,7 @@ namespace E_Commerce.Controllers
         /// Create collection (Admin only)
         /// </summary>
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<ApiResponse<CollectionSummaryDto>>> CreateCollection(
             [FromBody] CreateCollectionDto collectionDto
         )
@@ -188,9 +136,9 @@ namespace E_Commerce.Controllers
             try
             {
                 _logger.LogInformation($"Executing CreateCollection: {collectionDto.Name}");
-                var userid = HttpContext.Items["UserId"].ToString();
+                var userid = GetUserId();
                 var result = await _collectionServices.CreateCollectionAsync(collectionDto, userid);
-                return CreateResponse(result, nameof(CreateCollection));
+                return HandleResult(result, nameof(CreateCollection));
             }
             catch (Exception ex)
             {
@@ -204,7 +152,7 @@ namespace E_Commerce.Controllers
         /// Update collection (Admin only) - Handles all updates including status and display order
         /// </summary>
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<ApiResponse<CollectionSummaryDto>>> UpdateCollection(
             int id,
             [FromBody] UpdateCollectionDto collectionDto
@@ -220,13 +168,13 @@ namespace E_Commerce.Controllers
             try
             {
                 _logger.LogInformation($"Executing UpdateCollection for ID: {id}");
-                var userid = HttpContext.Items["UserId"].ToString();
+                var userid = GetUserId();
                 var result = await _collectionServices.UpdateCollectionAsync(
                     id,
                     collectionDto,
                     userid
                 );
-                return CreateResponse(result, nameof(UpdateCollection), new { id });
+                return HandleResult(result, nameof(UpdateCollection),  id );
             }
             catch (Exception ex)
             {
@@ -240,7 +188,7 @@ namespace E_Commerce.Controllers
         /// Delete collection (Admin only)
         /// </summary>
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<ApiResponse<bool>>> DeleteCollection(int id)
         {
             if (id <= 0)
@@ -251,9 +199,9 @@ namespace E_Commerce.Controllers
             try
             {
                 _logger.LogInformation($"Executing {nameof(DeleteCollection)} for ID: {id}");
-                var userid = HttpContext.Items["UserId"].ToString();
+                var userid = GetUserId();
                 var result = await _collectionServices.DeleteCollectionAsync(id, userid);
-                return CreateResponse(result, nameof(DeleteCollection), new { id });
+                return HandleResult(result, nameof(DeleteCollection), id);
             }
             catch (Exception ex)
             {
@@ -282,8 +230,8 @@ namespace E_Commerce.Controllers
                 _logger.LogInformation(
                     $"Executing {nameof(GetCollectionImages)} for collection ID: {id}"
                 );
-                var role = GetUserRole();
-                var isAdmin = role == "Admin";
+                var isAdmin = HasManagementRole();
+
                 var collection = await _collectionServices.GetCollectionByIdAsync(id, null, null, isAdmin);
                 if (!collection.Success)
                 {
@@ -310,7 +258,7 @@ namespace E_Commerce.Controllers
         /// Add images to a collection (Admin only)
         /// </summary>
         [HttpPost("{id}/images")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<ApiResponse<List<ImageDto>>>> AddImagesToCollection(
             int id,
             [FromForm] AddImagesDto images
@@ -336,7 +284,7 @@ namespace E_Commerce.Controllers
                     images.Images,
                     userId
                 );
-                return CreateResponse(result);
+                return HandleResult(result);
             }
             catch (Exception ex)
             {
@@ -350,7 +298,7 @@ namespace E_Commerce.Controllers
         /// Set main image for collection (Admin only) - RESTful PUT operation
         /// </summary>
         [HttpPut("{id}/main-image")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<ApiResponse<ImageDto>>> SetMainImage(
             int id,
             [FromForm] AddMainImageDto image
@@ -376,7 +324,7 @@ namespace E_Commerce.Controllers
                     image.Image,
                     userId
                 );
-                return CreateResponse(result);
+                return HandleResult(result);
             }
             catch (Exception ex)
             {
@@ -390,7 +338,7 @@ namespace E_Commerce.Controllers
         /// Remove image from a collection (Admin only)
         /// </summary>
         [HttpDelete("{id}/images/{imageId}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<ApiResponse<bool>>> RemoveImageFromCollection(
             int id,
             int imageId
@@ -409,7 +357,7 @@ namespace E_Commerce.Controllers
                     imageId,
                     userId
                 );
-                return CreateResponse(result);
+                return HandleResult(result);
             }
             catch (Exception ex)
             {
@@ -438,8 +386,8 @@ namespace E_Commerce.Controllers
                 _logger.LogInformation(
                     $"Executing {nameof(GetCollectionProducts)} for collection ID: {id}"
                 );
-                var role = GetUserRole();
-                var isAdmin = role == "Admin";
+               
+                var isAdmin = HasManagementRole();
 
                 var result = await _collectionServices.GetCollectionByIdAsync(
                     id,
@@ -473,7 +421,7 @@ namespace E_Commerce.Controllers
         /// Add products to collection (Admin only)
         /// </summary>
         [HttpPost("{id}/products")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<ApiResponse<bool>>> AddProductsToCollection(
             int id,
             [FromForm] AddProductsToCollectionDto productsDto
@@ -496,13 +444,13 @@ namespace E_Commerce.Controllers
                 _logger.LogInformation(
                     $"Executing {nameof(AddProductsToCollection)} for collection ID: {id}"
                 );
-                var userid = HttpContext.Items["UserId"].ToString();
+                var userid = GetUserId();
                 var result = await _collectionServices.AddProductsToCollectionAsync(
                     id,
                     productsDto,
                     userid
                 );
-                return CreateResponse(result, nameof(AddProductsToCollection), new { id });
+                return HandleResult(result, nameof(AddProductsToCollection), id);
             }
             catch (Exception ex)
             {
@@ -516,7 +464,7 @@ namespace E_Commerce.Controllers
         /// Remove products from collection (Admin only)
         /// </summary>
         [HttpDelete("{id}/products")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<ApiResponse<bool>>> RemoveProductsFromCollection(
             int id,
             [FromBody] RemoveProductsFromCollectionDto productsDto
@@ -539,13 +487,13 @@ namespace E_Commerce.Controllers
                 _logger.LogInformation(
                     $"Executing {nameof(RemoveProductsFromCollection)} for collection ID: {id}"
                 );
-                var userid = HttpContext.Items["UserId"].ToString();
+                var userid = GetUserId();
                 var result = await _collectionServices.RemoveProductsFromCollectionAsync(
                     id,
                     productsDto,
                     userid
                 );
-                return CreateResponse(result, nameof(RemoveProductsFromCollection), new { id });
+                return HandleResult(result, nameof(RemoveProductsFromCollection), id);
             }
             catch (Exception ex)
             {

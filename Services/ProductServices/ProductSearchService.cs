@@ -111,7 +111,7 @@ namespace E_Commerce.Services.ProductServices
                 if (!products.Any())
                     return Result<List<ProductDto>>.Fail("No new arrivals found", 404);
 
-                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "NewArrial", IsAdmin));
+                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "NewArrial", IsAdmin, null));
                 return Result<List<ProductDto>>.Ok(products, $"Found {products.Count} new arrivals", 200);
             }
             catch (Exception ex)
@@ -180,7 +180,7 @@ namespace E_Commerce.Services.ProductServices
 
                 var result = Result<List<ProductDto>>.Ok(products, $"Found {products.Count} best sellers", 200);
 
-                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products,null, isActive, deletedOnly,pageSize,page,"BestSeller", IsAdmin));
+                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products,null, isActive, deletedOnly,pageSize,page,"BestSeller", IsAdmin,null));
 
                 return result;
             }
@@ -295,7 +295,7 @@ namespace E_Commerce.Services.ProductServices
                 if (!products.Any())
                     return Result<List<ProductDto>>.Fail("No products found matching the search criteria", 404);
 
-                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products, searchKey, isActive, deletedOnly));
+                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products, searchKey, isActive, deletedOnly,pageSize,page,null,IsAdmin,null));
 
                 return Result<List<ProductDto>>.Ok(products, $"Found {products.Count} products matching search criteria", 200);
             }
@@ -350,7 +350,7 @@ namespace E_Commerce.Services.ProductServices
             }).ToList();
 
             _backgroundJobClient.Enqueue(() =>
-                _productCacheManger.SetProductListCacheAsync(bestSellers, null, isActive, isDeleted,pagesize,page,"BestSeller"));
+                _productCacheManger.SetProductListCacheAsync(bestSellers, null, isActive, isDeleted,pagesize,page,"BestSeller",IsAdmin,null));
 
             return Result<List<BestSellingProductDto>>.Ok(bestSellers);
         }

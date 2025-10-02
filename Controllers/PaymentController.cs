@@ -11,7 +11,7 @@ namespace E_Commerce.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	public class PaymentController : ControllerBase
+	public class PaymentController : BaseController
 	{
 		private readonly IPaymentServices _paymentServices;
 		private readonly ILogger<PaymentController> _logger;
@@ -27,7 +27,7 @@ namespace E_Commerce.Controllers
 		/// POST /api/payment
 		/// </summary>
 		[HttpPost]
-		[Authorize(Roles = "User,Admin")]
+		[Authorize(Roles = "User,Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<PaymentResponseDto>>> CreatePayment([FromBody] CreatePaymentRequestDto paymentRequest)
 		{
 			try
@@ -42,7 +42,7 @@ namespace E_Commerce.Controllers
 				_logger.LogInformation($"Executing CreatePayment for order: {paymentRequest.OrderNumber}");
 				var userId = GetUserId();
 				var result = await _paymentServices.CreatePaymentMethod(paymentRequest.OrderNumber, paymentRequest.PaymentDetails, userId);
-				return HandleResult(result, nameof(CreatePayment), new { id = result.Data?.Paymentid });
+				return HandleResult(result, nameof(CreatePayment),  result.Data?.Paymentid );
 			}
 			catch (Exception ex)
 			{
@@ -148,41 +148,9 @@ namespace E_Commerce.Controllers
 			return User.FindFirst(ClaimTypes.Role)?.Value ?? "User";
 		}
 
-		private List<string> GetModelErrors()
-		{
-			return ModelState.Values
-				.SelectMany(v => v.Errors)
-				.Select(e => e.ErrorMessage)
-				.ToList();
-		}
+	
 
-		private ActionResult<ApiResponse<T>> HandleResult<T>(Result<T> result, string? actionName = null, object? routeValues = null)
-		{
-			var apiResponse = result.Success
-				? ApiResponse<T>.CreateSuccessResponse(result.Message, result.Data, result.StatusCode, warnings: result.Warnings)
-				: ApiResponse<T>.CreateErrorResponse(result.Message, new ErrorResponse("Error", result.Message), result.StatusCode, warnings: result.Warnings);
-
-			switch (result.StatusCode)
-			{
-				case 200:
-					return Ok(apiResponse);
-				case 201:
-					return actionName != null && routeValues != null
-						? CreatedAtAction(actionName, routeValues, apiResponse)
-						: StatusCode(201, apiResponse);
-				case 400:
-					return BadRequest(apiResponse);
-				case 401:
-					return Unauthorized(apiResponse);
-				case 404:
-					return NotFound(apiResponse);
-				case 409:
-					return Conflict(apiResponse);
-				default:
-					return StatusCode(result.StatusCode, apiResponse);
-			}
-		}
-
+	
 		#endregion
 	}
 }

@@ -8,6 +8,7 @@ using E_Commerce.Services.AccountServices.AccountManagement;
 using E_Commerce.Services.AccountServices.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using E_Commerce.Services.EmailServices;
+using E_Commerce.Services.AccountServices.UserMangment;
 
 namespace E_Commerce.Services.AccountServices
 {
@@ -17,6 +18,10 @@ namespace E_Commerce.Services.AccountServices
         {
             // Core Account Services
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserMangerMapping,UserMangerMapping>();
+            services.AddScoped<IUserQueryServiece, UserQueryServiece>();
+            services.AddScoped<IUserRoleMangementService, UserRoleMangementService>();
+            services.AddScoped<IUserAccountManagementService, UserAccountManagementService>();
             services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             services.AddScoped<IAccountEmailService, AccountEmailService>();
             

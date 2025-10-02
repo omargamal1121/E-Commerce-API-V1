@@ -1,8 +1,9 @@
-using E_Commerce.DtoModels.Responses;
+﻿using E_Commerce.DtoModels.Responses;
 using E_Commerce.Enums;
 using E_Commerce.ErrorHnadling;
 using E_Commerce.Models;
 using E_Commerce.Services.EmailServices;
+using E_Commerce.Services.UserOpreationServices;
 using E_Commerce.UOW;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
@@ -14,9 +15,13 @@ namespace E_Commerce.Services.AccountServices.AccountManagement
         private readonly ILogger<AccountManagementService> _logger;
         private readonly UserManager<Customer> _userManager;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IBackgroundJobClient _backgroundJobClient;
+        private readonly IUserOpreationServices _userOpreationServices;
         private readonly IErrorNotificationService _errorNotificationService;
 
         public AccountManagementService(
+            IUserOpreationServices userOpreationServices,
+            IBackgroundJobClient backgroundJobClient,
             ILogger<AccountManagementService> logger,
             UserManager<Customer> userManager,
             IUnitOfWork unitOfWork,
@@ -25,73 +30,58 @@ namespace E_Commerce.Services.AccountServices.AccountManagement
             _logger = logger;
             _userManager = userManager;
             _unitOfWork = unitOfWork;
+            _backgroundJobClient = backgroundJobClient;
+            _userOpreationServices = userOpreationServices;
             _errorNotificationService = errorNotificationService;
         }
 
         public async Task<Result<bool>> DeleteAsync(string id)
         {
-            _logger.LogInformation($"Execute :{nameof(DeleteAsync)} in services");
-            using var Tran = await _unitOfWork.BeginTransactionAsync();
+            _logger.LogInformation("Executing {Method} for UserId: {UserId}", nameof(DeleteAsync), id);
+
+            using var tran = await _unitOfWork.BeginTransactionAsync();
             try
             {
-                Customer? customer = await _userManager.FindByIdAsync(id);
-                if (customer is null)
+                var customer = await _userManager.FindByIdAsync(id);
+
+                if (customer is null || customer.DeletedAt is not null)
                 {
-                    _logger.LogError($"Can't find Customer with this id: {id}");
-                    return Result<bool>.Fail($"Can't find Customer with this id: {id}", 401);
+                    _logger.LogWarning("Customer not found or already deleted. UserId: {UserId}", id);
+                    return Result<bool>.Fail($"Can't find Customer with this id: {id}", 404);
                 }
-                customer.DeletedAt = DateTime.Now;
-                var isupdated = await _userManager.UpdateAsync(customer);
-                if (!isupdated.Succeeded)
+
+                customer.DeletedAt = DateTime.UtcNow;
+
+                var result = await _userManager.UpdateAsync(customer);
+                if (!result.Succeeded)
                 {
-                    var errors = string.Join(", ", isupdated.Errors.Select(e => e.Description));
-                    _logger.LogError($"Can't update Customer: {customer.Id}. Errors: {errors}");
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    _logger.LogError("Failed to soft delete user {UserId}. Errors: {Errors}", customer.Id, errors);
+
+                    await tran.RollbackAsync();
                     return Result<bool>.Fail($"Can't delete account now. Errors: {errors}", 500);
                 }
-                BackgroundJob.Enqueue<AccountManagementService>(s => s.AddOperationAsync(customer.Id, "Delete Account", Opreations.DeleteOpreation));
-                await _unitOfWork.CommitAsync();
-                await Tran.CommitAsync();
-                _logger.LogInformation("Soft deleted is done");
+                await _userManager.UpdateSecurityStampAsync(customer);
+
+
+
+                await tran.CommitAsync();
+                _logger.LogInformation("Soft delete successful for UserId: {UserId}", id);
+
                 return Result<bool>.Ok(true, "Deleted", 200);
             }
             catch (Exception ex)
             {
-                await Tran.RollbackAsync();
-                BackgroundJob.Enqueue<IErrorNotificationService>(e =>
-                    e.SendErrorNotificationAsync(ex.Message, ex.StackTrace)
-                );
-                _logger.LogError($"Error:{ex.Message}");
-                return Result<bool>.Fail($"Error:{ex.Message}", 500);
+                await tran.RollbackAsync();
+                _logger.LogError(ex, "Exception during {Method} for UserId: {UserId}", nameof(DeleteAsync), id);
+
+                _backgroundJobClient.Enqueue<IErrorNotificationService>(e =>
+                    e.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
+
+                return Result<bool>.Fail($"Error: {ex.Message}", 500);
             }
         }
 
-        private async Task AddOperationAsync(
-            string userid,
-            string description,
-            Opreations opreation
-        )
-        {
-            try
-            {
-                await _unitOfWork
-                    .Repository<UserOperationsLog>()
-                    .CreateAsync(
-                        new UserOperationsLog
-                        {
-                            Description = description,
-                            OperationType = opreation,
-                            UserId = userid,
-                            Timestamp = DateTime.UtcNow,
-                        }
-                    );
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in AddOperationAsync: {ex.Message}");
-                BackgroundJob.Enqueue<IErrorNotificationService>(e =>
-                    e.SendErrorNotificationAsync(ex.Message, ex.StackTrace)
-                );
-            }
-        }
+      
     }
-} 
+}

@@ -64,7 +64,12 @@ namespace E_Commerce.Services.AccountServices.Authentication
 
 				await _userManager.ResetAccessFailedCountAsync(user);
 
-				var tokenResult = await _tokenService.GenerateTokenAsync(user);
+				if(user.DeletedAt!=null)
+				{
+					_logger.LogInformation("Login failed: Account deleted for {Email}", email);
+                    return Result<TokensDto>.Fail("Invalid email or password.", 400);
+                }
+                var tokenResult = await _tokenService.GenerateTokenAsync(user);
 				if (!tokenResult.Success || tokenResult.Data == null)
 				{
 					_logger.LogError("Failed to generate token: {Message}", tokenResult.Message);

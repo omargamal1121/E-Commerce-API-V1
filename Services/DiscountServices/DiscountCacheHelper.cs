@@ -7,105 +7,92 @@ using E_Commerce.Services.SubCategoryServices;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using E_Commerce.Services.ProductServices;
+using E_Commerce.DtoModels.DiscoutDtos;
 
 namespace E_Commerce.Services.DiscountServices
 {
     public class DiscountCacheHelper : IDiscountCacheHelper
     {
-        private readonly IBackgroundJobClient _jobClient;
-        private readonly ICacheManager _cacheManager;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ICartServices _cartServices;
+    
         private readonly ILogger<DiscountCacheHelper> _logger;
         private readonly ICollectionCacheHelper _collectionCacheHelper;
         private readonly ISubCategoryCacheHelper _subCategoryCacheHelper;
+        private readonly IProductCacheManger _productCacheManger;
+        private readonly string[] _discountTags = new[] { "discount" };
+        private readonly ICacheManager _cacheManager;
+        private IBackgroundJobClient _backgroundJobClient;
 
-        private const string CACHE_TAG_PRODUCT_SEARCH = "product_search";
-        private const string CACHE_TAG_CATEGORY_WITH_DATA = "categorywithdata";
-        private const string PRODUCT_WITH_VARIANT_TAG = "productwithvariantdata";
-        private static readonly string[] PRODUCT_CACHE_TAGS = new[] { CACHE_TAG_PRODUCT_SEARCH, CACHE_TAG_CATEGORY_WITH_DATA, PRODUCT_WITH_VARIANT_TAG };
+
+
+
 
         public DiscountCacheHelper(
-            IBackgroundJobClient jobClient, 
+            IBackgroundJobClient backgroundJobClient,
             ICacheManager cacheManager,
-            IUnitOfWork unitOfWork,
-            ICartServices cartServices,
+
             ILogger<DiscountCacheHelper> logger,
+            IProductCacheManger productCacheManger,
             ICollectionCacheHelper collectionCacheHelper,
             ISubCategoryCacheHelper subCategoryCacheHelper)
         {
-            _jobClient = jobClient;
+         
+            _backgroundJobClient = backgroundJobClient;
             _cacheManager = cacheManager;
-            _unitOfWork = unitOfWork;
-            _cartServices = cartServices;
             _logger = logger;
             _collectionCacheHelper = collectionCacheHelper;
             _subCategoryCacheHelper = subCategoryCacheHelper;
+            _productCacheManger = productCacheManger;
         }
 
         public void ClearProductCache()
         {
             // Clear product cache
-            _jobClient.Enqueue(() => _cacheManager.RemoveByTagsAsync(PRODUCT_CACHE_TAGS));
-            
+            _productCacheManger.ClearProductCache();
+
             // Clear collection cache that stores products
             _collectionCacheHelper.ClearCollectionCache();
             
             // Clear subcategory cache that stores products
             _subCategoryCacheHelper.ClearSubCategoryCache();
         }
-
-        public void NotifyAdminError(string message, string? stackTrace = null)
+        private string GetKey(int? id=null,bool? isActive=null,bool? isDeleted=null,string?Searchkey=null,int?page=null,int?PageSize=null,bool? IsAdmin=false)
         {
-            _jobClient.Enqueue<IErrorNotificationService>(_ => _.SendErrorNotificationAsync(message, stackTrace));
+            return $"discount:id:{id}:isActive:{isActive}:IsDeleted:{isDeleted}:SearchKey:{Searchkey}:Page:{page}:pageSize:{PageSize}:IsAdmin:{IsAdmin}";
+        }
+        public void SetCache(DiscountDto discountDto, int? id = null, bool? isActive = null, bool? isDeleted = null, bool? IsAdmin = false)
+        {
+            var key = GetKey(id,isActive,isDeleted,IsAdmin:IsAdmin);
+            _logger.LogInformation($"Set with Key{key}");
+            _backgroundJobClient.Enqueue(() => _cacheManager.SetAsync(key, discountDto, TimeSpan.FromHours(1), _discountTags));
+        }
+        public void SetCache(List< DiscountDto> discountDto,
+           
+            bool? isActive = null,
+            bool? isDeleted = null,
+            string? Searchkey = null,
+            bool? IsAdmin = false,
+            int? page = null, 
+            int? PageSize = null)
+        {
+            var key = GetKey(null,isActive,isDeleted,Searchkey,IsAdmin:IsAdmin,page:page,PageSize:PageSize);
+            _logger.LogInformation($"Set with Key{key}");
+            _backgroundJobClient.Enqueue(() => _cacheManager.SetAsync(key, discountDto, TimeSpan.FromHours(1), _discountTags));
         }
 
-        public void ScheduleDiscountCheck(int discountId, DateTime startDate, DateTime endDate)
+       public async Task< DiscountDto?> GetCacheAsync(int? id = null, bool? isActive = null, bool? isDeleted = null, bool? IsAdmin = false)
         {
-            // Schedule the discount check using Hangfire's ability to call services directly
-            _jobClient.Schedule<IDiscountCacheHelper>(service => service.CheckOnDiscount(discountId), startDate);
-            _jobClient.Schedule<IDiscountCacheHelper>(service => service.CheckOnDiscount(discountId), endDate);
+            var key = GetKey(id, isActive, isDeleted, IsAdmin: IsAdmin);
+            _logger.LogInformation($"Get with Key{key}");
+            return  await _cacheManager.GetAsync<DiscountDto>(key);
+        }
+       public async Task<List< DiscountDto>?> GetCacheAsync( bool? isActive = null, bool? isDeleted = null,string? SearchKey=null, bool? IsAdmin = false,int ? page = null, int? PageSize = null)
+        {
+            var key = GetKey(null, isActive, isDeleted,SearchKey, IsAdmin: IsAdmin, page: page, PageSize: PageSize);
+            _logger.LogInformation($"Get with Key{key}");
+            return  await _cacheManager.GetAsync<List<DiscountDto>>(key);
         }
 
-        public async Task CheckOnDiscount(int id)
-        {
-            var discount = await _unitOfWork.Repository<Models.Discount>().GetByIdAsync(id);
-            if (discount == null)
-            {
-                _logger.LogWarning($"Discount with ID {id} not found for check.");
-                return;
-            }
-            
-            bool shouldDeactivate = discount.IsActive &&
-                        ((discount.EndDate <= DateTime.UtcNow) || discount.DeletedAt != null);
 
-            bool shouldActivate = !discount.IsActive &&
-                                  discount.EndDate >= DateTime.UtcNow &&
-                                  discount.StartDate <= DateTime.UtcNow &&
-                                  discount.DeletedAt == null;
-
-            if (shouldDeactivate)
-            {
-                _logger.LogInformation($"Discount with ID {id} has expired. Deactivating it.");
-                discount.IsActive = false;
-                var productsids = await _unitOfWork.Product.GetAll().Where(p => p.DiscountId == id && p.DeletedAt == null).Select(p => p.Id).ToListAsync();
-                
-                _jobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterRemoveDiscountAsync(productsids));
-            }
-            else if (shouldActivate)
-            {
-                _logger.LogInformation($"Discount with ID {id} is now valid. Activating it.");
-                discount.IsActive = true;
-                var productsids = await _unitOfWork.Product.GetAll().Where(p => p.DiscountId == id && p.DeletedAt == null).Select(p => p.Id).ToListAsync();
-                
-                _jobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterAddDiscountAsync(productsids, discount.DiscountPercent));
-            }
-
-            if (shouldDeactivate || shouldActivate)
-            {
-                ClearProductCache();
-                await _unitOfWork.CommitAsync();
-            }
-        }
     }
 }

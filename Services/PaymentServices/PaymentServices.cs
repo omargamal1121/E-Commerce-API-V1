@@ -180,8 +180,14 @@ namespace E_Commerce.Services.PaymentServices
                     await transaction.RollbackAsync();
                     return Result<PaymentResponseDto>.Fail("Order not found.");
                 }
+                var ishaspendingpayment = await _unitOfWork.Repository<Payment>().GetAll().AnyAsync(p => p.Status == PaymentStatus.Pending && p.OrderId == order.Id);
 
-                // Lock the order row to serialize payment creation for this order
+                if(ishaspendingpayment)
+                {
+                    await transaction.RollbackAsync();
+                    return Result<PaymentResponseDto>.Fail("There is already a pending payment for this order. Please wait until it is completed ");
+                }
+
                 await _unitOfWork.context.Database.ExecuteSqlRawAsync(
                     "SELECT Id FROM Orders WHERE Id = {0} FOR UPDATE",
                     order.Id);
@@ -257,17 +263,11 @@ namespace E_Commerce.Services.PaymentServices
                 }
                 else
                 {
-                    var processResult = await _orderservices.ProcessOrderAsync(order.Id, userid);
-                    if (!processResult.Success)
-                    {
-                        _logger.LogError("Failed to process order {OrderId} for cash on delivery", order.Id);
-                        await transaction.RollbackAsync();
-                        return Result<PaymentResponseDto>.Fail("Failed to process order for cash on delivery.");
-                    }
+                   _backgroundJobClient.Enqueue(()=> _orderservices.ConfirmOrderAsync(order.Id, userid,true,false,null));
                 }
-
-                // Create payment record
                 var createdPayment = await _unitOfWork.Repository<Payment>().CreateAsync(payment);
+                await _unitOfWork.CommitAsync();
+
                 if (createdPayment == null)
                 {
                     _logger.LogError("Payment creation failed for user {UserId}", userid);
@@ -275,7 +275,6 @@ namespace E_Commerce.Services.PaymentServices
                     return Result<PaymentResponseDto>.Fail("Error while creating payment.");
                 }
 
-                // Log user operation
                 var logResult = await _userOpreationServices.AddUserOpreationAsync(
                     $"Created payment for order {order.Id}",
                     Opreations.AddOpreation,
@@ -368,7 +367,7 @@ namespace E_Commerce.Services.PaymentServices
             {
                 Amount = payment.Amount,
                 Currency = paymentdto.Currency,
-                CustomerId = payment.CustomerId, // Use the customer ID from the payment entity
+                CustomerId = payment.CustomerId, 
                 Notes = paymentdto.Notes,
                 Ordernumber = order.OrderNumber,
                 PaymentMethod = paymentdto.PaymentMethod,

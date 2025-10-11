@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<parameters>
-  <parameter name="IIS Web Application Name" description="" value="site36520" tags="IisApp">
-    <parameterEntry kind="ProviderPath" scope="IisApp" match="^D:\\project_fashion\\E-Commerce-API-main\\obj\\Release\\net9\.0\\PubTmp\\Out\\$" />
-  </parameter>
-</parameters>

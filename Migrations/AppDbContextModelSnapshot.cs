@@ -938,7 +938,12 @@ namespace E_Commerce.Migrations
 
                     b.HasIndex("SubCategoryId", "DiscountId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", t =>
+                        {
+                            t.HasCheckConstraint("CK_Product_Price_Positive", "[Price] > 0");
+
+                            t.HasCheckConstraint("CK_Product_Quantity_NonNegative", "[Quantity] >= 0");
+                        });
                 });
 
             modelBuilder.Entity("E_Commerce.Models.ProductCollection", b =>
@@ -1056,7 +1061,10 @@ namespace E_Commerce.Migrations
                     b.HasIndex("ProductId", "Color", "Size", "Waist", "Length")
                         .IsUnique();
 
-                    b.ToTable("ProductVariants");
+                    b.ToTable("ProductVariants", t =>
+                        {
+                            t.HasCheckConstraint("CK_ProductVariant_Quantity_NonNegative", "[Quantity] >= 0");
+                        });
                 });
 
             modelBuilder.Entity("E_Commerce.Models.ReturnRequest", b =>
@@ -1558,7 +1566,13 @@ namespace E_Commerce.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("ImageId");
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
 
                     b.HasDiscriminator().HasValue("Customer");
                 });

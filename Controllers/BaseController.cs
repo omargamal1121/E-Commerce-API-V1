@@ -4,7 +4,7 @@ using E_Commerce.ErrorHnadling;
 using E_Commerce.Interfaces;
 using E_Commerce.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+
 
 namespace E_Commerce.Controllers
 {
@@ -39,7 +39,7 @@ namespace E_Commerce.Controllers
 
 
         protected string GetUserId() =>
-            User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+            HttpContext?.Items?["UserId"]?.ToString() ?? string.Empty;
 
 
         protected bool HasManagementRole() =>

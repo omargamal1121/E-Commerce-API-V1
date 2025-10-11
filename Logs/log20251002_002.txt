@@ -566,3 +566,1316 @@ SELECT ROW_COUNT();
 2025-10-02 04:34:34.697 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
 2025-10-02 04:34:34.701 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 400 674 application/json; charset=utf-8 1305.689ms
 2025-10-02 04:37:40.798 +03:00 [INF] 1 servers were removed due to timeout
+2025-10-02 17:27:31.158 +03:00 [INF] Executed DbCommand (88ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-10-02 17:27:31.924 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-10-02 17:27:32.112 +03:00 [INF] Executed DbCommand (84ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-10-02 17:27:32.132 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-02 17:27:32.144 +03:00 [INF] Starting data seeding...
+2025-10-02 17:27:32.187 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-02 17:27:32.928 +03:00 [INF] DB tables already exist. Exit install
+2025-10-02 17:27:33.422 +03:00 [INF] Executed DbCommand (129ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 17:27:33.493 +03:00 [INF] Role 'Admin' already exists.
+2025-10-02 17:27:33.663 +03:00 [INF] Executed DbCommand (88ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 17:27:33.684 +03:00 [INF] Role 'User' already exists.
+2025-10-02 17:27:33.836 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 17:27:33.845 +03:00 [INF] Role 'SuperAdmin' already exists.
+2025-10-02 17:27:33.994 +03:00 [INF] Executed DbCommand (68ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 17:27:34.003 +03:00 [INF] Role 'DeliveryCompany' already exists.
+2025-10-02 17:27:34.197 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 17:27:34.450 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 17:27:34.639 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-10-02 17:27:34.657 +03:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-10-02 17:27:34.805 +03:00 [INF] Executed DbCommand (75ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 17:27:34.956 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 17:27:35.112 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-10-02 17:27:35.122 +03:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-10-02 17:27:35.265 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 17:27:35.425 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-10-02 17:27:35.450 +03:00 [INF] Execute GetAll for entity PaymentProvider
+2025-10-02 17:27:35.675 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-10-02 17:27:35.686 +03:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-10-02 17:27:35.765 +03:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-10-02 17:27:35.771 +03:00 [INF] Data seeding completed successfully.
+2025-10-02 17:27:37.628 +03:00 [INF] Now listening on: http://localhost:5069
+2025-10-02 17:27:37.723 +03:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-10-02 17:27:37.726 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-10-02 17:27:37.729 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-10-02 17:27:37.731 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-10-02 17:27:37.750 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-02 17:27:37.754 +03:00 [INF] Hosting environment: Development
+2025-10-02 17:27:37.757 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-10-02 17:27:37.910 +03:00 [INF] Server mrrobot:10548:c46f4626 successfully announced in 149.038 ms
+2025-10-02 17:27:37.915 +03:00 [INF] Server mrrobot:10548:c46f4626 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-10-02 17:27:37.956 +03:00 [INF] Server mrrobot:10548:c46f4626 all the dispatchers started
+2025-10-02 17:27:38.383 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-10-02 17:27:38.855 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 478.9536ms
+2025-10-02 17:27:38.858 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-02 17:27:38.901 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-10-02 17:27:38.940 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-10-02 17:27:38.946 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16504 application/javascript; charset=utf-8 88.0169ms
+2025-10-02 17:27:38.957 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 56.3681ms
+2025-10-02 17:27:39.096 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 155.2786ms
+2025-10-02 17:27:39.241 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-10-02 17:27:39.556 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 314.0009ms
+2025-10-02 17:29:32.970 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json-patch+json 70
+2025-10-02 17:29:32.977 +03:00 [INF] CORS policy execution successful.
+2025-10-02 17:29:32.980 +03:00 [WRN] Failed to determine the https port for redirect.
+2025-10-02 17:29:35.810 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 17:29:35.820 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-10-02 17:29:35.845 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commerce.DtoModels.AccountDtos.LoginDTo) on controller E_Commerce.Controllers.AccountController (E-Commerce).
+2025-10-02 17:29:36.169 +03:00 [INF] In LoginAsync Method 
+2025-10-02 17:29:36.323 +03:00 [INF] Executed DbCommand (77ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 17:29:36.328 +03:00 [WRN] Login failed: Email not found for 0margamal1132004@gmail.com
+2025-10-02 17:29:36.364 +03:00 [INF] Executing BadRequestObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 17:29:36.450 +03:00 [INF] Executed action E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce) in 597.1207ms
+2025-10-02 17:29:36.454 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-10-02 17:29:36.464 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 400 674 application/json; charset=utf-8 3493.8141ms
+2025-10-02 17:30:04.371 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json-patch+json 70
+2025-10-02 17:30:04.381 +03:00 [INF] CORS policy execution successful.
+2025-10-02 17:30:04.398 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 17:30:04.402 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-10-02 17:30:04.406 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commerce.DtoModels.AccountDtos.LoginDTo) on controller E_Commerce.Controllers.AccountController (E-Commerce).
+2025-10-02 17:30:04.493 +03:00 [INF] In LoginAsync Method 
+2025-10-02 17:30:04.639 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 17:30:04.750 +03:00 [INF] 🔐 Generating Access Token for User ID: 356a1f90-f249-4f61-9df0-6b4e1e4ff2c9
+2025-10-02 17:30:04.756 +03:00 [INF] 🔐 Generating Access Token for User ID: 356a1f90-f249-4f61-9df0-6b4e1e4ff2c9
+2025-10-02 17:30:04.914 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-10-02 17:30:05.065 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 17:30:05.327 +03:00 [INF] Executed DbCommand (84ms) [Parameters=[@p21='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p22='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = DateTime), @p10='?' (DbType = Boolean), @p11='?' (DbType = DateTimeOffset), @p12='?' (Size = 4000), @p13='?' (Size = 256), @p14='?' (Size = 256), @p15='?' (Size = 4000), @p16='?' (Size = 4000), @p17='?' (DbType = Boolean), @p18='?' (Size = 4000), @p19='?' (DbType = Boolean), @p20='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `LastVisit` = @p9, `LockoutEnabled` = @p10, `LockoutEnd` = @p11, `Name` = @p12, `NormalizedEmail` = @p13, `NormalizedUserName` = @p14, `PasswordHash` = @p15, `PhoneNumber` = @p16, `PhoneNumberConfirmed` = @p17, `SecurityStamp` = @p18, `TwoFactorEnabled` = @p19, `UserName` = @p20
+WHERE `Id` = @p21 AND `ConcurrencyStamp` = @p22;
+SELECT ROW_COUNT();
+2025-10-02 17:30:05.505 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-10-02 17:30:06.389 +03:00 [INF] ✅ Access Token generated successfully for User ID: 356a1f90-f249-4f61-9df0-6b4e1e4ff2c9
+2025-10-02 17:30:06.393 +03:00 [INF] 🔑 Generating Refresh Token for User ID: 356a1f90-f249-4f61-9df0-6b4e1e4ff2c9
+2025-10-02 17:30:06.627 +03:00 [INF] ✅ RefreshToken generated and stored for User ID: 356a1f90-f249-4f61-9df0-6b4e1e4ff2c9
+2025-10-02 17:30:06.642 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 17:30:06.650 +03:00 [INF] Executed action E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce) in 2236.329ms
+2025-10-02 17:30:06.654 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-10-02 17:30:06.657 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 200 1271 application/json; charset=utf-8 2286.5192ms
+2025-10-02 17:30:25.420 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/UserManagement/users?page=1&pageSize=10 - null null
+2025-10-02 17:30:25.481 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 17:30:25.692 +03:00 [INF] Executed DbCommand (75ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 17:30:25.701 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.UserManagementController.GetUsersAsync (E-Commerce)'
+2025-10-02 17:30:25.707 +03:00 [INF] Route matched with {action = "GetUsersAsync", controller = "UserManagement"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[E_Commerce.DtoModels.AccountDtos.Userdto]]] GetUsersAsync(System.String, System.String, System.String, System.String, System.Nullable`1[System.Boolean], System.Nullable`1[System.Boolean], Int32, Int32) on controller E_Commerce.Controllers.UserManagementController (E-Commerce).
+2025-10-02 17:30:25.723 +03:00 [INF] In GetUsersAsync Method 
+2025-10-02 17:30:25.747 +03:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-10-02 17:30:25.752 +03:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-10-02 17:30:25.971 +03:00 [INF] Executed DbCommand (89ms) [Parameters=[@__p_1='?' (DbType = Int32), @__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`Name`, `t`.`Email`, `t`.`c`, `t`.`UserName`, `t`.`PhoneNumber`, `t`.`c0`, `t`.`c1`, `t`.`c2`, `t0`.`Name`, `t0`.`UserId`, `t0`.`RoleId`, `t0`.`Id`
+FROM (
+    SELECT `a`.`Id`, `a`.`Name`, `a`.`Email`, `a`.`LockoutEnd` IS NOT NULL AND (`a`.`LockoutEnd` > UTC_TIMESTAMP()) AS `c`, `a`.`UserName`, `a`.`PhoneNumber`, `a`.`LockoutEnd` IS NULL OR (`a`.`LockoutEnd` <= CURRENT_TIMESTAMP()) AS `c0`, `a`.`DeletedAt` IS NOT NULL AS `c1`, CASE
+        WHEN `a`.`LastVisit` IS NOT NULL THEN `a`.`LastVisit`
+        ELSE NULL
+    END AS `c2`
+    FROM `AspNetUsers` AS `a`
+    WHERE `a`.`Discriminator` = 'Customer'
+    LIMIT @__p_1 OFFSET @__p_0
+) AS `t`
+LEFT JOIN (
+    SELECT `a1`.`Name`, `a0`.`UserId`, `a0`.`RoleId`, `a1`.`Id`
+    FROM `AspNetUserRoles` AS `a0`
+    INNER JOIN `AspNetRoles` AS `a1` ON `a0`.`RoleId` = `a1`.`Id`
+) AS `t0` ON `t`.`Id` = `t0`.`UserId`
+ORDER BY `t`.`Id`, `t0`.`UserId`, `t0`.`RoleId`
+2025-10-02 17:30:25.983 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[E_Commerce.DtoModels.AccountDtos.Userdto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 17:30:25.995 +03:00 [INF] Executed action E_Commerce.Controllers.UserManagementController.GetUsersAsync (E-Commerce) in 278.5388ms
+2025-10-02 17:30:26.000 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.UserManagementController.GetUsersAsync (E-Commerce)'
+2025-10-02 17:30:26.005 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/UserManagement/users?page=1&pageSize=10 - 200 1107 application/json; charset=utf-8 584.1868ms
+2025-10-02 17:31:18.328 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/UserManagement/users?isDeleted=true&page=1&pageSize=10 - null null
+2025-10-02 17:31:18.340 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 17:31:18.489 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 17:31:18.498 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.UserManagementController.GetUsersAsync (E-Commerce)'
+2025-10-02 17:31:18.501 +03:00 [INF] Route matched with {action = "GetUsersAsync", controller = "UserManagement"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[E_Commerce.DtoModels.AccountDtos.Userdto]]] GetUsersAsync(System.String, System.String, System.String, System.String, System.Nullable`1[System.Boolean], System.Nullable`1[System.Boolean], Int32, Int32) on controller E_Commerce.Controllers.UserManagementController (E-Commerce).
+2025-10-02 17:31:18.506 +03:00 [INF] In GetUsersAsync Method 
+2025-10-02 17:31:18.514 +03:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-10-02 17:31:18.517 +03:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-10-02 17:31:18.673 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[@__p_1='?' (DbType = Int32), @__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`Name`, `t`.`Email`, `t`.`c`, `t`.`UserName`, `t`.`PhoneNumber`, `t`.`c0`, `t`.`c1`, `t`.`c2`, `t0`.`Name`, `t0`.`UserId`, `t0`.`RoleId`, `t0`.`Id`
+FROM (
+    SELECT `a`.`Id`, `a`.`Name`, `a`.`Email`, `a`.`LockoutEnd` IS NOT NULL AND (`a`.`LockoutEnd` > UTC_TIMESTAMP()) AS `c`, `a`.`UserName`, `a`.`PhoneNumber`, `a`.`LockoutEnd` IS NULL OR (`a`.`LockoutEnd` <= CURRENT_TIMESTAMP()) AS `c0`, `a`.`DeletedAt` IS NOT NULL AS `c1`, CASE
+        WHEN `a`.`LastVisit` IS NOT NULL THEN `a`.`LastVisit`
+        ELSE NULL
+    END AS `c2`
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND `a`.`DeletedAt` IS NOT NULL
+    LIMIT @__p_1 OFFSET @__p_0
+) AS `t`
+LEFT JOIN (
+    SELECT `a1`.`Name`, `a0`.`UserId`, `a0`.`RoleId`, `a1`.`Id`
+    FROM `AspNetUserRoles` AS `a0`
+    INNER JOIN `AspNetRoles` AS `a1` ON `a0`.`RoleId` = `a1`.`Id`
+) AS `t0` ON `t`.`Id` = `t0`.`UserId`
+ORDER BY `t`.`Id`, `t0`.`UserId`, `t0`.`RoleId`
+2025-10-02 17:31:18.682 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[E_Commerce.DtoModels.AccountDtos.Userdto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 17:31:18.684 +03:00 [INF] Executed action E_Commerce.Controllers.UserManagementController.GetUsersAsync (E-Commerce) in 179.7851ms
+2025-10-02 17:31:18.687 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.UserManagementController.GetUsersAsync (E-Commerce)'
+2025-10-02 17:31:18.690 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/UserManagement/users?isDeleted=true&page=1&pageSize=10 - 200 603 application/json; charset=utf-8 361.6796ms
+2025-10-02 17:32:53.809 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/UserManagement/users?page=1&pageSize=10 - null null
+2025-10-02 17:32:53.816 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 17:32:53.962 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 17:32:53.973 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.UserManagementController.GetUsersAsync (E-Commerce)'
+2025-10-02 17:32:53.975 +03:00 [INF] Route matched with {action = "GetUsersAsync", controller = "UserManagement"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[E_Commerce.DtoModels.AccountDtos.Userdto]]] GetUsersAsync(System.String, System.String, System.String, System.String, System.Nullable`1[System.Boolean], System.Nullable`1[System.Boolean], Int32, Int32) on controller E_Commerce.Controllers.UserManagementController (E-Commerce).
+2025-10-02 17:32:54.005 +03:00 [INF] In GetUsersAsync Method 
+2025-10-02 17:32:54.153 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__p_1='?' (DbType = Int32), @__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`Name`, `t`.`Email`, `t`.`c`, `t`.`UserName`, `t`.`PhoneNumber`, `t`.`c0`, `t`.`c1`, `t`.`c2`, `t0`.`Name`, `t0`.`UserId`, `t0`.`RoleId`, `t0`.`Id`
+FROM (
+    SELECT `a`.`Id`, `a`.`Name`, `a`.`Email`, `a`.`LockoutEnd` IS NOT NULL AND (`a`.`LockoutEnd` > UTC_TIMESTAMP()) AS `c`, `a`.`UserName`, `a`.`PhoneNumber`, `a`.`LockoutEnd` IS NULL OR (`a`.`LockoutEnd` <= CURRENT_TIMESTAMP()) AS `c0`, `a`.`DeletedAt` IS NOT NULL AS `c1`, CASE
+        WHEN `a`.`LastVisit` IS NOT NULL THEN `a`.`LastVisit`
+        ELSE NULL
+    END AS `c2`
+    FROM `AspNetUsers` AS `a`
+    WHERE `a`.`Discriminator` = 'Customer'
+    LIMIT @__p_1 OFFSET @__p_0
+) AS `t`
+LEFT JOIN (
+    SELECT `a1`.`Name`, `a0`.`UserId`, `a0`.`RoleId`, `a1`.`Id`
+    FROM `AspNetUserRoles` AS `a0`
+    INNER JOIN `AspNetRoles` AS `a1` ON `a0`.`RoleId` = `a1`.`Id`
+) AS `t0` ON `t`.`Id` = `t0`.`UserId`
+ORDER BY `t`.`Id`, `t0`.`UserId`, `t0`.`RoleId`
+2025-10-02 17:32:54.158 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[E_Commerce.DtoModels.AccountDtos.Userdto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 17:32:54.163 +03:00 [INF] Executed action E_Commerce.Controllers.UserManagementController.GetUsersAsync (E-Commerce) in 181.6974ms
+2025-10-02 17:32:54.167 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.UserManagementController.GetUsersAsync (E-Commerce)'
+2025-10-02 17:32:54.183 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/UserManagement/users?page=1&pageSize=10 - 200 1107 application/json; charset=utf-8 374.1427ms
+2025-10-02 17:33:23.744 +03:00 [INF] Request starting HTTP/1.1 PATCH http://localhost:5069/api/UserManagement/lock-user/e9f759de-32ca-4bcb-8e5b-fc9c749c251c - null null
+2025-10-02 17:33:23.752 +03:00 [INF] CORS policy execution successful.
+2025-10-02 17:33:23.755 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 17:33:23.904 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 17:33:23.911 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.UserManagementController.LockUserAccountAsync (E-Commerce)'
+2025-10-02 17:33:23.921 +03:00 [INF] Route matched with {action = "LockUserAccountAsync", controller = "UserManagement"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[System.Boolean]]] LockUserAccountAsync(System.String) on controller E_Commerce.Controllers.UserManagementController (E-Commerce).
+2025-10-02 17:33:23.931 +03:00 [INF] In LockUserAccountAsync Method 
+2025-10-02 17:33:24.082 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__p_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__p_0)
+LIMIT 1
+2025-10-02 17:33:24.381 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-10-02 17:33:24.471 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 17:33:24.629 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@p21='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p22='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = DateTime), @p10='?' (DbType = Boolean), @p11='?' (DbType = DateTimeOffset), @p12='?' (Size = 4000), @p13='?' (Size = 256), @p14='?' (Size = 256), @p15='?' (Size = 4000), @p16='?' (Size = 4000), @p17='?' (DbType = Boolean), @p18='?' (Size = 4000), @p19='?' (DbType = Boolean), @p20='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `LastVisit` = @p9, `LockoutEnabled` = @p10, `LockoutEnd` = @p11, `Name` = @p12, `NormalizedEmail` = @p13, `NormalizedUserName` = @p14, `PasswordHash` = @p15, `PhoneNumber` = @p16, `PhoneNumberConfirmed` = @p17, `SecurityStamp` = @p18, `TwoFactorEnabled` = @p19, `UserName` = @p20
+WHERE `Id` = @p21 AND `ConcurrencyStamp` = @p22;
+SELECT ROW_COUNT();
+2025-10-02 17:33:24.781 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-10-02 17:33:24.860 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 17:33:25.013 +03:00 [INF] Executed DbCommand (76ms) [Parameters=[@p21='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p22='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = DateTime), @p10='?' (DbType = Boolean), @p11='?' (DbType = DateTimeOffset), @p12='?' (Size = 4000), @p13='?' (Size = 256), @p14='?' (Size = 256), @p15='?' (Size = 4000), @p16='?' (Size = 4000), @p17='?' (DbType = Boolean), @p18='?' (Size = 4000), @p19='?' (DbType = Boolean), @p20='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `LastVisit` = @p9, `LockoutEnabled` = @p10, `LockoutEnd` = @p11, `Name` = @p12, `NormalizedEmail` = @p13, `NormalizedUserName` = @p14, `PasswordHash` = @p15, `PhoneNumber` = @p16, `PhoneNumberConfirmed` = @p17, `SecurityStamp` = @p18, `TwoFactorEnabled` = @p19, `UserName` = @p20
+WHERE `Id` = @p21 AND `ConcurrencyStamp` = @p22;
+SELECT ROW_COUNT();
+2025-10-02 17:33:25.094 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-10-02 17:33:25.101 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-10-02 17:33:25.156 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-10-02 17:33:25.333 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@p0='?' (Size = 255), @p1='?' (DbType = DateTime), @p2='?' (DbType = DateTime), @p3='?' (Size = 4000), @p4='?' (Size = 4000), @p5='?' (DbType = DateTime), @p6='?' (DbType = Int32), @p7='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-10-02 17:33:25.532 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 17:33:25.543 +03:00 [INF] Executed action E_Commerce.Controllers.UserManagementController.LockUserAccountAsync (E-Commerce) in 1615.5154ms
+2025-10-02 17:33:25.552 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.UserManagementController.LockUserAccountAsync (E-Commerce)'
+2025-10-02 17:33:25.556 +03:00 [INF] Request finished HTTP/1.1 PATCH http://localhost:5069/api/UserManagement/lock-user/e9f759de-32ca-4bcb-8e5b-fc9c749c251c - 200 122 application/json; charset=utf-8 1811.5181ms
+2025-10-02 17:33:34.239 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/UserManagement/user/e9f759de-32ca-4bcb-8e5b-fc9c749c251c - null null
+2025-10-02 17:33:34.248 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 17:33:34.393 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 17:33:34.404 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce)'
+2025-10-02 17:33:34.411 +03:00 [INF] Route matched with {action = "GetUserByIdAsync", controller = "UserManagement"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.AccountDtos.Userdto]]] GetUserByIdAsync(System.String) on controller E_Commerce.Controllers.UserManagementController (E-Commerce).
+2025-10-02 17:33:34.421 +03:00 [INF] In GetUsersAsync Method 
+2025-10-02 17:33:34.574 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__id_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__id_0)
+LIMIT 1
+2025-10-02 17:33:34.729 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__customer_Id_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__customer_Id_0
+2025-10-02 17:33:34.739 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.AccountDtos.Userdto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 17:33:34.746 +03:00 [INF] Executed action E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce) in 326.9026ms
+2025-10-02 17:33:34.753 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce)'
+2025-10-02 17:33:34.756 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/UserManagement/user/e9f759de-32ca-4bcb-8e5b-fc9c749c251c - 200 352 application/json; charset=utf-8 517.5596ms
+2025-10-02 17:34:02.167 +03:00 [INF] Request starting HTTP/1.1 PATCH http://localhost:5069/api/UserManagement/Remove-role/e9f759de-32ca-4bcb-8e5b-fc9c749c251c?role=admin - null null
+2025-10-02 17:34:02.176 +03:00 [INF] CORS policy execution successful.
+2025-10-02 17:34:02.190 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 17:34:02.333 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 17:34:02.340 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.UserManagementController.RemoveRoleToUserAsync (E-Commerce)'
+2025-10-02 17:34:02.349 +03:00 [INF] Route matched with {action = "AddRoleToUserAsync", controller = "UserManagement"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[System.Boolean]]] RemoveRoleToUserAsync(System.String, System.String) on controller E_Commerce.Controllers.UserManagementController (E-Commerce).
+2025-10-02 17:34:02.354 +03:00 [INF] In GetUsersAsync Method 
+2025-10-02 17:34:02.497 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 17:34:02.646 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__p_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__p_0)
+LIMIT 1
+2025-10-02 17:34:02.795 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 17:34:02.952 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-10-02 17:34:03.269 +03:00 [INF] Executed DbCommand (92ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 17:34:03.347 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 17:34:03.425 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-10-02 17:34:03.502 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 17:34:03.659 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@p0='?' (Size = 255), @p1='?' (Size = 255), @p23='?' (Size = 255), @p2='?' (DbType = Int32), @p3='?' (DbType = Int32), @p4='?' (Size = 4000), @p24='?' (Size = 4000), @p5='?' (DbType = DateTime), @p6='?' (DbType = DateTime), @p7='?' (Size = 256), @p8='?' (DbType = Boolean), @p9='?' (DbType = Int32), @p10='?' (DbType = Int32), @p11='?' (DbType = DateTime), @p12='?' (DbType = Boolean), @p13='?' (DbType = DateTimeOffset), @p14='?' (Size = 4000), @p15='?' (Size = 256), @p16='?' (Size = 256), @p17='?' (Size = 4000), @p18='?' (Size = 4000), @p19='?' (DbType = Boolean), @p20='?' (Size = 4000), @p21='?' (DbType = Boolean), @p22='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+DELETE FROM `AspNetUserRoles`
+WHERE `RoleId` = @p0 AND `UserId` = @p1;
+SELECT ROW_COUNT();
+
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p2, `Age` = @p3, `ConcurrencyStamp` = @p4, `CreateAt` = @p5, `DeletedAt` = @p6, `Email` = @p7, `EmailConfirmed` = @p8, `Gender` = @p9, `ImageId` = @p10, `LastVisit` = @p11, `LockoutEnabled` = @p12, `LockoutEnd` = @p13, `Name` = @p14, `NormalizedEmail` = @p15, `NormalizedUserName` = @p16, `PasswordHash` = @p17, `PhoneNumber` = @p18, `PhoneNumberConfirmed` = @p19, `SecurityStamp` = @p20, `TwoFactorEnabled` = @p21, `UserName` = @p22
+WHERE `Id` = @p23 AND `ConcurrencyStamp` = @p24;
+SELECT ROW_COUNT();
+2025-10-02 17:34:03.753 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-10-02 17:34:03.756 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-10-02 17:34:03.760 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-10-02 17:34:03.904 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@p0='?' (Size = 255), @p1='?' (DbType = DateTime), @p2='?' (DbType = DateTime), @p3='?' (Size = 4000), @p4='?' (Size = 4000), @p5='?' (DbType = DateTime), @p6='?' (DbType = Int32), @p7='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-10-02 17:34:04.064 +03:00 [INF] Role 'admin' successfully remove for user 'e9f759de-32ca-4bcb-8e5b-fc9c749c251c'
+2025-10-02 17:34:04.073 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 17:34:04.086 +03:00 [INF] Executed action E_Commerce.Controllers.UserManagementController.RemoveRoleToUserAsync (E-Commerce) in 1734.3298ms
+2025-10-02 17:34:04.098 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.UserManagementController.RemoveRoleToUserAsync (E-Commerce)'
+2025-10-02 17:34:04.108 +03:00 [INF] Request finished HTTP/1.1 PATCH http://localhost:5069/api/UserManagement/Remove-role/e9f759de-32ca-4bcb-8e5b-fc9c749c251c?role=admin - 200 122 application/json; charset=utf-8 1941.3463ms
+2025-10-02 17:34:08.739 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/UserManagement/user/e9f759de-32ca-4bcb-8e5b-fc9c749c251c - null null
+2025-10-02 17:34:08.746 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 17:34:08.891 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 17:34:08.899 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce)'
+2025-10-02 17:34:08.903 +03:00 [INF] Route matched with {action = "GetUserByIdAsync", controller = "UserManagement"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.AccountDtos.Userdto]]] GetUserByIdAsync(System.String) on controller E_Commerce.Controllers.UserManagementController (E-Commerce).
+2025-10-02 17:34:08.907 +03:00 [INF] In GetUsersAsync Method 
+2025-10-02 17:34:09.049 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__id_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__id_0)
+LIMIT 1
+2025-10-02 17:34:09.197 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__customer_Id_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__customer_Id_0
+2025-10-02 17:34:09.204 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.AccountDtos.Userdto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 17:34:09.208 +03:00 [INF] Executed action E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce) in 301.4687ms
+2025-10-02 17:34:09.212 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce)'
+2025-10-02 17:34:09.216 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/UserManagement/user/e9f759de-32ca-4bcb-8e5b-fc9c749c251c - 200 344 application/json; charset=utf-8 476.4ms
+2025-10-02 17:36:28.889 +03:00 [INF] Setting cache for key: order:filter:user:all_deleted:all_page:1_size:50_status:all_IsAdmin:True
+2025-10-02 17:36:29.007 +03:00 [INF] Setting cache for key: Product:list_active:_deleted:_search:_pageSize:10_page:1_tag:BestSeller_IsAdmin:True
+2025-10-02 17:36:29.199 +03:00 [INF] Cache set successfully for key: order:filter:user:all_deleted:all_page:1_size:50_status:all_IsAdmin:True with tags: [order]
+2025-10-02 17:36:29.254 +03:00 [INF] Cache set successfully for key: Product:list_active:_deleted:_search:_pageSize:10_page:1_tag:BestSeller_IsAdmin:True with tags: [ProductList]
+2025-10-02 17:43:42.721 +03:00 [WRN] Server mrrobot:10548:c46f4626 encountered an exception while sending heartbeat
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.Heartbeat(String serverId)
+   at Hangfire.Server.ServerHeartbeatProcess.Execute(BackgroundProcessContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\ServerHeartbeatProcess.cs:line 50
+2025-10-02 17:43:57.265 +03:00 [ERR] Execution Worker is in the Failed state now due to an exception, execution will be retried in no more than 00:05:00
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.JobQueue.MySqlJobQueue.Dequeue(String[] queues, CancellationToken cancellationToken)
+   at Hangfire.MySql.MySqlStorageConnection.FetchNextJob(String[] queues, CancellationToken cancellationToken)
+   at Hangfire.Server.Worker.Execute(BackgroundProcessContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\Worker.cs:line 107
+   at Hangfire.Server.BackgroundProcessDispatcherBuilder.ExecuteProcess(Guid executionId, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundProcessDispatcherBuilder.cs:line 82
+   at Hangfire.Processing.BackgroundExecution.Run(Action`2 callback, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Processing\BackgroundExecution.cs:line 118
+2025-10-02 17:44:12.820 +03:00 [WRN] Server mrrobot:10548:c46f4626 encountered an exception while sending heartbeat
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.Heartbeat(String serverId)
+   at Hangfire.Server.ServerHeartbeatProcess.Execute(BackgroundProcessContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\ServerHeartbeatProcess.cs:line 50
+2025-10-02 17:44:17.211 +03:00 [ERR] Execution DelayedJobScheduler is in the Failed state now due to an exception, execution will be retried in no more than 00:00:25
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.Server.DelayedJobScheduler.UseConnectionDistributedLock[T](JobStorage storage, Func`2 action) in C:\projects\hangfire-525\src\Hangfire.Core\Server\DelayedJobScheduler.cs:line 407
+   at Hangfire.Server.DelayedJobScheduler.Execute(BackgroundProcessContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\DelayedJobScheduler.cs:line 148
+   at Hangfire.Server.BackgroundProcessDispatcherBuilder.ExecuteProcess(Guid executionId, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundProcessDispatcherBuilder.cs:line 82
+   at Hangfire.Processing.BackgroundExecution.Run(Action`2 callback, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Processing\BackgroundExecution.cs:line 118
+2025-10-02 17:44:17.703 +03:00 [ERR] Execution RecurringJobScheduler is in the Failed state now due to an exception, execution will be retried in no more than 00:00:25
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.Server.RecurringJobScheduler.UseConnectionDistributedLock[T](JobStorage storage, Func`2 action)
+   at Hangfire.Server.RecurringJobScheduler.Execute(BackgroundProcessContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\RecurringJobScheduler.cs:line 176
+   at Hangfire.Server.BackgroundProcessDispatcherBuilder.ExecuteProcess(Guid executionId, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundProcessDispatcherBuilder.cs:line 82
+   at Hangfire.Processing.BackgroundExecution.Run(Action`2 callback, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Processing\BackgroundExecution.cs:line 118
+2025-10-02 17:44:42.858 +03:00 [WRN] Server mrrobot:10548:c46f4626 encountered an exception while sending heartbeat
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.Heartbeat(String serverId)
+   at Hangfire.Server.ServerHeartbeatProcess.Execute(BackgroundProcessContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\ServerHeartbeatProcess.cs:line 50
+2025-10-02 17:45:12.905 +03:00 [WRN] Server mrrobot:10548:c46f4626 encountered an exception while sending heartbeat
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.Heartbeat(String serverId)
+   at Hangfire.Server.ServerHeartbeatProcess.Execute(BackgroundProcessContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\ServerHeartbeatProcess.cs:line 50
+2025-10-02 17:45:42.944 +03:00 [WRN] Server mrrobot:10548:c46f4626 encountered an exception while sending heartbeat
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.Heartbeat(String serverId)
+   at Hangfire.Server.ServerHeartbeatProcess.Execute(BackgroundProcessContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\ServerHeartbeatProcess.cs:line 50
+2025-10-02 17:46:12.989 +03:00 [WRN] Server mrrobot:10548:c46f4626 encountered an exception while sending heartbeat
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.Heartbeat(String serverId)
+   at Hangfire.Server.ServerHeartbeatProcess.Execute(BackgroundProcessContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\ServerHeartbeatProcess.cs:line 50
+2025-10-02 17:46:43.019 +03:00 [WRN] Server mrrobot:10548:c46f4626 encountered an exception while sending heartbeat
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.Heartbeat(String serverId)
+   at Hangfire.Server.ServerHeartbeatProcess.Execute(BackgroundProcessContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\ServerHeartbeatProcess.cs:line 50
+2025-10-02 17:47:13.037 +03:00 [WRN] Server mrrobot:10548:c46f4626 encountered an exception while sending heartbeat
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.Heartbeat(String serverId)
+   at Hangfire.Server.ServerHeartbeatProcess.Execute(BackgroundProcessContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\ServerHeartbeatProcess.cs:line 50
+2025-10-02 17:47:43.068 +03:00 [WRN] Server mrrobot:10548:c46f4626 encountered an exception while sending heartbeat
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.Heartbeat(String serverId)
+   at Hangfire.Server.ServerHeartbeatProcess.Execute(BackgroundProcessContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\ServerHeartbeatProcess.cs:line 50
+2025-10-02 17:48:08.551 +03:00 [ERR] Execution ServerWatchdog is in the Failed state now due to an exception, execution will be retried in no more than 00:00:25
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorageConnection.RemoveTimedOutServers(TimeSpan timeOut)
+   at Hangfire.Server.ServerWatchdog.Execute(BackgroundProcessContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\ServerWatchdog.cs:line 44
+   at Hangfire.Server.BackgroundProcessDispatcherBuilder.ExecuteProcess(Guid executionId, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundProcessDispatcherBuilder.cs:line 82
+   at Hangfire.Processing.BackgroundExecution.Run(Action`2 callback, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Processing\BackgroundExecution.cs:line 118
+2025-10-02 17:48:09.034 +03:00 [ERR] Execution CountersAggregator is in the Failed state now due to an exception, execution will be retried in no more than 00:00:25
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.CountersAggregator.Execute(CancellationToken cancellationToken)
+   at Hangfire.Server.ServerProcessDispatcherBuilder.ExecuteComponent(Guid executionId, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Server\ServerProcessDispatcherBuilder.cs:line 65
+   at Hangfire.Processing.BackgroundExecution.Run(Action`2 callback, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Processing\BackgroundExecution.cs:line 118
+2025-10-02 17:48:13.090 +03:00 [WRN] Server mrrobot:10548:c46f4626 encountered an exception while sending heartbeat
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.Heartbeat(String serverId)
+   at Hangfire.Server.ServerHeartbeatProcess.Execute(BackgroundProcessContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\ServerHeartbeatProcess.cs:line 50
+2025-10-02 17:48:43.112 +03:00 [WRN] Server mrrobot:10548:c46f4626 encountered an exception while sending heartbeat
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.Heartbeat(String serverId)
+   at Hangfire.Server.ServerHeartbeatProcess.Execute(BackgroundProcessContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\ServerHeartbeatProcess.cs:line 50
+2025-10-02 17:48:43.124 +03:00 [ERR] Server mrrobot:10548:c46f4626 will be restarted due to server time out
+2025-10-02 17:48:43.126 +03:00 [INF] Server mrrobot:10548:c46f4626 caught restart signal...
+2025-10-02 17:48:43.129 +03:00 [WRN] Server mrrobot:10548:c46f4626 stopped non-gracefully due to ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler. Outstanding work on those dispatchers could be aborted, and there can be delays in background processing. This server instance will be incorrectly shown as active for a while. To avoid non-graceful shutdowns, investigate what prevents from stopping gracefully and add CancellationToken support for those methods.
+2025-10-02 17:48:43.135 +03:00 [WRN] Server mrrobot:10548:c46f4626 there was an exception, server may not be removed
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.RemoveServer(String serverId)
+   at Hangfire.Server.BackgroundServerProcess.ServerDelete(BackgroundServerContext context, Stopwatch stoppedAt) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 214
+2025-10-02 17:48:43.145 +03:00 [ERR] Execution BackgroundServerProcess is in the Failed state now due to an exception, execution will be retried in no more than 00:00:15
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.AnnounceServer(String serverId, ServerContext context)
+   at Hangfire.Server.BackgroundServerProcess.CreateServer(BackgroundServerContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 194
+   at Hangfire.Server.BackgroundServerProcess.Execute(Guid executionId, BackgroundExecution execution, CancellationToken stoppingToken, CancellationToken stoppedToken, CancellationToken shutdownToken) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 101
+   at Hangfire.Server.BackgroundProcessingServer.RunServer(Guid executionId, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundProcessingServer.cs:line 249
+   at Hangfire.Processing.BackgroundExecution.Run(Action`2 callback, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Processing\BackgroundExecution.cs:line 118
+2025-10-02 17:48:58.167 +03:00 [ERR] Execution BackgroundServerProcess is still in the Failed state for 00:00:15.0153301 due to an exception, will be retried in no more than 00:00:15
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.AnnounceServer(String serverId, ServerContext context)
+   at Hangfire.Server.BackgroundServerProcess.CreateServer(BackgroundServerContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 194
+   at Hangfire.Server.BackgroundServerProcess.Execute(Guid executionId, BackgroundExecution execution, CancellationToken stoppingToken, CancellationToken stoppedToken, CancellationToken shutdownToken) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 101
+   at Hangfire.Server.BackgroundProcessingServer.RunServer(Guid executionId, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundProcessingServer.cs:line 249
+   at Hangfire.Processing.BackgroundExecution.Run(Action`2 callback, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Processing\BackgroundExecution.cs:line 118
+2025-10-02 17:49:13.184 +03:00 [ERR] Execution BackgroundServerProcess is still in the Failed state for 00:00:30.0326534 due to an exception, will be retried in no more than 00:00:15
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.AnnounceServer(String serverId, ServerContext context)
+   at Hangfire.Server.BackgroundServerProcess.CreateServer(BackgroundServerContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 194
+   at Hangfire.Server.BackgroundServerProcess.Execute(Guid executionId, BackgroundExecution execution, CancellationToken stoppingToken, CancellationToken stoppedToken, CancellationToken shutdownToken) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 101
+   at Hangfire.Server.BackgroundProcessingServer.RunServer(Guid executionId, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundProcessingServer.cs:line 249
+   at Hangfire.Processing.BackgroundExecution.Run(Action`2 callback, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Processing\BackgroundExecution.cs:line 118
+2025-10-02 17:49:28.206 +03:00 [ERR] Execution BackgroundServerProcess is still in the Failed state for 00:00:45.0541929 due to an exception, will be retried in no more than 00:00:15
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.CreateAndOpenConnection()
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.AnnounceServer(String serverId, ServerContext context)
+   at Hangfire.Server.BackgroundServerProcess.CreateServer(BackgroundServerContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 194
+   at Hangfire.Server.BackgroundServerProcess.Execute(Guid executionId, BackgroundExecution execution, CancellationToken stoppingToken, CancellationToken stoppedToken, CancellationToken shutdownToken) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 101
+   at Hangfire.Server.BackgroundProcessingServer.RunServer(Guid executionId, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundProcessingServer.cs:line 249
+   at Hangfire.Processing.BackgroundExecution.Run(Action`2 callback, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Processing\BackgroundExecution.cs:line 118
+2025-10-02 17:49:43.216 +03:00 [ERR] Execution BackgroundServerProcess is still in the Failed state for 00:01:00.0640369 due to an exception, will be retried in no more than 00:00:15
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.AnnounceServer(String serverId, ServerContext context)
+   at Hangfire.Server.BackgroundServerProcess.CreateServer(BackgroundServerContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 194
+   at Hangfire.Server.BackgroundServerProcess.Execute(Guid executionId, BackgroundExecution execution, CancellationToken stoppingToken, CancellationToken stoppedToken, CancellationToken shutdownToken) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 101
+   at Hangfire.Server.BackgroundProcessingServer.RunServer(Guid executionId, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundProcessingServer.cs:line 249
+   at Hangfire.Processing.BackgroundExecution.Run(Action`2 callback, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Processing\BackgroundExecution.cs:line 118
+2025-10-02 17:49:58.229 +03:00 [ERR] Execution BackgroundServerProcess is still in the Failed state for 00:01:15.0771196 due to an exception, will be retried in no more than 00:00:15
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.AnnounceServer(String serverId, ServerContext context)
+   at Hangfire.Server.BackgroundServerProcess.CreateServer(BackgroundServerContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 194
+   at Hangfire.Server.BackgroundServerProcess.Execute(Guid executionId, BackgroundExecution execution, CancellationToken stoppingToken, CancellationToken stoppedToken, CancellationToken shutdownToken) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 101
+   at Hangfire.Server.BackgroundProcessingServer.RunServer(Guid executionId, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundProcessingServer.cs:line 249
+   at Hangfire.Processing.BackgroundExecution.Run(Action`2 callback, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Processing\BackgroundExecution.cs:line 118
+2025-10-02 17:50:13.252 +03:00 [ERR] Execution BackgroundServerProcess is still in the Failed state for 00:01:30.1002373 due to an exception, will be retried in no more than 00:00:15
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.AnnounceServer(String serverId, ServerContext context)
+   at Hangfire.Server.BackgroundServerProcess.CreateServer(BackgroundServerContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 194
+   at Hangfire.Server.BackgroundServerProcess.Execute(Guid executionId, BackgroundExecution execution, CancellationToken stoppingToken, CancellationToken stoppedToken, CancellationToken shutdownToken) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 101
+   at Hangfire.Server.BackgroundProcessingServer.RunServer(Guid executionId, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundProcessingServer.cs:line 249
+   at Hangfire.Processing.BackgroundExecution.Run(Action`2 callback, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Processing\BackgroundExecution.cs:line 118
+2025-10-02 17:50:28.270 +03:00 [ERR] Execution BackgroundServerProcess is still in the Failed state for 00:01:45.1179224 due to an exception, will be retried in no more than 00:00:15
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.AnnounceServer(String serverId, ServerContext context)
+   at Hangfire.Server.BackgroundServerProcess.CreateServer(BackgroundServerContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 194
+   at Hangfire.Server.BackgroundServerProcess.Execute(Guid executionId, BackgroundExecution execution, CancellationToken stoppingToken, CancellationToken stoppedToken, CancellationToken shutdownToken) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 101
+   at Hangfire.Server.BackgroundProcessingServer.RunServer(Guid executionId, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundProcessingServer.cs:line 249
+   at Hangfire.Processing.BackgroundExecution.Run(Action`2 callback, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Processing\BackgroundExecution.cs:line 118
+2025-10-02 17:50:54.349 +03:00 [ERR] Execution BackgroundServerProcess is still in the Failed state for 00:02:11.1974139 due to an exception, will be retried in no more than 00:00:15
+MySqlConnector.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts.
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, MySqlConnection connection, Int64 startingTimestamp, ILoadBalancer loadBalancer, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 437
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 428
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(MySqlConnection connection, Action`4 logMessage, Int64 startingTimestamp, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 433
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 111
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int64 startingTimestamp, Int32 timeoutMilliseconds, Activity activity, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 144
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int64 startingTimestamp, Activity activity, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 919
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 419
+   at Hangfire.MySql.MySqlStorage.UseConnection[T](Func`2 func)
+   at Hangfire.MySql.MySqlStorage.UseConnection(Action`1 action)
+   at Hangfire.MySql.MySqlStorageConnection.AnnounceServer(String serverId, ServerContext context)
+   at Hangfire.Server.BackgroundServerProcess.CreateServer(BackgroundServerContext context) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 194
+   at Hangfire.Server.BackgroundServerProcess.Execute(Guid executionId, BackgroundExecution execution, CancellationToken stoppingToken, CancellationToken stoppedToken, CancellationToken shutdownToken) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundServerProcess.cs:line 101
+   at Hangfire.Server.BackgroundProcessingServer.RunServer(Guid executionId, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Server\BackgroundProcessingServer.cs:line 249
+   at Hangfire.Processing.BackgroundExecution.Run(Action`2 callback, Object state) in C:\projects\hangfire-525\src\Hangfire.Core\Processing\BackgroundExecution.cs:line 118
+2025-10-02 17:51:09.963 +03:00 [INF] Server mrrobot:10548:74cf0676 successfully announced in 569.5062 ms
+2025-10-02 17:51:09.968 +03:00 [INF] Server mrrobot:10548:74cf0676 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-10-02 17:51:09.989 +03:00 [INF] Server mrrobot:10548:74cf0676 all the dispatchers started
+2025-10-02 17:51:09.993 +03:00 [INF] Execution BackgroundServerProcess recovered from the Failed state after 00:02:26.8411361 and is in the Running state now
+2025-10-02 17:51:27.109 +03:00 [INF] Execution DelayedJobScheduler recovered from the Faulted state after 00:00:16.3523923 and is in the Running state now
+2025-10-02 17:53:47.253 +03:00 [INF] Execution Worker recovered from the Faulted state after 00:02:36.6319360 and is in the Running state now
+2025-10-02 17:53:47.409 +03:00 [INF] Setting cache for key: order:filter:user:all_deleted:all_page:1_size:50_status:all_IsAdmin:True
+2025-10-02 17:53:47.650 +03:00 [INF] Cache set successfully for key: order:filter:user:all_deleted:all_page:1_size:50_status:all_IsAdmin:True with tags: [order]
+2025-10-02 17:53:48.704 +03:00 [INF] Setting cache for key: Product:list_active:_deleted:_search:_pageSize:10_page:1_tag:BestSeller_IsAdmin:True
+2025-10-02 17:53:48.942 +03:00 [INF] Cache set successfully for key: Product:list_active:_deleted:_search:_pageSize:10_page:1_tag:BestSeller_IsAdmin:True with tags: [ProductList]
+2025-10-02 17:56:52.282 +03:00 [INF] Setting cache for key: Product:list_active:_deleted:_search:_pageSize:10_page:1_tag:BestSeller_IsAdmin:True
+2025-10-02 17:56:52.525 +03:00 [INF] Cache set successfully for key: Product:list_active:_deleted:_search:_pageSize:10_page:1_tag:BestSeller_IsAdmin:True with tags: [ProductList]
+2025-10-02 17:56:55.090 +03:00 [INF] Setting cache for key: order:filter:user:all_deleted:all_page:1_size:50_status:all_IsAdmin:True
+2025-10-02 17:56:55.332 +03:00 [INF] Cache set successfully for key: order:filter:user:all_deleted:all_page:1_size:50_status:all_IsAdmin:True with tags: [order]
+2025-10-02 18:09:40.374 +03:00 [INF] Executed DbCommand (95ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-10-02 18:09:41.089 +03:00 [INF] Executed DbCommand (68ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-10-02 18:09:41.265 +03:00 [INF] Executed DbCommand (83ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-10-02 18:09:41.285 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-02 18:09:41.296 +03:00 [INF] Starting data seeding...
+2025-10-02 18:09:41.320 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-02 18:09:41.509 +03:00 [INF] DB tables already exist. Exit install
+2025-10-02 18:09:41.974 +03:00 [INF] Executed DbCommand (106ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 18:09:42.035 +03:00 [INF] Role 'Admin' already exists.
+2025-10-02 18:09:42.180 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 18:09:42.186 +03:00 [INF] Role 'User' already exists.
+2025-10-02 18:09:42.325 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 18:09:42.333 +03:00 [INF] Role 'SuperAdmin' already exists.
+2025-10-02 18:09:42.474 +03:00 [INF] Executed DbCommand (68ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 18:09:42.482 +03:00 [INF] Role 'DeliveryCompany' already exists.
+2025-10-02 18:09:42.642 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 18:09:42.859 +03:00 [INF] Executed DbCommand (68ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 18:09:43.041 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-10-02 18:09:43.089 +03:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-10-02 18:09:43.232 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 18:09:43.380 +03:00 [INF] Executed DbCommand (68ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 18:09:43.526 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-10-02 18:09:43.543 +03:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-10-02 18:09:43.688 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 18:09:43.843 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-10-02 18:09:43.861 +03:00 [INF] Execute GetAll for entity PaymentProvider
+2025-10-02 18:09:44.070 +03:00 [INF] Executed DbCommand (78ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-10-02 18:09:44.085 +03:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-10-02 18:09:44.158 +03:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-10-02 18:09:44.161 +03:00 [INF] Data seeding completed successfully.
+2025-10-02 18:09:45.332 +03:00 [INF] Now listening on: http://localhost:5069
+2025-10-02 18:09:45.460 +03:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-10-02 18:09:45.475 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-10-02 18:09:45.477 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-10-02 18:09:45.479 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-10-02 18:09:45.524 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-02 18:09:45.527 +03:00 [INF] Hosting environment: Development
+2025-10-02 18:09:45.529 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-10-02 18:09:45.673 +03:00 [INF] Server mrrobot:4264:fa2b655c successfully announced in 145.4386 ms
+2025-10-02 18:09:45.685 +03:00 [INF] Server mrrobot:4264:fa2b655c is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-10-02 18:09:45.842 +03:00 [INF] Server mrrobot:4264:fa2b655c all the dispatchers started
+2025-10-02 18:09:46.054 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-10-02 18:09:46.284 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 230.5744ms
+2025-10-02 18:09:46.430 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-10-02 18:09:46.452 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 22.3116ms
+2025-10-02 18:09:46.469 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-02 18:09:46.477 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16504 application/javascript; charset=utf-8 7.3779ms
+2025-10-02 18:09:46.517 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-10-02 18:09:46.556 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 38.5193ms
+2025-10-02 18:09:47.415 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-10-02 18:09:47.580 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 164.9512ms
+2025-10-02 18:14:45.991 +03:00 [INF] 1 servers were removed due to timeout
+2025-10-02 18:15:49.634 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/UserManagement/users?page=1&pageSize=10 - null null
+2025-10-02 18:15:49.643 +03:00 [WRN] Failed to determine the https port for redirect.
+2025-10-02 18:15:49.820 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 18:15:49.996 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 18:15:50.021 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/UserManagement/users?page=1&pageSize=10 - 401 null application/json 387.2365ms
+2025-10-02 18:16:08.064 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/UserManagement/users?page=1&pageSize=10 - null null
+2025-10-02 18:16:08.116 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 18:16:08.329 +03:00 [INF] Executed DbCommand (68ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 18:16:08.338 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/UserManagement/users?page=1&pageSize=10 - 401 null application/json 273.027ms
+2025-10-02 18:16:40.391 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json-patch+json 63
+2025-10-02 18:16:40.402 +03:00 [INF] CORS policy execution successful.
+2025-10-02 18:16:40.409 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 18:16:40.563 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 18:16:40.573 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 401 null application/json 182.3676ms
+2025-10-02 18:16:55.033 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json-patch+json 63
+2025-10-02 18:16:55.042 +03:00 [INF] CORS policy execution successful.
+2025-10-02 18:16:55.046 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 18:16:55.191 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 18:16:55.199 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 401 null application/json 166.2124ms
+2025-10-02 18:17:08.453 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json-patch+json 70
+2025-10-02 18:17:08.462 +03:00 [INF] CORS policy execution successful.
+2025-10-02 18:17:08.465 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 18:17:08.608 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 18:17:08.623 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 401 null application/json 169.6629ms
+2025-10-02 18:17:24.018 +03:00 [INF] Setting cache for key: order:filter:user:all_deleted:all_page:1_size:50_status:all_IsAdmin:True
+2025-10-02 18:17:24.217 +03:00 [INF] Setting cache for key: Product:list_active:_deleted:_search:_pageSize:10_page:1_tag:BestSeller_IsAdmin:True
+2025-10-02 18:17:24.283 +03:00 [INF] Cache set successfully for key: order:filter:user:all_deleted:all_page:1_size:50_status:all_IsAdmin:True with tags: [order]
+2025-10-02 18:17:24.469 +03:00 [INF] Cache set successfully for key: Product:list_active:_deleted:_search:_pageSize:10_page:1_tag:BestSeller_IsAdmin:True with tags: [ProductList]
+2025-10-02 18:17:29.584 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json-patch+json 70
+2025-10-02 18:17:29.592 +03:00 [INF] CORS policy execution successful.
+2025-10-02 18:17:29.595 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 18:17:29.602 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-10-02 18:17:29.632 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commerce.DtoModels.AccountDtos.LoginDTo) on controller E_Commerce.Controllers.AccountController (E-Commerce).
+2025-10-02 18:17:29.941 +03:00 [INF] In LoginAsync Method 
+2025-10-02 18:17:30.099 +03:00 [INF] Executed DbCommand (86ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 18:17:30.229 +03:00 [INF] 🔐 Generating Access Token for User ID: 356a1f90-f249-4f61-9df0-6b4e1e4ff2c9
+2025-10-02 18:17:30.238 +03:00 [INF] 🔐 Generating Access Token for User ID: 356a1f90-f249-4f61-9df0-6b4e1e4ff2c9
+2025-10-02 18:17:30.405 +03:00 [INF] Executed DbCommand (84ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-10-02 18:17:30.566 +03:00 [INF] Executed DbCommand (84ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 18:17:30.841 +03:00 [INF] Executed DbCommand (82ms) [Parameters=[@p21='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p22='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = DateTime), @p10='?' (DbType = Boolean), @p11='?' (DbType = DateTimeOffset), @p12='?' (Size = 4000), @p13='?' (Size = 256), @p14='?' (Size = 256), @p15='?' (Size = 4000), @p16='?' (Size = 4000), @p17='?' (DbType = Boolean), @p18='?' (Size = 4000), @p19='?' (DbType = Boolean), @p20='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `LastVisit` = @p9, `LockoutEnabled` = @p10, `LockoutEnd` = @p11, `Name` = @p12, `NormalizedEmail` = @p13, `NormalizedUserName` = @p14, `PasswordHash` = @p15, `PhoneNumber` = @p16, `PhoneNumberConfirmed` = @p17, `SecurityStamp` = @p18, `TwoFactorEnabled` = @p19, `UserName` = @p20
+WHERE `Id` = @p21 AND `ConcurrencyStamp` = @p22;
+SELECT ROW_COUNT();
+2025-10-02 18:17:31.078 +03:00 [INF] Executed DbCommand (81ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-10-02 18:17:31.096 +03:00 [INF] ✅ Access Token generated successfully for User ID: 356a1f90-f249-4f61-9df0-6b4e1e4ff2c9
+2025-10-02 18:17:31.100 +03:00 [INF] 🔑 Generating Refresh Token for User ID: 356a1f90-f249-4f61-9df0-6b4e1e4ff2c9
+2025-10-02 18:17:31.325 +03:00 [INF] ✅ RefreshToken generated and stored for User ID: 356a1f90-f249-4f61-9df0-6b4e1e4ff2c9
+2025-10-02 18:17:31.366 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 18:17:31.389 +03:00 [INF] Executed action E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce) in 1744.8478ms
+2025-10-02 18:17:31.395 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-10-02 18:17:31.399 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 200 1271 application/json; charset=utf-8 1814.6382ms
+2025-10-02 18:17:49.983 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/UserManagement/users?page=1&pageSize=10 - null null
+2025-10-02 18:17:49.992 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 18:17:50.131 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 18:17:50.140 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.UserManagementController.GetUsersAsync (E-Commerce)'
+2025-10-02 18:17:50.146 +03:00 [INF] Route matched with {action = "GetUsersAsync", controller = "UserManagement"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[E_Commerce.DtoModels.AccountDtos.Userdto]]] GetUsersAsync(System.String, System.String, System.String, System.String, System.Nullable`1[System.Boolean], System.Nullable`1[System.Boolean], Int32, Int32) on controller E_Commerce.Controllers.UserManagementController (E-Commerce).
+2025-10-02 18:17:50.166 +03:00 [INF] In GetUsersAsync Method 
+2025-10-02 18:17:50.190 +03:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-10-02 18:17:50.192 +03:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-10-02 18:17:50.412 +03:00 [INF] Executed DbCommand (73ms) [Parameters=[@__p_1='?' (DbType = Int32), @__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`Name`, `t`.`Email`, `t`.`c`, `t`.`UserName`, `t`.`PhoneNumber`, `t`.`c0`, `t`.`c1`, `t`.`c2`, `t0`.`Name`, `t0`.`UserId`, `t0`.`RoleId`, `t0`.`Id`
+FROM (
+    SELECT `a`.`Id`, `a`.`Name`, `a`.`Email`, `a`.`LockoutEnd` IS NOT NULL AND (`a`.`LockoutEnd` > UTC_TIMESTAMP()) AS `c`, `a`.`UserName`, `a`.`PhoneNumber`, `a`.`LockoutEnd` IS NULL OR (`a`.`LockoutEnd` <= CURRENT_TIMESTAMP()) AS `c0`, `a`.`DeletedAt` IS NOT NULL AS `c1`, CASE
+        WHEN `a`.`LastVisit` IS NOT NULL THEN `a`.`LastVisit`
+        ELSE NULL
+    END AS `c2`
+    FROM `AspNetUsers` AS `a`
+    WHERE `a`.`Discriminator` = 'Customer'
+    LIMIT @__p_1 OFFSET @__p_0
+) AS `t`
+LEFT JOIN (
+    SELECT `a1`.`Name`, `a0`.`UserId`, `a0`.`RoleId`, `a1`.`Id`
+    FROM `AspNetUserRoles` AS `a0`
+    INNER JOIN `AspNetRoles` AS `a1` ON `a0`.`RoleId` = `a1`.`Id`
+) AS `t0` ON `t`.`Id` = `t0`.`UserId`
+ORDER BY `t`.`Id`, `t0`.`UserId`, `t0`.`RoleId`
+2025-10-02 18:17:50.423 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[E_Commerce.DtoModels.AccountDtos.Userdto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 18:17:50.434 +03:00 [INF] Executed action E_Commerce.Controllers.UserManagementController.GetUsersAsync (E-Commerce) in 283.6506ms
+2025-10-02 18:17:50.442 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.UserManagementController.GetUsersAsync (E-Commerce)'
+2025-10-02 18:17:50.444 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/UserManagement/users?page=1&pageSize=10 - 200 1099 application/json; charset=utf-8 461.7058ms
+2025-10-02 18:18:08.134 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/UserManagement/user/e9f759de-32ca-4bcb-8e5b-fc9c749c251c - null null
+2025-10-02 18:18:08.149 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 18:18:08.359 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 18:18:08.367 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce)'
+2025-10-02 18:18:08.373 +03:00 [INF] Route matched with {action = "GetUserByIdAsync", controller = "UserManagement"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.AccountDtos.UserwithAddressdto]]] GetUserByIdAsync(System.String) on controller E_Commerce.Controllers.UserManagementController (E-Commerce).
+2025-10-02 18:18:08.390 +03:00 [INF] In GetUsersAsync Method 
+2025-10-02 18:18:08.555 +03:00 [INF] Executed DbCommand (84ms) [Parameters=[@__id_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__id_0)
+LIMIT 1
+2025-10-02 18:18:08.706 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__customer_Id_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__customer_Id_0
+2025-10-02 18:18:08.857 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__customer_Id_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`City`, `c`.`AdditionalNotes`, `c`.`State`, `c`.`AddressType`, `c`.`StreetAddress`, `c`.`PhoneNumber`, `c`.`Country`, `c`.`IsDefault`
+FROM `CustomerAddresses` AS `c`
+WHERE `c`.`CustomerId` = @__customer_Id_0
+2025-10-02 18:18:08.873 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.AccountDtos.UserwithAddressdto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 18:18:08.894 +03:00 [INF] Executed action E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce) in 513.1709ms
+2025-10-02 18:18:08.902 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce)'
+2025-10-02 18:18:08.906 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/UserManagement/user/e9f759de-32ca-4bcb-8e5b-fc9c749c251c - 200 369 application/json; charset=utf-8 772.394ms
+2025-10-02 18:18:38.710 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/api/UserManagement/user/27142b8d-8890-420c-b264-5d535ce05879 - null null
+2025-10-02 18:18:38.715 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 18:18:38.865 +03:00 [INF] Executed DbCommand (77ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-10-02 18:18:38.874 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce)'
+2025-10-02 18:18:38.877 +03:00 [INF] Route matched with {action = "GetUserByIdAsync", controller = "UserManagement"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.AccountDtos.UserwithAddressdto]]] GetUserByIdAsync(System.String) on controller E_Commerce.Controllers.UserManagementController (E-Commerce).
+2025-10-02 18:18:38.907 +03:00 [INF] In GetUsersAsync Method 
+2025-10-02 18:18:39.052 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__id_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__id_0)
+LIMIT 1
+2025-10-02 18:18:39.202 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__customer_Id_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__customer_Id_0
+2025-10-02 18:18:39.351 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__customer_Id_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`City`, `c`.`AdditionalNotes`, `c`.`State`, `c`.`AddressType`, `c`.`StreetAddress`, `c`.`PhoneNumber`, `c`.`Country`, `c`.`IsDefault`
+FROM `CustomerAddresses` AS `c`
+WHERE `c`.`CustomerId` = @__customer_Id_0
+2025-10-02 18:18:39.361 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.AccountDtos.UserwithAddressdto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 18:18:39.368 +03:00 [INF] Executed action E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce) in 483.8547ms
+2025-10-02 18:18:39.374 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.UserManagementController.GetUserByIdAsync (E-Commerce)'
+2025-10-02 18:18:39.378 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/api/UserManagement/user/27142b8d-8890-420c-b264-5d535ce05879 - 200 717 application/json; charset=utf-8 667.9525ms
+2025-10-02 18:22:51.334 +03:00 [INF] Executed DbCommand (79ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-10-02 18:22:52.043 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-10-02 18:22:52.210 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-10-02 18:22:52.232 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-02 18:22:52.243 +03:00 [INF] Starting data seeding...
+2025-10-02 18:22:52.269 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-02 18:22:52.457 +03:00 [INF] DB tables already exist. Exit install
+2025-10-02 18:22:52.945 +03:00 [INF] Executed DbCommand (109ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 18:22:53.007 +03:00 [INF] Role 'Admin' already exists.
+2025-10-02 18:22:53.152 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 18:22:53.157 +03:00 [INF] Role 'User' already exists.
+2025-10-02 18:22:53.304 +03:00 [INF] Executed DbCommand (75ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 18:22:53.314 +03:00 [INF] Role 'SuperAdmin' already exists.
+2025-10-02 18:22:53.463 +03:00 [INF] Executed DbCommand (74ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-10-02 18:22:53.468 +03:00 [INF] Role 'DeliveryCompany' already exists.
+2025-10-02 18:22:53.642 +03:00 [INF] Executed DbCommand (78ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 18:22:53.876 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 18:22:54.049 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-10-02 18:22:54.099 +03:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-10-02 18:22:54.260 +03:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 18:22:54.406 +03:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-10-02 18:22:54.550 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-10-02 18:22:54.556 +03:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-10-02 18:22:54.705 +03:00 [INF] Executed DbCommand (76ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 18:22:54.860 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-10-02 18:22:54.870 +03:00 [INF] Execute GetAll for entity PaymentProvider
+2025-10-02 18:22:55.075 +03:00 [INF] Executed DbCommand (80ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-10-02 18:22:55.086 +03:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-10-02 18:22:55.165 +03:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-10-02 18:22:55.177 +03:00 [INF] Data seeding completed successfully.
+2025-10-02 18:22:56.399 +03:00 [INF] Now listening on: http://localhost:5069
+2025-10-02 18:22:56.508 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-10-02 18:22:56.573 +03:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-10-02 18:22:56.636 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-10-02 18:22:56.644 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-10-02 18:22:56.741 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-10-02 18:22:56.814 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-02 18:22:56.818 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 303.8198ms
+2025-10-02 18:22:56.998 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-02 18:22:57.018 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16504 application/javascript; charset=utf-8 204.4807ms
+2025-10-02 18:22:57.031 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-10-02 18:22:57.037 +03:00 [INF] Hosting environment: Development
+2025-10-02 18:22:57.090 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-10-02 18:22:57.094 +03:00 [INF] Content root path: D:\project_fashion\E-Commerce-API-main
+2025-10-02 18:22:57.094 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 63.6621ms
+2025-10-02 18:22:57.159 +03:00 [INF] Server mrrobot:12332:40cc7b5e successfully announced in 149.2698 ms
+2025-10-02 18:22:57.169 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 79.48ms
+2025-10-02 18:22:57.185 +03:00 [INF] Server mrrobot:12332:40cc7b5e is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-10-02 18:22:57.235 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-10-02 18:22:57.308 +03:00 [INF] Server mrrobot:12332:40cc7b5e all the dispatchers started
+2025-10-02 18:22:57.594 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 359.1252ms
+2025-10-02 18:23:29.709 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5069/api/Account/login - application/json-patch+json 70
+2025-10-02 18:23:29.718 +03:00 [INF] CORS policy execution successful.
+2025-10-02 18:23:29.722 +03:00 [WRN] Failed to determine the https port for redirect.
+2025-10-02 18:23:29.803 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-10-02 18:23:29.812 +03:00 [INF] Executing endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-10-02 18:23:29.838 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commerce.DtoModels.Responses.ApiResponse`1[E_Commerce.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commerce.DtoModels.AccountDtos.LoginDTo) on controller E_Commerce.Controllers.AccountController (E-Commerce).
+2025-10-02 18:23:30.167 +03:00 [INF] In LoginAsync Method 
+2025-10-02 18:23:30.310 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 18:23:30.413 +03:00 [INF] 🔐 Generating Access Token for User ID: 356a1f90-f249-4f61-9df0-6b4e1e4ff2c9
+2025-10-02 18:23:30.419 +03:00 [INF] 🔐 Generating Access Token for User ID: 356a1f90-f249-4f61-9df0-6b4e1e4ff2c9
+2025-10-02 18:23:30.596 +03:00 [INF] Executed DbCommand (81ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-10-02 18:23:30.768 +03:00 [INF] Executed DbCommand (88ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-10-02 18:23:31.001 +03:00 [INF] Executed DbCommand (76ms) [Parameters=[@p21='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p22='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = DateTime), @p10='?' (DbType = Boolean), @p11='?' (DbType = DateTimeOffset), @p12='?' (Size = 4000), @p13='?' (Size = 256), @p14='?' (Size = 256), @p15='?' (Size = 4000), @p16='?' (Size = 4000), @p17='?' (DbType = Boolean), @p18='?' (Size = 4000), @p19='?' (DbType = Boolean), @p20='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `LastVisit` = @p9, `LockoutEnabled` = @p10, `LockoutEnd` = @p11, `Name` = @p12, `NormalizedEmail` = @p13, `NormalizedUserName` = @p14, `PasswordHash` = @p15, `PhoneNumber` = @p16, `PhoneNumberConfirmed` = @p17, `SecurityStamp` = @p18, `TwoFactorEnabled` = @p19, `UserName` = @p20
+WHERE `Id` = @p21 AND `ConcurrencyStamp` = @p22;
+SELECT ROW_COUNT();
+2025-10-02 18:23:31.176 +03:00 [INF] Executed DbCommand (68ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-10-02 18:23:31.216 +03:00 [INF] ✅ Access Token generated successfully for User ID: 356a1f90-f249-4f61-9df0-6b4e1e4ff2c9
+2025-10-02 18:23:31.231 +03:00 [INF] 🔑 Generating Refresh Token for User ID: 356a1f90-f249-4f61-9df0-6b4e1e4ff2c9
+2025-10-02 18:23:31.460 +03:00 [INF] ✅ RefreshToken generated and stored for User ID: 356a1f90-f249-4f61-9df0-6b4e1e4ff2c9
+2025-10-02 18:23:31.605 +03:00 [INF] Executed DbCommand (69ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-10-02 18:23:31.684 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commerce.DtoModels.Responses.ApiResponse`1[[E_Commerce.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 18:23:31.707 +03:00 [INF] Executed action E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce) in 1849.8003ms
+2025-10-02 18:23:31.713 +03:00 [INF] Executed endpoint 'E_Commerce.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-10-02 18:23:31.720 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5069/api/Account/login - 200 1302 application/json; charset=utf-8 2010.2273ms
+2025-10-02 18:23:33.622 +03:00 [INF] Setting cache for key: order:filter:user:all_deleted:all_page:1_size:50_status:all_IsAdmin:True
+2025-10-02 18:23:33.885 +03:00 [INF] Cache set successfully for key: order:filter:user:all_deleted:all_page:1_size:50_status:all_IsAdmin:True with tags: [order]
+2025-10-02 18:23:34.114 +03:00 [INF] Setting cache for key: Product:list_active:_deleted:_search:_pageSize:10_page:1_tag:BestSeller_IsAdmin:True
+2025-10-02 18:23:34.350 +03:00 [INF] Cache set successfully for key: Product:list_active:_deleted:_search:_pageSize:10_page:1_tag:BestSeller_IsAdmin:True with tags: [ProductList]
+2025-10-02 18:24:03.962 +03:00 [WRN] Stopping the server due to DomainUnload or ProcessExit event...
+2025-10-02 18:24:03.964 +03:00 [INF] Server mrrobot:12332:40cc7b5e caught stopping signal...
+2025-10-02 18:24:03.969 +03:00 [INF] Server mrrobot:12332:40cc7b5e caught stopped signal...
+2025-10-02 18:24:03.971 +03:00 [INF] Server mrrobot:12332:40cc7b5e All dispatchers stopped
+2025-10-02 18:24:03.972 +03:00 [WRN] Server mrrobot:12332:40cc7b5e caught shutdown signal...
+2025-10-02 18:24:04.568 +03:00 [INF] Server mrrobot:12332:40cc7b5e successfully reported itself as stopped in 591.4969 ms
+2025-10-02 18:24:04.571 +03:00 [INF] Server mrrobot:12332:40cc7b5e has been stopped in total 602.2563 ms

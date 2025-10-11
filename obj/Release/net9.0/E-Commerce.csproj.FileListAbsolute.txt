@@ -164,3 +164,4 @@ D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\E-Commerce.pdb
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\E-Commerce.genruntimeconfig.cache
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\ref\E-Commerce.dll
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\swae.build.ex.cache
+D:\project_fashion\E-Commerce-API-main\bin\Release\net9.0\Microsoft.AspNetCore.Authentication.Google.dll

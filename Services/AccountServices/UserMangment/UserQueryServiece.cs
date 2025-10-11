@@ -1,4 +1,5 @@
-﻿using E_Commerce.Models;
+﻿using E_Commerce.DtoModels.AccountDtos;
+using E_Commerce.Models;
 using E_Commerce.UOW;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -22,13 +23,13 @@ namespace E_Commerce.Services.AccountServices.UserMangment
 
         }
 
-		public async Task<Result< Userdto>> GetUserByIdAsnyc(string  id)
+		public async Task<Result<UserwithAddressdto>> GetUserByIdAsnyc(string  id)
 		{
 			var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
 			if (user == null)
-				return Result<Userdto>.Fail("No User With this id",404);
+				return Result<UserwithAddressdto>.Fail("No User With this id",404);
 			var userDto = _userMangerMapping.ToUserDto(user);
-			return Result<Userdto>.Ok(userDto);
+			return Result<UserwithAddressdto>.Ok(userDto);
         }
 		public Result< List<Userdto>> FilterUsers(
 			string? name = null, 

@@ -30,7 +30,13 @@ namespace E_Commerce.Middleware
             {
                 _logger.LogWarning("Authenticated user without UserId claim");
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsJsonAsync(ApiResponse<object>.CreateErrorResponse("Error",new ErrorHnadling.ErrorResponse("Authentication", "User not properly authenticated")));
+                await context.Response.WriteAsJsonAsync(
+       ApiResponse<object>.CreateErrorResponse(
+           "Authentication Failed",
+           new ErrorHnadling.ErrorResponse("Authentication", "User not properly authenticated")
+       )
+   );
+
                 return;
             }
 

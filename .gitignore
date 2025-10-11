@@ -1,0 +1,56 @@
+# Build results
+bin/
+obj/
+out/
+# Visual Studio
+.vs/
+.vscode/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+logs/
+
+# Configuration files containing secrets
+appsettings.Development.json
+appsettings.Local.json
+appsettings.Secret.json
+*.secret.json
+
+# Sensitive data
+.env
+
+# Dependency folders
+node_modules/
+packages/
+
+# Publish outputs
+wwwroot/lib/
+wwwroot/dist/
+publish/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.DS_Store
+Thumbs.db
+
+# Resharper / Rider
+.idea/
+_ReSharper*/
+*.DotSettings.user
+
+# Generated files
+*.generated.cs
+
+# Test results
+TestResults/
+coverage/
+appsettings.json

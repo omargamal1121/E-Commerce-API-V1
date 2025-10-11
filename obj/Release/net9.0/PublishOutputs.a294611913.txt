@@ -11,6 +11,7 @@ D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\PubTmp\Out\Hangfire.As
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\PubTmp\Out\Hangfire.Core.dll
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\PubTmp\Out\Hangfire.MySql.dll
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\PubTmp\Out\Hangfire.NetCore.dll
+D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\PubTmp\Out\Microsoft.AspNetCore.Authentication.Google.dll
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\PubTmp\Out\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\PubTmp\Out\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 D:\project_fashion\E-Commerce-API-main\obj\Release\net9.0\PubTmp\Out\Microsoft.AspNetCore.JsonPatch.dll

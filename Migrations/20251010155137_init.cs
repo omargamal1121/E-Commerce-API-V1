@@ -275,6 +275,8 @@ namespace E_Commerce.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
+                    table.CheckConstraint("CK_Product_Price_Positive", "'Price' > 0");
+                    table.CheckConstraint("CK_Product_Quantity_NonNegative", "'Quantity' >= 0");
                     table.ForeignKey(
                         name: "FK_Products_Discount_DiscountId",
                         column: x => x.DiscountId,
@@ -433,6 +435,7 @@ namespace E_Commerce.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductVariants", x => x.Id);
+                    table.CheckConstraint("CK_ProductVariant_Quantity_NonNegative", "'Quantity' >= 0");
                     table.ForeignKey(
                         name: "FK_ProductVariants_Products_ProductId",
                         column: x => x.ProductId,
@@ -458,7 +461,6 @@ namespace E_Commerce.Migrations
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     LastVisit = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     ImageId = table.Column<int>(type: "int", nullable: true),
-                    ImageId1 = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
@@ -486,8 +488,8 @@ namespace E_Commerce.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUsers_Images_ImageId1",
-                        column: x => x.ImageId1,
+                        name: "FK_AspNetUsers_Images_ImageId",
+                        column: x => x.ImageId,
                         principalTable: "Images",
                         principalColumn: "Id");
                 })
@@ -502,7 +504,7 @@ namespace E_Commerce.Migrations
                     AdminId = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     OperationType = table.Column<int>(type: "int", nullable: false),
-                    ItemId = table.Column<string>(type: "longtext", nullable: false)
+                    ItemId = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -1160,9 +1162,21 @@ namespace E_Commerce.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_ImageId1",
+                name: "IX_AspNetUsers_Email",
                 table: "AspNetUsers",
-                column: "ImageId1");
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_ImageId",
+                table: "AspNetUsers",
+                column: "ImageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_UserName",
+                table: "AspNetUsers",
+                column: "UserName",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",

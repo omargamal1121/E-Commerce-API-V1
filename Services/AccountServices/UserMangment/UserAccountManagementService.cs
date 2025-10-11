@@ -5,14 +5,18 @@ using Microsoft.AspNetCore.Identity;
 
 namespace E_Commerce.Services.AccountServices.UserMangment
 {
-    public class UserAccountManagementService: IUserAccountManagementService
+    public class UserAccountManagementService : IUserAccountManagementService
     {
         private readonly UserManager<Customer> _userManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<UserAccountManagementService> _logger;
         private readonly IAdminOpreationServices _adminOpreationServices;
 
-        public UserAccountManagementService( IUnitOfWork unitOfWork,IAdminOpreationServices adminOpreationServices ,UserManager<Customer> userManager, ILogger<UserAccountManagementService> logger)
+        public UserAccountManagementService(
+            IUnitOfWork unitOfWork,
+            IAdminOpreationServices adminOpreationServices,
+            UserManager<Customer> userManager,
+            ILogger<UserAccountManagementService> logger)
         {
             _unitOfWork = unitOfWork;
             _adminOpreationServices = adminOpreationServices;
@@ -20,138 +24,186 @@ namespace E_Commerce.Services.AccountServices.UserMangment
             _logger = logger;
         }
 
-        public async Task<Result<bool>> LockUserAsync(string userId, DateTimeOffset? lockoutEnd = null)
+        #region Helpers
+        private async Task< Result<bool>>ValidateIds(string userId, string adminId)
         {
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-                return Result<bool>.Fail("User not found", 404);
-
-            using var transaction = await _unitOfWork.BeginTransactionAsync();
-
-
-            await _userManager.SetLockoutEnabledAsync(user, true);
-          var result=  await _userManager.SetLockoutEndDateAsync(user, lockoutEnd ?? DateTimeOffset.MaxValue);
-            if (!result.Succeeded)
+            if (string.IsNullOrWhiteSpace(userId))
             {
-                await transaction.RollbackAsync();
-                _logger.LogError("Failed to lock user {UserId}: {Errors}", userId, string.Join(", ", result.Errors.Select(e => e.Description)));
-                return Result<bool>.Fail("Failed to lock user", 500);
+                _logger.LogWarning("Validation failed: empty UserId received by Admin {AdminId}", adminId);
+                return Result<bool>.Fail("Invalid UserId", 400);
             }
-            // Log the admin operation
-            var isadded =await _adminOpreationServices.AddAdminOpreationAsync("Lock User"+ $"Locked user {user.UserName} (ID: {user.Id}) until {lockoutEnd?.ToString() ?? "indefinitely"}",Enums.Opreations.UpdateOpreation,userId,null);
-            if (!isadded.Success)
+
+            if (string.IsNullOrWhiteSpace(adminId))
             {
-                await transaction.RollbackAsync();
-                _logger.LogError("Failed to log admin operation for locking user {UserId}", userId);
-                return Result<bool>.Fail("Failed to log admin operation", 500);
+                _logger.LogWarning("Validation failed: empty AdminId while managing User {UserId}", userId);
+                return Result<bool>.Fail("Invalid AdminId", 400);
             }
-            await transaction.CommitAsync();
-            await _unitOfWork.CommitAsync();
+
+            if (userId == adminId)
+            {
+                _logger.LogWarning("Admin {AdminId} attempted to modify their own account", adminId);
+                return Result<bool>.Fail("You cannot modify your own account", 403);
+            }
+            var admin = await _userManager.FindByIdAsync(adminId);
+            if (admin == null || !await _userManager.IsInRoleAsync(admin, "SuperAdmin"))
+                return Result<bool>.Fail("Unauthorized operation", 403);
 
 
-            _logger.LogInformation("User {UserId} locked until {LockoutEnd}", userId, lockoutEnd);
             return Result<bool>.Ok(true);
         }
 
-        public async Task<Result<bool>> UnlockUserAsync(string userId)
-        { 
-
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-                return Result<bool>.Fail("User not found", 404);
-            using var transaction = await _unitOfWork.BeginTransactionAsync();
-
-
-
-         var result=   await _userManager.SetLockoutEndDateAsync(user, null);
-            if (!result.Succeeded)
-            {
-                await transaction.RollbackAsync();
-                _logger.LogError("Failed to unlock user {UserId}: {Errors}", userId, string.Join(", ", result.Errors.Select(e => e.Description)));
-                return Result<bool>.Fail("Failed to unlock user", 500);
-            }
-
-            // Log the admin operation
-            var isadded = await _adminOpreationServices.AddAdminOpreationAsync("Unlock User" + $"Unlocked user {user.UserName} (ID: {user.Id})", Enums.Opreations.UpdateOpreation, userId, null);
-            if (!isadded.Success)
-            {
-                await transaction.RollbackAsync();
-                _logger.LogError("Failed to log admin operation for unlocking user {UserId}", userId);
-                return Result<bool>.Fail("Failed to log admin operation", 500);
-            }
-            await transaction.CommitAsync();
-            await _unitOfWork.CommitAsync();
-
-            _logger.LogInformation("User {UserId} unlocked", userId);
-            return Result<bool>.Ok(true);
-        }
-
-
-        public async Task<Result<bool>> DeleteUserAsync(string userId)
+        private async Task<Customer?> FindUserAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
-                return Result<bool>.Fail("User not found", 404);
+                _logger.LogWarning("User not found with ID {UserId}", userId);
+            else
+                _logger.LogInformation("Fetched user {UserName} (ID: {UserId})", user.UserName, user.Id);
 
-            using var transaction = await _unitOfWork.BeginTransactionAsync();
-
-            user.DeletedAt = DateTime.UtcNow; 
-            var result= await _userManager.UpdateAsync(user);
-            if (!result.Succeeded)
-            {
-                _logger.LogError("Failed to soft delete user {UserId}: {Errors}", userId, string.Join(", ", result.Errors.Select(e => e.Description)));
-                await transaction.RollbackAsync();
-                return Result<bool>.Fail("Failed to soft delete user", 500);
-            }
-
-            // Log the admin operation
-            var isadded = await _adminOpreationServices.AddAdminOpreationAsync("Soft Delete User" + $"Soft deleted user {user.UserName} (ID: {user.Id})", Enums.Opreations.DeleteOpreation, userId, null);
-            if (!isadded.Success)
-            {
-                await transaction.RollbackAsync();
-                _logger.LogError("Failed to log admin operation for soft deleting user {UserId}", userId);
-                return Result<bool>.Fail("Failed to log admin operation", 500);
-            }
-            await transaction.CommitAsync();
-            await _unitOfWork.CommitAsync();
-
-            _logger.LogInformation("User {UserId} soft deleted", userId);
-            return Result<bool>.Ok(true);
+            return user;
         }
 
-        public async Task<Result<bool>> RestoreUserAsync(string userId)
+        private async Task<Result<bool>> ExecuteWithTransactionAsync(
+            Func<Task<IdentityResult>> userOperation,
+            string adminOperationDesc,
+            Enums.Opreations opType,
+            string userId,
+            string adminId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-                return Result<bool>.Fail("User not found", 404);
+            _logger.LogInformation("Admin {AdminId} started {Operation} for User {UserId}", adminId, opType, userId);
+
             using var transaction = await _unitOfWork.BeginTransactionAsync();
+
+            try
+            {
+                var result = await userOperation();
+                if (!result.Succeeded)
+                {
+                    await transaction.RollbackAsync();
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+
+                    _logger.LogError("Admin {AdminId} failed {Operation} for User {UserId}: {Errors}",
+                        adminId, opType, userId, errors);
+
+                    return Result<bool>.Fail(errors, 500);
+                }
+
+                var logResult = await _adminOpreationServices.AddAdminOpreationAsync(
+                    adminOperationDesc, opType, userId, null);
+
+                if (!logResult.Success)
+                {
+                    await transaction.RollbackAsync();
+                    _logger.LogError("Failed to log admin operation {Operation} for User {UserId}", opType, userId);
+                    return Result<bool>.Fail("Failed to log admin operation", 500);
+                }
+
+
+                await _unitOfWork.CommitAsync();
+                await transaction.CommitAsync();
+
+                _logger.LogInformation("Admin {AdminId} successfully completed {Operation} for User {UserId}",
+                    adminId, opType, userId);
+
+                return Result<bool>.Ok(true);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Unexpected error during {Operation} for User {UserId} by Admin {AdminId}",
+                    opType, userId, adminId);
+
+                return Result<bool>.Fail("Unexpected server error", 500);
+            }
+        }
+        #endregion
+
+        #region Public Methods
+        public async Task<Result<bool>> LockUserAsync(string userId, string adminId, DateTimeOffset? lockoutEnd = null)
+        {
+            _logger.LogInformation("Admin {AdminId} requested to lock User {UserId}", adminId, userId);
+
+            var validation = await ValidateIds(userId, adminId);
+            if (!validation.Success) return  validation;
+
+            var user = await FindUserAsync(userId);
+            if (user == null) return Result<bool>.Fail("User not found", 404);
+
+            var lockDate = lockoutEnd ?? DateTimeOffset.UtcNow.AddYears(100);
+
+            return await ExecuteWithTransactionAsync(
+                async () =>
+                {
+                    await _userManager.SetLockoutEnabledAsync(user, true);
+                    return await _userManager.SetLockoutEndDateAsync(user, lockDate);
+                },
+                $"Locked user {user.UserName} (ID: {user.Id}) until {lockDate}",
+                Enums.Opreations.UpdateOpreation,
+                userId,
+                adminId
+            );
+        }
+
+        public async Task<Result<bool>> UnlockUserAsync(string userId, string adminId)
+        {
+            _logger.LogInformation("Admin {AdminId} requested to unlock User {UserId}", adminId, userId);
+
+            var validation = await ValidateIds(userId, adminId);
+            if (!validation.Success) return validation;
+
+            var user = await FindUserAsync(userId);
+            if (user == null) return Result<bool>.Fail("User not found", 404);
+
+            return await ExecuteWithTransactionAsync(
+                () => _userManager.SetLockoutEndDateAsync(user, null),
+                $"Unlocked user {user.UserName} (ID: {user.Id})",
+                Enums.Opreations.UpdateOpreation,
+                userId,
+                adminId
+            );
+        }
+
+        public async Task<Result<bool>> DeleteUserAsync(string userId, string adminId)
+        {
+            _logger.LogInformation("Admin {AdminId} requested to delete User {UserId}", adminId, userId);
+
+            var validation = await ValidateIds(userId, adminId);
+            if (!validation.Success) return validation;
+
+            var user = await FindUserAsync(userId);
+            if (user == null) return Result<bool>.Fail("User not found", 404);
+
+            user.DeletedAt = DateTime.UtcNow;
+
+            return await ExecuteWithTransactionAsync(
+                () => _userManager.UpdateAsync(user),
+                $"Soft deleted user {user.UserName} (ID: {user.Id}) by Admin({adminId})",
+                Enums.Opreations.DeleteOpreation,
+                userId,
+                adminId
+            );
+        }
+
+        public async Task<Result<bool>> RestoreUserAsync(string userId, string adminId)
+        {
+            _logger.LogInformation("Admin {AdminId} requested to restore User {UserId}", adminId, userId);
+
+            var validation = await ValidateIds(userId, adminId);
+            if (!validation.Success) return validation;
+
+            var user = await FindUserAsync(userId);
+            if (user == null) return Result<bool>.Fail("User not found", 404);
 
             user.DeletedAt = null;
-            var result = await _userManager.UpdateAsync(user);
-            if (!result.Succeeded)
-            {
-                _logger.LogError("Failed to restore user {UserId}: {Errors}", userId, string.Join(", ", result.Errors.Select(e => e.Description)));
-                await transaction.RollbackAsync();
-                return Result<bool>.Fail("Failed to restore user", 500);
-            }
-            // Log the admin operation
-            var isadded = await _adminOpreationServices.AddAdminOpreationAsync("Restore User" + $"Restored user {user.UserName} (ID: {user.Id})", Enums.Opreations.UpdateOpreation, userId, null);
-            if (!isadded.Success)
-            {
-                await transaction.RollbackAsync();
-                _logger.LogError("Failed to log admin operation for restoring user {UserId}", userId);
-                return Result<bool>.Fail("Failed to log admin operation", 500);
-            }
-            await transaction.CommitAsync();
-            await _unitOfWork.CommitAsync();
 
-
-
-            _logger.LogInformation("User {UserId} restored", userId);
-            return Result<bool>.Ok(true);
+            return await ExecuteWithTransactionAsync(
+                () => _userManager.UpdateAsync(user),
+                $"Restored user {user.UserName} (ID: {user.Id})",
+                Enums.Opreations.UpdateOpreation,
+                userId,
+                adminId
+            );
         }
+        #endregion
     }
-
 }

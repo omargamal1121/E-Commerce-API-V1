@@ -12,6 +12,7 @@
           "CloudinaryDotNet": "1.27.6",
           "Hangfire.AspNetCore": "1.8.18",
           "Hangfire.MySqlStorage": "2.0.3",
+          "Microsoft.AspNetCore.Authentication.Google": "9.0.9",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.3",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.3",
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "9.0.0",
@@ -150,6 +151,14 @@
           "lib/netstandard2.1/Hangfire.NetCore.dll": {
             "assemblyVersion": "1.8.18.0",
             "fileVersion": "1.8.18.0"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.Authentication.Google/9.0.9": {
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.Authentication.Google.dll": {
+            "assemblyVersion": "9.0.9.0",
+            "fileVersion": "9.0.925.42003"
           }
         }
       },
@@ -689,6 +698,13 @@
       "sha512": "sha512-3KAV9AZ1nqQHC54qR4buNEEKRmQJfq+lODtZxUk5cdi68lV8+9K2f4H1/mIfDlPpgjPFjEfCobNoi2+TIpKySw==",
       "path": "hangfire.netcore/1.8.18",
       "hashPath": "hangfire.netcore.1.8.18.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Authentication.Google/9.0.9": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-cVElw5JwIib+frt6G/Zp4cSEFl1eE4gGIm0ICmkDJM16uePQDuWrFho5SoHHybnASspMyuI8y0S/miysHL1nmA==",
+      "path": "microsoft.aspnetcore.authentication.google/9.0.9",
+      "hashPath": "microsoft.aspnetcore.authentication.google.9.0.9.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.3": {
       "type": "package",

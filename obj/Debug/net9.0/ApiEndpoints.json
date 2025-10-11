@@ -2526,6 +2526,48 @@
     ]
   },
   {
+    "ContainingType": "E_Commerce.Controllers.ExternalLoginController",
+    "Method": "ExternalLoginCallback",
+    "RelativePath": "api/ExternalLogin/Callback",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "returnUrl",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "remoteError",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "E_Commerce.Controllers.ExternalLoginController",
+    "Method": "ExternalLogin",
+    "RelativePath": "api/ExternalLogin/Login",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "provider",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "returnUrl",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "E_Commerce.Controllers.OrderController",
     "Method": "GetOrders",
     "RelativePath": "api/Order",
@@ -4787,7 +4829,7 @@
   {
     "ContainingType": "E_Commerce.Controllers.UserManagementController",
     "Method": "RemoveRoleToUserAsync",
-    "RelativePath": "api/UserManagement/Remove-role/{id}",
+    "RelativePath": "api/UserManagement/remove-role/{id}",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
@@ -4824,6 +4866,41 @@
       },
       {
         "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "E_Commerce.Controllers.UserManagementController",
+    "Method": "RestoreUserAccountAsync",
+    "RelativePath": "api/UserManagement/restore-user/{id}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -4904,7 +4981,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[E_Commerce.Services.AccountServices.UserMangment.UserQueryServiece\u002BUserdto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[E_Commerce.DtoModels.AccountDtos.UserwithAddressdto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -4913,7 +4990,7 @@
         "StatusCode": 200
       },
       {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[E_Commerce.DtoModels.AccountDtos.UserwithAddressdto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -4952,7 +5029,7 @@
         "IsRequired": false
       },
       {
-        "Name": "IsActive",
+        "Name": "isActive",
         "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
@@ -4974,7 +5051,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commerce.Services.AccountServices.UserMangment.UserQueryServiece\u002BUserdto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "E_Commerce.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commerce.DtoModels.AccountDtos.Userdto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

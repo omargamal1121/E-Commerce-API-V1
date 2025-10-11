@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250924151642_init")]
+    [Migration("20251010155137_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -48,7 +48,6 @@ namespace E_Commerce.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("ItemId")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("ModifiedAt")
@@ -942,7 +941,12 @@ namespace E_Commerce.Migrations
 
                     b.HasIndex("SubCategoryId", "DiscountId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", t =>
+                        {
+                            t.HasCheckConstraint("CK_Product_Price_Positive", "[Price] > 0");
+
+                            t.HasCheckConstraint("CK_Product_Quantity_NonNegative", "[Quantity] >= 0");
+                        });
                 });
 
             modelBuilder.Entity("E_Commerce.Models.ProductCollection", b =>
@@ -1060,7 +1064,10 @@ namespace E_Commerce.Migrations
                     b.HasIndex("ProductId", "Color", "Size", "Waist", "Length")
                         .IsUnique();
 
-                    b.ToTable("ProductVariants");
+                    b.ToTable("ProductVariants", t =>
+                        {
+                            t.HasCheckConstraint("CK_ProductVariant_Quantity_NonNegative", "[Quantity] >= 0");
+                        });
                 });
 
             modelBuilder.Entity("E_Commerce.Models.ReturnRequest", b =>
@@ -1555,9 +1562,6 @@ namespace E_Commerce.Migrations
                     b.Property<int?>("ImageId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ImageId1")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("LastVisit")
                         .HasColumnType("datetime(6)");
 
@@ -1565,7 +1569,13 @@ namespace E_Commerce.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasIndex("ImageId1");
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("ImageId");
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
 
                     b.HasDiscriminator().HasValue("Customer");
                 });
@@ -2018,7 +2028,7 @@ namespace E_Commerce.Migrations
                 {
                     b.HasOne("E_Commerce.Models.Image", "Image")
                         .WithMany()
-                        .HasForeignKey("ImageId1");
+                        .HasForeignKey("ImageId");
 
                     b.Navigation("Image");
                 });

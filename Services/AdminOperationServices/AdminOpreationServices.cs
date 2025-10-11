@@ -67,11 +67,12 @@ namespace E_Commerce.Services.AdminOperationServices
 			var adminopreationDtos = await adminopreations.Select(o => new OpreationDto
 			{
 				Description = o.Description,
-				Id = o.Id.ToString(),
+				Id = o.AdminId,
 				ItemId = o.ItemId,
 				Name = o.Admin.Name,
 				OperationType = o.OperationType.ToString(),
 				Timestamp = o.Timestamp,
+				
 			}).ToListAsync();
 			return Result<List<OpreationDto>>.Ok(adminopreationDtos);
 		}

@@ -62,7 +62,7 @@ namespace E_Commerce.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         [ActionName(nameof(Create))]
         public async Task<ActionResult<ApiResponse<SubCategoryDto>>> Create([FromBody] CreateSubCategoryDto subCategoryDto)
         {

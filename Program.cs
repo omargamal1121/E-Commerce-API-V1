@@ -1,4 +1,4 @@
-using CloudinaryDotNet;
+﻿using CloudinaryDotNet;
 using E_Commerce.BackgroundJops;
 using E_Commerce.Context;
 using E_Commerce.DtoModels;
@@ -27,6 +27,7 @@ using E_Commerce.Services.Collection;
 using E_Commerce.Services.CustomerAddress;
 using E_Commerce.Services.DiscountServices;
 using E_Commerce.Services.EmailServices;
+using E_Commerce.Services.Externallogin;
 using E_Commerce.Services.HangFireAuth;
 using E_Commerce.Services.Order;
 using E_Commerce.Services.PaymentMethodsServices;
@@ -104,9 +105,10 @@ namespace E_Commerce
 			builder.Services.AddProductServices();
 			builder.Services.AddAccountServices();
 			builder.Services.AddOrderServices();
+			builder.Services.AddScoped<IExtrenalLoginService,ExtrenalLoginService>();
 
-			// Add Link Builders
-			builder.Services.AddTransient<ICategoryLinkBuilder, CategoryLinkBuilder>();
+            // Add Link Builders
+            builder.Services.AddTransient<ICategoryLinkBuilder, CategoryLinkBuilder>();
 			builder.Services.AddTransient<IProductLinkBuilder, ProductLinkBuilder>();
 			builder.Services.AddTransient<IAccountLinkBuilder, AccountLinkBuilder>();
 			builder.Services.AddTransient<IWareHouseLinkBuilder, WareHouseLinkBuilder>();
@@ -153,7 +155,7 @@ namespace E_Commerce
 			});
 
 
-			//var redisUrl = "rediss://default:AbS_AAIncDE0MDc1NDlmMTI2OWU0YTdlOTU0MTA0MWJjMjExODQ0YXAxNDYyNzE@square-guinea-46271.upstash.io:6379";
+			
 			var redisUrl = builder.Configuration.GetSection("ConnectionStrings:Redis").Value ?? throw new Exception();
 
 			var uri = new Uri(redisUrl);
@@ -298,8 +300,18 @@ namespace E_Commerce
 					options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 					options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 					options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-				})
-				.AddJwtBearer(options =>
+				}).AddCookie( options =>
+                {
+                    options.Cookie.SameSite = SameSiteMode.None; // مهم للـ OAuth
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // HTTPS فقط
+                    options.Cookie.HttpOnly = true;
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(10); // Short expiration
+                }).AddGoogle(o=>
+				{
+					o.ClientId = builder.Configuration["Security:ExternalServices:Google:ClientId"] ??throw new Exception("ClientId missing");
+					o.ClientSecret = builder.Configuration["Security:ExternalServices:Google:ClientSecret"] ?? throw new Exception("ClientSecret missing");
+                })
+                .AddJwtBearer(options =>
 				{
 					options.SaveToken = true;
 					options.RequireHttpsMetadata = false;
@@ -321,7 +333,7 @@ namespace E_Commerce
 				});
 
 			var app = builder.Build();
-			app.UseCors("MyPolicy");
+		
 
 			app.UseSwagger();
 			app.UseSwaggerUI();
@@ -347,7 +359,8 @@ namespace E_Commerce
 			}
 
 			app.UseRouting();
-			app.UseRateLimiter();
+            app.UseCors("MyPolicy");
+            app.UseRateLimiter();
             app.UseAuthentication();        
             app.UseAuthorization();
             app.UseUserAuthentication();

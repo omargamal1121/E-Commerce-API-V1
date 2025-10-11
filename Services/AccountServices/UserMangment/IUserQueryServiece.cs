@@ -1,10 +1,11 @@
-﻿using static E_Commerce.Services.AccountServices.UserMangment.UserQueryServiece;
+﻿using E_Commerce.DtoModels.AccountDtos;
+using static E_Commerce.Services.AccountServices.UserMangment.UserQueryServiece;
 
 namespace E_Commerce.Services.AccountServices.UserMangment
 {
 	public interface IUserQueryServiece
 	{
-		Task< Result<Userdto>> GetUserByIdAsnyc(string id);
+		Task< Result<UserwithAddressdto>> GetUserByIdAsnyc(string id);
 		public Result<List<Userdto>> FilterUsers(
 		string? name = null,
 		string? email = null,

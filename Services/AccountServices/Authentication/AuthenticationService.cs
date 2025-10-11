@@ -82,8 +82,8 @@ namespace E_Commerce.Services.AccountServices.Authentication
 					SetRefreshCookie(refreshTokenResult.Data);
 				else
 					_logger.LogError("Failed to generate refresh token: {Message}", refreshTokenResult.Message);
-
-				return Result<TokensDto>.Ok(new TokensDto { Token = tokenResult.Data }, "Login successfully", 200);
+				var roles = (await _userManager.GetRolesAsync(user)).ToList();
+                return Result<TokensDto>.Ok(new TokensDto { Token = tokenResult.Data , Roles=roles }, "Login successfully", 200);
 			}
 			catch (Exception ex)
 			{
@@ -137,6 +137,7 @@ namespace E_Commerce.Services.AccountServices.Authentication
 			}
 			var token = new TokensDto
 			{
+				
 				Token = tokenResult.Data
 			};
 			return Result<TokensDto>.Ok(token, "Token generated", 200);

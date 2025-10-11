@@ -4536,6 +4536,64 @@
         }
       }
     },
+    "/api/ExternalLogin/Login": {
+      "get": {
+        "tags": [
+          "ExternalLogin"
+        ],
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "Google"
+            }
+          },
+          {
+            "name": "returnUrl",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "/"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ExternalLogin/Callback": {
+      "get": {
+        "tags": [
+          "ExternalLogin"
+        ],
+        "parameters": [
+          {
+            "name": "returnUrl",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "remoteError",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Order": {
       "get": {
         "tags": [
@@ -8177,7 +8235,7 @@
             }
           },
           {
-            "name": "IsActive",
+            "name": "isActive",
             "in": "query",
             "schema": {
               "type": "boolean"
@@ -8258,17 +8316,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserdtoApiResponse"
+                  "$ref": "#/components/schemas/UserwithAddressdtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserdtoApiResponse"
+                  "$ref": "#/components/schemas/UserwithAddressdtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserdtoApiResponse"
+                  "$ref": "#/components/schemas/UserwithAddressdtoApiResponse"
                 }
               }
             }
@@ -8278,17 +8336,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/UserwithAddressdtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/UserwithAddressdtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResponse"
+                  "$ref": "#/components/schemas/UserwithAddressdtoApiResponse"
                 }
               }
             }
@@ -8411,7 +8469,7 @@
         }
       }
     },
-    "/api/UserManagement/Remove-role/{id}": {
+    "/api/UserManagement/remove-role/{id}": {
       "patch": {
         "tags": [
           "UserManagement"
@@ -8617,6 +8675,65 @@
     },
     "/api/UserManagement/delete-user/{id}": {
       "delete": {
+        "tags": [
+          "UserManagement"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UserManagement/restore-user/{id}": {
+      "patch": {
         "tags": [
           "UserManagement"
         ],
@@ -12806,6 +12923,13 @@
           "token": {
             "type": "string",
             "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -13207,25 +13331,19 @@
             "format": "date-time",
             "nullable": true
           },
+          "createAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isLock": {
+            "type": "boolean"
+          },
           "roles": {
             "type": "array",
             "items": {
               "type": "string"
             },
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UserdtoApiResponse": {
-        "type": "object",
-        "properties": {
-          "statuscode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "responseBody": {
-            "$ref": "#/components/schemas/UserdtoResponseBody"
           }
         },
         "additionalProperties": false
@@ -13277,7 +13395,74 @@
         },
         "additionalProperties": false
       },
-      "UserdtoResponseBody": {
+      "UserwithAddressdto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "lastVisit": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isLock": {
+            "type": "boolean"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "customerAddresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomerAddressDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserwithAddressdtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "statuscode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "responseBody": {
+            "$ref": "#/components/schemas/UserwithAddressdtoResponseBody"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserwithAddressdtoResponseBody": {
         "type": "object",
         "properties": {
           "errors": {
@@ -13295,7 +13480,7 @@
             "nullable": true
           },
           "data": {
-            "$ref": "#/components/schemas/Userdto"
+            "$ref": "#/components/schemas/UserwithAddressdto"
           },
           "links": {
             "type": "array",

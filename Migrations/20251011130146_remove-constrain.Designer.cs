@@ -4,6 +4,7 @@ using E_Commerce.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251011130146_remove-constrain")]
+    partial class removeconstrain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -938,7 +941,10 @@ namespace E_Commerce.Migrations
 
                     b.HasIndex("SubCategoryId", "DiscountId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", t =>
+                        {
+                            t.HasCheckConstraint("CK_Product_Quantity_NonNegative", "'Quantity' >= 0");
+                        });
                 });
 
             modelBuilder.Entity("E_Commerce.Models.ProductCollection", b =>
@@ -1056,7 +1062,10 @@ namespace E_Commerce.Migrations
                     b.HasIndex("ProductId", "Color", "Size", "Waist", "Length")
                         .IsUnique();
 
-                    b.ToTable("ProductVariants");
+                    b.ToTable("ProductVariants", t =>
+                        {
+                            t.HasCheckConstraint("CK_ProductVariant_Quantity_NonNegative", "'Quantity'>= 0");
+                        });
                 });
 
             modelBuilder.Entity("E_Commerce.Models.ReturnRequest", b =>

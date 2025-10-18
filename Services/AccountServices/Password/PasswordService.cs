@@ -2,6 +2,7 @@ using E_Commerce.DtoModels.Responses;
 using E_Commerce.ErrorHnadling;
 using E_Commerce.Interfaces;
 using E_Commerce.Models;
+using E_Commerce.Services.AccountServices.UserCaches;
 using E_Commerce.Services.EmailServices;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
@@ -16,8 +17,10 @@ namespace E_Commerce.Services.AccountServices.Password
         private readonly IErrorNotificationService _errorNotificationService;
         private readonly IBackgroundJobClient _backgroundJobClient;
         private readonly IAccountEmailService _accountEmailService;
+		private readonly IUserCacheService _userCacheService;
 
         public PasswordService(
+            IUserCacheService userCacheService,
             IAccountEmailService accountEmailService,
             IBackgroundJobClient backgroundJobClient,
             ILogger<PasswordService> logger,
@@ -25,6 +28,7 @@ namespace E_Commerce.Services.AccountServices.Password
             IRefreshTokenService refreshTokenService,
             IErrorNotificationService errorNotificationService)
         {
+            _userCacheService = userCacheService;
             _accountEmailService = accountEmailService;
             _backgroundJobClient = backgroundJobClient;
             _logger = logger;
@@ -62,6 +66,7 @@ namespace E_Commerce.Services.AccountServices.Password
                 _backgroundJobClient.Enqueue(() => _accountEmailService.SendEmailAfterChangePassAsync(user.UserName, user.Email));
 
                 _logger.LogInformation("Password changed successfully for user {UserId}", userid);
+                _=_userCacheService.DeleteByUserIdAsync(userid);
                 return Result<bool>.Ok(true, "Password changed successfully.", 200);
             }
             catch (Exception ex)

@@ -6,5 +6,6 @@ namespace E_Commerce.DtoModels.ProductDtos
         public string ProductName { get; set; } = string.Empty;
         public string? Image { get; set; }
         public int TotalSoldQuantity { get; set; }
+        
     }
 }

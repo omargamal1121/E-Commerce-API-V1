@@ -21,5 +21,6 @@ namespace E_Commerce.DtoModels.ProductDtos
 		public IEnumerable<ImageDto>? Images { get; set; }
 		public IEnumerable<ProductVariantDto>? Variants { get; set; }
 		public decimal? FinalPrice { get; set; }
+		public bool InWishList { get; set; }
 	}
 }

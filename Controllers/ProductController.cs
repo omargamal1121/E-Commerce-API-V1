@@ -269,9 +269,10 @@ namespace E_Commerce.Controllers
 				isActive = true;
 				includeDeleted = false;
 			}
+			string? userid= GetUserId();
 			
 			var response = await _productsServices.AdvancedSearchAsync(
-				new AdvancedSearchDto { SearchTerm=search}, page, pageSize, isActive, includeDeleted, isAdmin);
+				new AdvancedSearchDto { SearchTerm=search}, page, pageSize, isActive, includeDeleted, isAdmin,userid);
 			return HandleResult(response, nameof(GetProducts));
 		}
 
@@ -321,8 +322,7 @@ namespace E_Commerce.Controllers
 			{
 				isActive = true;
 				includeDeleted = false;
-			}
-			
+			}	
 			var response = await _productsServices.GetBestSellersAsync(page, pageSize, isActive, includeDeleted,isAdmin);
 			return HandleResult(response, nameof(GetBestSellers));
 		}
@@ -342,9 +342,11 @@ namespace E_Commerce.Controllers
 			{
 				isActive = true;
 				includeDeleted = false;
-			}
-			
-			var response = await _productsServices.GetNewArrivalsAsync(page, pageSize, isActive, includeDeleted,isAdmin);
+            }
+			string? userid = GetUserId();
+
+
+            var response = await _productsServices.GetNewArrivalsAsync(page, pageSize, isActive, includeDeleted,isAdmin,userid);
 			return HandleResult(response, nameof(GetNewArrivals));
 		}
 		[HttpPatch("{id}/activate")]
@@ -401,8 +403,10 @@ namespace E_Commerce.Controllers
 				isActive = true;
 				includeDeleted = false;
 			}
-			
-			var response = await _productsServices.AdvancedSearchAsync(searchDto, page, pageSize, isActive, includeDeleted,isAdmin);
+            string? userid = GetUserId();
+
+
+            var response = await _productsServices.AdvancedSearchAsync(searchDto, page, pageSize, isActive, includeDeleted,isAdmin,userid);
 			return HandleResult(response, nameof(AdvancedSearch));
 		}
        

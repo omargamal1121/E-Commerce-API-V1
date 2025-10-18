@@ -1,3 +1,4 @@
+using E_Commerce.DtoModels.CategoryDtos;
 using E_Commerce.Services.Cache;
 using E_Commerce.Services.EmailServices;
 using Hangfire;
@@ -42,7 +43,7 @@ namespace E_Commerce.Services.CategoryServices
 			_jobClient.Enqueue<IErrorNotificationService>(_ => _.SendErrorNotificationAsync(message, stackTrace));
 		}
 
-		public  void SetCategoryListCacheAsync(object data, string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false, TimeSpan? expiration = null)
+		public  void SetCategoryListCacheAsync(List<CategoryDto> data, string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false, TimeSpan? expiration = null)
 		{
 			var cacheKey = GetCategoryListKey(search, isActive, isDeleted, page, pageSize, IsAdmin);
 			_jobClient.Enqueue(()=> _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { CACHELIST }));
@@ -54,7 +55,7 @@ namespace E_Commerce.Services.CategoryServices
 			return await _cacheManager.GetAsync<T>(cacheKey);
 		}
 
-		public void SetCategoryByIdCacheAsync(int id, bool? isActive, bool? isDeleted, object data,bool IsAdmin=false, TimeSpan? expiration = null)
+		public void SetCategoryByIdCacheAsync(int id, bool? isActive, bool? isDeleted, CategorywithdataDto data,bool IsAdmin=false, TimeSpan? expiration = null)
 		{
 			var cacheKey = GetCategoryByIdKey(id, isActive, isDeleted,IsAdmin);
 			_jobClient.Enqueue(()=> _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[]{ CACHEWITHDATA }));

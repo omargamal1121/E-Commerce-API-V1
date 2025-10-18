@@ -20,6 +20,7 @@ using E_Commerce.Services.SubCategoryServices;
 using E_Commerce.Services.AdminOperationServices;
 using System.Threading.Tasks;
 using E_Commerce.Services.Collection;
+using E_Commerce.Services.WishlistServices;
 
 namespace E_Commerce.Services.ProductServices
 {
@@ -32,8 +33,8 @@ namespace E_Commerce.Services.ProductServices
 		bool? inStock = null,
 		bool isAdmin = false);
 
-        Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive, bool? deletedOnly, bool IsAdmin = false);
-		public Task UpdateProductQuantity(int Productid  );
+        Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive, bool? deletedOnly, bool IsAdmin = false, string? userid = null);
+		public Task UpdateProductQuantity(int Productid );
 		Task<Result<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId);
 		Task<Result<ProductDto>> UpdateProductAsync(int id, UpdateProductDto dto, string userId);
 		Task<Result<bool>> DeleteProductAsync(int id, string userId);
@@ -56,9 +57,11 @@ namespace E_Commerce.Services.ProductServices
 		private readonly IAdminOpreationServices _adminOpreationServices;
 		private readonly ICollectionServices _collectionServices;
 		private readonly IErrorNotificationService _errorNotificationService;
+		private readonly IWishlistQueryService _wishlistQueryService;
 		private readonly ISubCategoryCacheHelper _subCategoryCacheHelper;
 
 		public ProductCatalogService(
+			IWishlistQueryService wishlistQueryService,
 			ICollectionCacheHelper collectionCacheHelper,
 			ISubCategoryCacheHelper  subCategoryCacheHelper,
 			IProductCacheManger productCacheManger,
@@ -73,6 +76,7 @@ namespace E_Commerce.Services.ProductServices
 			IErrorNotificationService errorNotificationService
 			)
 		{
+			_wishlistQueryService = wishlistQueryService;
 			_collectionCacheHelper = collectionCacheHelper;
 			_productMapper = iproductMapper;
 			_productCacheManger=productCacheManger;
@@ -106,7 +110,16 @@ namespace E_Commerce.Services.ProductServices
 			_productCacheManger.ClearProductCache();
 		}
 
-		public async Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive, bool? deletedOnly, bool IsAdmin = false)
+		private async Task< ProductDetailDto> addwishlistasync(ProductDetailDto product,string userid)
+		{
+            var productids = await _wishlistQueryService.GetUserWishlistProductIdsAsync(userid);
+			product.InWishList = productids.Contains(product.Id);
+			return product;
+
+
+        }
+
+        public async Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive, bool? deletedOnly, bool IsAdmin = false,string? userid=null)
 		{
 			_logger.LogInformation($"Retrieving product by id: {id}, isActive: {isActive}, deletedOnly: {deletedOnly}, IsAdmin: {IsAdmin}");
 			if (!IsAdmin)
@@ -145,10 +158,12 @@ namespace E_Commerce.Services.ProductServices
 				if (product == null)
 					return Result<ProductDetailDto>.Fail("Product not found", 404);
 
-				_logger.LogInformation($"Product found: {product.Name} (ID: {product.Id})");
 
 				_productCacheManger.SetProductByIdCacheAsync(id, isActive, deletedOnly, product, IsAdmin: IsAdmin, expiration: TimeSpan.FromMinutes(30));
+ 
+				_logger.LogInformation($"Product found: {product.Name} (ID: {product.Id})");
 				return Result<ProductDetailDto>.Ok(product, "Product retrieved successfully", 200);
+
 			}
 			catch (Exception ex)
 			{
@@ -240,6 +255,13 @@ namespace E_Commerce.Services.ProductServices
 					await transaction.RollbackAsync();
 					_logger.LogWarning("CreateProductAsync: Product with same name exists: {ProductName}", dto.Name);
 					return Result<ProductDto>.Fail($"There's already a product with the same name: {dto.Name}", 409);
+				}
+				if(dto.Price<=0)
+				{
+					
+					await transaction.RollbackAsync();
+					_logger.LogWarning("CreateProductAsync: Invalid price: {Price}", dto.Price);
+					return Result<ProductDto>.Fail("Price must be greater than zero.", 400);
 				}
 				var product = new Models.Product
 				{

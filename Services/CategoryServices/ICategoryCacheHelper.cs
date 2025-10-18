@@ -1,5 +1,3 @@
-using E_Commerce.DtoModels.CategoryDtos;
-
 namespace E_Commerce.Services.CategoryServices
 {
 	public interface ICategoryCacheHelper
@@ -8,9 +6,9 @@ namespace E_Commerce.Services.CategoryServices
 		public void ClearCategoryListCache();
 		public void ClearCategoryDataCache();
 		void NotifyAdminError(string message, string? stackTrace = null);
-		void SetCategoryListCacheAsync(List<CategoryDto> data, string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false, TimeSpan? expiration = null);
+		void SetCategoryListCacheAsync(object data, string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false, TimeSpan? expiration = null);
 		Task<T?> GetCategoryListCacheAsync<T>(string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false);
-		void SetCategoryByIdCacheAsync(int id, bool? isActive, bool? isDeleted, CategorywithdataDto data, bool IsAdmin = false, TimeSpan? expiration = null);
+		void SetCategoryByIdCacheAsync(int id, bool? isActive, bool? isDeleted, object data, bool IsAdmin = false, TimeSpan? expiration = null);
 		Task<T?> GetCategoryByIdCacheAsync<T>(int id, bool? isActive, bool? isDeleted, bool IsAdmin = false);
 	}
 }

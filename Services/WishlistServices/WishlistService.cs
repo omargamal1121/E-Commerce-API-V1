@@ -29,9 +29,8 @@ namespace E_Commerce.Services.WishlistServices
         }
 
         #region Query Operations (Read)
-        public async Task<Result<List<WishlistItemDto>>> GetWishlistAsync(string userId,bool all=false, int page = 1, int pageSize = 20,bool isadmin=false)
-
-            => await _queryService.GetWishlistAsync(userId,all, page, pageSize,isadmin);
+        public async Task<Result<List<WishlistItemDto>>> GetWishlistAsync(string userId, int page = 1, int pageSize = 20)
+            => await _queryService.GetWishlistAsync(userId, page, pageSize);
 
         public async Task<Result<bool>> IsInWishlistAsync(string userId, int productId)
             => await _queryService.IsInWishlistAsync(userId, productId);

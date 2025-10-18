@@ -71,7 +71,6 @@ namespace E_Commerce.Services.ProductServices
 
             return new ProductDto
             {
-                 
                 Id = p.Id,
                 Name = p.Name,
                 IsActive = p.IsActive,
@@ -150,7 +149,6 @@ namespace E_Commerce.Services.ProductServices
                                Quantity = v.Quantity,
                                ProductId = v.ProductId
                            }).ToList()
-                          
             });
         }
 
@@ -184,7 +182,7 @@ namespace E_Commerce.Services.ProductServices
                     : (p.Discount != null && p.Discount.IsActive && p.Discount.DeletedAt == null && p.Discount.EndDate > DateTime.UtcNow
                         ? p.Discount.EndDate
                         : null),
-       
+
                 DiscountName = isAdmin
                     ? p.Discount!.Name
                     : (p.Discount != null && p.Discount.IsActive && p.Discount.DeletedAt == null && p.Discount.EndDate > DateTime.UtcNow
@@ -192,12 +190,12 @@ namespace E_Commerce.Services.ProductServices
                         : null),
 
                 DiscountPrecentage = isAdmin
-                    ? (p.Discount!.DiscountPercent)
+                    ? (p.Discount!.DiscountPercent )
                     : (p.Discount != null && p.Discount.IsActive && p.Discount.DeletedAt == null && p.Discount.EndDate > DateTime.UtcNow
                         ? p.Discount.DiscountPercent
                         : 0),
 
-
+     
                 images = p.Images
                           .Where(i => i.DeletedAt == null)
                           .Select(i => new ImageDto

@@ -1,4 +1,3 @@
-using E_Commerce.DtoModels.CollectionDtos;
 using E_Commerce.Services.Cache;
 using E_Commerce.Services.EmailServices;
 using Hangfire;
@@ -45,7 +44,7 @@ namespace E_Commerce.Services.Collection
             _jobClient.Enqueue<IErrorNotificationService>(_ => _.SendErrorNotificationAsync(message, stackTrace));
         }
 
-        public  void SetCollectionListCacheAsync(List<CollectionSummaryDto> data, string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false, TimeSpan? expiration = null)
+        public  void SetCollectionListCacheAsync(object data, string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false, TimeSpan? expiration = null)
         {
             var cacheKey = GetCollectionListKey(search, isActive, isDeleted, page, pageSize, IsAdmin);
             _jobClient.Enqueue(()=> _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { CACHELIST }));
@@ -57,7 +56,7 @@ namespace E_Commerce.Services.Collection
             return await _cacheManager.GetAsync<T>(cacheKey);
         }
 
-        public  void SetCollectionByIdCacheAsync(int id, bool? isActive, bool? isDeleted, CollectionDto data, bool IsAdmin = false, TimeSpan? expiration = null)
+        public  void SetCollectionByIdCacheAsync(int id, bool? isActive, bool? isDeleted, object data, bool IsAdmin = false, TimeSpan? expiration = null)
         {
             var cacheKey = GetCollectionByIdKey(id, isActive, isDeleted, IsAdmin);
             _jobClient.Enqueue(()=> _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { CACHEWITHDATA }));

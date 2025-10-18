@@ -9,7 +9,6 @@ namespace E_Commerce.Services.WishlistServices
         public static IServiceCollection AddWishlistServices(this IServiceCollection services)
         {
             // Wishlist Services (arranged by dependencies)
-            services.AddTransient<IWishListMapper, WishListMapper>();
             
             // 1. Cache Helper (no dependencies on other wishlist services)
             services.AddScoped<IWishlistCacheHelper, WishlistCacheHelper>();

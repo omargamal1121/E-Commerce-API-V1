@@ -9,7 +9,6 @@ using E_Commerce.Services.AccountServices.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using E_Commerce.Services.EmailServices;
 using E_Commerce.Services.AccountServices.UserMangment;
-using E_Commerce.Services.AccountServices.UserCaches;
 
 namespace E_Commerce.Services.AccountServices
 {
@@ -17,7 +16,6 @@ namespace E_Commerce.Services.AccountServices
     {
         public static IServiceCollection AddAccountServices(this IServiceCollection services)
         {
-            services.AddSingleton<IUserCacheService, UserCacheService>();
             // Core Account Services
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserMangerMapping,UserMangerMapping>();

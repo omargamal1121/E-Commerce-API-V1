@@ -2,6 +2,9 @@
 bin/
 obj/
 out/
+**/bin/
+**/obj/
+
 # Visual Studio
 .vs/
 .vscode/
@@ -20,6 +23,7 @@ logs/
 appsettings.Development.json
 appsettings.Local.json
 appsettings.Secret.json
+appsettings.json
 *.secret.json
 
 # Sensitive data
@@ -53,4 +57,3 @@ _ReSharper*/
 # Test results
 TestResults/
 coverage/
-appsettings.json

@@ -376,17 +376,7 @@ namespace E_Commerce.Context
 				.OnDelete(DeleteBehavior.Cascade);
 			builder.Entity<Customer>().HasIndex(c=>c.UserName).IsUnique();
 			builder.Entity<Customer>().HasIndex(c=>c.Email).IsUnique();
-            builder.Entity<Product>().ToTable(p =>
-            {
-                p.HasCheckConstraint("CK_Product_Quantity_NonNegative", "'Quantity' >= 0");
-                p.HasCheckConstraint("CK_Product_Price_Positive", "'Price' > 0");
-            });
-
-        
-            builder.Entity<ProductVariant>().ToTable(p =>
-            {
-                p.HasCheckConstraint("CK_ProductVariant_Quantity_NonNegative", "'Quantity'>= 0");
-            });
+     
 
 
         }

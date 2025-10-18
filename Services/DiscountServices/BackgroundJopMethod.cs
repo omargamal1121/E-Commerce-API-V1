@@ -43,9 +43,17 @@ namespace E_Commerce.Services.DiscountServices
 
         public void ScheduleDiscountCheck(int discountId, DateTime startDate, DateTime endDate)
         {
-            // Schedule the discount check using Hangfire's ability to call services directly
-            _jobClient.Schedule<IDiscountCacheHelper>(_ => CheckOnDiscount(discountId), startDate);
-            _jobClient.Schedule<IDiscountCacheHelper>(_ => CheckOnDiscount(discountId), endDate);
+            // Schedule job to run at start date
+            _jobClient.Schedule<IDiscountBackgroundJopMethod>(
+                job => job.CheckOnDiscount(discountId),
+                startDate
+            );
+
+            // Schedule job to run at end date
+            _jobClient.Schedule<IDiscountBackgroundJopMethod>(
+                job => job.CheckOnDiscount(discountId),
+                endDate
+            );
         }
 
         public async Task CheckOnDiscount(int id)

@@ -50,7 +50,7 @@ namespace E_Commerce.Services.SubCategoryServices
             _backgroundJobClient.Enqueue<IErrorNotificationService>(x => x.SendErrorNotificationAsync(errorMessage, stackTrace)); 
         }
 
-        public void SetSubCategoryListCacheAsync(object data,string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false, TimeSpan? expiration = null)
+        public void SetSubCategoryListCacheAsync(List<SubCategoryDto> data,string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false, TimeSpan? expiration = null)
         {
             var cacheKey = GetSubCategoryListKey(search,isActive, isDeleted, page, pageSize, IsAdmin);
             _backgroundJobClient.Enqueue(() => _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { CACHELIST }));
@@ -62,7 +62,7 @@ namespace E_Commerce.Services.SubCategoryServices
             return await _cacheManager.GetAsync<T>(cacheKey);
         }
 
-        public void SetSubCategoryByIdCacheAsync(int id, bool? isActive, bool? isDeleted, object data, bool IsAdmin = false, TimeSpan? expiration = null)
+        public void SetSubCategoryByIdCacheAsync(int id, bool? isActive, bool? isDeleted, SubCategoryDtoWithData data, bool IsAdmin = false, TimeSpan? expiration = null)
         {
             var cacheKey = GetSubCategoryByIdKey(id, isActive, isDeleted, IsAdmin);
             _backgroundJobClient.Enqueue(() => _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { CACHEWITHDATA }));

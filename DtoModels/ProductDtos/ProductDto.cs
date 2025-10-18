@@ -29,6 +29,7 @@ namespace E_Commerce.DtoModels.ProductDtos
 		public string? DiscountName { get; set; }
 
 		public DateTime? EndAt { get; set; }
+		public bool IsInWithList { get; set; }
 
 
 		public bool IsActive { get; set; }

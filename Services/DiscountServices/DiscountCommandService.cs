@@ -42,6 +42,7 @@ namespace E_Commerce.Services.DiscountServices
         public async Task<Result<DiscountDto>> CreateDiscountAsync(CreateDiscountDto dto, string userId)
         {
             _logger.LogInformation($"Creating new discount: {dto.Name}");
+                using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
                 if (dto.StartDate >= dto.EndDate)
@@ -56,7 +57,6 @@ namespace E_Commerce.Services.DiscountServices
                 if (existingDiscount != null)
                     return Result<DiscountDto>.Fail($"Discount with name '{dto.Name}' already exists", 409);
 
-                using var transaction = await _unitOfWork.BeginTransactionAsync();
 
                 var discount = new Models.Discount
                 {
@@ -103,6 +103,7 @@ namespace E_Commerce.Services.DiscountServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error in CreateDiscountAsync for discount {dto.Name}");
+               await  transaction.RollbackAsync();
                 _discountBackgroundJopMethod.NotifyAdminError($"Error in CreateDiscountAsync for discount {dto.Name}: {ex.Message}", ex.StackTrace);
                 return Result<DiscountDto>.Fail("Error creating discount", 500);
             }

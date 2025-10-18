@@ -13,6 +13,7 @@ namespace E_Commerce.Services.WishlistServices
 {
     public class WishlistCommandService : IWishlistCommandService
     {
+        
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<WishlistCommandService> _logger;
         private readonly IWishlistCacheHelper _cacheHelper;

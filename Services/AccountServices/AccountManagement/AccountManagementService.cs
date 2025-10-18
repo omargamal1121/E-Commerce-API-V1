@@ -2,6 +2,7 @@
 using E_Commerce.Enums;
 using E_Commerce.ErrorHnadling;
 using E_Commerce.Models;
+using E_Commerce.Services.AccountServices.UserCaches;
 using E_Commerce.Services.EmailServices;
 using E_Commerce.Services.UserOpreationServices;
 using E_Commerce.UOW;
@@ -13,6 +14,7 @@ namespace E_Commerce.Services.AccountServices.AccountManagement
     public class AccountManagementService : IAccountManagementService
     {
         private readonly ILogger<AccountManagementService> _logger;
+        private readonly IUserCacheService _userCacheService;
         private readonly UserManager<Customer> _userManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IBackgroundJobClient _backgroundJobClient;
@@ -20,6 +22,7 @@ namespace E_Commerce.Services.AccountServices.AccountManagement
         private readonly IErrorNotificationService _errorNotificationService;
 
         public AccountManagementService(
+            IUserCacheService userCacheService,
             IUserOpreationServices userOpreationServices,
             IBackgroundJobClient backgroundJobClient,
             ILogger<AccountManagementService> logger,
@@ -27,6 +30,7 @@ namespace E_Commerce.Services.AccountServices.AccountManagement
             IUnitOfWork unitOfWork,
             IErrorNotificationService errorNotificationService)
         {
+            _userCacheService = userCacheService;
             _logger = logger;
             _userManager = userManager;
             _unitOfWork = unitOfWork;
@@ -63,7 +67,7 @@ namespace E_Commerce.Services.AccountServices.AccountManagement
                 }
                 await _userManager.UpdateSecurityStampAsync(customer);
 
-
+               _= _userCacheService.DeleteByUserIdAsync(id);
 
                 await tran.CommitAsync();
                 _logger.LogInformation("Soft delete successful for UserId: {UserId}", id);

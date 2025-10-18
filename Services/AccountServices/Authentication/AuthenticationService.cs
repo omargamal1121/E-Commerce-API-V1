@@ -3,6 +3,7 @@ using E_Commerce.DtoModels.TokenDtos;
 using E_Commerce.ErrorHnadling;
 using E_Commerce.Interfaces;
 using E_Commerce.Models;
+using E_Commerce.Services.AccountServices.UserCaches;
 using E_Commerce.Services.EmailServices;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
@@ -20,11 +21,13 @@ namespace E_Commerce.Services.AccountServices.Authentication
 		private readonly IAccountEmailService _accountEmailService;
 		private readonly IConfiguration _configuration;
 		private readonly IHttpContextAccessor _httpContextAccessor;
+		private readonly IUserCacheService _userCacheService;
 
-		private const string RefreshCookieName = "Refresh";
+        private const string RefreshCookieName = "Refresh";
 
 		public AuthenticationService(
-			IHttpContextAccessor httpContextAccessor,
+            IUserCacheService userCacheService,
+            IHttpContextAccessor httpContextAccessor,
 			ILogger<AuthenticationService> logger,
 			UserManager<Customer> userManager,
 			IRefreshTokenService refreshTokenService,
@@ -33,7 +36,8 @@ namespace E_Commerce.Services.AccountServices.Authentication
 			IAccountEmailService accountEmailService,
 			IConfiguration configuration)
 		{
-			_httpContextAccessor = httpContextAccessor;
+			_userCacheService = userCacheService;
+            _httpContextAccessor = httpContextAccessor;
 			_logger = logger;
 			_userManager = userManager;
 			_refreshTokenService = refreshTokenService;
@@ -83,6 +87,7 @@ namespace E_Commerce.Services.AccountServices.Authentication
 				else
 					_logger.LogError("Failed to generate refresh token: {Message}", refreshTokenResult.Message);
 				var roles = (await _userManager.GetRolesAsync(user)).ToList();
+				_= _userCacheService.SetAsync(user.Id, roles, TimeSpan.FromHours(1));
                 return Result<TokensDto>.Ok(new TokensDto { Token = tokenResult.Data , Roles=roles }, "Login successfully", 200);
 			}
 			catch (Exception ex)
@@ -114,8 +119,8 @@ namespace E_Commerce.Services.AccountServices.Authentication
 				BackgroundJob.Enqueue<IErrorNotificationService>(e =>
 					e.SendErrorNotificationAsync(errors, $"{nameof(AuthenticationService)}/{nameof(LogoutAsync)}"));
 			}
-
-			return Result<bool>.Ok(true, "Logout Successful", 200);
+			_=_userCacheService.DeleteByUserIdAsync(userId);
+            return Result<bool>.Ok(true, "Logout Successful", 200);
 		}
 
 		public async Task<Result<TokensDto>> RefreshTokenAsync()

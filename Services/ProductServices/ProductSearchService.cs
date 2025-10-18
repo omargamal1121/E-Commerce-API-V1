@@ -9,24 +9,27 @@ using E_Commerce.ErrorHnadling;
 using E_Commerce.Interfaces;
 using E_Commerce.Models;
 using E_Commerce.Services.EmailServices;
+using E_Commerce.Services.WishlistServices;
 using E_Commerce.UOW;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace E_Commerce.Services.ProductServices
 {
     public interface IProductSearchService
     {
-        public Task<Result<List<BestSellingProductDto>>> GetBestSellerProductsWithCountAsync(bool? isDeleted, bool? isActive, int page = 1, int pagesize = 10, bool IsAdmin = false);
-        Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
-        Task<Result<List<ProductDto>>> GetBestSellersAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
-        Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
+        public Task<Result<List<BestSellingProductDto>>> GetBestSellerProductsWithCountAsync(bool? isDeleted, bool? isActive, int page = 1, int pagesize = 10, bool IsAdmin = false,string? userid=null);
+        Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userid = null);
+        Task<Result<List<ProductDto>>> GetBestSellersAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userid = null);
+        Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userid = null);
     }
 
     public class ProductSearchService : IProductSearchService
     {
+        private readonly IWishlistQueryService _wishlistQueryService;
         private readonly IBackgroundJobClient _backgroundJobClient;
         private readonly IproductMapper _productMapper;
         private readonly IProductCacheManger _productCacheManger;
@@ -35,6 +38,7 @@ namespace E_Commerce.Services.ProductServices
         private readonly IErrorNotificationService _errorNotificationService;
 
         public ProductSearchService(
+            IWishlistQueryService wishlistQueryService,
             IproductMapper iproductMapper,
             IProductCacheManger productCacheManger,
             IBackgroundJobClient backgroundJobClient,
@@ -43,6 +47,7 @@ namespace E_Commerce.Services.ProductServices
             IErrorNotificationService errorNotificationService
         )
         {
+            _wishlistQueryService = wishlistQueryService;
             _productCacheManger = productCacheManger;
             _productMapper = iproductMapper;
             _backgroundJobClient = backgroundJobClient;
@@ -74,9 +79,20 @@ namespace E_Commerce.Services.ProductServices
             }
             return query;
         }
+        private async Task<List<ProductDto>>AddWishListAsync(List<ProductDto> productDtos,string userid)
+        {
+            var productids = await _wishlistQueryService.GetUserWishlistProductIdsAsync(userid);
+
+            foreach (var item in productDtos)
+            {
+                item.IsInWithList = productids.Contains(item.Id);
+
+            }
+            return productDtos;
+        }
 
     
-        public async Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+        public async Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userid = null)
         {
             if (page <= 0 || pageSize <= 0)
                 return Result<List<ProductDto>>.Fail("Invalid page or pageSize. Must be greater than 0.", 400);
@@ -107,11 +123,13 @@ namespace E_Commerce.Services.ProductServices
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-
                 if (!products.Any())
                     return Result<List<ProductDto>>.Fail("No new arrivals found", 404);
 
                 _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "NewArrial", IsAdmin, null));
+                if(userid!=null)
+                    products=  await  AddWishListAsync(products,userid);
+
                 return Result<List<ProductDto>>.Ok(products, $"Found {products.Count} new arrivals", 200);
             }
             catch (Exception ex)
@@ -122,7 +140,7 @@ namespace E_Commerce.Services.ProductServices
             }
         }
 
-        public async Task<Result<List<ProductDto>>> GetBestSellersAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+        public async Task<Result<List<ProductDto>>> GetBestSellersAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userid = null)
         {
             if (page <= 0 || pageSize <= 0)
                 return Result<List<ProductDto>>.Fail("Invalid page or pageSize. Must be greater than 0.", 400);
@@ -181,6 +199,9 @@ namespace E_Commerce.Services.ProductServices
                 var result = Result<List<ProductDto>>.Ok(products, $"Found {products.Count} best sellers", 200);
 
                 _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products,null, isActive, deletedOnly,pageSize,page,"BestSeller", IsAdmin,null));
+                if (userid != null)
+                    products = await AddWishListAsync(products, userid);
+
 
                 return result;
             }
@@ -192,7 +213,7 @@ namespace E_Commerce.Services.ProductServices
             }
         }
 
-        public async Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+        public async Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userid = null)
         {
             if (page <= 0 || pageSize <= 0)
                 return Result<List<ProductDto>>.Fail("Invalid page or pageSize. Must be greater than 0.", 400);
@@ -291,11 +312,13 @@ namespace E_Commerce.Services.ProductServices
 
                 var products = await  _productMapper.maptoProductDtoexpression(query,IsAdmin)
                     .ToListAsync();
-
                 if (!products.Any())
                     return Result<List<ProductDto>>.Fail("No products found matching the search criteria", 404);
 
                 _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products, searchKey, isActive, deletedOnly,pageSize,page,null,IsAdmin,null));
+                if (userid != null)
+                    products = await AddWishListAsync(products, userid);
+
 
                 return Result<List<ProductDto>>.Ok(products, $"Found {products.Count} products matching search criteria", 200);
             }
@@ -307,7 +330,7 @@ namespace E_Commerce.Services.ProductServices
             }
         }
 
-        public async Task<Result<List<BestSellingProductDto>>> GetBestSellerProductsWithCountAsync(bool? isDeleted, bool? isActive, int page = 1, int pagesize = 10,bool IsAdmin=false)
+        public async Task<Result<List<BestSellingProductDto>>> GetBestSellerProductsWithCountAsync(bool? isDeleted, bool? isActive, int page = 1, int pagesize = 10,bool IsAdmin=false, string? userid = null)
         {
 
             var cachedResult = await _productCacheManger.GetProductListCacheAsync<List<BestSellingProductDto>>(null, isActive, isDeleted, pagesize,page,"BestSeller",IsAdmin);

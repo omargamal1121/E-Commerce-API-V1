@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using System.Linq;
 using E_Commerce.Services;
+using E_Commerce.DtoModels.ProductDtos;
 
 namespace E_Commerce.Controllers
 {
@@ -26,7 +27,10 @@ namespace E_Commerce.Controllers
 
         [HttpGet]
 
-        public async Task<ActionResult<ApiResponse<List<E_Commerce.DtoModels.ProductDtos.WishlistItemDto>>>> GetWishlist([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+        public async Task<ActionResult<ApiResponse<List<WishlistItemDto>>>> GetWishlist(
+            [FromQuery]bool all = false,
+            [FromQuery] int page = 1, 
+            [FromQuery] int pageSize = 20)
         {
             try
             {
@@ -39,9 +43,9 @@ namespace E_Commerce.Controllers
                 }
 
                 var userId = GetUserId();
-              
+                var isadmin = HasManagementRole();
 
-                var result = await _wishlistService.GetWishlistAsync(userId, page, pageSize);
+                var result = await _wishlistService.GetWishlistAsync(userId,all, page, pageSize,isadmin);
                 return HandleResult(result);
             }
             catch (Exception ex)

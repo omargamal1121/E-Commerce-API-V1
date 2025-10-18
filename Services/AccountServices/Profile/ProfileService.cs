@@ -5,6 +5,7 @@ using E_Commerce.Enums;
 using E_Commerce.ErrorHnadling;
 using E_Commerce.Interfaces;
 using E_Commerce.Models;
+using E_Commerce.Services.AccountServices.UserCaches;
 using E_Commerce.Services.EmailServices;
 using E_Commerce.UOW;
 using Hangfire;
@@ -22,10 +23,12 @@ namespace E_Commerce.Services.AccountServices.Profile
         private readonly UserManager<Customer> _userManager;
         private readonly IImagesServices _imagesService;
         private readonly ICustomerAddressServices _customerAddressServices;
+        private readonly IUserCacheService _userCacheService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IErrorNotificationService _errorNotificationService;
 
         public ProfileService(
+            IUserCacheService userCacheService,
             ICustomerAddressServices customerAddressServices,
             IHttpContextAccessor httpContextAccessor,
             ILogger<ProfileService> logger,
@@ -35,6 +38,7 @@ namespace E_Commerce.Services.AccountServices.Profile
             IErrorNotificationService errorNotificationService)
         {
 
+            _userCacheService = userCacheService;
             _customerAddressServices = customerAddressServices; 
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
@@ -95,6 +99,7 @@ namespace E_Commerce.Services.AccountServices.Profile
 				}
 			
                 _logger.LogInformation("Email changed successfully.");
+               _= _userCacheService.DeleteByUserIdAsync(userid);
                 return Result<ChangeEmailResultDto>.Ok(new ChangeEmailResultDto
                 {
                     NewEmail = newEmail,

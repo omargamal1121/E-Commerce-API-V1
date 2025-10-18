@@ -34,7 +34,7 @@ namespace E_Commerce.Services.ProductServices
 		}
 
 		// Core Product Operations
-		public async Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+		public async Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userid = null)
 		{
 			_logger.LogInformation($"Fetching product details for Product ID: {id}, IsActive: {isActive}, DeletedOnly: {deletedOnly}, IsAdmin: {IsAdmin}");
 			return await _productCatalogService.GetProductByIdAsync(id, isActive, deletedOnly, IsAdmin);
@@ -59,21 +59,21 @@ namespace E_Commerce.Services.ProductServices
 		{
 			return await _productSearchService.AdvancedSearchAsync(new AdvancedSearchDto { Subcategoryid = subCategoryId }, page, pageSize, isActive, deletedOnly, IsAdmin);
 		}
-		public async Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+		public async Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userid = null)
 		{
-			return await _productSearchService.GetNewArrivalsAsync(page, pageSize, isActive, deletedOnly, IsAdmin);
+			return await _productSearchService.GetNewArrivalsAsync(page, pageSize, isActive, deletedOnly, IsAdmin,userid);
 		}
-		public async Task<Result<List<ProductDto>>> GetProductsAsync(string? search = null, bool? isActive = null, bool? deletedOnly = null, int page = 1, int pageSize = 10, bool IsAdmin = false)
+		public async Task<Result<List<ProductDto>>> GetProductsAsync(string? search = null, bool? isActive = null, bool? deletedOnly = null, int page = 1, int pageSize = 10, bool IsAdmin = false, string? userid = null)
 		{
-			return await _productSearchService.AdvancedSearchAsync(new AdvancedSearchDto { SearchTerm = search }, page, pageSize, isActive, deletedOnly, IsAdmin);
+			return await _productSearchService.AdvancedSearchAsync(new AdvancedSearchDto { SearchTerm = search }, page, pageSize, isActive, deletedOnly, IsAdmin,userid);
 		}
 		public async Task<Result<List<BestSellingProductDto>>> GetBestSellersProductsWithCountAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null,bool IsAdmin=false)
 		{
 			return await _productSearchService.GetBestSellerProductsWithCountAsync(isActive,deletedOnly, page, pageSize,IsAdmin);
 		}
-		public async Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+		public async Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userid = null)
 		{
-			return await _productSearchService.AdvancedSearchAsync(searchCriteria, page, pageSize, isActive, deletedOnly, IsAdmin);
+			return await _productSearchService.AdvancedSearchAsync(searchCriteria, page, pageSize, isActive, deletedOnly, IsAdmin,userid);
 		}
 		// Image Operations
 		public async Task<Result<List<ImageDto>>> GetProductImagesAsync(int productId)

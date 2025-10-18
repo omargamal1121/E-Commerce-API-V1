@@ -1,7 +1,7 @@
 # Build results
 bin/
 obj/
-out/
+out/+
 **/bin/
 **/obj/
 

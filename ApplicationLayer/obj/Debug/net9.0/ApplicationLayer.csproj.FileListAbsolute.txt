@@ -1,0 +1,15 @@
+D:\project_fashion\With Clean Arc\ApplicationLayer\obj\Debug\net9.0\ApplicationLayer.csproj.AssemblyReference.cache
+D:\project_fashion\With Clean Arc\ApplicationLayer\obj\Debug\net9.0\ApplicationLayer.GeneratedMSBuildEditorConfig.editorconfig
+D:\project_fashion\With Clean Arc\ApplicationLayer\obj\Debug\net9.0\ApplicationLayer.AssemblyInfoInputs.cache
+D:\project_fashion\With Clean Arc\ApplicationLayer\obj\Debug\net9.0\ApplicationLayer.AssemblyInfo.cs
+D:\project_fashion\With Clean Arc\ApplicationLayer\obj\Debug\net9.0\ApplicationLayer.csproj.CoreCompileInputs.cache
+D:\project_fashion\With Clean Arc\ApplicationLayer\bin\Debug\net9.0\ApplicationLayer.deps.json
+D:\project_fashion\With Clean Arc\ApplicationLayer\bin\Debug\net9.0\ApplicationLayer.dll
+D:\project_fashion\With Clean Arc\ApplicationLayer\bin\Debug\net9.0\ApplicationLayer.pdb
+D:\project_fashion\With Clean Arc\ApplicationLayer\bin\Debug\net9.0\DomainLayer.dll
+D:\project_fashion\With Clean Arc\ApplicationLayer\bin\Debug\net9.0\DomainLayer.pdb
+D:\project_fashion\With Clean Arc\ApplicationLayer\obj\Debug\net9.0\Applicat.033E422A.Up2Date
+D:\project_fashion\With Clean Arc\ApplicationLayer\obj\Debug\net9.0\ApplicationLayer.dll
+D:\project_fashion\With Clean Arc\ApplicationLayer\obj\Debug\net9.0\refint\ApplicationLayer.dll
+D:\project_fashion\With Clean Arc\ApplicationLayer\obj\Debug\net9.0\ApplicationLayer.pdb
+D:\project_fashion\With Clean Arc\ApplicationLayer\obj\Debug\net9.0\ref\ApplicationLayer.dll

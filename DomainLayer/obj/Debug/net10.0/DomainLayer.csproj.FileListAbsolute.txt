@@ -1,0 +1,4 @@
+D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net10.0\DomainLayer.GeneratedMSBuildEditorConfig.editorconfig
+D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net10.0\DomainLayer.AssemblyInfoInputs.cache
+D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net10.0\DomainLayer.AssemblyInfo.cs
+D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net10.0\DomainLayer.csproj.CoreCompileInputs.cache

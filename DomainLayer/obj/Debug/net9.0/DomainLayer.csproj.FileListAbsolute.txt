@@ -1,0 +1,12 @@
+D:\project_fashion\With Clean Arc\DomainLayer\bin\Debug\net9.0\DomainLayer.deps.json
+D:\project_fashion\With Clean Arc\DomainLayer\bin\Debug\net9.0\DomainLayer.dll
+D:\project_fashion\With Clean Arc\DomainLayer\bin\Debug\net9.0\DomainLayer.pdb
+D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net9.0\DomainLayer.csproj.AssemblyReference.cache
+D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net9.0\DomainLayer.GeneratedMSBuildEditorConfig.editorconfig
+D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net9.0\DomainLayer.AssemblyInfoInputs.cache
+D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net9.0\DomainLayer.AssemblyInfo.cs
+D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net9.0\DomainLayer.csproj.CoreCompileInputs.cache
+D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net9.0\DomainLayer.dll
+D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net9.0\refint\DomainLayer.dll
+D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net9.0\DomainLayer.pdb
+D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net9.0\ref\DomainLayer.dll

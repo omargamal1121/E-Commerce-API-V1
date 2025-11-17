@@ -10,3 +10,4 @@ D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net9.0\DomainLayer.dll
 D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net9.0\refint\DomainLayer.dll
 D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net9.0\DomainLayer.pdb
 D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net9.0\ref\DomainLayer.dll
+D:\project_fashion\With Clean Arc\DomainLayer\obj\Debug\net9.0\DomainLayer.sourcelink.json

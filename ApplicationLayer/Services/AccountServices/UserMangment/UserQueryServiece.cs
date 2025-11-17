@@ -69,6 +69,7 @@ namespace ApplicationLayer.Services.AccountServices.UserMangment
             }
 			query= query.Skip((page-1)*pageSize).Take(pageSize);
 			var users = _userMangerMapping.ToUserDto(query);
+			
             return Result<List<Userdto>>.Ok(users);
 
 

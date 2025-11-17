@@ -11,7 +11,7 @@ namespace DomainLayer.Models
 
         [Timestamp]
         [Column(TypeName = "binary(8)")]
-        public byte[] RowVersion { get; set; }
+        public byte[]? RowVersion { get; set; }
         public VariantSize? Size { get; set; }
         public int? Waist { get; set; }
         public int? Length { get; set; }

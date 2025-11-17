@@ -15,3 +15,4 @@ D:\project_fashion\With Clean Arc\InfrastructureLayer\obj\Debug\net9.0\Infrastru
 D:\project_fashion\With Clean Arc\InfrastructureLayer\obj\Debug\net9.0\refint\InfrastructureLayer.dll
 D:\project_fashion\With Clean Arc\InfrastructureLayer\obj\Debug\net9.0\InfrastructureLayer.pdb
 D:\project_fashion\With Clean Arc\InfrastructureLayer\obj\Debug\net9.0\ref\InfrastructureLayer.dll
+D:\project_fashion\With Clean Arc\InfrastructureLayer\obj\Debug\net9.0\InfrastructureLayer.sourcelink.json

@@ -62,6 +62,7 @@ namespace ApplicationLayer.Services.AccountServices.Registration
                 IdentityResult result1 = await _userManager.AddToRoleAsync(customer, DefaultRole);
                 if (!result1.Succeeded)
                 {
+                    await _userManager.DeleteAsync(customer);
                     await tran.RollbackAsync();
                     _logger.LogError(result1.Errors.ToString());
                     return Result<RegisterResponse>.Fail("Errors:Sorry Try Again Later", 500);
@@ -154,7 +155,7 @@ namespace ApplicationLayer.Services.AccountServices.Registration
 				if (request != null)
 				{
 					var baseUrl = $"{request.Scheme}://{request.Host}";
-					BackgroundJob.Enqueue<IAccountEmailService>(e => e.SendValidationEmailAsync(user.Email, user.Id, token, baseUrl));
+					BackgroundJob.Enqueue<IAccountEmailService>(e => e.SendValidationEmailAsync(user.Email, user.Id, encodedToken, baseUrl));
 				}
 				_logger.LogInformation($"Confirmation email resent successfully to: {email}");
                 return Result<bool>.Ok(true, "Confirmation email has been resent. Please check your inbox.", 200);

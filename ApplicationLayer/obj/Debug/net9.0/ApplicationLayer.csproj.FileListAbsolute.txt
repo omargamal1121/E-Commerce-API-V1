@@ -13,3 +13,4 @@ D:\project_fashion\With Clean Arc\ApplicationLayer\obj\Debug\net9.0\ApplicationL
 D:\project_fashion\With Clean Arc\ApplicationLayer\obj\Debug\net9.0\refint\ApplicationLayer.dll
 D:\project_fashion\With Clean Arc\ApplicationLayer\obj\Debug\net9.0\ApplicationLayer.pdb
 D:\project_fashion\With Clean Arc\ApplicationLayer\obj\Debug\net9.0\ref\ApplicationLayer.dll
+D:\project_fashion\With Clean Arc\ApplicationLayer\obj\Debug\net9.0\ApplicationLayer.sourcelink.json

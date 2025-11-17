@@ -236,6 +236,7 @@ namespace ApplicationLayer.Services.AccountServices.Profile
 					IsConfirmed = user.EmailConfirmed,
 					Gender = user.Gender.ToString(),
                     UserName =user.UserName,
+                
 				};
 				if (user.Image != null)
 				{

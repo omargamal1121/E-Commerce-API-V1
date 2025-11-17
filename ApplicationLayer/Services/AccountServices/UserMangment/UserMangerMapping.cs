@@ -28,7 +28,6 @@ namespace ApplicationLayer.Services.AccountServices.UserMangment
                     IsActive = !u.LockoutEnd.HasValue || u.LockoutEnd <= DateTime.Now,
                     IsDeleted = u.DeletedAt != null,
                     CreateAt= u.CreateAt,
-                    
                     LastVisit = u.LastVisit.HasValue ? u.LastVisit.Value : (DateTime?)null,
 
 

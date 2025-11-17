@@ -19,8 +19,6 @@ namespace ApplicationLayer.Services.AccountServices.Authentication
 		private readonly UserManager<Customer> _userManager;
 		private readonly IRefreshTokenService _refreshTokenService;
 		private readonly ITokenService _tokenService;
-		private readonly IErrorNotificationService _errorNotificationService;
-		private readonly IAccountEmailService _accountEmailService;
 		private readonly IConfiguration _configuration;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -41,8 +39,7 @@ namespace ApplicationLayer.Services.AccountServices.Authentication
 			_userManager = userManager;
 			_refreshTokenService = refreshTokenService;
 			_tokenService = tokenService;
-			_errorNotificationService = errorNotificationService;
-			_accountEmailService = accountEmailService;
+		
 			_configuration = configuration;
 		}
 

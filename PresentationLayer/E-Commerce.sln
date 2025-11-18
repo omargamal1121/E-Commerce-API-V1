@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11116.177 d18.0
+VisualStudioVersion = 18.0.11116.177
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-Commerce", "E-Commerce.csproj", "{94F97F80-D94C-978E-C845-20D69BD1A077}"
 EndProject
@@ -17,6 +17,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{E6077F85-1A57-4D36-B1A4-E056CBE99DF6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfrastructureLayer", "..\InfrastructureLayer\InfrastructureLayer.csproj", "{600A950A-BAFF-460C-97A8-28C9A52C4D6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationLayer.Tests", "..\Tests\ApplicationLayer.Tests\ApplicationLayer.Tests.csproj", "{0EFF6971-713F-215C-F93A-988F88FDDDFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +42,10 @@ Global
 		{600A950A-BAFF-460C-97A8-28C9A52C4D6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{600A950A-BAFF-460C-97A8-28C9A52C4D6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{600A950A-BAFF-460C-97A8-28C9A52C4D6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EFF6971-713F-215C-F93A-988F88FDDDFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EFF6971-713F-215C-F93A-988F88FDDDFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EFF6971-713F-215C-F93A-988F88FDDDFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EFF6971-713F-215C-F93A-988F88FDDDFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

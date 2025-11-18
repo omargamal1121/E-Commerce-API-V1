@@ -118,7 +118,7 @@ namespace ApplicationLayer.Services.AccountServices.Registration
                     _logger.LogError($"Failed to confirm email for user ID: {userId}. Errors: {errors}");
                     return Result<bool>.Fail($"Failed to confirm email: {errors}", 400);
                 }
-                BackgroundJob.Enqueue<RegistrationService>(s => s.AddOperationAsync(userId, "Email Confirmation", Opreations.UpdateOpreation));
+                _ = AddOperationAsync(userId, "Email Confirmation", Opreations.UpdateOpreation);
                 _logger.LogInformation($"Email confirmed successfully for user ID: {userId}");
                 return Result<bool>.Ok(true, "Email confirmed successfully.", 200);
             }

@@ -21,20 +21,21 @@ namespace ApplicationLayer.Services.AccountServices.Authentication
 		private readonly ITokenService _tokenService;
 		private readonly IConfiguration _configuration;
 		private readonly IHttpContextAccessor _httpContextAccessor;
+		private readonly IBackgroundJobClient _backgroundJobClient;
 
-		private const string RefreshCookieName = "Refresh";
+        private const string RefreshCookieName = "Refresh";
 
 		public AuthenticationService(
-			IHttpContextAccessor httpContextAccessor,
+			IBackgroundJobClient backgroundJobClient,
+            IHttpContextAccessor httpContextAccessor,
 			ILogger<AuthenticationService> logger,
 			UserManager<Customer> userManager,
 			IRefreshTokenService refreshTokenService,
 			ITokenService tokenService,
-			IErrorNotificationService errorNotificationService,
-			IAccountEmailService accountEmailService,
 			IConfiguration configuration)
 		{
-			_httpContextAccessor = httpContextAccessor;
+			_backgroundJobClient = backgroundJobClient;
+            _httpContextAccessor = httpContextAccessor;
 			_logger = logger;
 			_userManager = userManager;
 			_refreshTokenService = refreshTokenService;
@@ -53,8 +54,13 @@ namespace ApplicationLayer.Services.AccountServices.Authentication
 					_logger.LogWarning("Login failed: Email not found for {Email}", email);
 					return Result<TokensDto>.Fail("Invalid email or password.", 400);
 				}
+                if (user.DeletedAt != null)
+                {
+                    _logger.LogInformation("Login failed: Account deleted for {Email}", email);
+                    return Result<TokensDto>.Fail("Invalid email or password.", 400);
+                }
 
-				await EnsureLockoutEnabled(user);
+                await EnsureLockoutEnabled(user);
 
 				if (await _userManager.IsLockedOutAsync(user))
 					return Result<TokensDto>.Fail("Your account is currently locked. Please try again later.", 403);
@@ -64,11 +70,7 @@ namespace ApplicationLayer.Services.AccountServices.Authentication
 
 				await _userManager.ResetAccessFailedCountAsync(user);
 
-				if(user.DeletedAt!=null)
-				{
-					_logger.LogInformation("Login failed: Account deleted for {Email}", email);
-                    return Result<TokensDto>.Fail("Invalid email or password.", 400);
-                }
+				
                 var tokenResult = await _tokenService.GenerateTokenAsync(user);
 				if (!tokenResult.Success || tokenResult.Data == null)
 				{
@@ -77,9 +79,10 @@ namespace ApplicationLayer.Services.AccountServices.Authentication
 				}
 			
 
-				var refreshTokenResult = await _refreshTokenService.GenerateRefreshTokenAsync(user.Id);
-				if (refreshTokenResult.Success && refreshTokenResult.Data != null)
+				var refreshTokenResult = await _refreshTokenService.GenerateRefreshTokenAsync(user.Id,user.SecurityStamp??"");
+				if (refreshTokenResult.Success && refreshTokenResult.Data != null){
 					SetRefreshCookie(refreshTokenResult.Data);
+				}
 				else
 					_logger.LogError("Failed to generate refresh token: {Message}", refreshTokenResult.Message);
 				var roles = (await _userManager.GetRolesAsync(user)).ToList();
@@ -114,8 +117,8 @@ namespace ApplicationLayer.Services.AccountServices.Authentication
 				BackgroundJob.Enqueue<IErrorNotificationService>(e =>
 					e.SendErrorNotificationAsync(errors, $"{nameof(AuthenticationService)}/{nameof(LogoutAsync)}"));
 			}
-
-			return Result<bool>.Ok(true, "Logout Successful", 200);
+            ExpireRefreshCookie();
+            return Result<bool>.Ok(true, "Logout Successful", 200);
 		}
 
 		public async Task<Result<TokensDto>> RefreshTokenAsync()
@@ -135,10 +138,13 @@ namespace ApplicationLayer.Services.AccountServices.Authentication
 				ExpireRefreshCookie();
 				return Result<TokensDto>.Fail("Failed to generate token. Please login again.", 401);
 			}
-			var token = new TokensDto
+			SetRefreshCookie(tokenResult.Data.RefreshToken);
+
+
+            var token = new TokensDto
 			{
-				
-				Token = tokenResult.Data
+			
+				Token = tokenResult.Data.Token
 			};
 			return Result<TokensDto>.Ok(token, "Token generated", 200);
 		}
@@ -173,6 +179,7 @@ namespace ApplicationLayer.Services.AccountServices.Authentication
 					Expires = DateTimeOffset.UtcNow.AddDays(7)
 				});
 		}
+	
 
 		private void ExpireRefreshCookie()
 		{

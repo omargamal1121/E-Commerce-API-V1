@@ -40,7 +40,7 @@ namespace ApplicationLayer.Services.WishlistServices
         {
             var cacheKey = _cacheHelper.GetWishlistCacheKey(userId, page, pageSize);
             var cached = await _cacheManager.GetAsync<List<WishlistItemDto>>(cacheKey);
-            if (cached != null)
+            if (cached != null&&cached.Count!=0)
             {
                 _logger.LogInformation("Cache hit for wishlist of user {UserId} page {Page}", userId, page);
                 return Result<List<WishlistItemDto>>.Ok(cached, "Wishlist retrieved from cache", 200);
@@ -53,7 +53,9 @@ namespace ApplicationLayer.Services.WishlistServices
 
                 if (userId != null)
                     query = query.Where(w => w.CustomerId == userId);
-                  var list=await     query
+
+
+                  var list=await query
                     .Select(w => new WishlistItemDto
                     {
                         Id = w.Id,

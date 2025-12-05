@@ -6130,11 +6130,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\project_fashion\\With Clean Arc\\DomainLayer\\DomainLayer.csproj",
+      "projectUniqueName": "D:\\projects\\E-Commerce\\With Clean Arc\\DomainLayer\\DomainLayer.csproj",
       "projectName": "DomainLayer",
-      "projectPath": "D:\\project_fashion\\With Clean Arc\\DomainLayer\\DomainLayer.csproj",
+      "projectPath": "D:\\projects\\E-Commerce\\With Clean Arc\\DomainLayer\\DomainLayer.csproj",
       "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-      "outputPath": "D:\\project_fashion\\With Clean Arc\\DomainLayer\\obj\\",
+      "outputPath": "D:\\projects\\E-Commerce\\With Clean Arc\\DomainLayer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

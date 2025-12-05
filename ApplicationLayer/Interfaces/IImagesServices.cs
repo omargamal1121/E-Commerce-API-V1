@@ -8,7 +8,7 @@ namespace ApplicationLayer.Interfaces
 	{
 		bool IsValidExtension(string extension);
 		public Task<Result<List<string>>> DeleteImagesAsync(List<Image> images);
-		string GetFolderPath(params string[] folders);
+	
 		Task<Result<Image>> SaveCustomerImageAsync(IFormFile image, string userId);
 		
 		// Single image methods

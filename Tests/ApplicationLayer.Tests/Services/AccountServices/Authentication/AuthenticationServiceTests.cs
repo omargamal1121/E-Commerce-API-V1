@@ -7,6 +7,7 @@ using ApplicationLayer.DtoModels.TokenDtos;
 using ApplicationLayer.Interfaces;
 using ApplicationLayer.Services;
 using ApplicationLayer.Services.AccountServices.Authentication;
+using ApplicationLayer.Services.AuthServices;
 using DomainLayer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -64,13 +65,13 @@ namespace ApplicationLayer.Tests.Services.AccountServices.Authentication
 
 
             return new AuthenticationService(
+                null,
                 httpContextAccessor.Object,
                 logger.Object,
                 userManager.Object,
                 refreshTokenService.Object,
                 tokenService.Object,
-                Mock.Of<ApplicationLayer.Services.EmailServices.IErrorNotificationService>(),
-                Mock.Of<ApplicationLayer.Services.EmailServices.IAccountEmailService>(),
+            
                 configuration
             );
         }
@@ -143,7 +144,7 @@ namespace ApplicationLayer.Tests.Services.AccountServices.Authentication
             userManager.Verify(x => x.AccessFailedAsync(user), Times.Once);
             userManager.Verify(x => x.GetAccessFailedCountAsync(user), Times.Once);
             token.Verify(x => x.GenerateTokenAsync(It.IsAny<Customer>()), Times.Never);
-            refresh.Verify(x => x.GenerateRefreshTokenAsync(It.IsAny<string>()), Times.Never);
+            refresh.Verify(x => x.GenerateRefreshTokenAsync(It.IsAny<string>(),It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -168,7 +169,7 @@ namespace ApplicationLayer.Tests.Services.AccountServices.Authentication
             Assert.False(result.Success);
             Assert.Equal(400, result.StatusCode);
             token.Verify(x => x.GenerateTokenAsync(It.IsAny<Customer>()), Times.Never);
-            refresh.Verify(x => x.GenerateRefreshTokenAsync(It.IsAny<string>()), Times.Never);
+            refresh.Verify(x => x.GenerateRefreshTokenAsync(It.IsAny<string>(),It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -194,7 +195,7 @@ namespace ApplicationLayer.Tests.Services.AccountServices.Authentication
 
             Assert.False(result.Success);
             Assert.Equal(500, result.StatusCode);
-            refresh.Verify(x => x.GenerateRefreshTokenAsync(It.IsAny<string>()), Times.Never);
+            refresh.Verify(x => x.GenerateRefreshTokenAsync(It.IsAny<string>(),It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -219,7 +220,7 @@ namespace ApplicationLayer.Tests.Services.AccountServices.Authentication
             userManager.Setup(x => x.GetRolesAsync(user)).ReturnsAsync(new List<string> { "User", "Admin" });
 
             token.Setup(x => x.GenerateTokenAsync(user)).ReturnsAsync(Result<string>.Ok("tok"));
-            refresh.Setup(x => x.GenerateRefreshTokenAsync(user.Id)).ReturnsAsync(Result<string>.Ok("rt"));
+            refresh.Setup(x => x.GenerateRefreshTokenAsync(user.Id,user.SecurityStamp)).ReturnsAsync(Result<string>.Ok("rt"));
 
             var sut = CreateSut(http, logger, userManager, refresh, token);
             var result = await sut.LoginAsync(user.Email, "pwd");
@@ -230,7 +231,7 @@ namespace ApplicationLayer.Tests.Services.AccountServices.Authentication
             Assert.Equal("tok", result.Data.Token);
             Assert.Equal(2, result.Data.Roles.Count);
             userManager.Verify(x => x.UpdateAsync(It.Is<Customer>(c => c.LockoutEnabled)), Times.Once);
-            refresh.Verify(x => x.GenerateRefreshTokenAsync(user.Id), Times.Once);
+            refresh.Verify(x => x.GenerateRefreshTokenAsync(user.Id,user.SecurityStamp), Times.Once);
         }
 
         [Fact]
@@ -316,7 +317,7 @@ namespace ApplicationLayer.Tests.Services.AccountServices.Authentication
             context.Request.Headers["Cookie"] = "Refresh=badtoken";
             http.Setup(x => x.HttpContext).Returns(context);
 
-            refresh.Setup(x => x.RefreshTokenAsync("badtoken")).ReturnsAsync(Result<string>.Fail("bad"));
+            refresh.Setup(x => x.RefreshTokenAsync("badtoken")).ReturnsAsync(Result<RefreshTokenResponse>.Fail("bad"));
             refresh.Setup(x => x.RemoveRefreshTokenAsync("badtoken")).ReturnsAsync(Result<bool>.Ok(true));
 
             var sut = CreateSut(http, logger, userManager, refresh, token);
@@ -341,7 +342,7 @@ namespace ApplicationLayer.Tests.Services.AccountServices.Authentication
             context.Request.Headers["Cookie"] = "Refresh=oktoken";
             http.Setup(x => x.HttpContext).Returns(context);
 
-            refresh.Setup(x => x.RefreshTokenAsync("oktoken")).ReturnsAsync(Result<string>.Ok("newtoken"));
+            refresh.Setup(x => x.RefreshTokenAsync("oktoken")).ReturnsAsync(Result<RefreshTokenResponse>.Ok(new RefreshTokenResponse { }));
 
             var sut = CreateSut(http, logger, userManager, refresh, token);
             var result = await sut.RefreshTokenAsync();

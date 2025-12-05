@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qIa2XtyodkY=",
+  "dgSpecHash": "uQk46jrpODY=",
   "success": true,
-  "projectFilePath": "D:\\project_fashion\\With Clean Arc\\DomainLayer\\DomainLayer.csproj",
+  "projectFilePath": "D:\\projects\\E-Commerce\\With Clean Arc\\DomainLayer\\DomainLayer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\DELL\\.nuget\\packages\\dapper\\1.50.5\\dapper.1.50.5.nupkg.sha512",
     "C:\\Users\\DELL\\.nuget\\packages\\hangfire.core\\1.6.21\\hangfire.core.1.6.21.nupkg.sha512",

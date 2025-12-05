@@ -1,0 +1,1607 @@
+2025-11-23 00:55:12.033 +02:00 [INF] Executed DbCommand (84ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 00:55:12.808 +02:00 [INF] Executed DbCommand (69ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 00:55:12.981 +02:00 [INF] Executed DbCommand (71ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-11-23 00:55:13.015 +02:00 [INF] No migrations were applied. The database is already up to date.
+2025-11-23 00:55:13.066 +02:00 [INF] Starting data seeding...
+2025-11-23 00:55:13.189 +02:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-11-23 00:55:14.072 +02:00 [INF] DB tables already exist. Exit install
+2025-11-23 00:55:14.950 +02:00 [INF] Executed DbCommand (202ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 00:55:15.103 +02:00 [INF] Role 'Admin' already exists.
+2025-11-23 00:55:15.247 +02:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 00:55:15.248 +02:00 [INF] Role 'User' already exists.
+2025-11-23 00:55:15.391 +02:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 00:55:15.393 +02:00 [INF] Role 'SuperAdmin' already exists.
+2025-11-23 00:55:15.531 +02:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 00:55:15.534 +02:00 [INF] Role 'DeliveryCompany' already exists.
+2025-11-23 00:55:15.717 +02:00 [INF] Executed DbCommand (77ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 00:55:16.041 +02:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 00:55:16.219 +02:00 [INF] Executed DbCommand (69ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 00:55:16.246 +02:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-11-23 00:55:16.505 +02:00 [INF] Executed DbCommand (190ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 00:55:16.659 +02:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 00:55:16.818 +02:00 [INF] Executed DbCommand (72ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 00:55:16.821 +02:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-11-23 00:55:16.968 +02:00 [INF] Executed DbCommand (74ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 00:55:17.138 +02:00 [INF] Executed DbCommand (72ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-11-23 00:55:17.170 +02:00 [INF] Execute GetAll for entity PaymentProvider
+2025-11-23 00:55:17.437 +02:00 [INF] Executed DbCommand (99ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-11-23 00:55:17.447 +02:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-11-23 00:55:17.564 +02:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-11-23 00:55:17.565 +02:00 [INF] Data seeding completed successfully.
+2025-11-23 00:55:19.708 +02:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-11-23 00:55:19.708 +02:00 [INF] Using the following options for SQL Server job storage:
+2025-11-23 00:55:19.709 +02:00 [INF]     Queue poll interval: 00:00:10.
+2025-11-23 00:55:19.710 +02:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-11-23 00:55:19.762 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-11-23 00:55:19.762 +02:00 [INF] Hosting environment: Development
+2025-11-23 00:55:19.762 +02:00 [INF] Content root path: D:\project_fashion\With Clean Arc\PresentationLayer
+2025-11-23 00:55:19.914 +02:00 [INF] Server mrrobot:6892:592af546 successfully announced in 153.7862 ms
+2025-11-23 00:55:20.077 +02:00 [INF] Server mrrobot:6892:592af546 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-11-23 00:55:20.307 +02:00 [INF] Server mrrobot:6892:592af546 all the dispatchers started
+2025-11-23 00:55:20.375 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost/api/Products - null null
+2025-11-23 00:55:20.427 +02:00 [WRN] Failed to determine the https port for redirect.
+2025-11-23 00:55:22.316 +02:00 [INF] Executing UserAuthenticationMiddleware
+2025-11-23 00:55:22.335 +02:00 [INF] No cached response available for this request.
+2025-11-23 00:55:22.356 +02:00 [INF] Executing endpoint 'DomainLayer.Controllers.ProductController.GetProducts (E-Commerce)'
+2025-11-23 00:55:22.390 +02:00 [INF] Route matched with {action = "GetProducts", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[ApplicationLayer.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[ApplicationLayer.DtoModels.ProductDtos.ProductDto]]]] GetProducts(System.String, System.Nullable`1[System.Boolean], System.Nullable`1[System.Boolean], Int32, Int32) on controller DomainLayer.Controllers.ProductController (E-Commerce).
+2025-11-23 00:55:22.466 +02:00 [INF] Executing GetProducts
+2025-11-23 00:55:22.487 +02:00 [INF] Getting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_10_True_False_pageSize:10_page:1_tag:AdvancedSearch_IsAdmin:False
+2025-11-23 00:55:22.717 +02:00 [WRN] Cache miss for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_10_True_False_pageSize:10_page:1_tag:AdvancedSearch_IsAdmin:False
+2025-11-23 00:55:22.719 +02:00 [INF] Execute GetAll for entity Product
+2025-11-23 00:55:23.125 +02:00 [INF] Executed DbCommand (102ms) [Parameters=[@__p_1='?' (DbType = Int32), @__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`Name`, `t`.`Description`, `t`.`Quantity`, `t`.`Gender`, `t`.`SubCategoryId`, `t`.`Price`, `t`.`CreatedAt`, `t`.`ModifiedAt`, `t`.`DeletedAt`, `t`.`fitType`, `t`.`IsActive`, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `t`.`Price` - ((`d`.`DiscountPercent` / 100.0) * `t`.`Price`)
+    ELSE `t`.`Price`
+END, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`EndDate`
+    ELSE NULL
+END, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`Name`
+    ELSE NULL
+END, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`DiscountPercent`
+    ELSE 0.0
+END, `d`.`Id`, `t0`.`Id`, `t0`.`Url`
+FROM (
+    SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`DeletedAt`, `p`.`Description`, `p`.`DiscountId`, `p`.`Gender`, `p`.`IsActive`, `p`.`ModifiedAt`, `p`.`Name`, `p`.`Price`, `p`.`Quantity`, `p`.`SubCategoryId`, `p`.`fitType`
+    FROM `Products` AS `p`
+    WHERE `p`.`IsActive` AND (`p`.`DeletedAt` IS NULL)
+    ORDER BY `p`.`Name`
+    LIMIT @__p_1 OFFSET @__p_0
+) AS `t`
+LEFT JOIN `Discount` AS `d` ON `t`.`DiscountId` = `d`.`Id`
+LEFT JOIN (
+    SELECT `i`.`Id`, `i`.`Url`, `i`.`ProductId`
+    FROM `Images` AS `i`
+    WHERE `i`.`DeletedAt` IS NULL
+) AS `t0` ON `t`.`Id` = `t0`.`ProductId`
+ORDER BY `t`.`Name`, `t`.`Id`, `d`.`Id`
+2025-11-23 00:55:24.373 +02:00 [INF] Executing OkObjectResult, writing value of type 'ApplicationLayer.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[ApplicationLayer.DtoModels.ProductDtos.ProductDto, ApplicationLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-11-23 00:55:24.430 +02:00 [INF] Executed action DomainLayer.Controllers.ProductController.GetProducts (E-Commerce) in 2034.8829ms
+2025-11-23 00:55:24.433 +02:00 [INF] Executed endpoint 'DomainLayer.Controllers.ProductController.GetProducts (E-Commerce)'
+2025-11-23 00:55:24.449 +02:00 [INF] The response could not be cached for this request.
+2025-11-23 00:55:24.479 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost/api/Products - 200 9550 application/json; charset=utf-8 4120.023ms
+2025-11-23 00:55:24.578 +02:00 [INF] Server mrrobot:6892:592af546 caught stopping signal...
+2025-11-23 00:55:24.724 +02:00 [INF] Server mrrobot:6892:592af546 All dispatchers stopped
+2025-11-23 00:55:24.724 +02:00 [INF] Application is shutting down...
+2025-11-23 00:55:24.880 +02:00 [INF] Server mrrobot:6892:592af546 successfully reported itself as stopped in 146.055 ms
+2025-11-23 00:55:24.880 +02:00 [INF] Server mrrobot:6892:592af546 has been stopped in total 162.3971 ms
+2025-11-23 01:01:03.362 +02:00 [INF] Executed DbCommand (91ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:01:04.119 +02:00 [INF] Executed DbCommand (74ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:01:04.334 +02:00 [INF] Executed DbCommand (72ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-11-23 01:01:04.358 +02:00 [INF] No migrations were applied. The database is already up to date.
+2025-11-23 01:01:04.368 +02:00 [INF] Starting data seeding...
+2025-11-23 01:01:04.395 +02:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-11-23 01:01:04.671 +02:00 [INF] DB tables already exist. Exit install
+2025-11-23 01:01:05.491 +02:00 [INF] Executed DbCommand (146ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:01:05.625 +02:00 [INF] Role 'Admin' already exists.
+2025-11-23 01:01:05.773 +02:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:01:05.774 +02:00 [INF] Role 'User' already exists.
+2025-11-23 01:01:05.913 +02:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:01:05.914 +02:00 [INF] Role 'SuperAdmin' already exists.
+2025-11-23 01:01:06.054 +02:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:01:06.055 +02:00 [INF] Role 'DeliveryCompany' already exists.
+2025-11-23 01:01:06.241 +02:00 [INF] Executed DbCommand (74ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:01:06.573 +02:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:01:06.762 +02:00 [INF] Executed DbCommand (71ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:01:06.823 +02:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-11-23 01:01:06.983 +02:00 [INF] Executed DbCommand (73ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:01:07.133 +02:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:01:07.275 +02:00 [INF] Executed DbCommand (70ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:01:07.275 +02:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-11-23 01:01:07.420 +02:00 [INF] Executed DbCommand (73ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:01:07.579 +02:00 [INF] Executed DbCommand (70ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-11-23 01:01:07.596 +02:00 [INF] Execute GetAll for entity PaymentProvider
+2025-11-23 01:01:07.833 +02:00 [INF] Executed DbCommand (71ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-11-23 01:01:07.843 +02:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-11-23 01:01:08.008 +02:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-11-23 01:01:08.008 +02:00 [INF] Data seeding completed successfully.
+2025-11-23 01:01:09.481 +02:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-11-23 01:01:09.482 +02:00 [INF] Using the following options for SQL Server job storage:
+2025-11-23 01:01:09.483 +02:00 [INF]     Queue poll interval: 00:00:10.
+2025-11-23 01:01:09.484 +02:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-11-23 01:01:09.518 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-11-23 01:01:09.518 +02:00 [INF] Hosting environment: Development
+2025-11-23 01:01:09.519 +02:00 [INF] Content root path: D:\project_fashion\With Clean Arc\PresentationLayer
+2025-11-23 01:01:09.667 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost/api/Products?page=1;pagesize=5 - null null
+2025-11-23 01:01:09.688 +02:00 [INF] Server mrrobot:17784:bc99aee0 successfully announced in 153.6987 ms
+2025-11-23 01:01:09.699 +02:00 [INF] Server mrrobot:17784:bc99aee0 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-11-23 01:01:09.708 +02:00 [WRN] Failed to determine the https port for redirect.
+2025-11-23 01:01:09.743 +02:00 [INF] Server mrrobot:17784:bc99aee0 all the dispatchers started
+2025-11-23 01:01:09.829 +02:00 [INF] Executing UserAuthenticationMiddleware
+2025-11-23 01:01:09.838 +02:00 [INF] No cached response available for this request.
+2025-11-23 01:01:09.842 +02:00 [INF] Executing endpoint 'DomainLayer.Controllers.ProductController.GetProducts (E-Commerce)'
+2025-11-23 01:01:09.890 +02:00 [INF] Route matched with {action = "GetProducts", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[ApplicationLayer.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[ApplicationLayer.DtoModels.ProductDtos.ProductDto]]]] GetProducts(System.String, System.Nullable`1[System.Boolean], System.Nullable`1[System.Boolean], Int32, Int32) on controller DomainLayer.Controllers.ProductController (E-Commerce).
+2025-11-23 01:01:09.959 +02:00 [INF] Executing GetProducts
+2025-11-23 01:01:09.985 +02:00 [INF] Getting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_10_True_False_pageSize:10_page:1_tag:AdvancedSearch_IsAdmin:False
+2025-11-23 01:01:10.223 +02:00 [WRN] Cache miss for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_10_True_False_pageSize:10_page:1_tag:AdvancedSearch_IsAdmin:False
+2025-11-23 01:01:10.224 +02:00 [INF] Execute GetAll for entity Product
+2025-11-23 01:01:10.922 +02:00 [INF] Executed DbCommand (88ms) [Parameters=[@__p_1='?' (DbType = Int32), @__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`Name`, `t`.`Description`, `t`.`Quantity`, `t`.`Gender`, `t`.`SubCategoryId`, `t`.`Price`, `t`.`CreatedAt`, `t`.`ModifiedAt`, `t`.`DeletedAt`, `t`.`fitType`, `t`.`IsActive`, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `t`.`Price` - ((`d`.`DiscountPercent` / 100.0) * `t`.`Price`)
+    ELSE `t`.`Price`
+END, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`EndDate`
+    ELSE NULL
+END, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`Name`
+    ELSE NULL
+END, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`DiscountPercent`
+    ELSE 0.0
+END, `d`.`Id`, `t0`.`Id`, `t0`.`Url`
+FROM (
+    SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`DeletedAt`, `p`.`Description`, `p`.`DiscountId`, `p`.`Gender`, `p`.`IsActive`, `p`.`ModifiedAt`, `p`.`Name`, `p`.`Price`, `p`.`Quantity`, `p`.`SubCategoryId`, `p`.`fitType`
+    FROM `Products` AS `p`
+    WHERE `p`.`IsActive` AND (`p`.`DeletedAt` IS NULL)
+    ORDER BY `p`.`Name`
+    LIMIT @__p_1 OFFSET @__p_0
+) AS `t`
+LEFT JOIN `Discount` AS `d` ON `t`.`DiscountId` = `d`.`Id`
+LEFT JOIN (
+    SELECT `i`.`Id`, `i`.`Url`, `i`.`ProductId`
+    FROM `Images` AS `i`
+    WHERE `i`.`DeletedAt` IS NULL
+) AS `t0` ON `t`.`Id` = `t0`.`ProductId`
+ORDER BY `t`.`Name`, `t`.`Id`, `d`.`Id`
+2025-11-23 01:01:12.199 +02:00 [INF] Executing OkObjectResult, writing value of type 'ApplicationLayer.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[ApplicationLayer.DtoModels.ProductDtos.ProductDto, ApplicationLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-11-23 01:01:12.290 +02:00 [INF] Executed action DomainLayer.Controllers.ProductController.GetProducts (E-Commerce) in 2394.9892ms
+2025-11-23 01:01:12.300 +02:00 [INF] Executed endpoint 'DomainLayer.Controllers.ProductController.GetProducts (E-Commerce)'
+2025-11-23 01:01:12.303 +02:00 [INF] The response could not be cached for this request.
+2025-11-23 01:01:12.331 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost/api/Products?page=1;pagesize=5 - 200 9550 application/json; charset=utf-8 2660.6425ms
+2025-11-23 01:01:12.535 +02:00 [INF] Server mrrobot:17784:bc99aee0 caught stopping signal...
+2025-11-23 01:01:12.537 +02:00 [INF] Application is shutting down...
+2025-11-23 01:01:13.042 +02:00 [INF] Server mrrobot:17784:bc99aee0 caught stopped signal...
+2025-11-23 01:01:14.346 +02:00 [INF] Server mrrobot:17784:bc99aee0 All dispatchers stopped
+2025-11-23 01:01:14.514 +02:00 [INF] Server mrrobot:17784:bc99aee0 successfully reported itself as stopped in 148.5673 ms
+2025-11-23 01:01:14.514 +02:00 [INF] Server mrrobot:17784:bc99aee0 has been stopped in total 1977.2489 ms
+2025-11-23 01:01:59.610 +02:00 [INF] Executed DbCommand (89ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:02:00.498 +02:00 [INF] Executed DbCommand (72ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:02:00.685 +02:00 [INF] Executed DbCommand (73ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-11-23 01:02:00.708 +02:00 [INF] No migrations were applied. The database is already up to date.
+2025-11-23 01:02:00.718 +02:00 [INF] Starting data seeding...
+2025-11-23 01:02:00.744 +02:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-11-23 01:02:00.939 +02:00 [INF] DB tables already exist. Exit install
+2025-11-23 01:02:01.692 +02:00 [INF] Executed DbCommand (121ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:02:01.772 +02:00 [INF] Role 'Admin' already exists.
+2025-11-23 01:02:01.999 +02:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:02:02.000 +02:00 [INF] Role 'User' already exists.
+2025-11-23 01:02:02.144 +02:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:02:02.145 +02:00 [INF] Role 'SuperAdmin' already exists.
+2025-11-23 01:02:02.292 +02:00 [INF] Executed DbCommand (73ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:02:02.292 +02:00 [INF] Role 'DeliveryCompany' already exists.
+2025-11-23 01:02:02.466 +02:00 [INF] Executed DbCommand (79ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:02:02.851 +02:00 [INF] Executed DbCommand (73ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:02:03.026 +02:00 [INF] Executed DbCommand (71ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:02:03.045 +02:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-11-23 01:02:03.195 +02:00 [INF] Executed DbCommand (77ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:02:03.373 +02:00 [INF] Executed DbCommand (74ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:02:03.520 +02:00 [INF] Executed DbCommand (73ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:02:03.520 +02:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-11-23 01:02:03.670 +02:00 [INF] Executed DbCommand (76ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:02:03.830 +02:00 [INF] Executed DbCommand (74ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-11-23 01:02:03.839 +02:00 [INF] Execute GetAll for entity PaymentProvider
+2025-11-23 01:02:04.101 +02:00 [INF] Executed DbCommand (75ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-11-23 01:02:04.106 +02:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-11-23 01:02:04.187 +02:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-11-23 01:02:04.187 +02:00 [INF] Data seeding completed successfully.
+2025-11-23 01:02:05.504 +02:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-11-23 01:02:05.505 +02:00 [INF] Using the following options for SQL Server job storage:
+2025-11-23 01:02:05.505 +02:00 [INF]     Queue poll interval: 00:00:10.
+2025-11-23 01:02:05.506 +02:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-11-23 01:02:05.526 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-11-23 01:02:05.526 +02:00 [INF] Hosting environment: Development
+2025-11-23 01:02:05.526 +02:00 [INF] Content root path: D:\project_fashion\With Clean Arc\PresentationLayer
+2025-11-23 01:02:05.573 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost/api/Products?page=1;PageSize=5 - null null
+2025-11-23 01:02:05.601 +02:00 [WRN] Failed to determine the https port for redirect.
+2025-11-23 01:02:05.689 +02:00 [INF] Server mrrobot:11180:0dcd61ba successfully announced in 154.5221 ms
+2025-11-23 01:02:05.692 +02:00 [INF] Executing UserAuthenticationMiddleware
+2025-11-23 01:02:05.693 +02:00 [INF] Server mrrobot:11180:0dcd61ba is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-11-23 01:02:05.702 +02:00 [INF] No cached response available for this request.
+2025-11-23 01:02:05.706 +02:00 [INF] Executing endpoint 'DomainLayer.Controllers.ProductController.GetProducts (E-Commerce)'
+2025-11-23 01:02:05.720 +02:00 [INF] Server mrrobot:11180:0dcd61ba all the dispatchers started
+2025-11-23 01:02:05.739 +02:00 [INF] Route matched with {action = "GetProducts", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[ApplicationLayer.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[ApplicationLayer.DtoModels.ProductDtos.ProductDto]]]] GetProducts(System.String, System.Nullable`1[System.Boolean], System.Nullable`1[System.Boolean], Int32, Int32) on controller DomainLayer.Controllers.ProductController (E-Commerce).
+2025-11-23 01:02:05.808 +02:00 [INF] Executing GetProducts
+2025-11-23 01:02:05.829 +02:00 [INF] Getting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_10_True_False_pageSize:10_page:1_tag:AdvancedSearch_IsAdmin:False
+2025-11-23 01:02:06.055 +02:00 [WRN] Cache miss for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_10_True_False_pageSize:10_page:1_tag:AdvancedSearch_IsAdmin:False
+2025-11-23 01:02:06.055 +02:00 [INF] Execute GetAll for entity Product
+2025-11-23 01:02:06.764 +02:00 [INF] Executed DbCommand (85ms) [Parameters=[@__p_1='?' (DbType = Int32), @__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`Name`, `t`.`Description`, `t`.`Quantity`, `t`.`Gender`, `t`.`SubCategoryId`, `t`.`Price`, `t`.`CreatedAt`, `t`.`ModifiedAt`, `t`.`DeletedAt`, `t`.`fitType`, `t`.`IsActive`, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `t`.`Price` - ((`d`.`DiscountPercent` / 100.0) * `t`.`Price`)
+    ELSE `t`.`Price`
+END, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`EndDate`
+    ELSE NULL
+END, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`Name`
+    ELSE NULL
+END, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`DiscountPercent`
+    ELSE 0.0
+END, `d`.`Id`, `t0`.`Id`, `t0`.`Url`
+FROM (
+    SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`DeletedAt`, `p`.`Description`, `p`.`DiscountId`, `p`.`Gender`, `p`.`IsActive`, `p`.`ModifiedAt`, `p`.`Name`, `p`.`Price`, `p`.`Quantity`, `p`.`SubCategoryId`, `p`.`fitType`
+    FROM `Products` AS `p`
+    WHERE `p`.`IsActive` AND (`p`.`DeletedAt` IS NULL)
+    ORDER BY `p`.`Name`
+    LIMIT @__p_1 OFFSET @__p_0
+) AS `t`
+LEFT JOIN `Discount` AS `d` ON `t`.`DiscountId` = `d`.`Id`
+LEFT JOIN (
+    SELECT `i`.`Id`, `i`.`Url`, `i`.`ProductId`
+    FROM `Images` AS `i`
+    WHERE `i`.`DeletedAt` IS NULL
+) AS `t0` ON `t`.`Id` = `t0`.`ProductId`
+ORDER BY `t`.`Name`, `t`.`Id`, `d`.`Id`
+2025-11-23 01:02:07.946 +02:00 [INF] Executing OkObjectResult, writing value of type 'ApplicationLayer.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[ApplicationLayer.DtoModels.ProductDtos.ProductDto, ApplicationLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-11-23 01:02:08.077 +02:00 [INF] Executed action DomainLayer.Controllers.ProductController.GetProducts (E-Commerce) in 2312.2275ms
+2025-11-23 01:02:08.093 +02:00 [INF] Executed endpoint 'DomainLayer.Controllers.ProductController.GetProducts (E-Commerce)'
+2025-11-23 01:02:08.095 +02:00 [INF] The response could not be cached for this request.
+2025-11-23 01:02:08.108 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost/api/Products?page=1;PageSize=5 - 200 9550 application/json; charset=utf-8 2534.2278ms
+2025-11-23 01:02:08.118 +02:00 [INF] Setting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_10_True_False_pageSize:10_page:1_tag:_IsAdmin:False
+2025-11-23 01:02:08.278 +02:00 [INF] Server mrrobot:11180:0dcd61ba caught stopping signal...
+2025-11-23 01:02:08.283 +02:00 [INF] Application is shutting down...
+2025-11-23 01:02:08.412 +02:00 [INF] Cache set successfully for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_10_True_False_pageSize:10_page:1_tag:_IsAdmin:False with tags: [ProductList]
+2025-11-23 01:02:08.787 +02:00 [INF] Server mrrobot:11180:0dcd61ba caught stopped signal...
+2025-11-23 01:02:10.300 +02:00 [INF] Server mrrobot:11180:0dcd61ba All dispatchers stopped
+2025-11-23 01:02:10.447 +02:00 [INF] Server mrrobot:11180:0dcd61ba successfully reported itself as stopped in 143.8933 ms
+2025-11-23 01:02:10.448 +02:00 [INF] Server mrrobot:11180:0dcd61ba has been stopped in total 2165.6023 ms
+2025-11-23 01:04:15.189 +02:00 [INF] Executed DbCommand (87ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:04:15.966 +02:00 [INF] Executed DbCommand (77ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:04:16.186 +02:00 [INF] Executed DbCommand (79ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-11-23 01:04:16.237 +02:00 [INF] No migrations were applied. The database is already up to date.
+2025-11-23 01:04:16.259 +02:00 [INF] Starting data seeding...
+2025-11-23 01:04:16.300 +02:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-11-23 01:04:16.497 +02:00 [INF] DB tables already exist. Exit install
+2025-11-23 01:04:17.122 +02:00 [INF] Executed DbCommand (117ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:04:17.199 +02:00 [INF] Role 'Admin' already exists.
+2025-11-23 01:04:17.355 +02:00 [INF] Executed DbCommand (77ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:04:17.356 +02:00 [INF] Role 'User' already exists.
+2025-11-23 01:04:17.503 +02:00 [INF] Executed DbCommand (73ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:04:17.503 +02:00 [INF] Role 'SuperAdmin' already exists.
+2025-11-23 01:04:17.652 +02:00 [INF] Executed DbCommand (74ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:04:17.654 +02:00 [INF] Role 'DeliveryCompany' already exists.
+2025-11-23 01:04:17.955 +02:00 [INF] Executed DbCommand (206ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:04:18.249 +02:00 [INF] Executed DbCommand (79ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:04:18.457 +02:00 [INF] Executed DbCommand (78ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:04:18.501 +02:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-11-23 01:04:18.655 +02:00 [INF] Executed DbCommand (79ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:04:18.854 +02:00 [INF] Executed DbCommand (73ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:04:19.006 +02:00 [INF] Executed DbCommand (76ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:04:19.015 +02:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-11-23 01:04:19.180 +02:00 [INF] Executed DbCommand (89ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:04:19.357 +02:00 [INF] Executed DbCommand (74ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-11-23 01:04:19.366 +02:00 [INF] Execute GetAll for entity PaymentProvider
+2025-11-23 01:04:19.594 +02:00 [INF] Executed DbCommand (77ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-11-23 01:04:19.597 +02:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-11-23 01:04:19.668 +02:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-11-23 01:04:19.668 +02:00 [INF] Data seeding completed successfully.
+2025-11-23 01:04:20.961 +02:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-11-23 01:04:20.961 +02:00 [INF] Using the following options for SQL Server job storage:
+2025-11-23 01:04:20.962 +02:00 [INF]     Queue poll interval: 00:00:10.
+2025-11-23 01:04:20.962 +02:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-11-23 01:04:20.980 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-11-23 01:04:20.980 +02:00 [INF] Hosting environment: Development
+2025-11-23 01:04:20.981 +02:00 [INF] Content root path: D:\project_fashion\With Clean Arc\PresentationLayer
+2025-11-23 01:04:21.027 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost/api/Products?page=1&pageSize=5 - null null
+2025-11-23 01:04:21.058 +02:00 [WRN] Failed to determine the https port for redirect.
+2025-11-23 01:04:21.150 +02:00 [INF] Server mrrobot:20188:13f0f565 successfully announced in 160.6748 ms
+2025-11-23 01:04:21.153 +02:00 [INF] Executing UserAuthenticationMiddleware
+2025-11-23 01:04:21.156 +02:00 [INF] Server mrrobot:20188:13f0f565 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-11-23 01:04:21.165 +02:00 [INF] No cached response available for this request.
+2025-11-23 01:04:21.174 +02:00 [INF] Executing endpoint 'DomainLayer.Controllers.ProductController.GetProducts (E-Commerce)'
+2025-11-23 01:04:21.182 +02:00 [INF] Server mrrobot:20188:13f0f565 all the dispatchers started
+2025-11-23 01:04:21.206 +02:00 [INF] Route matched with {action = "GetProducts", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[ApplicationLayer.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[ApplicationLayer.DtoModels.ProductDtos.ProductDto]]]] GetProducts(System.String, System.Nullable`1[System.Boolean], System.Nullable`1[System.Boolean], Int32, Int32) on controller DomainLayer.Controllers.ProductController (E-Commerce).
+2025-11-23 01:04:21.265 +02:00 [INF] Executing GetProducts
+2025-11-23 01:04:21.291 +02:00 [INF] Getting cache for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_5_True_False_pageSize:5_page:1_tag:AdvancedSearch_IsAdmin:False
+2025-11-23 01:04:21.570 +02:00 [WRN] Cache miss for key: Product:list_active:True_deleted:False_search:advsearch_{"SearchTerm":null,"Subcategoryid":null,"Gender":null,"FitType":null,"MinPrice":null,"MaxPrice":null,"InStock":null,"OnSale":null,"SortBy":null,"SortDescending":false,"Color":null,"MinSize":null,"MaxSize":null}_1_5_True_False_pageSize:5_page:1_tag:AdvancedSearch_IsAdmin:False
+2025-11-23 01:04:21.571 +02:00 [INF] Execute GetAll for entity Product
+2025-11-23 01:04:22.416 +02:00 [INF] Executed DbCommand (83ms) [Parameters=[@__p_1='?' (DbType = Int32), @__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`Name`, `t`.`Description`, `t`.`Quantity`, `t`.`Gender`, `t`.`SubCategoryId`, `t`.`Price`, `t`.`CreatedAt`, `t`.`ModifiedAt`, `t`.`DeletedAt`, `t`.`fitType`, `t`.`IsActive`, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `t`.`Price` - ((`d`.`DiscountPercent` / 100.0) * `t`.`Price`)
+    ELSE `t`.`Price`
+END, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`EndDate`
+    ELSE NULL
+END, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`Name`
+    ELSE NULL
+END, CASE
+    WHEN ((`d`.`Id` IS NOT NULL AND `d`.`IsActive`) AND `d`.`DeletedAt` IS NULL) AND (`d`.`EndDate` > UTC_TIMESTAMP()) THEN `d`.`DiscountPercent`
+    ELSE 0.0
+END, `d`.`Id`, `t0`.`Id`, `t0`.`Url`
+FROM (
+    SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`DeletedAt`, `p`.`Description`, `p`.`DiscountId`, `p`.`Gender`, `p`.`IsActive`, `p`.`ModifiedAt`, `p`.`Name`, `p`.`Price`, `p`.`Quantity`, `p`.`SubCategoryId`, `p`.`fitType`
+    FROM `Products` AS `p`
+    WHERE `p`.`IsActive` AND (`p`.`DeletedAt` IS NULL)
+    ORDER BY `p`.`Name`
+    LIMIT @__p_1 OFFSET @__p_0
+) AS `t`
+LEFT JOIN `Discount` AS `d` ON `t`.`DiscountId` = `d`.`Id`
+LEFT JOIN (
+    SELECT `i`.`Id`, `i`.`Url`, `i`.`ProductId`
+    FROM `Images` AS `i`
+    WHERE `i`.`DeletedAt` IS NULL
+) AS `t0` ON `t`.`Id` = `t0`.`ProductId`
+ORDER BY `t`.`Name`, `t`.`Id`, `d`.`Id`
+2025-11-23 01:04:23.563 +02:00 [INF] Executing OkObjectResult, writing value of type 'ApplicationLayer.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[ApplicationLayer.DtoModels.ProductDtos.ProductDto, ApplicationLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-11-23 01:04:23.634 +02:00 [INF] Executed action DomainLayer.Controllers.ProductController.GetProducts (E-Commerce) in 2422.3878ms
+2025-11-23 01:04:23.639 +02:00 [INF] Executed endpoint 'DomainLayer.Controllers.ProductController.GetProducts (E-Commerce)'
+2025-11-23 01:04:23.641 +02:00 [INF] The response could not be cached for this request.
+2025-11-23 01:04:23.658 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost/api/Products?page=1&pageSize=5 - 200 5022 application/json; charset=utf-8 2629.0207ms
+2025-11-23 01:04:23.777 +02:00 [INF] Server mrrobot:20188:13f0f565 caught stopping signal...
+2025-11-23 01:04:23.778 +02:00 [INF] Application is shutting down...
+2025-11-23 01:04:23.785 +02:00 [INF] Server mrrobot:20188:13f0f565 All dispatchers stopped
+2025-11-23 01:04:23.930 +02:00 [INF] Server mrrobot:20188:13f0f565 successfully reported itself as stopped in 140.6053 ms
+2025-11-23 01:04:23.931 +02:00 [INF] Server mrrobot:20188:13f0f565 has been stopped in total 152.7883 ms
+2025-11-23 01:32:00.823 +02:00 [INF] Executed DbCommand (100ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:32:01.615 +02:00 [INF] Executed DbCommand (71ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:32:01.802 +02:00 [INF] Executed DbCommand (72ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-11-23 01:32:01.825 +02:00 [INF] No migrations were applied. The database is already up to date.
+2025-11-23 01:32:01.834 +02:00 [INF] Starting data seeding...
+2025-11-23 01:32:01.867 +02:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-11-23 01:32:02.054 +02:00 [INF] DB tables already exist. Exit install
+2025-11-23 01:32:02.602 +02:00 [INF] Executed DbCommand (117ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:32:02.729 +02:00 [INF] Role 'Admin' already exists.
+2025-11-23 01:32:02.877 +02:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:32:02.883 +02:00 [INF] Role 'User' already exists.
+2025-11-23 01:32:03.026 +02:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:32:03.026 +02:00 [INF] Role 'SuperAdmin' already exists.
+2025-11-23 01:32:03.168 +02:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:32:03.168 +02:00 [INF] Role 'DeliveryCompany' already exists.
+2025-11-23 01:32:03.356 +02:00 [INF] Executed DbCommand (76ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:32:03.641 +02:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:32:03.879 +02:00 [INF] Executed DbCommand (90ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:32:03.929 +02:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-11-23 01:32:04.077 +02:00 [INF] Executed DbCommand (77ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:32:04.260 +02:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:32:04.408 +02:00 [INF] Executed DbCommand (73ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:32:04.408 +02:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-11-23 01:32:04.554 +02:00 [INF] Executed DbCommand (75ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:32:04.710 +02:00 [INF] Executed DbCommand (69ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-11-23 01:32:04.715 +02:00 [INF] Execute GetAll for entity PaymentProvider
+2025-11-23 01:32:04.909 +02:00 [INF] Executed DbCommand (70ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-11-23 01:32:04.917 +02:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-11-23 01:32:05.051 +02:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-11-23 01:32:05.051 +02:00 [INF] Data seeding completed successfully.
+2025-11-23 01:32:06.527 +02:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-11-23 01:32:06.528 +02:00 [INF] Using the following options for SQL Server job storage:
+2025-11-23 01:32:06.529 +02:00 [INF]     Queue poll interval: 00:00:10.
+2025-11-23 01:32:06.529 +02:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-11-23 01:32:06.557 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-11-23 01:32:06.557 +02:00 [INF] Hosting environment: Development
+2025-11-23 01:32:06.558 +02:00 [INF] Content root path: D:\project_fashion\With Clean Arc\PresentationLayer
+2025-11-23 01:32:06.617 +02:00 [INF] Server mrrobot:22436:b1a95aa2 caught stopping signal...
+2025-11-23 01:32:06.618 +02:00 [INF] Application is shutting down...
+2025-11-23 01:32:06.779 +02:00 [INF] Server mrrobot:22436:b1a95aa2 successfully announced in 212.8678 ms
+2025-11-23 01:32:06.786 +02:00 [INF] Server mrrobot:22436:b1a95aa2 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-11-23 01:32:06.803 +02:00 [INF] Server mrrobot:22436:b1a95aa2 all the dispatchers started
+2025-11-23 01:32:06.807 +02:00 [INF] Server mrrobot:22436:b1a95aa2 All dispatchers stopped
+2025-11-23 01:32:07.067 +02:00 [INF] Server mrrobot:22436:b1a95aa2 successfully reported itself as stopped in 252.7849 ms
+2025-11-23 01:32:07.068 +02:00 [INF] Server mrrobot:22436:b1a95aa2 has been stopped in total 450.4106 ms
+2025-11-23 01:35:00.149 +02:00 [INF] Executed DbCommand (87ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:35:01.202 +02:00 [INF] Executed DbCommand (74ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:35:01.382 +02:00 [INF] Executed DbCommand (79ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-11-23 01:35:01.407 +02:00 [INF] No migrations were applied. The database is already up to date.
+2025-11-23 01:35:01.460 +02:00 [INF] Starting data seeding...
+2025-11-23 01:35:01.500 +02:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-11-23 01:35:01.709 +02:00 [INF] DB tables already exist. Exit install
+2025-11-23 01:35:02.256 +02:00 [INF] Executed DbCommand (121ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:35:02.331 +02:00 [INF] Role 'Admin' already exists.
+2025-11-23 01:35:02.483 +02:00 [INF] Executed DbCommand (74ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:35:02.488 +02:00 [INF] Role 'User' already exists.
+2025-11-23 01:35:02.637 +02:00 [INF] Executed DbCommand (73ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:35:02.644 +02:00 [INF] Role 'SuperAdmin' already exists.
+2025-11-23 01:35:02.794 +02:00 [INF] Executed DbCommand (76ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:35:02.799 +02:00 [INF] Role 'DeliveryCompany' already exists.
+2025-11-23 01:35:03.065 +02:00 [INF] Executed DbCommand (77ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:35:03.329 +02:00 [INF] Executed DbCommand (74ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:35:03.515 +02:00 [INF] Executed DbCommand (73ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:35:03.535 +02:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-11-23 01:35:03.784 +02:00 [INF] Executed DbCommand (140ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:35:04.040 +02:00 [INF] Executed DbCommand (81ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:35:04.226 +02:00 [INF] Executed DbCommand (79ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:35:04.230 +02:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-11-23 01:35:04.375 +02:00 [INF] Executed DbCommand (74ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:35:04.541 +02:00 [INF] Executed DbCommand (73ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-11-23 01:35:04.562 +02:00 [INF] Execute GetAll for entity PaymentProvider
+2025-11-23 01:35:04.805 +02:00 [INF] Executed DbCommand (74ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-11-23 01:35:04.814 +02:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-11-23 01:35:04.899 +02:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-11-23 01:35:04.899 +02:00 [INF] Data seeding completed successfully.
+2025-11-23 01:35:07.623 +02:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-11-23 01:35:07.623 +02:00 [INF] Using the following options for SQL Server job storage:
+2025-11-23 01:35:07.624 +02:00 [INF]     Queue poll interval: 00:00:10.
+2025-11-23 01:35:07.625 +02:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-11-23 01:35:07.643 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-11-23 01:35:07.643 +02:00 [INF] Hosting environment: Development
+2025-11-23 01:35:07.643 +02:00 [INF] Content root path: D:\project_fashion\With Clean Arc\PresentationLayer
+2025-11-23 01:35:07.736 +02:00 [INF] Request starting HTTP/1.1 POST http://localhost/api/Products - application/json; charset=utf-8 111
+2025-11-23 01:35:07.767 +02:00 [WRN] Failed to determine the https port for redirect.
+2025-11-23 01:35:07.818 +02:00 [INF] Server mrrobot:11552:655b0427 successfully announced in 168.211 ms
+2025-11-23 01:35:07.824 +02:00 [INF] Server mrrobot:11552:655b0427 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-11-23 01:35:07.845 +02:00 [INF] Server mrrobot:11552:655b0427 all the dispatchers started
+2025-11-23 01:35:07.868 +02:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin|SuperAdmin)
+2025-11-23 01:35:07.875 +02:00 [INF] AuthenticationScheme: Bearer was challenged.
+2025-11-23 01:35:07.882 +02:00 [INF] Request finished HTTP/1.1 POST http://localhost/api/Products - 401 null null 148.8351ms
+2025-11-23 01:35:08.008 +02:00 [INF] Server mrrobot:11552:655b0427 caught stopping signal...
+2025-11-23 01:35:08.009 +02:00 [INF] Application is shutting down...
+2025-11-23 01:35:08.513 +02:00 [INF] Server mrrobot:11552:655b0427 caught stopped signal...
+2025-11-23 01:35:09.826 +02:00 [INF] Server mrrobot:11552:655b0427 All dispatchers stopped
+2025-11-23 01:35:10.334 +02:00 [INF] Server mrrobot:11552:655b0427 successfully reported itself as stopped in 502.2747 ms
+2025-11-23 01:35:10.335 +02:00 [INF] Server mrrobot:11552:655b0427 has been stopped in total 2325.8565 ms
+2025-11-23 01:36:50.572 +02:00 [INF] Executed DbCommand (448ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:37:06.763 +02:00 [INF] Executed DbCommand (213ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:37:08.507 +02:00 [INF] Executed DbCommand (1,630ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-11-23 01:37:08.562 +02:00 [INF] No migrations were applied. The database is already up to date.
+2025-11-23 01:37:08.580 +02:00 [INF] Starting data seeding...
+2025-11-23 01:37:08.644 +02:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-11-23 01:37:09.874 +02:00 [INF] DB tables already exist. Exit install
+2025-11-23 01:37:11.670 +02:00 [INF] Executed DbCommand (314ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:37:11.761 +02:00 [INF] Role 'Admin' already exists.
+2025-11-23 01:37:27.596 +02:00 [INF] Executed DbCommand (9,830ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:37:27.603 +02:00 [INF] Role 'User' already exists.
+2025-11-23 01:37:28.419 +02:00 [INF] Executed DbCommand (75ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:37:28.420 +02:00 [INF] Role 'SuperAdmin' already exists.
+2025-11-23 01:37:28.567 +02:00 [INF] Executed DbCommand (73ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:37:28.571 +02:00 [INF] Role 'DeliveryCompany' already exists.
+2025-11-23 01:37:28.804 +02:00 [INF] Executed DbCommand (125ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:37:29.213 +02:00 [INF] Executed DbCommand (172ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:37:29.872 +02:00 [INF] Executed DbCommand (395ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:37:29.894 +02:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-11-23 01:37:31.469 +02:00 [INF] Executed DbCommand (1,255ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:37:31.860 +02:00 [INF] Executed DbCommand (74ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:37:32.046 +02:00 [INF] Executed DbCommand (81ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:37:32.047 +02:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-11-23 01:37:32.212 +02:00 [INF] Executed DbCommand (84ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:37:32.381 +02:00 [INF] Executed DbCommand (72ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-11-23 01:37:32.386 +02:00 [INF] Execute GetAll for entity PaymentProvider
+2025-11-23 01:37:32.669 +02:00 [INF] Executed DbCommand (84ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-11-23 01:37:32.674 +02:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-11-23 01:37:32.748 +02:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-11-23 01:37:32.748 +02:00 [INF] Data seeding completed successfully.
+2025-11-23 01:37:35.295 +02:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-11-23 01:37:35.295 +02:00 [INF] Using the following options for SQL Server job storage:
+2025-11-23 01:37:35.296 +02:00 [INF]     Queue poll interval: 00:00:10.
+2025-11-23 01:37:35.296 +02:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-11-23 01:37:35.318 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-11-23 01:37:35.318 +02:00 [INF] Hosting environment: Development
+2025-11-23 01:37:35.318 +02:00 [INF] Content root path: D:\project_fashion\With Clean Arc\PresentationLayer
+2025-11-23 01:37:35.402 +02:00 [INF] Request starting HTTP/1.1 POST http://localhost/api/Products - application/json; charset=utf-8 239
+2025-11-23 01:37:35.432 +02:00 [WRN] Failed to determine the https port for redirect.
+2025-11-23 01:37:35.521 +02:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin|SuperAdmin)
+2025-11-23 01:37:35.528 +02:00 [INF] AuthenticationScheme: Bearer was challenged.
+2025-11-23 01:37:35.535 +02:00 [INF] Request finished HTTP/1.1 POST http://localhost/api/Products - 401 null null 135.0703ms
+2025-11-23 01:37:35.651 +02:00 [INF] Server mrrobot:3052:31ca487b caught stopping signal...
+2025-11-23 01:37:35.652 +02:00 [INF] Application is shutting down...
+2025-11-23 01:37:36.168 +02:00 [INF] Server mrrobot:3052:31ca487b caught stopped signal...
+2025-11-23 01:37:36.390 +02:00 [INF] Server mrrobot:3052:31ca487b successfully announced in 1063.0069 ms
+2025-11-23 01:37:36.533 +02:00 [INF] Server mrrobot:3052:31ca487b is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-11-23 01:37:36.560 +02:00 [INF] Server mrrobot:3052:31ca487b all the dispatchers started
+2025-11-23 01:37:36.563 +02:00 [INF] Server mrrobot:3052:31ca487b All dispatchers stopped
+2025-11-23 01:37:37.176 +02:00 [INF] Server mrrobot:3052:31ca487b successfully reported itself as stopped in 605.4708 ms
+2025-11-23 01:37:37.176 +02:00 [INF] Server mrrobot:3052:31ca487b has been stopped in total 1524.8341 ms
+2025-11-23 01:38:52.525 +02:00 [INF] Executed DbCommand (87ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:38:54.550 +02:00 [INF] Executed DbCommand (69ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:38:54.792 +02:00 [INF] Executed DbCommand (116ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-11-23 01:38:54.849 +02:00 [INF] No migrations were applied. The database is already up to date.
+2025-11-23 01:38:54.871 +02:00 [INF] Starting data seeding...
+2025-11-23 01:38:54.936 +02:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-11-23 01:38:55.236 +02:00 [INF] DB tables already exist. Exit install
+2025-11-23 01:38:56.270 +02:00 [INF] Executed DbCommand (131ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:38:56.352 +02:00 [INF] Role 'Admin' already exists.
+2025-11-23 01:38:56.680 +02:00 [INF] Executed DbCommand (232ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:38:56.685 +02:00 [INF] Role 'User' already exists.
+2025-11-23 01:38:56.825 +02:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:38:56.827 +02:00 [INF] Role 'SuperAdmin' already exists.
+2025-11-23 01:38:57.084 +02:00 [INF] Executed DbCommand (77ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:38:57.085 +02:00 [INF] Role 'DeliveryCompany' already exists.
+2025-11-23 01:38:57.346 +02:00 [INF] Executed DbCommand (76ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:38:57.997 +02:00 [INF] Executed DbCommand (382ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:38:58.462 +02:00 [INF] Executed DbCommand (83ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:38:58.521 +02:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-11-23 01:38:59.898 +02:00 [INF] Executed DbCommand (1,269ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:39:01.847 +02:00 [INF] Executed DbCommand (597ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:39:02.429 +02:00 [INF] Executed DbCommand (376ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:39:02.438 +02:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-11-23 01:39:03.172 +02:00 [INF] Executed DbCommand (663ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:39:03.624 +02:00 [INF] Executed DbCommand (224ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-11-23 01:39:03.638 +02:00 [INF] Execute GetAll for entity PaymentProvider
+2025-11-23 01:39:04.244 +02:00 [INF] Executed DbCommand (418ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-11-23 01:39:04.249 +02:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-11-23 01:39:04.314 +02:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-11-23 01:39:04.314 +02:00 [INF] Data seeding completed successfully.
+2025-11-23 01:39:07.000 +02:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-11-23 01:39:07.001 +02:00 [INF] Using the following options for SQL Server job storage:
+2025-11-23 01:39:07.002 +02:00 [INF]     Queue poll interval: 00:00:10.
+2025-11-23 01:39:07.002 +02:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-11-23 01:39:07.029 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-11-23 01:39:07.030 +02:00 [INF] Hosting environment: Development
+2025-11-23 01:39:07.030 +02:00 [INF] Content root path: D:\project_fashion\With Clean Arc\PresentationLayer
+2025-11-23 01:39:07.159 +02:00 [INF] Request starting HTTP/1.1 POST http://localhost/api/Products - application/json; charset=utf-8 111
+2025-11-23 01:39:07.190 +02:00 [WRN] Failed to determine the https port for redirect.
+2025-11-23 01:39:07.398 +02:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin|SuperAdmin)
+2025-11-23 01:39:07.404 +02:00 [INF] AuthenticationScheme: Bearer was challenged.
+2025-11-23 01:39:07.416 +02:00 [INF] Request finished HTTP/1.1 POST http://localhost/api/Products - 401 null null 258.1808ms
+2025-11-23 01:39:07.530 +02:00 [INF] Server mrrobot:17592:84e6cb10 caught stopping signal...
+2025-11-23 01:39:07.531 +02:00 [INF] Application is shutting down...
+2025-11-23 01:39:07.535 +02:00 [INF] Server mrrobot:17592:84e6cb10 successfully announced in 494.4026 ms
+2025-11-23 01:39:07.547 +02:00 [INF] Server mrrobot:17592:84e6cb10 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-11-23 01:39:07.556 +02:00 [INF] Server mrrobot:17592:84e6cb10 all the dispatchers started
+2025-11-23 01:39:07.559 +02:00 [INF] Server mrrobot:17592:84e6cb10 All dispatchers stopped
+2025-11-23 01:39:07.717 +02:00 [INF] Server mrrobot:17592:84e6cb10 successfully reported itself as stopped in 153.8581 ms
+2025-11-23 01:39:07.717 +02:00 [INF] Server mrrobot:17592:84e6cb10 has been stopped in total 186.3939 ms
+2025-11-23 01:40:44.954 +02:00 [ERR] An error occurred using the connection to database '' on server 'mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com'.
+2025-11-23 01:42:29.307 +02:00 [ERR] An error occurred using the connection to database '' on server 'mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com'.
+2025-11-23 01:42:51.859 +02:00 [ERR] An error occurred using the connection to database '' on server 'mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com'.
+2025-11-23 01:44:12.316 +02:00 [INF] Executed DbCommand (83ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:44:13.827 +02:00 [INF] Executed DbCommand (97ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:44:14.179 +02:00 [INF] Executed DbCommand (209ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-11-23 01:44:14.227 +02:00 [INF] No migrations were applied. The database is already up to date.
+2025-11-23 01:44:14.237 +02:00 [INF] Starting data seeding...
+2025-11-23 01:44:14.275 +02:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-11-23 01:44:16.513 +02:00 [INF] DB tables already exist. Exit install
+2025-11-23 01:44:17.997 +02:00 [INF] Executed DbCommand (324ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:44:18.092 +02:00 [INF] Role 'Admin' already exists.
+2025-11-23 01:44:20.108 +02:00 [INF] Executed DbCommand (198ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:44:20.109 +02:00 [INF] Role 'User' already exists.
+2025-11-23 01:44:21.166 +02:00 [INF] Executed DbCommand (885ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:44:21.166 +02:00 [INF] Role 'SuperAdmin' already exists.
+2025-11-23 01:44:21.385 +02:00 [INF] Executed DbCommand (96ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:44:21.385 +02:00 [INF] Role 'DeliveryCompany' already exists.
+2025-11-23 01:44:21.850 +02:00 [INF] Executed DbCommand (339ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:44:23.007 +02:00 [INF] Executed DbCommand (797ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:44:23.293 +02:00 [INF] Executed DbCommand (105ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:44:23.316 +02:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-11-23 01:44:24.514 +02:00 [INF] Executed DbCommand (981ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:44:25.618 +02:00 [INF] Executed DbCommand (1,008ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:44:27.867 +02:00 [INF] Executed DbCommand (781ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:44:27.873 +02:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-11-23 01:44:28.307 +02:00 [INF] Executed DbCommand (348ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:44:28.684 +02:00 [INF] Executed DbCommand (77ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-11-23 01:44:28.692 +02:00 [INF] Execute GetAll for entity PaymentProvider
+2025-11-23 01:44:28.932 +02:00 [INF] Executed DbCommand (93ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-11-23 01:44:28.945 +02:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-11-23 01:44:29.030 +02:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-11-23 01:44:29.030 +02:00 [INF] Data seeding completed successfully.
+2025-11-23 01:44:34.667 +02:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-11-23 01:44:34.668 +02:00 [INF] Using the following options for SQL Server job storage:
+2025-11-23 01:44:34.668 +02:00 [INF]     Queue poll interval: 00:00:10.
+2025-11-23 01:44:34.669 +02:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-11-23 01:44:34.687 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-11-23 01:44:34.688 +02:00 [INF] Hosting environment: Development
+2025-11-23 01:44:34.688 +02:00 [INF] Content root path: D:\project_fashion\With Clean Arc\PresentationLayer
+2025-11-23 01:44:34.911 +02:00 [INF] Server mrrobot:4084:b85b332d successfully announced in 213.624 ms
+2025-11-23 01:44:34.915 +02:00 [INF] Server mrrobot:4084:b85b332d is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-11-23 01:44:34.934 +02:00 [INF] Server mrrobot:4084:b85b332d all the dispatchers started
+2025-11-23 01:44:35.050 +02:00 [INF] Request starting HTTP/1.1 POST http://localhost/api/Products - application/json; charset=utf-8 111
+2025-11-23 01:44:35.084 +02:00 [WRN] Failed to determine the https port for redirect.
+2025-11-23 01:44:36.904 +02:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin|SuperAdmin)
+2025-11-23 01:44:36.912 +02:00 [INF] AuthenticationScheme: Bearer was challenged.
+2025-11-23 01:44:36.922 +02:00 [INF] Request finished HTTP/1.1 POST http://localhost/api/Products - 401 null null 1871.8777ms
+2025-11-23 01:44:37.010 +02:00 [INF] Server mrrobot:4084:b85b332d caught stopping signal...
+2025-11-23 01:44:37.015 +02:00 [INF] Application is shutting down...
+2025-11-23 01:44:37.535 +02:00 [INF] Server mrrobot:4084:b85b332d caught stopped signal...
+2025-11-23 01:44:52.031 +02:00 [WRN] Server mrrobot:4084:b85b332d caught shutdown signal...
+2025-11-23 01:44:52.032 +02:00 [WRN] Server mrrobot:4084:b85b332d stopped non-gracefully due to Worker. Outstanding work on those dispatchers could be aborted, and there can be delays in background processing. This server instance will be incorrectly shown as active for a while. To avoid non-graceful shutdowns, investigate what prevents from stopping gracefully and add CancellationToken support for those methods.
+2025-11-23 01:44:52.260 +02:00 [INF] Server mrrobot:4084:b85b332d successfully reported itself as stopped in 225.2538 ms
+2025-11-23 01:44:52.260 +02:00 [INF] Server mrrobot:4084:b85b332d has been stopped in total 15249.1719 ms
+2025-11-23 01:45:10.097 +02:00 [INF] Executed DbCommand (100ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:45:10.937 +02:00 [INF] Executed DbCommand (77ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:45:11.216 +02:00 [INF] Executed DbCommand (83ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-11-23 01:45:11.274 +02:00 [INF] No migrations were applied. The database is already up to date.
+2025-11-23 01:45:11.288 +02:00 [INF] Starting data seeding...
+2025-11-23 01:45:11.330 +02:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-11-23 01:45:11.607 +02:00 [INF] DB tables already exist. Exit install
+2025-11-23 01:45:12.448 +02:00 [INF] Executed DbCommand (119ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:45:12.750 +02:00 [INF] Role 'Admin' already exists.
+2025-11-23 01:45:13.242 +02:00 [INF] Executed DbCommand (390ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:45:13.243 +02:00 [INF] Role 'User' already exists.
+2025-11-23 01:45:13.500 +02:00 [INF] Executed DbCommand (137ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:45:13.504 +02:00 [INF] Role 'SuperAdmin' already exists.
+2025-11-23 01:45:13.652 +02:00 [INF] Executed DbCommand (75ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:45:13.654 +02:00 [INF] Role 'DeliveryCompany' already exists.
+2025-11-23 01:45:13.888 +02:00 [INF] Executed DbCommand (132ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:45:14.473 +02:00 [INF] Executed DbCommand (166ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:45:15.517 +02:00 [INF] Executed DbCommand (448ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:45:15.535 +02:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-11-23 01:45:16.242 +02:00 [INF] Executed DbCommand (630ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:45:16.544 +02:00 [INF] Executed DbCommand (198ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:45:16.699 +02:00 [INF] Executed DbCommand (74ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:45:16.703 +02:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-11-23 01:45:16.937 +02:00 [INF] Executed DbCommand (152ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:45:17.123 +02:00 [INF] Executed DbCommand (92ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-11-23 01:45:17.133 +02:00 [INF] Execute GetAll for entity PaymentProvider
+2025-11-23 01:45:17.364 +02:00 [INF] Executed DbCommand (73ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-11-23 01:45:17.374 +02:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-11-23 01:45:17.463 +02:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-11-23 01:45:17.463 +02:00 [INF] Data seeding completed successfully.
+2025-11-23 01:45:19.365 +02:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-11-23 01:45:19.365 +02:00 [INF] Using the following options for SQL Server job storage:
+2025-11-23 01:45:19.366 +02:00 [INF]     Queue poll interval: 00:00:10.
+2025-11-23 01:45:19.366 +02:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-11-23 01:45:19.384 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-11-23 01:45:19.385 +02:00 [INF] Hosting environment: Development
+2025-11-23 01:45:19.385 +02:00 [INF] Content root path: D:\project_fashion\With Clean Arc\PresentationLayer
+2025-11-23 01:45:19.469 +02:00 [INF] Request starting HTTP/1.1 POST http://localhost/api/Products - application/json; charset=utf-8 111
+2025-11-23 01:45:19.497 +02:00 [WRN] Failed to determine the https port for redirect.
+2025-11-23 01:45:19.582 +02:00 [INF] Server mrrobot:22252:b4bf6e81 successfully announced in 187.7108 ms
+2025-11-23 01:45:19.588 +02:00 [INF] Server mrrobot:22252:b4bf6e81 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-11-23 01:45:19.594 +02:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin|SuperAdmin)
+2025-11-23 01:45:19.602 +02:00 [INF] AuthenticationScheme: Bearer was challenged.
+2025-11-23 01:45:19.611 +02:00 [INF] Request finished HTTP/1.1 POST http://localhost/api/Products - 401 null null 143.3446ms
+2025-11-23 01:45:19.624 +02:00 [INF] Server mrrobot:22252:b4bf6e81 all the dispatchers started
+2025-11-23 01:45:19.660 +02:00 [INF] Server mrrobot:22252:b4bf6e81 caught stopping signal...
+2025-11-23 01:45:19.662 +02:00 [INF] Application is shutting down...
+2025-11-23 01:45:20.173 +02:00 [INF] Server mrrobot:22252:b4bf6e81 caught stopped signal...
+2025-11-23 01:45:34.670 +02:00 [WRN] Server mrrobot:22252:b4bf6e81 caught shutdown signal...
+2025-11-23 01:45:34.671 +02:00 [WRN] Server mrrobot:22252:b4bf6e81 stopped non-gracefully due to Worker. Outstanding work on those dispatchers could be aborted, and there can be delays in background processing. This server instance will be incorrectly shown as active for a while. To avoid non-graceful shutdowns, investigate what prevents from stopping gracefully and add CancellationToken support for those methods.
+2025-11-23 01:45:34.829 +02:00 [INF] Server mrrobot:22252:b4bf6e81 successfully reported itself as stopped in 150.5673 ms
+2025-11-23 01:45:34.830 +02:00 [INF] Server mrrobot:22252:b4bf6e81 has been stopped in total 15168.8549 ms
+2025-11-23 01:52:26.036 +02:00 [INF] Executed DbCommand (92ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:52:26.811 +02:00 [INF] Executed DbCommand (97ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:52:27.207 +02:00 [INF] Executed DbCommand (76ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-11-23 01:52:27.278 +02:00 [INF] No migrations were applied. The database is already up to date.
+2025-11-23 01:52:27.308 +02:00 [INF] Starting data seeding...
+2025-11-23 01:52:27.395 +02:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-11-23 01:52:27.844 +02:00 [INF] DB tables already exist. Exit install
+2025-11-23 01:52:28.980 +02:00 [INF] Executed DbCommand (120ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:52:29.065 +02:00 [INF] Role 'Admin' already exists.
+2025-11-23 01:52:29.217 +02:00 [INF] Executed DbCommand (77ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:52:29.220 +02:00 [INF] Role 'User' already exists.
+2025-11-23 01:52:29.358 +02:00 [INF] Executed DbCommand (69ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:52:29.359 +02:00 [INF] Role 'SuperAdmin' already exists.
+2025-11-23 01:52:29.511 +02:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:52:29.512 +02:00 [INF] Role 'DeliveryCompany' already exists.
+2025-11-23 01:52:29.691 +02:00 [INF] Executed DbCommand (75ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:52:30.402 +02:00 [INF] Executed DbCommand (71ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:52:31.265 +02:00 [INF] Executed DbCommand (69ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:52:31.286 +02:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-11-23 01:52:31.657 +02:00 [INF] Executed DbCommand (301ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:52:31.811 +02:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:52:31.958 +02:00 [INF] Executed DbCommand (69ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:52:31.959 +02:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-11-23 01:52:32.125 +02:00 [INF] Executed DbCommand (74ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:52:32.292 +02:00 [INF] Executed DbCommand (83ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-11-23 01:52:32.308 +02:00 [INF] Execute GetAll for entity PaymentProvider
+2025-11-23 01:52:32.805 +02:00 [INF] Executed DbCommand (364ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-11-23 01:52:32.815 +02:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-11-23 01:52:33.044 +02:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-11-23 01:52:33.044 +02:00 [INF] Data seeding completed successfully.
+2025-11-23 01:52:34.770 +02:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-11-23 01:52:34.771 +02:00 [INF] Using the following options for SQL Server job storage:
+2025-11-23 01:52:34.771 +02:00 [INF]     Queue poll interval: 00:00:10.
+2025-11-23 01:52:34.772 +02:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-11-23 01:52:34.792 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-11-23 01:52:34.792 +02:00 [INF] Hosting environment: Development
+2025-11-23 01:52:34.792 +02:00 [INF] Content root path: D:\project_fashion\With Clean Arc\PresentationLayer
+2025-11-23 01:52:34.877 +02:00 [INF] Request starting HTTP/1.1 POST http://localhost/api/Account/login - application/json; charset=utf-8 61
+2025-11-23 01:52:34.909 +02:00 [WRN] Failed to determine the https port for redirect.
+2025-11-23 01:52:34.960 +02:00 [INF] Server mrrobot:21288:0b586bba successfully announced in 160.1515 ms
+2025-11-23 01:52:34.969 +02:00 [INF] Server mrrobot:21288:0b586bba is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-11-23 01:52:35.008 +02:00 [INF] Server mrrobot:21288:0b586bba all the dispatchers started
+2025-11-23 01:52:35.039 +02:00 [INF] Executing UserAuthenticationMiddleware
+2025-11-23 01:52:35.052 +02:00 [INF] Executing endpoint 'DomainLayer.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-11-23 01:52:35.104 +02:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[ApplicationLayer.DtoModels.Responses.ApiResponse`1[ApplicationLayer.DtoModels.TokenDtos.TokensDto]]] LoginAsync(ApplicationLayer.DtoModels.AccountDtos.LoginDTo) on controller DomainLayer.Controllers.AccountController (E-Commerce).
+2025-11-23 01:52:35.211 +02:00 [INF] In LoginAsync Method 
+2025-11-23 01:52:35.878 +02:00 [INF] Executed DbCommand (419ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:52:36.578 +02:00 [INF] ?? Generating Access Token for User ID: 5dfa2304-4d13-4852-9adb-5e789391207e
+2025-11-23 01:52:36.580 +02:00 [INF] ?? Generating Access Token for User ID: 5dfa2304-4d13-4852-9adb-5e789391207e
+2025-11-23 01:52:36.887 +02:00 [INF] Executed DbCommand (148ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-11-23 01:52:37.267 +02:00 [INF] Executed DbCommand (276ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:52:37.624 +02:00 [INF] Executed DbCommand (104ms) [Parameters=[@p21='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p22='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = DateTime), @p10='?' (DbType = Boolean), @p11='?' (DbType = DateTimeOffset), @p12='?' (Size = 4000), @p13='?' (Size = 256), @p14='?' (Size = 256), @p15='?' (Size = 4000), @p16='?' (Size = 4000), @p17='?' (DbType = Boolean), @p18='?' (Size = 4000), @p19='?' (DbType = Boolean), @p20='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `LastVisit` = @p9, `LockoutEnabled` = @p10, `LockoutEnd` = @p11, `Name` = @p12, `NormalizedEmail` = @p13, `NormalizedUserName` = @p14, `PasswordHash` = @p15, `PhoneNumber` = @p16, `PhoneNumberConfirmed` = @p17, `SecurityStamp` = @p18, `TwoFactorEnabled` = @p19, `UserName` = @p20
+WHERE `Id` = @p21 AND `ConcurrencyStamp` = @p22;
+SELECT ROW_COUNT();
+2025-11-23 01:52:38.004 +02:00 [INF] Executed DbCommand (77ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-11-23 01:52:38.128 +02:00 [INF] ? Access Token generated successfully for User ID: 5dfa2304-4d13-4852-9adb-5e789391207e
+2025-11-23 01:52:38.130 +02:00 [INF] ?? Generating Refresh Token for User ID: 5dfa2304-4d13-4852-9adb-5e789391207e
+2025-11-23 01:52:38.466 +02:00 [INF] ? RefreshToken generated and stored for User ID: 5dfa2304-4d13-4852-9adb-5e789391207e
+2025-11-23 01:52:38.619 +02:00 [INF] Executed DbCommand (71ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-11-23 01:52:38.724 +02:00 [INF] Executing OkObjectResult, writing value of type 'ApplicationLayer.DtoModels.Responses.ApiResponse`1[[ApplicationLayer.DtoModels.TokenDtos.TokensDto, ApplicationLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-11-23 01:52:38.776 +02:00 [INF] Executed action DomainLayer.Controllers.AccountController.LoginAsync (E-Commerce) in 3660.3038ms
+2025-11-23 01:52:38.784 +02:00 [INF] Executed endpoint 'DomainLayer.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-11-23 01:52:38.805 +02:00 [INF] Request finished HTTP/1.1 POST http://localhost/api/Account/login - 200 1255 application/json; charset=utf-8 3928.146ms
+2025-11-23 01:52:38.869 +02:00 [INF] Request starting HTTP/1.1 POST http://localhost/api/Products - application/json; charset=utf-8 111
+2025-11-23 01:52:38.989 +02:00 [INF] Executing UserAuthenticationMiddleware
+2025-11-23 01:52:39.526 +02:00 [INF] Executed DbCommand (69ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-11-23 01:52:39.530 +02:00 [INF] Executing endpoint 'DomainLayer.Controllers.ProductController.CreateProduct (E-Commerce)'
+2025-11-23 01:52:39.544 +02:00 [INF] Route matched with {action = "CreateProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[ApplicationLayer.DtoModels.Responses.ApiResponse`1[ApplicationLayer.DtoModels.ProductDtos.ProductDto]]] CreateProduct(ApplicationLayer.DtoModels.ProductDtos.CreateProductDto) on controller DomainLayer.Controllers.ProductController (E-Commerce).
+2025-11-23 01:52:39.573 +02:00 [INF] Executing CreateProduct
+2025-11-23 01:52:39.575 +02:00 [ERR] Validation Errors: System.Collections.Generic.List`1[System.String]
+2025-11-23 01:52:39.577 +02:00 [INF] Executing BadRequestObjectResult, writing value of type 'ApplicationLayer.DtoModels.Responses.ApiResponse`1[[ApplicationLayer.DtoModels.ProductDtos.ProductDto, ApplicationLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-11-23 01:52:39.582 +02:00 [INF] Executed action DomainLayer.Controllers.ProductController.CreateProduct (E-Commerce) in 37.9018ms
+2025-11-23 01:52:39.583 +02:00 [INF] Executed endpoint 'DomainLayer.Controllers.ProductController.CreateProduct (E-Commerce)'
+2025-11-23 01:52:39.584 +02:00 [INF] Request finished HTTP/1.1 POST http://localhost/api/Products - 400 212 application/json; charset=utf-8 714.8038ms
+2025-11-23 01:52:39.631 +02:00 [INF] Server mrrobot:21288:0b586bba caught stopping signal...
+2025-11-23 01:52:39.635 +02:00 [INF] Application is shutting down...
+2025-11-23 01:52:39.641 +02:00 [INF] Server mrrobot:21288:0b586bba All dispatchers stopped
+2025-11-23 01:52:39.786 +02:00 [INF] Server mrrobot:21288:0b586bba successfully reported itself as stopped in 140.485 ms
+2025-11-23 01:52:39.786 +02:00 [INF] Server mrrobot:21288:0b586bba has been stopped in total 152.1234 ms
+2025-11-23 01:53:41.260 +02:00 [INF] Executed DbCommand (97ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:53:42.288 +02:00 [INF] Executed DbCommand (73ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-11-23 01:53:42.475 +02:00 [INF] Executed DbCommand (77ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-11-23 01:53:42.512 +02:00 [INF] No migrations were applied. The database is already up to date.
+2025-11-23 01:53:42.524 +02:00 [INF] Starting data seeding...
+2025-11-23 01:53:42.568 +02:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-11-23 01:53:42.785 +02:00 [INF] DB tables already exist. Exit install
+2025-11-23 01:53:44.014 +02:00 [INF] Executed DbCommand (181ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:53:44.149 +02:00 [INF] Role 'Admin' already exists.
+2025-11-23 01:53:44.484 +02:00 [INF] Executed DbCommand (244ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:53:44.488 +02:00 [INF] Role 'User' already exists.
+2025-11-23 01:53:45.314 +02:00 [INF] Executed DbCommand (637ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:53:45.315 +02:00 [INF] Role 'SuperAdmin' already exists.
+2025-11-23 01:53:47.154 +02:00 [INF] Executed DbCommand (1,690ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-11-23 01:53:47.156 +02:00 [INF] Role 'DeliveryCompany' already exists.
+2025-11-23 01:53:47.534 +02:00 [INF] Executed DbCommand (92ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:53:48.014 +02:00 [INF] Executed DbCommand (139ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:53:48.221 +02:00 [INF] Executed DbCommand (80ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:53:48.440 +02:00 [INF] Admin user Omargamal1132004@gmail.com already exists.
+2025-11-23 01:53:48.656 +02:00 [INF] Executed DbCommand (126ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:53:48.834 +02:00 [INF] Executed DbCommand (89ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedRoleName_0
+LIMIT 2
+2025-11-23 01:53:48.995 +02:00 [INF] Executed DbCommand (77ms) [Parameters=[@__p_0='?' (Size = 255), @__p_1='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`UserId`, `a`.`RoleId`
+FROM `AspNetUserRoles` AS `a`
+WHERE (`a`.`UserId` = @__p_0) AND (`a`.`RoleId` = @__p_1)
+LIMIT 1
+2025-11-23 01:53:48.996 +02:00 [INF] Admin user Og4381146@gmail.com already exists.
+2025-11-23 01:53:49.257 +02:00 [INF] Executed DbCommand (83ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:53:49.428 +02:00 [INF] Executed DbCommand (78ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Email` = @__adminEmail_0)
+LIMIT 1
+2025-11-23 01:53:49.464 +02:00 [INF] Execute GetAll for entity PaymentProvider
+2025-11-23 01:53:50.310 +02:00 [INF] Executed DbCommand (182ms) [Parameters=[@__ToLower_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `PaymentProviders` AS `p`
+    WHERE (LOWER(`p`.`Name`) = @__ToLower_0) AND `p`.`DeletedAt` IS NULL)
+2025-11-23 01:53:50.396 +02:00 [WRN] Payment provider with name 'Paymob' already exists
+2025-11-23 01:53:50.590 +02:00 [WRN] Failed to ensure payment provider 'Paymob'.
+2025-11-23 01:53:50.590 +02:00 [INF] Data seeding completed successfully.
+2025-11-23 01:53:52.752 +02:00 [INF] Starting Hangfire Server using job storage: 'Server: mysql-3581f657-omargamal1132004-b0c1.b.aivencloud.com@Fashion_Site'
+2025-11-23 01:53:52.754 +02:00 [INF] Using the following options for SQL Server job storage:
+2025-11-23 01:53:52.755 +02:00 [INF]     Queue poll interval: 00:00:10.
+2025-11-23 01:53:52.756 +02:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-11-23 01:53:52.782 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-11-23 01:53:52.782 +02:00 [INF] Hosting environment: Development
+2025-11-23 01:53:52.782 +02:00 [INF] Content root path: D:\project_fashion\With Clean Arc\PresentationLayer
+2025-11-23 01:53:53.035 +02:00 [INF] Request starting HTTP/1.1 POST http://localhost/api/Account/login - application/json; charset=utf-8 61
+2025-11-23 01:53:53.060 +02:00 [INF] Server mrrobot:19448:5e62173d successfully announced in 255.249 ms
+2025-11-23 01:53:53.069 +02:00 [INF] Server mrrobot:19448:5e62173d is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-11-23 01:53:53.143 +02:00 [INF] Server mrrobot:19448:5e62173d all the dispatchers started
+2025-11-23 01:53:53.160 +02:00 [WRN] Failed to determine the https port for redirect.
+2025-11-23 01:53:54.109 +02:00 [INF] Executing UserAuthenticationMiddleware
+2025-11-23 01:53:54.128 +02:00 [INF] Executing endpoint 'DomainLayer.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-11-23 01:53:54.182 +02:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[ApplicationLayer.DtoModels.Responses.ApiResponse`1[ApplicationLayer.DtoModels.TokenDtos.TokensDto]]] LoginAsync(ApplicationLayer.DtoModels.AccountDtos.LoginDTo) on controller DomainLayer.Controllers.AccountController (E-Commerce).
+2025-11-23 01:53:54.497 +02:00 [INF] In LoginAsync Method 
+2025-11-23 01:53:54.819 +02:00 [INF] Executed DbCommand (232ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:53:56.124 +02:00 [INF] ?? Generating Access Token for User ID: 5dfa2304-4d13-4852-9adb-5e789391207e
+2025-11-23 01:53:56.161 +02:00 [INF] ?? Generating Access Token for User ID: 5dfa2304-4d13-4852-9adb-5e789391207e
+2025-11-23 01:53:57.687 +02:00 [INF] Executed DbCommand (280ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedUserName` = @__normalizedUserName_0)
+LIMIT 1
+2025-11-23 01:53:59.409 +02:00 [INF] Executed DbCommand (421ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`Gender`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-11-23 01:54:02.729 +02:00 [INF] Executed DbCommand (101ms) [Parameters=[@p21='?' (Size = 255), @p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p22='?' (Size = 4000), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (DbType = Int32), @p8='?' (DbType = Int32), @p9='?' (DbType = DateTime), @p10='?' (DbType = Boolean), @p11='?' (DbType = DateTimeOffset), @p12='?' (Size = 4000), @p13='?' (Size = 256), @p14='?' (Size = 256), @p15='?' (Size = 4000), @p16='?' (Size = 4000), @p17='?' (DbType = Boolean), @p18='?' (Size = 4000), @p19='?' (DbType = Boolean), @p20='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `AspNetUsers` SET `AccessFailedCount` = @p0, `Age` = @p1, `ConcurrencyStamp` = @p2, `CreateAt` = @p3, `DeletedAt` = @p4, `Email` = @p5, `EmailConfirmed` = @p6, `Gender` = @p7, `ImageId` = @p8, `LastVisit` = @p9, `LockoutEnabled` = @p10, `LockoutEnd` = @p11, `Name` = @p12, `NormalizedEmail` = @p13, `NormalizedUserName` = @p14, `PasswordHash` = @p15, `PhoneNumber` = @p16, `PhoneNumberConfirmed` = @p17, `SecurityStamp` = @p18, `TwoFactorEnabled` = @p19, `UserName` = @p20
+WHERE `Id` = @p21 AND `ConcurrencyStamp` = @p22;
+SELECT ROW_COUNT();
+2025-11-23 01:54:03.166 +02:00 [INF] Executed DbCommand (92ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-11-23 01:54:03.347 +02:00 [INF] ? Access Token generated successfully for User ID: 5dfa2304-4d13-4852-9adb-5e789391207e
+2025-11-23 01:54:03.372 +02:00 [INF] ?? Generating Refresh Token for User ID: 5dfa2304-4d13-4852-9adb-5e789391207e
+2025-11-23 01:54:03.650 +02:00 [INF] ? RefreshToken generated and stored for User ID: 5dfa2304-4d13-4852-9adb-5e789391207e
+2025-11-23 01:54:03.908 +02:00 [INF] Executed DbCommand (150ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-11-23 01:54:04.082 +02:00 [INF] Executing OkObjectResult, writing value of type 'ApplicationLayer.DtoModels.Responses.ApiResponse`1[[ApplicationLayer.DtoModels.TokenDtos.TokensDto, ApplicationLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-11-23 01:54:04.712 +02:00 [INF] Executed action DomainLayer.Controllers.AccountController.LoginAsync (E-Commerce) in 10498.296ms
+2025-11-23 01:54:04.773 +02:00 [INF] Executed endpoint 'DomainLayer.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-11-23 01:54:04.862 +02:00 [INF] Request finished HTTP/1.1 POST http://localhost/api/Account/login - 200 1255 application/json; charset=utf-8 11830.1846ms
+2025-11-23 01:54:05.141 +02:00 [INF] Request starting HTTP/1.1 POST http://localhost/api/Products - application/json; charset=utf-8 111
+2025-11-23 01:54:05.474 +02:00 [INF] Executing UserAuthenticationMiddleware
+2025-11-23 01:54:06.161 +02:00 [INF] Executed DbCommand (77ms) [Parameters=[@__userId_0='?' (Size = 255), @__tokenSecurityStamp_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM `AspNetUsers` AS `a`
+    WHERE (`a`.`Discriminator` = 'Customer') AND ((`a`.`Id` = @__userId_0) AND (`a`.`SecurityStamp` = @__tokenSecurityStamp_1)))
+2025-11-23 01:54:06.177 +02:00 [INF] Executing endpoint 'DomainLayer.Controllers.ProductController.CreateProduct (E-Commerce)'
+2025-11-23 01:54:06.216 +02:00 [INF] Route matched with {action = "CreateProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[ApplicationLayer.DtoModels.Responses.ApiResponse`1[ApplicationLayer.DtoModels.ProductDtos.ProductDto]]] CreateProduct(ApplicationLayer.DtoModels.ProductDtos.CreateProductDto) on controller DomainLayer.Controllers.ProductController (E-Commerce).
+2025-11-23 01:54:06.382 +02:00 [INF] Executing CreateProduct
+2025-11-23 01:54:06.417 +02:00 [ERR] Validation Errors: System.Collections.Generic.List`1[System.String]
+2025-11-23 01:54:06.439 +02:00 [INF] Executing BadRequestObjectResult, writing value of type 'ApplicationLayer.DtoModels.Responses.ApiResponse`1[[ApplicationLayer.DtoModels.ProductDtos.ProductDto, ApplicationLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-11-23 01:54:06.457 +02:00 [INF] Executed action DomainLayer.Controllers.ProductController.CreateProduct (E-Commerce) in 239.8366ms
+2025-11-23 01:54:06.457 +02:00 [INF] Executed endpoint 'DomainLayer.Controllers.ProductController.CreateProduct (E-Commerce)'
+2025-11-23 01:54:06.459 +02:00 [INF] Request finished HTTP/1.1 POST http://localhost/api/Products - 400 212 application/json; charset=utf-8 1317.7962ms
+2025-11-23 01:54:07.011 +02:00 [INF] Server mrrobot:19448:5e62173d caught stopping signal...
+2025-11-23 01:54:07.014 +02:00 [INF] Application is shutting down...
+2025-11-23 01:54:07.053 +02:00 [INF] Server mrrobot:19448:5e62173d All dispatchers stopped
+2025-11-23 01:54:07.270 +02:00 [INF] Server mrrobot:19448:5e62173d successfully reported itself as stopped in 175.7503 ms
+2025-11-23 01:54:07.271 +02:00 [INF] Server mrrobot:19448:5e62173d has been stopped in total 257.2468 ms

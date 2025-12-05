@@ -53,7 +53,7 @@ namespace ApplicationLayer.Services.AdminOperationServices
 			}
 			return Result<AdminOperationsLog>.Ok(created);
 		}
-		public async Task<Result<List<OpreationDto>>> GetAllOpreationsAsync(string? userid=null,string?name=null,Opreations? opreation=null)
+		public async Task<Result<List<OpreationDto>>> GetAllOpreationsAsync(int page=1,int pagesize=10,string? userid=null,string?name=null,Opreations? opreation=null)
 		{
 			_logger.LogInformation($"Execute {nameof(GetAllOpreationsAsync)}");
 			var adminopreations =  _unitOfWork.Repository<AdminOperationsLog>().GetAll();
@@ -65,7 +65,9 @@ namespace ApplicationLayer.Services.AdminOperationServices
 				adminopreations = adminopreations.Where(a => a.OperationType == opreation);
 			if (adminopreations == null || !adminopreations.Any())
 				return Result<List<OpreationDto>>.Fail("No admin operations found",404);
-			var adminopreationDtos = await adminopreations.Select(o => new OpreationDto
+			if(page <= 0) page = 1;
+			if(pagesize <= 0) pagesize = 10;
+			var adminopreationDtos = await adminopreations.Skip((page-1)*pagesize).Take(pagesize).Select(o => new OpreationDto
 			{
 				Description = o.Description,
 				Id = o.AdminId,

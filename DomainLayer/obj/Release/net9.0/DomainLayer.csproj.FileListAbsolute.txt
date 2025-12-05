@@ -11,3 +11,16 @@ D:\project_fashion\With Clean Arc\DomainLayer\obj\Release\net9.0\DomainLayer.dll
 D:\project_fashion\With Clean Arc\DomainLayer\obj\Release\net9.0\refint\DomainLayer.dll
 D:\project_fashion\With Clean Arc\DomainLayer\obj\Release\net9.0\DomainLayer.pdb
 D:\project_fashion\With Clean Arc\DomainLayer\obj\Release\net9.0\ref\DomainLayer.dll
+D:\projects\E-Commerce\With Clean Arc\DomainLayer\bin\Release\net9.0\DomainLayer.deps.json
+D:\projects\E-Commerce\With Clean Arc\DomainLayer\bin\Release\net9.0\DomainLayer.dll
+D:\projects\E-Commerce\With Clean Arc\DomainLayer\bin\Release\net9.0\DomainLayer.pdb
+D:\projects\E-Commerce\With Clean Arc\DomainLayer\obj\Release\net9.0\DomainLayer.csproj.AssemblyReference.cache
+D:\projects\E-Commerce\With Clean Arc\DomainLayer\obj\Release\net9.0\DomainLayer.GeneratedMSBuildEditorConfig.editorconfig
+D:\projects\E-Commerce\With Clean Arc\DomainLayer\obj\Release\net9.0\DomainLayer.AssemblyInfoInputs.cache
+D:\projects\E-Commerce\With Clean Arc\DomainLayer\obj\Release\net9.0\DomainLayer.AssemblyInfo.cs
+D:\projects\E-Commerce\With Clean Arc\DomainLayer\obj\Release\net9.0\DomainLayer.csproj.CoreCompileInputs.cache
+D:\projects\E-Commerce\With Clean Arc\DomainLayer\obj\Release\net9.0\DomainLayer.sourcelink.json
+D:\projects\E-Commerce\With Clean Arc\DomainLayer\obj\Release\net9.0\DomainLayer.dll
+D:\projects\E-Commerce\With Clean Arc\DomainLayer\obj\Release\net9.0\refint\DomainLayer.dll
+D:\projects\E-Commerce\With Clean Arc\DomainLayer\obj\Release\net9.0\DomainLayer.pdb
+D:\projects\E-Commerce\With Clean Arc\DomainLayer\obj\Release\net9.0\ref\DomainLayer.dll

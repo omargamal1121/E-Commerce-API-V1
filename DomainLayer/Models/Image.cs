@@ -33,5 +33,6 @@ namespace DomainLayer.Models
         public Product? Product { get; set; }
         public int? CollectionId { get; set; }
         public Collection? Collection { get; set; }
+		public string? CloudinaryPublicId { get; set; }
 	}
 } 

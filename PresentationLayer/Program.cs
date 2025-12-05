@@ -284,8 +284,8 @@ namespace DomainLayer
 					options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 				}).AddCookie( options =>
                 {
-                    options.Cookie.SameSite = SameSiteMode.None; // مهم للـ OAuth
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // HTTPS فقط
+                    options.Cookie.SameSite = SameSiteMode.None;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
                     options.Cookie.HttpOnly = true;
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(10); // Short expiration
                 }).AddGoogle(o=>
@@ -346,7 +346,7 @@ namespace DomainLayer
             app.UseAuthentication();        
             app.UseAuthorization();
             app.UseUserAuthentication();
-			app.UseMiddleware<SecurityStampMiddleware>();
+			//app.UseMiddleware<SecurityStampMiddleware>();
 			app.UseStaticFiles();
 			app.UseResponseCaching();
             app.UseHangfireDashboard("/hangfire", new DashboardOptions

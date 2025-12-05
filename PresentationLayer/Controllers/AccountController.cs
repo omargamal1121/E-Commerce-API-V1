@@ -74,9 +74,9 @@ namespace DomainLayer.Controllers
 		[HttpPost("login")]
 		[ActionName(nameof(LoginAsync))]
 		[ProducesResponseType(typeof(ApiResponse<TokensDto>), StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status401Unauthorized)]
-		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
+		[ProducesResponseType(typeof(ApiResponse<TokensDto>), StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(ApiResponse<TokensDto>), StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(typeof(ApiResponse<TokensDto>), StatusCodes.Status500InternalServerError)]
 		public async Task<ActionResult<ApiResponse<TokensDto>>> LoginAsync([FromBody] LoginDTo login)
 		{
 			try

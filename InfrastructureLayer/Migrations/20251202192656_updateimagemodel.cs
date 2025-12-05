@@ -12,12 +12,12 @@ namespace InfrastructureLayer.Migrations
         {
           
 
-            migrationBuilder.AddColumn<string>(
-                name: "CloudinaryPublicId",
-                table: "Images",
-                type: "longtext",
-                nullable: true)
-                .Annotation("MySql:CharSet", "utf8mb4");
+            //migrationBuilder.AddColumn<string>(
+            //    name: "CloudinaryPublicId",
+            //    table: "Images",
+            //    type: "longtext",
+            //    nullable: true)
+            //    .Annotation("MySql:CharSet", "utf8mb4");
 
            
         }
@@ -29,9 +29,9 @@ namespace InfrastructureLayer.Migrations
 
            
 
-            migrationBuilder.DropColumn(
-                name: "CloudinaryPublicId",
-                table: "Images");
+            //migrationBuilder.DropColumn(
+            //    name: "CloudinaryPublicId",
+            //    table: "Images");
 
           
         }

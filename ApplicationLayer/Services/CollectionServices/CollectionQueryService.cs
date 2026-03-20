@@ -104,7 +104,7 @@ namespace ApplicationLayer.Services.CollectionServices
 
                 var query = _collectionRepository.GetCollectionsByName(searchTerm, IsActive, IsDeleted);
                 query = BasicFilter(query, IsActive, IsDeleted, IsAdmin);
-                var collectionDtos = await _mapper.CollectionSelector(query)
+                var collectionDtos = await _mapper.CollectionSelector(query, IsAdmin)
                     .OrderBy(x => x.DisplayOrder)
                     .ThenBy(x => x.CreatedAt)
                     .Skip((page - 1) * pagesize)

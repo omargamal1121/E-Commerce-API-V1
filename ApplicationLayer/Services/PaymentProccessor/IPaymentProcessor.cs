@@ -7,7 +7,7 @@ namespace ApplicationLayer.Services.PaymentProccessor
 {
 	public interface IPaymentProcessor
 	{
-		Task<Result<PaymentLinkResult>> GetPaymentLinkAsync(CreatePayment dto, int expries);
+		Task<Result<PaymentLinkResult>> GetPaymentLinkAsync(CreatePayment dto, int expries, long? orderproviderid=null);
 		 Task<Result<PaymobPaymentStatusDto>> GetPaymentStatusAsync(long orderId);
 	}
 }

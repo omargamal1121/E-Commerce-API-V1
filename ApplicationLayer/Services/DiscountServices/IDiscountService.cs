@@ -9,7 +9,7 @@ namespace ApplicationLayer.Services.DiscountServices
 	{
 		// Basic CRUD Operations
 
-		Task<Result<DiscountDto>> GetDiscountByIdAsync(int id, bool? isActive = null, bool? isDeleted = null);
+		Task<Result<DiscountDto>> GetDiscountByIdAsync(int id, bool? isActive = null, bool? isDeleted = null,bool isAdmin=false);
 		Task<Result<DiscountDto>> CreateDiscountAsync(CreateDiscountDto dto, string userId);
 		Task<Result<DiscountDto>> UpdateDiscountAsync(int id, UpdateDiscountDto dto, string userId);
 		Task<Result<bool>> DeleteDiscountAsync(int id, string userId);

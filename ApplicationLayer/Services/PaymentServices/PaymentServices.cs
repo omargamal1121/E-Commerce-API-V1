@@ -1,25 +1,19 @@
-using DomainLayer.Enums;
-
+﻿using ApplicationLayer.DtoModels.PaymentDtos;
 using ApplicationLayer.Interfaces;
-using DomainLayer.Models;
-
+using ApplicationLayer.Services.CollectionServices;
 using ApplicationLayer.Services.EmailServices;
+using ApplicationLayer.Services.OrderService;
 using ApplicationLayer.Services.PaymentMethodsServices;
 using ApplicationLayer.Services.PaymentProccessor;
 using ApplicationLayer.Services.ProductServices;
 using ApplicationLayer.Services.ProductVariantServices;
 using ApplicationLayer.Services.SubCategoryServices;
 using ApplicationLayer.Services.UserOpreationServices;
-
+using DomainLayer.Enums;
+using DomainLayer.Models;
 using Hangfire;
-using Microsoft.AspNetCore;
 using Microsoft.EntityFrameworkCore;
-using StackExchange.Redis;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using ApplicationLayer.Services.OrderService;
 using Microsoft.Extensions.Logging;
-using ApplicationLayer.DtoModels.PaymentDtos;
-using ApplicationLayer.Services.CollectionServices;
 
 namespace ApplicationLayer.Services.PaymentServices
 {
@@ -103,7 +97,7 @@ namespace ApplicationLayer.Services.PaymentServices
                     return Result<int>.Fail("Payment not found", 404,null);
                 }
 
-                // Lock the payment row to prevent concurrent updates
+
                 await _unitOfWork.Payment.LockPaymentForUpdateAsync(latestPayment.Id);
                 if (latestPayment.Status == status)
                 {
@@ -171,21 +165,26 @@ namespace ApplicationLayer.Services.PaymentServices
             try
             {
             
-                var order = await _unitOfWork.Order.GetOrderByNumberAsync(ordernumber);
+                var order= await _unitOfWork.Order
+                   .GetOrderByNumberAsync(ordernumber);
                 if (order == null)
                 {
                     _logger.LogWarning("Order not found with number {OrderNumber}", ordernumber);
                     await transaction.RollbackAsync();
                     return Result<PaymentResponseDto>.Fail("Order not found.");
                 }
-                var ishaspendingpayment = await _unitOfWork.Repository<Payment>().GetAll().AnyAsync(p => p.Status == PaymentStatus.Pending && p.OrderId == order.Id);
-
-                if(ishaspendingpayment)
-                {
-                    return Result<PaymentResponseDto>.Fail("There is already a pending payment for this order. Please wait until it is completed ");
-                }
-
+                
                 await _unitOfWork.Order.LockOrderForUpdateAsync(order.Id);
+
+                var lastpayment = await _unitOfWork.Repository<Payment>().GetAll().Where(p=> p.OrderId == order.Id).OrderBy(p => p.CreatedAt).ThenBy(p => p.Id).LastOrDefaultAsync();
+
+                if (lastpayment is not null &&
+      lastpayment.Status == PaymentStatus.Pending &&
+      lastpayment?.CreatedAt?. AddMinutes(10) > DateTime.UtcNow)
+                {
+                    await transaction.RollbackAsync();
+                    return Result<PaymentResponseDto>.Fail("There is already a pending payment...");
+                }
 
                 if (order.CustomerId != userid)
                 {
@@ -200,6 +199,14 @@ namespace ApplicationLayer.Services.PaymentServices
                     await transaction.RollbackAsync();
                     return Result<PaymentResponseDto>.Fail("This order cannot be paid due to its current status.", 400);
                 }
+                if (order?.CreatedAt?.AddHours(5) <= DateTime.UtcNow)
+                {
+                    order.Status = OrderStatus.PaymentExpired;
+                    await _unitOfWork.CommitAsync();
+                    await transaction.CommitAsync();
+                    return Result<PaymentResponseDto>.Fail("Order expired. Please create a new order.", 400);
+                }
+
                 var methodResult = await _paymentMethodsServices.GetPaymentMethodIdByEnum(paymentdto.PaymentMethod);
                 if (!methodResult.Success || methodResult.Data == null)
                 {
@@ -207,7 +214,7 @@ namespace ApplicationLayer.Services.PaymentServices
                     await transaction.RollbackAsync();
                     return Result<PaymentResponseDto>.Fail("Invalid Payment Method.");
                 }
-
+             
                 var paymentMethodId = methodResult.Data.Value;
 
                 var paymentMethodEntity = await _unitOfWork.Repository<PaymentMethod>().GetByIdAsync(paymentMethodId);
@@ -224,6 +231,14 @@ namespace ApplicationLayer.Services.PaymentServices
                     await transaction.RollbackAsync();
                     return Result<PaymentResponseDto>.Fail("Payment method is not active.");
                 }
+                if (lastpayment != null &&
+    lastpayment.Status == PaymentStatus.Pending &&
+    lastpayment?.CreatedAt?.AddMinutes(10) <= DateTime.UtcNow)
+                {
+                    lastpayment.Status = PaymentStatus.Failed;
+                    _unitOfWork.Repository<Payment>().Update(lastpayment);
+                   // await _unitOfWork.CommitAsync(); // Removed intermediate commit
+                }
 
                 var payment = new Payment
                 {
@@ -231,6 +246,7 @@ namespace ApplicationLayer.Services.PaymentServices
                     Status = PaymentStatus.Pending,
                     PaymentMethodId = paymentMethodId,
                     PaymentProviderId = paymentMethodEntity.PaymentProviderId,
+                    
                     OrderId = order.Id,
                     CustomerId = userid,
                     CreatedAt = DateTime.UtcNow
@@ -246,12 +262,13 @@ namespace ApplicationLayer.Services.PaymentServices
                
                 if (paymentdto.PaymentMethod != PaymentMethodEnums.CashOnDelivery)
                 {
-                    var onlinePaymentResult = await ProcessOnlinePayment(paymentdto, order, payment);
+                    var onlinePaymentResult = await ProcessOnlinePayment(paymentdto, order, payment,lastpayment is not null? lastpayment.ProviderOrderId:0);
                     if (!onlinePaymentResult.Success)
                     {
                         await transaction.RollbackAsync();
                         return Result<PaymentResponseDto>.Fail(onlinePaymentResult.Message);
                     }
+                  
                     response = onlinePaymentResult.Data;
                 }
                 else
@@ -259,7 +276,7 @@ namespace ApplicationLayer.Services.PaymentServices
                    _backgroundJobClient.Enqueue(()=> _orderservices.ConfirmOrderAsync(order.Id, userid,true,false,null));
                 }
                 var createdPayment = await _unitOfWork.Repository<Payment>().CreateAsync(payment);
-                await _unitOfWork.CommitAsync();
+                // await _unitOfWork.CommitAsync();  // Removed intermediate commit
 
                 if (createdPayment == null)
                 {
@@ -278,19 +295,19 @@ namespace ApplicationLayer.Services.PaymentServices
                 if (!logResult.Success)
                 {
                     _logger.LogWarning("Failed to log user operation for Payment ID {Id}", createdPayment.Id);
-                    // Don't fail the entire operation for logging failure
+       
                 }
 				await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
                 _logger.LogInformation("Payment created successfully with ID {Id}", createdPayment.Id);
                 
-                // Schedule status check for online payments
+           
                 if (paymentdto.PaymentMethod != PaymentMethodEnums.CashOnDelivery)
                 {
                     _backgroundJobClient.Schedule(() =>
                         CheckAndUpdatePaymentStatusAsync(createdPayment.Id),
-                        TimeSpan.FromHours(1));
+                        TimeSpan.FromMinutes(8));
                 }
 
                 return Result<PaymentResponseDto>.Ok(response!);
@@ -347,14 +364,21 @@ namespace ApplicationLayer.Services.PaymentServices
             }
         }
 
-        private async Task<Result<PaymentResponseDto>> ProcessOnlinePayment(CreatePaymentOfCustomer paymentdto, DomainLayer.Models.Order order, Payment payment)
+        private async Task<Result<PaymentResponseDto>> ProcessOnlinePayment(CreatePaymentOfCustomer paymentdto, DomainLayer.Models.Order order, Payment payment,long providerorderid)
         {
-            int timeremaining = (int)(order.CreatedAt.Value.AddHours(2) - DateTime.UtcNow).TotalSeconds;
-            if (timeremaining <= 0)
+            var expirationTime = order.CreatedAt?.AddHours(5);
+            
+            if (expirationTime is null || expirationTime <= DateTime.UtcNow)
             {
-                _logger.LogWarning("Order {OrderId} has expired and cannot be paid", order.Id);
-                return Result<PaymentResponseDto>.Fail("This order has expired and cannot be paid.", 400);
+                return Result<PaymentResponseDto>.Fail("Order has expired.", 400);
             }
+
+            var remainingTime = expirationTime.Value - DateTime.UtcNow;
+
+            var maxTime = TimeSpan.FromMinutes(40); // Increased max time to be reasonable
+            int timeRemainingSeconds =
+                (int)Math.Min(remainingTime.TotalSeconds, maxTime.TotalSeconds);
+
 
             CreatePayment createPayment = new CreatePayment
             {
@@ -368,7 +392,7 @@ namespace ApplicationLayer.Services.PaymentServices
                 AddressId = order.CustomerAddressId
             };
 
-            var onlinePaymentResult = await _paymentProcessor.GetPaymentLinkAsync(createPayment, timeremaining);
+            var onlinePaymentResult = await _paymentProcessor.GetPaymentLinkAsync(createPayment, timeRemainingSeconds, providerorderid);
 
             if (!onlinePaymentResult.Success || onlinePaymentResult.Data == null)
             {
@@ -382,7 +406,8 @@ namespace ApplicationLayer.Services.PaymentServices
             {
                 IsRedirectRequired = true,
                 RedirectUrl = onlinePaymentResult.Data.PaymentUrl,
-                Message = "Redirect to the provided link to complete payment."
+                Message = "Redirect to the provided link to complete payment.",
+                ProviderOrderId = onlinePaymentResult.Data.PaymobOrderId
             });
         }
 
@@ -459,10 +484,10 @@ namespace ApplicationLayer.Services.PaymentServices
                 _logger.LogError(ex, "Error in CheckAndUpdatePaymentStatusAsync for payment {PaymentId}", paymentId);
                 await transaction.RollbackAsync();
                 
-                // Schedule retry for failed background job
+        
                 _backgroundJobClient.Schedule(() =>
                     CheckAndUpdatePaymentStatusAsync(paymentId),
-                    TimeSpan.FromMinutes(30));
+                    TimeSpan.FromMinutes(5));
             }
         }
 		private void RemoveCacheAndRelated()

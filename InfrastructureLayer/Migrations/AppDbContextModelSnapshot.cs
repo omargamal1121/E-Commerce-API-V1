@@ -654,7 +654,7 @@ namespace DomainLayer.Migrations
 
                     b.HasIndex("PaymentProviderId");
 
-                    b.HasIndex("OrderId", "Status", "PaymentMethodId")
+                    b.HasIndex("OrderId", "PaymentMethodId")
                         .IsUnique();
 
                     b.ToTable("Payments");

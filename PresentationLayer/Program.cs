@@ -17,7 +17,6 @@ using DomainLayer.Middleware;
 using DomainLayer.Models;
 
 using E_Commerce.LinkBuilders;
- using E_Commerce.Registration;
 using E_Commerce.Registration.AccountServices;
 using E_Commerce.Registration.CartService;
 using E_Commerce.Registration.CategoryService;
@@ -36,13 +35,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MySqlConnector;
 using Newtonsoft.Json;
-using Scalar.AspNetCore;
+using Newtonsoft.Json.Converters;
 using Serilog;
-using Serilog.AspNetCore;
 using StackExchange.Redis;
-using System.Reflection;
 using System.Text;
 using System.Threading.RateLimiting;
 
@@ -59,10 +55,16 @@ namespace DomainLayer
 				{
 					options.SerializerSettings.ReferenceLoopHandling =
 						ReferenceLoopHandling.Serialize;
+					options.SerializerSettings.Converters.Add(new StringEnumConverter());
+
 				})
 				.ConfigureApiBehaviorOptions(options =>
 					options.SuppressModelStateInvalidFilter = true
 				);
+			builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
+			{
+				options.SerializerOptions.Converters.Clear(); 
+			});
 			Log.Logger = new LoggerConfiguration()
 				.WriteTo.Console()
 			 .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
@@ -184,8 +186,9 @@ namespace DomainLayer
 					"MyPolicy",
 					Options =>
 					{
-						Options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
-					}
+						Options.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://r-and-s-admin.vercel.app", "https://r-and-s-one.vercel.app", "http://localhost:5173", "http://localhost:5174").AllowCredentials();
+
+                    }
 				);
 			});
 			builder.Services.AddRateLimiter( options =>
@@ -287,7 +290,8 @@ namespace DomainLayer
                     options.Cookie.SameSite = SameSiteMode.None;
                     options.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
                     options.Cookie.HttpOnly = true;
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(10); // Short expiration
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(10); 
+			
                 }).AddGoogle(o=>
 				{
 					o.ClientId = builder.Configuration["Security:ExternalServices:Google:ClientId"] ??throw new Exception("ClientId missing");

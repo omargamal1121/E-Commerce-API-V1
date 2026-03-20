@@ -157,6 +157,8 @@ namespace ApplicationLayer.Services.PaymentWebhookService
 			}
 
 			await _unitOfWork.Repository<PaymentWebhook>().CreateAsync(webhook);
+            // Commit here to ensure we log the webhook regardless of what happens next
+            await _unitOfWork.CommitAsync();
 
 			if (localOrderId <= 0)
 			{
@@ -170,128 +172,132 @@ namespace ApplicationLayer.Services.PaymentWebhookService
 			{
 				return (false, localOrderId);
 			}
-				await _unitOfWork.CommitAsync();
+				
 			webhook.PaymentId = updateResult.PaymentId;
+            // Update the webhook with the payment ID
+            _unitOfWork.Repository<PaymentWebhook>().Update(webhook);
+            await _unitOfWork.CommitAsync();
+
 			return (true, localOrderId);
 		}
 
-        private async Task<int> ExtractAndValidateOrderId(PaymobTransactionObj transaction)
+    private async Task<int> ExtractAndValidateOrderId(PaymobTransactionObj transaction)
+    {
+        var merchantOrderNumber = transaction.Order?.MerchantOrderId;
+
+        if (string.IsNullOrWhiteSpace(merchantOrderNumber))
+            return 0;
+
+        var order = await _unitOfWork.Repository<Order>()
+            .GetAll()
+            .FirstOrDefaultAsync(o => o.OrderNumber == merchantOrderNumber);
+
+        return order?.Id ?? 0;
+    }
+
+
+    private bool VerifyPaymobHmac(JObject obj, string receivedHmac, string secretKey)
+    {
+        try
         {
-            var merchantOrderNumber = transaction.Order?.MerchantOrderId;
+            var sb = new StringBuilder();
+            _logger.LogInformation("=== HMAC Field Extraction ===");
 
-            if (string.IsNullOrWhiteSpace(merchantOrderNumber))
-                return 0;
-
-            var order = await _unitOfWork.Repository<Order>()
-                .GetAll()
-                .FirstOrDefaultAsync(o => o.OrderNumber == merchantOrderNumber);
-
-            return order?.Id ?? 0;
-        }
-
-
-        private bool VerifyPaymobHmac(JObject obj, string receivedHmac, string secretKey)
-        {
-            try
+            foreach (var field in HmacFieldsOrder)
             {
-				var sb = new StringBuilder();
-                _logger.LogInformation("=== HMAC Field Extraction ===");
+                string[] parts = field.Split('.');
+                JToken? current = obj;
 
-                foreach (var field in HmacFieldsOrder)
+                foreach (var part in parts)
                 {
-                    string[] parts = field.Split('.');
-                    JToken? current = obj;
-
-                    foreach (var part in parts)
-                    {
-                        if (current == null || current.Type == JTokenType.Null)
-                        {
-                            current = null;
-                            break;
-                        }
-                        current = current[part];
-                    }
-
-                    string fieldValue = "";
                     if (current == null || current.Type == JTokenType.Null)
                     {
-                        fieldValue = "";
+                        current = null;
+                        break;
                     }
-                    else if (current.Type == JTokenType.Boolean)
-                    {
-                        fieldValue = current.Value<bool>() ? "true" : "false";
-                    }
-                    else
-                    {
-                        fieldValue = current.ToString();
-                    }
-
-                    sb.Append(fieldValue);
-                    _logger.LogDebug("HMAC Field '{Field}': '{Value}' (Type: {Type})",
-                        field,
-                        fieldValue,
-                        current?.Type.ToString() ?? "null");
+                    current = current[part];
                 }
 
-                var dataToHash = sb.ToString();
-                _logger.LogInformation("Final HMAC string: '{DataToHash}'", dataToHash);
-                _logger.LogInformation("HMAC string length: {Length}", dataToHash.Length);
+                string fieldValue = "";
+                if (current == null || current.Type == JTokenType.Null)
+                {
+                    fieldValue = "";
+                }
+                else if (current.Type == JTokenType.Boolean)
+                {
+                    fieldValue = current.Value<bool>() ? "true" : "false";
+                }
+                else
+                {
+                    fieldValue = current.ToString();
+                }
 
-                using var hmac = new HMACSHA512(Encoding.UTF8.GetBytes(secretKey));
-                var hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(dataToHash));
-                var calculatedHmac = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-
-                _logger.LogInformation("Calculated HMAC: {CalculatedHmac}", calculatedHmac);
-                _logger.LogInformation("Received HMAC: {ReceivedHmac}", receivedHmac);
-
-                bool isValid = string.Equals(calculatedHmac, receivedHmac, StringComparison.OrdinalIgnoreCase);
-                _logger.LogInformation("HMAC validation result: {IsValid}", isValid);
-
-                return isValid;
+                sb.Append(fieldValue);
+                _logger.LogDebug("HMAC Field '{Field}': '{Value}' (Type: {Type})",
+                    field,
+                    fieldValue,
+                    current?.Type.ToString() ?? "null");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error calculating HMAC for Paymob webhook");
-                return false;
-            }
+
+            var dataToHash = sb.ToString();
+            _logger.LogInformation("Final HMAC string: '{DataToHash}'", dataToHash);
+            _logger.LogInformation("HMAC string length: {Length}", dataToHash.Length);
+
+            using var hmac = new HMACSHA512(Encoding.UTF8.GetBytes(secretKey));
+            var hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(dataToHash));
+            var calculatedHmac = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+
+            _logger.LogInformation("Calculated HMAC: {CalculatedHmac}", calculatedHmac);
+            _logger.LogInformation("Received HMAC: {ReceivedHmac}", receivedHmac);
+
+            bool isValid = string.Equals(calculatedHmac, receivedHmac, StringComparison.OrdinalIgnoreCase);
+            _logger.LogInformation("HMAC validation result: {IsValid}", isValid);
+
+            return isValid;
         }
-       
-        private async Task<(bool Success, int? PaymentId)> UpdatePaymentAndOrderStatus(PaymobTransactionObj transaction, int localOrderId)
-		{
-			PaymentStatus status = PaymentStatus.Failed;
-			OrderStatus orderStatus = OrderStatus.PendingPayment;
-			
-			if (transaction.Pending) 
-			{
-				status = PaymentStatus.Pending;
-			}
-			else if (transaction.Success)
-			{
-				status = PaymentStatus.Completed;
-				orderStatus = OrderStatus.Confirmed;
-			}
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error calculating HMAC for Paymob webhook");
+            return false;
+        }
+    }
+   
+    private async Task<(bool Success, int? PaymentId)> UpdatePaymentAndOrderStatus(PaymobTransactionObj transaction, int localOrderId)
+    {
+        PaymentStatus status = PaymentStatus.Failed;
+        OrderStatus orderStatus = OrderStatus.PendingPayment;
+        
+        if (transaction.Pending) 
+        {
+            status = PaymentStatus.Pending;
+        }
+        else if (transaction.Success)
+        {
+            status = PaymentStatus.Completed;
+            orderStatus = OrderStatus.Confirmed;
+        }
 
-			var paymentResult = await _paymentServices.UpdatePaymentAfterPaid(
-				localOrderId, 
-				transaction.Id.ToString(), 
-				transaction.PaymentKeyClaims?.OrderId ?? 0, 
-				status);
+        var paymentResult = await _paymentServices.UpdatePaymentAfterPaid(
+            localOrderId, 
+            transaction.Id.ToString(), 
+            transaction.Order?.Id ?? 0, 
+            status);
 
-			if (!paymentResult.Success)
-			{
-				_logger.LogError("Failed to update payment for order {OrderId}", localOrderId);
-				return (false, null);
-			}
+        if (!paymentResult.Success)
+        {
+            _logger.LogError("Failed to update payment for order {OrderId}", localOrderId);
+            return (false, null);
+        }
 
-			var orderUpdateResult = await _orderServices.UpdateOrderAfterPaid(localOrderId, orderStatus);
-			if (!orderUpdateResult.Success)
-			{
-				_logger.LogError("Failed to update order status for order {OrderId}", localOrderId);
-				return (false, paymentResult.Data);
-			}
+        var orderUpdateResult = await _orderServices.UpdateOrderAfterPaid(localOrderId, orderStatus);
+        if (!orderUpdateResult.Success)
+        {
+            _logger.LogError("Failed to update order status for order {OrderId}", localOrderId);
+            return (false, paymentResult.Data);
+        }
 
-			return (true, paymentResult.Data);
-		}
+        return (true, paymentResult.Data);
+    }
 
 	
 

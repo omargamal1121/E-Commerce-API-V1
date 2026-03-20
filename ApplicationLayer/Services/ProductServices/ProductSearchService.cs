@@ -18,13 +18,6 @@ using Microsoft.Extensions.Logging;
 
 namespace ApplicationLayer.Services.ProductServices
 {
-    public interface IProductSearchService
-    {
-        public Task<Result<List<BestSellingProductDto>>> GetBestSellerProductsWithCountAsync(bool? isDeleted, bool? isActive, int page = 1, int pagesize = 10, bool IsAdmin = false);
-        Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
-        Task<Result<List<ProductDto>>> GetBestSellersAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
-        Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
-    }
 
     public class ProductSearchService : IProductSearchService
     {
@@ -58,6 +51,7 @@ namespace ApplicationLayer.Services.ProductServices
             {
                 isActive = true;
                 DeletedOnly = false;
+                query = query.Where(p => p.Quantity > 0); // Enforce stock check for customers
             }
             if (isActive.HasValue)
             {
@@ -207,7 +201,8 @@ namespace ApplicationLayer.Services.ProductServices
                 {
                     isActive = true;
                     deletedOnly = false;
-                }
+                    searchCriteria.InStock = true;
+				}
 
 
                 var cached = await _productCacheManger.GetProductListCacheAsync<List<ProductDto>>(
@@ -354,6 +349,87 @@ namespace ApplicationLayer.Services.ProductServices
                 _productCacheManger.SetProductListCacheAsync(bestSellers, null, isActive, isDeleted,pagesize,page,"BestSeller",IsAdmin,null));
 
             return Result<List<BestSellingProductDto>>.Ok(bestSellers);
+        }
+
+        public async Task<Result<List<BestSellingProductDto>>> GetMostWishlistedProductsAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+        {
+            try
+            {
+                 if (page <= 0 || pageSize <= 0)
+                    return Result<List<BestSellingProductDto>>.Fail("Invalid page or pageSize. Must be greater than 0.", 400);
+
+                if (!IsAdmin)
+                {
+                    isActive = true;
+                    deletedOnly = false;
+                }
+
+                var cached = await _productCacheManger.GetProductListCacheAsync<List<BestSellingProductDto>>(
+                    null, isActive, deletedOnly, pageSize, page, "MostWishlisted", IsAdmin);
+                
+                if (cached != null)
+                    return Result<List<BestSellingProductDto>>.Ok(cached, $"Found {cached.Count} most wishlisted products", 200);
+
+                var wishCountQuery = _unitOfWork.Repository<WishlistItem>().GetAll()
+                    .GroupBy(w => w.ProductId)
+                    .Select(g => new
+                    {
+                        ProductId = g.Key,
+                        Count = g.Count()
+                    })
+                    .OrderByDescending(g => g.Count);
+
+                var productsQuery = _unitOfWork.Product.GetAll();
+                productsQuery = BasicFilter(productsQuery, isActive, deletedOnly, IsAdmin);
+
+                var joinedQuery = wishCountQuery
+                    .Join(productsQuery,
+                          w => w.ProductId,
+                          p => p.Id,
+                          (w, p) => new BestSellingProductDto
+                          {
+                              ProductId = p.Id,
+                              ProductName = p.Name,
+                              Image = p.Images.Where(i => i.IsMain && i.DeletedAt == null).Select(i => i.Url).FirstOrDefault() ?? "",
+                              TotalSoldQuantity = w.Count
+                          });
+
+                var products = await joinedQuery
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                if (!products.Any())
+                {
+                 
+                    var fallbackQuery = _unitOfWork.Product.GetAll();
+                    fallbackQuery = BasicFilter(fallbackQuery, isActive, deletedOnly, IsAdmin);
+                    
+                    var fallbackProducts = await fallbackQuery
+                        .OrderBy(r => Guid.NewGuid())
+                        .Take(pageSize)
+                        .Select(p => new BestSellingProductDto
+                        {
+                            ProductId = p.Id,
+                            ProductName = p.Name,
+                            Image = p.Images.Where(i => i.IsMain && i.DeletedAt == null).Select(i => i.Url).FirstOrDefault() ?? "",
+                            TotalSoldQuantity = 0
+                        })
+                        .ToListAsync();
+
+                    return Result<List<BestSellingProductDto>>.Ok(fallbackProducts, "No wishlisted products found. Showing random products instead.", 200);
+                }
+
+                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "MostWishlisted", IsAdmin, null));
+
+                return Result<List<BestSellingProductDto>>.Ok(products, $"Found {products.Count} most wishlisted products", 200);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting most wishlisted products");
+                _backgroundJobClient.Enqueue(() => _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
+                return Result<List<BestSellingProductDto>>.Fail("Error retrieving data", 500);
+            }
         }
     }
 }

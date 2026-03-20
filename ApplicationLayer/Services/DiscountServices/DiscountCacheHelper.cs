@@ -47,7 +47,7 @@ namespace ApplicationLayer.Services.DiscountServices
 
         public void ClearProductCache()
         {
-            // Clear product cache
+            _cacheManager.RemoveByTagsAsync(_discountTags);
             _productCacheManger.ClearProductCache();
 
             // Clear collection cache that stores products

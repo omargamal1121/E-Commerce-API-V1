@@ -1,3 +1,5 @@
+using ApplicationLayer.DtoModels.ProductDtos;
+
 namespace ApplicationLayer.Services.ProductServices
 {
 	public interface IProductCacheManger
@@ -9,7 +11,7 @@ namespace ApplicationLayer.Services.ProductServices
 		void NotifyAdminError(string message, string? stackTrace = null);
 		void SetProductListCacheAsync(object data, string? search, bool? isActive, bool? isDeleted,int pageSize=10,int page=1,string? tag=null,bool IsAdmin = false, TimeSpan? expiration = null);
 		Task<T?> GetProductListCacheAsync<T>(string? search, bool? isActive, bool? isDeleted, int pageSize = 10, int page = 1, string? tag = null, bool IsAdmin = false);
-		void SetProductByIdCacheAsync(int id, bool? isActive, bool? isDeleted, object data, bool IsAdmin = false, TimeSpan? expiration = null);
+		void SetProductByIdCacheAsync(int id, bool? isActive, bool? isDeleted, ProductDetailDto data, bool IsAdmin = false, TimeSpan? expiration = null);
 		Task<T?> GetProductByIdCacheAsync<T>(int id, bool? isActive, bool? isDeleted, bool IsAdmin = false);
 	}
 }

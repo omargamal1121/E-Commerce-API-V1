@@ -28,6 +28,7 @@ namespace ApplicationLayer.Services.ProductServices
         Task<Result<List<ProductDto>>> GetProductsAsync(string? search = null, bool? isActive = null, bool? deletedOnly = null, int page = 1, int pageSize = 10, bool IsAdmin = false);
         Task<Result<List<ProductDto>>> GetBestSellersAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
         Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
+        Task<Result<List<BestSellingProductDto>>> GetMostWishlistedProductsAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
 		// Image operations (delegated to ProductImageService)
 		Task<Result<List<ImageDto>>> GetProductImagesAsync(int productId);
 		Task<Result<List<ImageDto>>> AddProductImagesAsync(int productId, List<IFormFile> images, string userId);
@@ -49,6 +50,7 @@ namespace ApplicationLayer.Services.ProductServices
 		Task<Result<List<ProductDto>>> GetProductsWithActiveDiscountsAsync(bool?IsActive);
 		public Task<Result<List<ProductDto>>> ApplyDiscountToProductsAsync(ApplyDiscountToProductsDto dto, string userid);
 		public Task<Result<List<ProductDto>>> RemoveDiscountFromProductsAsync(List<int> productIds, string userId);
+		Task<Result<List<ProductDto>>> GetProductsByDiscountIdAsync(int discountId);
 	}
 }
 

@@ -280,6 +280,11 @@ namespace ApplicationLayer.Services.SubCategoryServices
 					return Result<bool>.Fail("SubCategory is already inactive", 400);
 				}
 
+				if(subcategoryInfo.HasActiveSubCategories)
+				{
+					_logger.LogInformation($"SubCategory {subCategoryId} has active products. Cannot deactivate.");
+					return Result<bool>.Fail("Cannot deactivate subcategory with active products", 400);
+				}
 
 
 

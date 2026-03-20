@@ -1,7 +1,7 @@
 
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ApplicationLayer.DtoModels.Shared
 {
@@ -9,14 +9,14 @@ namespace ApplicationLayer.DtoModels.Shared
 	{
 		public int Id { get; set; }
 
-		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-		public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
-		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+	
+		public DateTime? CreatedAt { get; set; }
+
 
 		[CustomValidation(typeof(BaseDto), nameof(ValidateModifiedAt))]
 
 		public DateTime? ModifiedAt { get; set; }
-		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+	
 		[CustomValidation(typeof(BaseDto), nameof(ValidateDeletedAt))]
 		public DateTime? DeletedAt { get; set; }
 

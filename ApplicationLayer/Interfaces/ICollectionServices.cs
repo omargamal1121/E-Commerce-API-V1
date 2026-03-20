@@ -13,6 +13,7 @@ namespace ApplicationLayer.Interfaces
         public  Task<Result<ImageDto>> AddMainImageToCollectionAsync(int collectionid, IFormFile mainImage, string userId);
         public  Task<Result<List<ImageDto>>> AddImagesToCollectionAsync(int collectionid, List<IFormFile> images, string userId);
         public  Task CheckAndDeactivateEmptyCollectionsAsync(int productId);
+        public  Task<Result<bool>> RestoreCollectionAsync(int collectionId, string userid);
 
 
 		Task<Result<CollectionSummaryDto>> CreateCollectionAsync(CreateCollectionDto collectionDto, string userid);

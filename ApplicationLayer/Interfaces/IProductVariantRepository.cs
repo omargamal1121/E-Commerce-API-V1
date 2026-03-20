@@ -22,8 +22,11 @@ namespace ApplicationLayer.Interfaces
 		public Task<List<ProductVariant>> GetVariantsByColorAsync(string color);
 
 		public Task<List<ProductVariant>> GetVariantsInStockAsync();
-		
-	
+
+		public  Task<int> DeactiveVarinatsByProductId(int productId);
+
+
+
 	}
 } 
 

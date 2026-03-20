@@ -29,16 +29,24 @@ namespace DomainLayer.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        
 
-       
 
-    
 
-     
-       
 
-        [HttpPatch("activate/{id}")]
+        [HttpPatch("Restore/{id}")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
+        public async Task<ActionResult<ApiResponse<bool>>> RestoreAsync(int id)
+        {
+
+			var userid = HttpContext?.Items["UserId"]?.ToString();
+			var response = await _collectionServices.RestoreCollectionAsync(id, userid);
+			return HandleResult(response, nameof(ActiveAsync), id);
+		}
+
+
+
+
+		[HttpPatch("activate/{id}")]
         [Authorize(Roles ="Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<bool>>> ActiveAsync(int id)
 		{

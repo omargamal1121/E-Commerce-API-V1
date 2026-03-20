@@ -56,6 +56,7 @@ namespace ApplicationLayer.Services.WishlistServices
 
 
                   var list=await query
+                    .Where(w => w.Product.IsActive && w.Product.DeletedAt == null && w.Product.Quantity > 0)
                     .Select(w => new WishlistItemDto
                     {
                         Id = w.Id,

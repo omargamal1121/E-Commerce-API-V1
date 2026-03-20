@@ -108,6 +108,12 @@ namespace DomainLayer.Controllers
 			var response = await _productsServices.RemoveDiscountFromProductsAsync(productIds, userId);
 			return HandleResult(response, nameof(RemoveDiscountFromProducts));
 		}
+		[HttpGet("Discount/{discountId}/Products")]
+		public async Task<ActionResult<ApiResponse<List<ProductDto>>>> GetProductsByDiscount(int discountId)
+		{
+			var response = await _productsServices.GetProductsByDiscountIdAsync(discountId);
+			return HandleResult(response, nameof(GetProductsByDiscount), discountId);
+		}
 		[HttpGet("{id}")]
 		[AllowAnonymous]
 		public async Task<ActionResult<ApiResponse<ProductDetailDto>>> GetProduct(
@@ -323,6 +329,24 @@ namespace DomainLayer.Controllers
 			return HandleResult(response, nameof(GetBestSellers));
 		}
 
+		[HttpGet("most-wishlisted")]
+		[AllowAnonymous]
+		public async Task<ActionResult<ApiResponse<List<BestSellingProductDto>>>> GetMostWishlistedProducts(
+			[FromQuery] int page = 1,
+			[FromQuery] int pageSize = 10,
+            [FromQuery] bool? isActive = null,
+            [FromQuery] bool? includeDeleted = null)
+		{
+			bool isAdmin = HasManagementRole();
+            if (!isAdmin)
+            {
+                isActive = true;
+                includeDeleted = false;
+            }
+			var response = await _productsServices.GetMostWishlistedProductsAsync(page, pageSize, isActive, includeDeleted, isAdmin);
+			return HandleResult(response, nameof(GetMostWishlistedProducts));
+		}
+
 		[HttpGet("newarrivals")]
 		[AllowAnonymous]
 		public async Task<ActionResult<ApiResponse<List<ProductDto>>>> GetNewArrivals(
@@ -333,7 +357,7 @@ namespace DomainLayer.Controllers
 		{
 			bool isAdmin = HasManagementRole();
 			
-			// For non-admin users, restrict to active and non-deleted products
+		
 			if (!isAdmin)
 			{
 				isActive = true;

@@ -114,7 +114,7 @@ namespace ApplicationLayer.Services.OrderService
                 }
 
                 // If not admin, double-check ownership (defensive)
-                if (!isAdmin && order.Customer.Id != userId)
+                if (!isAdmin && order?.Customer?.Id != userId)
                 {
                     _logger.LogWarning("User {UserId} tried to access order {OrderNumber} they don't own", userId, orderNumber);
                     return Result<OrderDto>.Fail("Access denied", 403);
@@ -251,7 +251,7 @@ namespace ApplicationLayer.Services.OrderService
                     query = query.Where(o => o.Status == status.Value);
 
                 var orders = await query
-                    .OrderByDescending(o => o.CreatedAt)
+                    .OrderByDescending(o => o.CreatedAt).ThenBy(o=>o.ModifiedAt)
                     .Select(_mapper.OrderListSelector)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)

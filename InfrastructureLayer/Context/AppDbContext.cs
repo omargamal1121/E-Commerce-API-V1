@@ -79,7 +79,7 @@ namespace InfrastructureLayer.Context
             builder.Entity<Payment>().HasIndex(p => p.PaymentMethodId);
             builder.Entity<Payment>().HasIndex(p => p.PaymentProviderId);
             builder.Entity<Payment>()
-    .HasIndex(p => new { p.OrderId, p.Status,p.PaymentMethodId })
+    .HasIndex(p => new { p.OrderId,p.PaymentMethodId })
     .IsUnique();
 
 

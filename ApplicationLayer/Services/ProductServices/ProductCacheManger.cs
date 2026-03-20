@@ -1,3 +1,5 @@
+using ApplicationLayer.DtoModels.InventoryDtos;
+using ApplicationLayer.DtoModels.ProductDtos;
 using ApplicationLayer.Interfaces;
 using ApplicationLayer.Services.Cache;
 using ApplicationLayer.Services.CollectionServices;
@@ -73,7 +75,7 @@ namespace ApplicationLayer.Services.ProductServices
             return await _cacheManager.GetAsync<T>(cacheKey);
         }
 
-        public void SetProductByIdCacheAsync(int id, bool? isActive, bool? isDeleted, object data, bool IsAdmin = false, TimeSpan? expiration = null)
+        public void SetProductByIdCacheAsync(int id, bool? isActive, bool? isDeleted, ProductDetailDto data, bool IsAdmin = false, TimeSpan? expiration = null)
         {
             var cacheKey = GetProductByIdKey(id, isActive, isDeleted, IsAdmin);
             _jobClient.Enqueue(() => _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30),new string[] { _Productwithdata}));

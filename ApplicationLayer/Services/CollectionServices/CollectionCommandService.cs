@@ -65,20 +65,27 @@ namespace ApplicationLayer.Services.CollectionServices
 
 				var collectionsToDeactivate = collections
 					.Where(c => !c.ProductCollections.Any(pc =>
-								pc.ProductId != productId && pc.Product.IsActive && pc.Product.DeletedAt == null))
+								pc.ProductId != productId && 
+                                pc.Product.IsActive && 
+                                pc.Product.DeletedAt == null && 
+                                pc.Product.Quantity > 0)) // Check quantity > 0
 					.ToList();
 
 				foreach (var collection in collectionsToDeactivate)
 				{
-					if (!collection.ProductCollections.Any(pc => pc.Product.IsActive && pc.Product.DeletedAt == null))
+                    // Check if *any* product in the collection is valid (active + stock > 0)
+					if (!collection.ProductCollections.Any(pc => 
+                            pc.Product.IsActive && 
+                            pc.Product.DeletedAt == null && 
+                            pc.Product.Quantity > 0))
 					{
-						_logger.LogInformation("Deactivating collection {CollectionId}: no active products remain", collection.Id);
+						_logger.LogInformation("Deactivating collection {CollectionId}: no active in-stock products remain", collection.Id);
 						collection.IsActive = false;
 						collection.ModifiedAt = DateTime.UtcNow;
 					}
 					else
 					{
-						_logger.LogInformation("Collection {CollectionId} still has active products, skipping deactivation", collection.Id);
+						_logger.LogInformation("Collection {CollectionId} still has active in-stock products, skipping deactivation", collection.Id);
 					}
 				}
 
@@ -152,8 +159,44 @@ namespace ApplicationLayer.Services.CollectionServices
                 return Result<CollectionSummaryDto>.Fail("An error occurred while creating collection", 500);
             }
         }
+        public async Task<Result<bool>> RestoreCollectionAsync(int collectionId, string userid)
+        {
+            _logger.LogInformation($"Restoring collection {collectionId}");
+            using var transaction = await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                var restored = await _collectionRepository.RestoreAsync(collectionId);
+                if (!restored)
+                {
+                    _logger.LogError($"Failed to restore collection {collectionId}.");
+                    await transaction.RollbackAsync();
+                    return Result<bool>.Fail("Failed to restore collection", 500);
+                }
+          
+                var adminLog = await _adminOperationServices.AddAdminOpreationAsync(
+                    $"Restored collection ID '{collectionId}'",Opreations.UndoDeleteOpreation,userid,collectionId);
+                if(adminLog == null||!adminLog.Success)
+                {
+                    _logger.LogError(adminLog?.Message);
+                    await transaction.RollbackAsync();
+                    _cacheHelper.NotifyAdminError("Error while add admin operation");
+                    return Result<bool>.Fail("Error while restoring collection", 500);
+				}
+                await _unitOfWork.CommitAsync();
+                await transaction.CommitAsync();
+                _cacheHelper.ClearCollectionCache();
+                return Result<bool>.Ok(true, "Collection restored successfully", 200);
+			}
+            catch(Exception e) {
+                await transaction.RollbackAsync();
+                _logger.LogError($"Error restoring collection {collectionId}: {e.Message}");
+                _cacheHelper.NotifyAdminError($"Error restoring collection {collectionId}: {e.Message}", e.StackTrace);
+                return Result<bool>.Fail("An error occurred while restoring collection", 500);
+			}
+         }
 
-        public async Task<Result<CollectionSummaryDto>> UpdateCollectionAsync(int collectionId, UpdateCollectionDto collectionDto, string userid)
+
+		public async Task<Result<CollectionSummaryDto>> UpdateCollectionAsync(int collectionId, UpdateCollectionDto collectionDto, string userid)
         {
             _logger.LogInformation($"Updating collection {collectionId}");
             using var transaction = await _unitOfWork.BeginTransactionAsync();
@@ -292,22 +335,22 @@ namespace ApplicationLayer.Services.CollectionServices
             try
             {
                 var collection = _collectionRepository.GetAll()
-                    .Where(c => c.Id == collectionId && c.DeletedAt == null && !c.IsActive)
+                    .Where(c => c.Id == collectionId && c.DeletedAt == null)
                     .Select(c => new
                     {
                         HasImages = c.Images.Any(),
-                        HasProducts = c.ProductCollections.Select(pc => pc.Product).Where(p => p.IsActive && p.DeletedAt == null).Any()
+                        HasProducts = c.ProductCollections.Select(pc => pc.Product).Where(p => p.IsActive && p.DeletedAt == null && p.Quantity > 0).Any()
                     })
                     .FirstOrDefault();
 
                 if (collection == null)
-                    return Result<bool>.Fail("Collection not found", 404);
+                    return Result<bool>.Fail("Collection not found Check if deleted ", 404);
 
                 if (!collection.HasImages)
                     return Result<bool>.Fail("Collection must have at least one image before activation", 400);
 
                 if (!collection.HasProducts)
-                    return Result<bool>.Fail("Collection must have at least one product before activation", 400);
+                    return Result<bool>.Fail("Collection must have at least one active in-stock product before activation", 400);
 
                 var updated = await _collectionRepository.UpdateCollectionStatusAsync(collectionId, true);
                 if (!updated)
@@ -457,10 +500,9 @@ namespace ApplicationLayer.Services.CollectionServices
                 var warningMessage = new List<string>();
                 var validProductIds = new List<int>();
 
-                // Batch validation for better performance
                 var productIds = productsDto.ProductIds.ToList();
                 var existingProducts = await _unitOfWork.Product.GetAll()
-                    .Where(p => productIds.Contains(p.Id) && p.IsActive && p.DeletedAt == null)
+                    .Where(p => productIds.Contains(p.Id) && p.IsActive && p.DeletedAt == null && p.Quantity > 0)
                     .Select(p => p.Id)
                     .ToListAsync();
 
@@ -468,7 +510,7 @@ namespace ApplicationLayer.Services.CollectionServices
                 {
                     if (!existingProducts.Contains(productId))
                     {
-                        warningMessage.Add($"Product with ID {productId} not found or not active");
+                        warningMessage.Add($"Product with ID {productId} not found, inactive, or out of stock");
                     }
                     else
                     {
@@ -536,7 +578,11 @@ namespace ApplicationLayer.Services.CollectionServices
                     return Result<bool>.Fail("No product IDs provided to remove", 400);
                 }
 
-                var collection = await _collectionRepository.GetByIdAsync(collectionId);
+                var collection = await _unitOfWork.Repository<DomainLayer.Models.Collection>()
+                            .GetAll()
+                            .Include(c => c.ProductCollections)
+                                .ThenInclude(pc => pc.Product)
+                            .FirstOrDefaultAsync(c => c.Id == collectionId);
                 if (collection == null)
                 {
                     await transaction.RollbackAsync();
@@ -550,6 +596,27 @@ namespace ApplicationLayer.Services.CollectionServices
                     await transaction.RollbackAsync();
                     return Result<bool>.Fail("Failed to remove products from collection", 500);
                 }
+
+                // Check if collection has any valid products left
+                var hasValidProducts = await _unitOfWork.Repository<DomainLayer.Models.Collection>()
+                     .GetAll()
+                     .Where(c => c.Id == collectionId)
+                     .SelectMany(c => c.ProductCollections)
+                     .AnyAsync(pc => pc.Product.IsActive && pc.Product.DeletedAt == null && pc.Product.Quantity > 0);
+
+
+                if (!hasValidProducts)
+                {
+                    // Re-fetch to update specifically if tracking issues, or just attach and update
+                     var colToUpdate = await _collectionRepository.GetByIdAsync(collectionId);
+                     if(colToUpdate != null && colToUpdate.IsActive)
+                     {
+                        colToUpdate.IsActive = false;
+                        colToUpdate.ModifiedAt = DateTime.UtcNow;
+                        _collectionRepository.Update(colToUpdate);
+                        _logger.LogInformation($"Deactivating collection {collectionId} as it now has no valid products");
+                     }
+                 }
 
                 var adminLog = await _adminOperationServices.AddAdminOpreationAsync(
                     $"Removed {productsDto.ProductIds.Count} products from collection '{collection.Name}'",

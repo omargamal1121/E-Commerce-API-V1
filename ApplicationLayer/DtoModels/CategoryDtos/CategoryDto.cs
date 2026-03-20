@@ -1,6 +1,7 @@
 using ApplicationLayer.DtoModels.ImagesDtos;
 using ApplicationLayer.DtoModels.ProductDtos;
 using ApplicationLayer.DtoModels.Shared;
+using ApplicationLayer.DtoModels.SubCategorydto;
 using System.ComponentModel.DataAnnotations;
 
 namespace ApplicationLayer.DtoModels.CategoryDtos
@@ -14,6 +15,13 @@ namespace ApplicationLayer.DtoModels.CategoryDtos
 		public int DisplayOrder { get; set; }
 		public List<ImageDto> Images { get; set; } = new List<ImageDto>();
 		public bool IsActive { get; set; }
+		public List<SubCategorySimpleDataDto>  subCategorySimples { get; set; }
+
+	}
+	public class SubCategorySimpleDataDto
+	{
+		public int Id { get; set; }
+		public string Name { get; set; } = string.Empty;
 	}
 }
 

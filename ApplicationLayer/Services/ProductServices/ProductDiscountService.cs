@@ -634,6 +634,42 @@ namespace ApplicationLayer.Services.ProductServices
 
 
 	
+		public async Task<Result<List<ProductDto>>> GetProductsByDiscountIdAsync(int discountId)
+		{
+			try
+			{
+				_logger.LogInformation($"Fetching products for discount ID: {discountId}");
+
+				if (discountId <= 0)
+				{
+					return Result<List<ProductDto>>.Fail("Invalid discount ID.", 400);
+				}
+
+				var discount = await _unitOfWork.Repository<Discount>().GetByIdAsync(discountId);
+				if (discount == null || discount.DeletedAt != null)
+				{
+					return Result<List<ProductDto>>.Fail("Discount not found or deleted.", 404);
+				}
+
+				var products = _unitOfWork.Product.GetAll()
+					.Where(p => p.DiscountId == discountId && p.DeletedAt == null);
+
+				var productDtos = await _productMapper.maptoProductDtoexpression(products).ToListAsync();
+
+				if (!productDtos.Any())
+				{
+					return Result<List<ProductDto>>.Ok(productDtos, "No products found for this discount.", 200);
+				}
+
+				return Result<List<ProductDto>>.Ok(productDtos, $"{productDtos.Count} products retrieved successfully for discount {discountId}", 200);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, $"Error in GetProductsByDiscountIdAsync for discountId: {discountId}");
+				_backgroundJobClient.Enqueue(() => _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
+				return Result<List<ProductDto>>.Fail("Error retrieving products for this discount.", 500);
+			}
+		}
 	}
 } 
 

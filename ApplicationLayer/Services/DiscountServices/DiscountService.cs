@@ -17,9 +17,9 @@ namespace ApplicationLayer.Services.DiscountServices
         }
 
 
-        public async Task<Result<DiscountDto>> GetDiscountByIdAsync(int id, bool? isActive = null, bool? isDeleted = null)
+        public async Task<Result<DiscountDto>> GetDiscountByIdAsync(int id, bool? isActive = null, bool? isDeleted = null,bool isAdmin=false)
         {
-            return await _discountQueryService.GetDiscountByIdAsync(id, isActive, isDeleted);
+            return await _discountQueryService.GetDiscountByIdAsync(id, isActive, isDeleted,isAdmin);
 		}
 
 		public async Task<Result<DiscountDto>> CreateDiscountAsync(CreateDiscountDto dto, string userId)

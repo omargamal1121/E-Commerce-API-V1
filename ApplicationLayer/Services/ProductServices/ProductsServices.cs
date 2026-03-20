@@ -161,9 +161,18 @@ namespace ApplicationLayer.Services.ProductServices
 			return await _productSearchService.GetBestSellersAsync(page,pageSize, isActive, deletedOnly, IsAdmin);
 		}
 
+		public async Task<Result<List<BestSellingProductDto>>> GetMostWishlistedProductsAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+		{
+			return await _productSearchService.GetMostWishlistedProductsAsync(page, pageSize, isActive, deletedOnly, IsAdmin);
+		}
+
 		public async Task<Result<int>> CountProductsAsync(bool? isActive = null, bool? isDelete = null, bool? inStock = null, bool isAdmin = false)
 		{
 			return await _productCatalogService.CountProductsAsync(isActive,isDelete, inStock, isAdmin);
+		}
+		public async Task<Result<List<ProductDto>>> GetProductsByDiscountIdAsync(int discountId)
+		{
+			return await _productDiscountService.GetProductsByDiscountIdAsync(discountId);
 		}
 	}
 }

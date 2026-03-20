@@ -6,6 +6,7 @@ namespace ApplicationLayer.DtoModels.PaymentDtos
         public string? RedirectUrl { get; set; }
         public string Message { get; set; } = string.Empty;
 		public  int Paymentid { get; set; }
+		public long ProviderOrderId { get; set; }
 	}
 }
 

@@ -14,6 +14,7 @@ namespace ApplicationLayer.Services.CollectionServices
         Task<Result<bool>> AddProductsToCollectionAsync(int collectionId, AddProductsToCollectionDto productsDto, string userId);
         Task<Result<bool>> RemoveProductsFromCollectionAsync(int collectionId, RemoveProductsFromCollectionDto productsDto, string userId);
         Task DeactivateCollectionsWithoutActiveProductsAsync(int productId);
+        public  Task<Result<bool>> RestoreCollectionAsync(int collectionId, string userid);
 
 	}
 }

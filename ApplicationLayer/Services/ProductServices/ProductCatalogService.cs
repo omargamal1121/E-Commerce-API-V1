@@ -16,6 +16,7 @@ using ApplicationLayer.Services.AdminOperationServices;
 using DomainLayer.Enums;
 using Microsoft.Extensions.Logging;
 using ApplicationLayer.Services.CollectionServices;
+using System.Text;
 
 namespace ApplicationLayer.Services.ProductServices
 {
@@ -107,6 +108,9 @@ namespace ApplicationLayer.Services.ProductServices
 			_logger.LogInformation($"Retrieving product by id: {id}, isActive: {isActive}, deletedOnly: {deletedOnly}, IsAdmin: {IsAdmin}");
 			if (!IsAdmin)
 			{
+				var isexsist = await _unitOfWork.Product.IsExsistAndActiveAsync(id);
+				if(!isexsist)
+					return Result<ProductDetailDto>.Fail("Product not found", 404);
 				isActive = true;
 				deletedOnly = false;
 			}
@@ -134,7 +138,6 @@ namespace ApplicationLayer.Services.ProductServices
 				{
 					query = query.Where(p => p.IsActive==isActive);
 				}
-
 				var product = await _productMapper.maptoProductDetailDtoexpression(query, IsAdmin)
 					.FirstOrDefaultAsync();
 
@@ -411,7 +414,11 @@ namespace ApplicationLayer.Services.ProductServices
 					await transacrion.RollbackAsync();
 					return Result<bool>.Fail("Product not found", 404);
 				}
-
+				if (product.DeletedAt is not null)
+				{
+					_logger.LogInformation("Product is already deleted");
+					return Result<bool>.Ok(true, "Product is already deleted",200);
+				}
 				product.IsActive = false;
 				var result = await _unitOfWork.Product.SoftDeleteAsync(id);
 				if (!result){
@@ -620,23 +627,31 @@ namespace ApplicationLayer.Services.ProductServices
 					.Where(p => p.Id == productId)
 					.Select(p => new {
 						IsActive = p.IsActive,
-						HasActiveVariants = p.ProductVariants.Any(v => v.IsActive && v.DeletedAt == null),
+						variantcount = p.ProductVariants.Count(v => v.IsActive && v.DeletedAt == null),
 						SubCategoryId = p.SubCategoryId
 					})
 					.FirstOrDefaultAsync();
-
+				StringBuilder messages = new StringBuilder();
 				if (productInfo == null)
 					return Result<bool>.Fail("Product not found", 404);
 
 				if (!productInfo.IsActive)
 					return Result<bool>.Ok(true, "Product already deactivated", 200);
-
-				if (productInfo.HasActiveVariants)
-					return Result<bool>.Fail("Product still has active variants. Please deactivate them first.", 400);
-
 				var result = await _unitOfWork.Product.DeactiveProductAsync(productId);
 				if (!result)
 					return Result<bool>.Fail("Failed to deactivate product", 400);
+
+				if (productInfo.variantcount!=0){
+					var effectedvariant= await _unitOfWork.ProductVariant.DeactiveVarinatsByProductId(productId);
+					if(effectedvariant!=productInfo.variantcount)
+					{
+						messages.AppendLine("Some Variant Can't be deactiveated ");
+						
+					}
+					
+				}
+
+				
 
 				var isAdded = await _adminOpreationServices.AddAdminOpreationAsync(
 					$"Deactivate Product {productId}",
@@ -661,7 +676,7 @@ namespace ApplicationLayer.Services.ProductServices
 
 				_logger.LogInformation($"Product {productId} deactivated. Triggered background jobs for collection and subcategory checks.");
 
-				return Result<bool>.Ok(true, "Product deactivated successfully", 200);
+				return Result<bool>.Ok(true, "Product deactivated successfully", 200,warnings:  new List<string>{ messages.ToString()});
 			}
 			catch (DbUpdateConcurrencyException e)
 			{

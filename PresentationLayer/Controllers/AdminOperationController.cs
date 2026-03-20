@@ -1,6 +1,7 @@
 ﻿
 using ApplicationLayer.DtoModels;
 using ApplicationLayer.Services.AdminOperationServices;
+using DomainLayer.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -24,10 +25,10 @@ namespace DomainLayer.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<ResponseDto>> GetAllOperation()
+		public async Task<ActionResult<ResponseDto>> GetAllOperation(int page = 1, int pagesize = 10, string? userid = null, string? name = null, Opreations? opreation = null)
 		{
 			_Logger.LogInformation($"Execute {nameof(GetAllOperation)}");
-			var result = await _adminOpreationServices.GetAllOpreationsAsync();
+			var result = await _adminOpreationServices.GetAllOpreationsAsync(page,pagesize,userid,name,opreation);
 			if (!result.Success)
 			{
 				_Logger.LogError(result.Message);

@@ -1,23 +1,15 @@
-
-using ApplicationLayer.DtoModels.OrderDtos;
 using ApplicationLayer.DtoModels.PaymentDtos;
-
-using ApplicationLayer.Services;
 using ApplicationLayer.Services.EmailServices;
 using ApplicationLayer.Services.PaymentProccessor;
 
 using Hangfire;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-
-using static System.Net.WebRequestMethods;
 using DomainLayer.Models;
 using ApplicationLayer.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -30,7 +22,7 @@ namespace ApplicationLayer.Services.PayMobServices
 	public interface IPayMobServices
 	{
 		Task<Result<PaymobPaymentStatusDto>> GetPaymentStatusAsync(long orderId);
-		Task<Result<PaymentLinkResult>> GetPaymentLinkAsync(CreatePayment dto, int expires);
+		Task<Result<PaymentLinkResult>> GetPaymentLinkAsync(CreatePayment dto, int expires, long? orderproviderid=null);
 	}
 
 	public class PayMobServices : IPaymentProcessor, IPayMobServices
@@ -315,7 +307,7 @@ namespace ApplicationLayer.Services.PayMobServices
 			}
 		}
 
-		public async Task<Result<PaymentLinkResult>> GetPaymentLinkAsync(CreatePayment dto, int expires)
+		public async Task<Result<PaymentLinkResult>> GetPaymentLinkAsync(CreatePayment dto, int expires, long? orderproviderid=null)
 		{
 			if (dto == null)
 			{
@@ -350,23 +342,33 @@ namespace ApplicationLayer.Services.PayMobServices
 					return Result<PaymentLinkResult>.Fail("Address not found", 404);
 				}
 
-				var paymobOrderRequest = new CreateOrderRequest
-				{
-					auth_token = _token,
-					amount_cents = (int)(dto.Amount * 100),
-					currency = "EGP",
-					delivery_needed = true,
-                    merchant_order_id = dto.Ordernumber
-				};
 
-				var paymobOrderId = await CreateOrderInPaymobAsync(paymobOrderRequest);
-				if (paymobOrderId == 0)
-				{
-					_logger.LogError("Failed to create order in PayMob for OrderId: {OrderId}", dto.Ordernumber);
-					return Result<PaymentLinkResult>.Fail("Failed to create payment order", 500);
-				}
 
-				_logger.LogInformation("Successfully created PayMob order: {PayMobOrderId} for local order: {OrderId}", paymobOrderId, dto.Ordernumber);
+                long paymobOrderId;
+
+                if (orderproviderid is null||orderproviderid==0)
+                {
+					var paymobOrderRequest = new CreateOrderRequest
+                    {
+                        auth_token = _token,
+                        amount_cents = (int)(dto.Amount * 100),
+                        currency = "EGP",
+                        delivery_needed = true,
+                        merchant_order_id = dto.Ordernumber
+                    }; 
+                    paymobOrderId = await CreateOrderInPaymobAsync(paymobOrderRequest);
+					if (paymobOrderId == 0)
+					{
+						_logger .LogError("Failed to create PayMob order for local order: {OrderId}", dto.Ordernumber);
+                        return Result<PaymentLinkResult>.Fail("Failed to create order in PayMob", 500);
+                    }
+                }
+                else
+                {
+                    paymobOrderId = orderproviderid.Value;
+                }
+
+                _logger.LogInformation("Successfully created PayMob order: {PayMobOrderId} for local order: {OrderId}", paymobOrderId, dto.Ordernumber);
 
 				var amountInCents = (int)(dto.Amount * 100);
 				var integrationId = await _unitOfWork.Repository<PaymentMethod>()
@@ -404,7 +406,7 @@ namespace ApplicationLayer.Services.PayMobServices
 						first_name = user.Name?.Split(" ").FirstOrDefault() ?? "NA",
 						last_name = user.Name?.Split(" ").Skip(1).FirstOrDefault() ?? "NA",
 						email = user.Email,
-						phone_number = user.PhoneNumber
+						phone_number = user.PhoneNumber??address.PhoneNumber
 					}
 					,
 
@@ -512,7 +514,7 @@ namespace ApplicationLayer.Services.PayMobServices
 			public string auth_token { get; set; } = string.Empty;
 			public decimal amount_cents { get; set; }
 			public int expiration { get; set; } = 1000;
-			public int order_id { get; set; }
+			public long order_id { get; set; }
 			public string integration_id { get; set; } = string.Empty;
 			public string redirection_url { get; set; }
 			public billing_data billing_data { get; set; } = new billing_data();
@@ -521,6 +523,7 @@ namespace ApplicationLayer.Services.PayMobServices
 		{
 			public string PaymentUrl { get; set; }
 			public long PaymobOrderId { get; set; }
+
 		}
 		public class PaymobPaymentStatusDto
 		{

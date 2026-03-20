@@ -16,7 +16,16 @@ namespace ApplicationLayer.Services.OrderService
             Status = o.Status.ToString(),
             Total = o.Total,
             CreatedAt = o.CreatedAt.Value,
-        };
+            UpdatedAt = o.ModifiedAt,
+            PaymentStatus = o.Payment != null && o.Payment.Any() ? o.Payment.FirstOrDefault().Status : DomainLayer.Enums.PaymentStatus.Pending,
+            canBeCancelled = o.Status == DomainLayer.Enums.OrderStatus.PendingPayment || o.Status == DomainLayer.Enums.OrderStatus.Processing,
+            imageurl = o.Items.FirstOrDefault().Product.Images.Where(i=>i.DeletedAt==null).FirstOrDefault().Url ?? string.Empty,
+            itemCount = o.Items.Sum(i => i.Quantity),
+            paymentMethod= o.Payment != null && o.Payment.Any() ? o.Payment.FirstOrDefault().PaymentMethod.Name : "N/A"
+
+
+
+		};
 
         public static readonly Expression<Func<Order, OrderDto>> OrderSelector = order => new OrderDto
         {
@@ -44,6 +53,8 @@ namespace ApplicationLayer.Services.OrderService
                 PaymentMethodId=p.PaymentMethodId,
                 PaymentProviderId= p.PaymentProviderId,
                 PaymentMethod=p.PaymentMethod.Name,
+                ProviderOrderId =p.ProviderOrderId
+                
                 
             }),
             Customer = order.Customer == null ? null : new CustomerDto

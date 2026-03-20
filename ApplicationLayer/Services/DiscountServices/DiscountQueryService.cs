@@ -57,7 +57,7 @@ namespace ApplicationLayer.Services.DiscountServices
         }
 
        
-        public async Task<Result<DiscountDto>> GetDiscountByIdAsync(int id, bool? isActive = null, bool? isDeleted = false,bool isAdmin=false)
+        public async Task<Result<DiscountDto>> GetDiscountByIdAsync(int id, bool? isActive = null, bool? isDeleted = null,bool isAdmin=false)
         {
             try
             {

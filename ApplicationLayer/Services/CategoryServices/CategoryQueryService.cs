@@ -47,7 +47,7 @@ namespace ApplicationLayer.Services.CategoryServices
 			query = BasicFilter(query, isActive, isDeleted,IsAdmin);
 			if (!string.IsNullOrWhiteSpace(word))
 			{
-				query = query.Where(c => EF.Functions.Like(c.Name, $"%{word}%") || EF.Functions.Like(c.Description, $"%{word}%"));
+				query = query.Where(c => EF.Functions.Like(c.Name, $"%{word}") || EF.Functions.Like(c.Description, $"%{word}"));
 			}
 			 query =  query.Skip((page - 1) * pageSize)
 			.Take(pageSize);

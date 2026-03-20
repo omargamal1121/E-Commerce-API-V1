@@ -183,7 +183,7 @@ namespace ApplicationLayer.Services.ProductVariantServices
         {
             _logger.LogInformation($"Adding variant to product: {productId}");
 
-            var product = await _unitOfWork.Product.IsExsistAsync(productId);
+            var product = await _unitOfWork.Product.GetAll().AnyAsync(p=>p.Id== productId);
             if (!product)
                 return Result<ProductVariantDto>.Fail("Product not found", 404);
 
@@ -205,7 +205,7 @@ namespace ApplicationLayer.Services.ProductVariantServices
             using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
-                // Use mapper to create variant
+            
                 var variant = _mapper.MapToProductVariant(dto);
                 variant.ProductId = productId;
 

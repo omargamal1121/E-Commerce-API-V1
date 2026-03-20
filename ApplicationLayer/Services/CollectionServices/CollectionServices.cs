@@ -32,7 +32,10 @@ namespace ApplicationLayer.Services.CollectionServices
 			_errorNotificationService = errorNotificationService;
             _logger = logger;
         }
-	
+		public async Task<Result<bool>> RestoreCollectionAsync(int collectionId, string userid)
+		{
+			return await _collectionCommandService.RestoreCollectionAsync(collectionId, userid);
+		}
 		public async Task CheckAndDeactivateEmptyCollectionsAsync(int productId)
 		{
 			await _collectionCommandService.DeactivateCollectionsWithoutActiveProductsAsync(productId);

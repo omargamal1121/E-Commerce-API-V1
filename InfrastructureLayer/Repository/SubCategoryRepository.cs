@@ -42,7 +42,7 @@ namespace InfrastructureLayer.Repository
 		public async Task<bool> DeActiveSubCategoryAsync(int id)
 		{
 			var subcategory = await GetByIdAsync(id);
-			if (subcategory == null || subcategory.IsActive) return false;
+			if (subcategory == null || !subcategory.IsActive) return false;
 			subcategory.IsActive = false;
 			return true;
 		}

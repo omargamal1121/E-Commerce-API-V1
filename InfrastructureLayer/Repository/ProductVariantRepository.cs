@@ -116,7 +116,7 @@ namespace InfrastructureLayer.Repository
 		{
 			_logger.LogInformation($"Adding quantity {addQuantity} to variant ID: {id}");
             var effectedrows= await _context.Database.ExecuteSqlRawAsync(
-                    "UPDATE ProductVariants SET Quantity = Quantity + {0} WHERE Id = {1} AND RowVersion = @oldRowVersion",
+                    "UPDATE ProductVariants SET Quantity = Quantity + {0} WHERE Id = {1}",
                     addQuantity, id
                 );
 			if(effectedrows>0)
@@ -177,6 +177,11 @@ namespace InfrastructureLayer.Repository
 				return false;
 			varaint.IsActive=false;
 			return true;
+		}
+		public async Task<int>DeactiveVarinatsByProductId(int productId)
+		{
+			var counter=await  _entity.Where(p => p.ProductId == productId && p.DeletedAt == null).ExecuteUpdateAsync(v=>v.SetProperty(p=>p.IsActive,false));
+			return counter;
 		}
 	}
 } 

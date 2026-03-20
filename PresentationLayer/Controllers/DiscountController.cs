@@ -26,11 +26,12 @@ namespace DomainLayer.Controllers
 	
 		[HttpGet("{id}")]
 		[ActionName(nameof(GetByIdAsync))]
+		
 		[ResponseCache(Duration = 60, VaryByQueryKeys = new string[] { "id", "isActive", "includeDeleted" })]
 		public async Task<ActionResult<ApiResponse<DiscountDto>>> GetByIdAsync(
 			int id,
 			[FromQuery] bool? isActive = null,
-			[FromQuery] bool includeDeleted = false)
+			[FromQuery] bool? includeDeleted = null)
 		{
 			if (id <= 0)
 			{
@@ -42,7 +43,7 @@ namespace DomainLayer.Controllers
 			}
 			_logger.LogInformation($"Executing {nameof(GetByIdAsync)} for id: {id}, isActive: {isActive}, includeDeleted: {includeDeleted}");
 
-			var response = await _discountService.GetDiscountByIdAsync(id, isActive, includeDeleted);
+			var response = await _discountService.GetDiscountByIdAsync(id, isActive, includeDeleted,true);
 			return HandleResult<DiscountDto>(response, nameof(GetByIdAsync), id);
 		}
 

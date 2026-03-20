@@ -80,8 +80,9 @@ namespace ApplicationLayer.DtoModels.OrderDtos
         public decimal Amount { get; set; }
         public DateTime PaymentDate { get; set; }
         public int OrderId { get; set; }
-        public string Status { get; set; } 
-    }
+        public string Status { get; set; }
+		public long  ProviderOrderId { get; set; }
+	}
 
     
    

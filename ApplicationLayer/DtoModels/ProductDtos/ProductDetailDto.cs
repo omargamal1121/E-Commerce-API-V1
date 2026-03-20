@@ -10,8 +10,8 @@ namespace ApplicationLayer.DtoModels.ProductDtos
 {
 	public class ProductDetailDto : BaseDto
 	{
-		public string Name { get; set; } = string.Empty;
-		public string Description { get; set; } = string.Empty;
+		public string Name { get; set; }
+		public string Description { get; set; }
 		public int SubCategoryId { get; set; }
 		public DiscountDto? Discount { get; set; }
 		public int AvailableQuantity { get; set; }

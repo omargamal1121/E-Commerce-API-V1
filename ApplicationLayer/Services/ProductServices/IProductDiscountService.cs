@@ -12,6 +12,7 @@ namespace ApplicationLayer.Services.ProductServices
 		Task<Result<List<ProductDto>>> GetProductsWithActiveDiscountsAsync(bool ? IsActive);
 		Task<Result<List<ProductDto>>> ApplyDiscountToProductsAsync(ApplyDiscountToProductsDto dto, string userId);
 		Task<Result<List<ProductDto>>> RemoveDiscountFromProductsAsync(List<int> productIds, string userId);
+		Task<Result<List<ProductDto>>> GetProductsByDiscountIdAsync(int discountId);
 	}
 } 
 

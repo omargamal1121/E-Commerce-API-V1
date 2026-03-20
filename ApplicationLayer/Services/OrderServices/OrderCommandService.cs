@@ -38,7 +38,7 @@ namespace ApplicationLayer.Services.OrderService
         private readonly IOrderCacheHelper _cacheHelper;
         private readonly IProductVariantCommandService _productVariantCommandService;
         
-        // Thread-safe dictionary to store locks for each product variant to prevent race conditions
+
         private static readonly ConcurrentDictionary<int, SemaphoreSlim> _variantLocks = new();
 
         public OrderCommandService(
@@ -265,7 +265,7 @@ namespace ApplicationLayer.Services.OrderService
 
                 _backgroundJobClient.Schedule(
                     () => ExpireUnpaidOrderInBackground(createdOrder.Id),
-                    TimeSpan.FromHours(2)
+                    TimeSpan.FromHours(5)
                 );
 
                 return Result<OrderAfterCreatedto>.Ok(response, "Order created successfully", 201);
@@ -313,6 +313,7 @@ namespace ApplicationLayer.Services.OrderService
 					_logger.LogWarning("Invalid status transition from {Old} to {New}", order.Status, orderStatus);
 					return Result<bool>.Fail($"Invalid status transition from {order.Status} to {orderStatus}", 400);
 				}
+ 
 
 				bool shouldReduceStock = false;
 
@@ -393,7 +394,7 @@ namespace ApplicationLayer.Services.OrderService
 				OrderStatus.Processing => target is OrderStatus.Shipped or OrderStatus.CancelledByAdmin, 
 				OrderStatus.Shipped => target is OrderStatus.Delivered,
 				OrderStatus.Delivered => target is OrderStatus.Complete or OrderStatus.Returned or OrderStatus.Refunded,
-				OrderStatus.PaymentExpired => target is OrderStatus.CancelledByAdmin or OrderStatus.CancelledByUser,
+				OrderStatus.PaymentExpired => target is  OrderStatus.CancelledByAdmin or OrderStatus.CancelledByUser,
 				_ => false
 
 			};

@@ -67,12 +67,19 @@ namespace ApplicationLayer.Services.CategoryServices
 			DeletedAt = c.DeletedAt,
 			ModifiedAt = c.ModifiedAt,
 			DisplayOrder = c.DisplayOrder,
+			subCategorySimples = c.SubCategories.Where(sc => sc.IsActive == true && sc.DeletedAt == null).Select(sc => new SubCategorySimpleDataDto
+			{
+				Id = sc.Id,
+				Name = sc.Name,
+			}).ToList(),
+
 			Images = c.Images.Where(i => i.DeletedAt == null).Select(i => new ImageDto
 			{
 				Id = i.Id,
 				Url = i.Url,
 				IsMain = i.IsMain
-			}).ToList()
+			}).ToList(),
+
 		}
 		); }
 		public CategoryDto ToCategoryDto(Category c) => new CategoryDto
@@ -82,6 +89,12 @@ namespace ApplicationLayer.Services.CategoryServices
 			Description = c.Description,
 			IsActive = c.IsActive,
 			CreatedAt = c.CreatedAt,
+			subCategorySimples= c.SubCategories?.Where(sc=>sc.DeletedAt==null&&sc.IsActive==true).Select(sc => new SubCategorySimpleDataDto
+			{
+				Id = sc.Id,
+				Name = sc.Name,
+		
+			}).ToList() ?? new List<SubCategorySimpleDataDto>(),
 			DeletedAt = c.DeletedAt,
 			ModifiedAt = c.ModifiedAt,
 			DisplayOrder = c.DisplayOrder,

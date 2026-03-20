@@ -22,7 +22,7 @@ namespace ApplicationLayer.Services.CollectionServices
                 DisplayOrder = c.DisplayOrder,
                 TotalProducts = IsAdmin
                     ? c.ProductCollections.Count()
-                    : c.ProductCollections.Count(pc => pc.Product.IsActive && pc.Product.DeletedAt == null),
+                    : c.ProductCollections.Count(pc => pc.Product.IsActive && pc.Product.DeletedAt == null && pc.Product.Quantity > 0),
                 Images = c.Images.Where(i => i.DeletedAt == null).Select(i => new ImageDto
                 {
                     Id = i.Id,
@@ -31,7 +31,7 @@ namespace ApplicationLayer.Services.CollectionServices
                 }).ToList(),
                 Products = (IsAdmin
                         ? c.ProductCollections
-                        : c.ProductCollections.Where(p => p.Product.IsActive && p.Product.DeletedAt == null))
+                        : c.ProductCollections.Where(p => p.Product.IsActive && p.Product.DeletedAt == null && p.Product.Quantity > 0))
                     .Select(p => new ProductDto
                 {
                     Id = p.ProductId,
@@ -55,7 +55,7 @@ namespace ApplicationLayer.Services.CollectionServices
             });
         }
 
-        public IQueryable<CollectionSummaryDto> CollectionSelector(IQueryable<Collection> queryable)
+        public IQueryable<CollectionSummaryDto> CollectionSelector(IQueryable<Collection> queryable, bool IsAdmin = false)
         {
             return queryable.Select(c => new CollectionSummaryDto
             {
@@ -67,7 +67,9 @@ namespace ApplicationLayer.Services.CollectionServices
                 DeletedAt = c.DeletedAt,
                 ModifiedAt = c.ModifiedAt,
                 DisplayOrder = c.DisplayOrder,
-                TotalProducts = c.ProductCollections.Count(),
+                TotalProducts = IsAdmin 
+                    ? c.ProductCollections.Count() 
+                    : c.ProductCollections.Count(pc => pc.Product.IsActive && pc.Product.DeletedAt == null && pc.Product.Quantity > 0),
                 images = c.Images.Where(i=>i.DeletedAt==null).Select(i => new ImageDto
                 {
                     Id = i.Id,
@@ -89,7 +91,7 @@ namespace ApplicationLayer.Services.CollectionServices
             DisplayOrder = c.DisplayOrder,
             TotalProducts = IsAdmin
                 ? (c.ProductCollections?.Count() ?? 0)
-                : (c.ProductCollections?.Count(pc => pc.Product.IsActive && pc.Product.DeletedAt == null) ?? 0),
+                : (c.ProductCollections?.Count(pc => pc.Product.IsActive && pc.Product.DeletedAt == null && pc.Product.Quantity > 0) ?? 0),
             Images = c.Images?.Where(i=>i.DeletedAt==null).Select(i => new ImageDto
             {
                 Id = i.Id,
@@ -98,7 +100,7 @@ namespace ApplicationLayer.Services.CollectionServices
             }).ToList() ?? new List<ImageDto>(),
             Products = (IsAdmin
                     ? c.ProductCollections
-                    : c.ProductCollections?.Where(p => p.Product.IsActive && p.Product.DeletedAt == null))
+                    : c.ProductCollections?.Where(p => p.Product.IsActive && p.Product.DeletedAt == null && p.Product.Quantity > 0))
                 ?.Select(p => new ProductDto
             {
                 Id = p.ProductId,

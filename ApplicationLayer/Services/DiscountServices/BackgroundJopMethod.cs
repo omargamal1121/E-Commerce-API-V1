@@ -44,12 +44,18 @@ namespace ApplicationLayer.Services.DiscountServices
 
         public void ScheduleDiscountCheck(int discountId, DateTime startDate, DateTime endDate)
         {
-            // Schedule the discount check using Hangfire's ability to call services directly
-            _jobClient.Schedule<IDiscountCacheHelper>(_ => CheckOnDiscount(discountId), startDate);
-            _jobClient.Schedule<IDiscountCacheHelper>(_ => CheckOnDiscount(discountId), endDate);
-        }
+			// Schedule the discount check using Hangfire's ability to call services directly
+			_jobClient.Schedule<IDiscountBackgroundJopMethod>(
+	  x => x.CheckOnDiscount(discountId),
+	  startDate);
 
-        public async Task CheckOnDiscount(int id)
+			_jobClient.Schedule<IDiscountBackgroundJopMethod>(
+				x => x.CheckOnDiscount(discountId),
+				endDate);
+
+		}
+
+		public async Task CheckOnDiscount(int id)
         {
             var discount = await _unitOfWork.Repository<Discount>().GetByIdAsync(id);
             if (discount == null)

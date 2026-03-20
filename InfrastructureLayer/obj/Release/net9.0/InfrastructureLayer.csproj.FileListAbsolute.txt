@@ -34,3 +34,5 @@ D:\projects\E-Commerce\With Clean Arc\InfrastructureLayer\obj\Release\net9.0\Inf
 D:\projects\E-Commerce\With Clean Arc\InfrastructureLayer\obj\Release\net9.0\refint\InfrastructureLayer.dll
 D:\projects\E-Commerce\With Clean Arc\InfrastructureLayer\obj\Release\net9.0\InfrastructureLayer.pdb
 D:\projects\E-Commerce\With Clean Arc\InfrastructureLayer\obj\Release\net9.0\ref\InfrastructureLayer.dll
+D:\projects\E-Commerce\With Clean Arc\InfrastructureLayer\bin\Release\net9.0\InfrastructureLayer.runtimeconfig.json
+D:\projects\E-Commerce\With Clean Arc\InfrastructureLayer\obj\Release\net9.0\InfrastructureLayer.genruntimeconfig.cache

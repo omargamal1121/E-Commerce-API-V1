@@ -76,7 +76,7 @@ namespace ApplicationLayer.Services.AdminOperationServices
 				OperationType = o.OperationType.ToString(),
 				Timestamp = o.Timestamp,
 				
-			}).ToListAsync();
+			}).OrderBy(o=>o.Timestamp).Distinct().ToListAsync();
 			return Result<List<OpreationDto>>.Ok(adminopreationDtos);
 		}
 			

@@ -1,5 +1,7 @@
 
 
+using DomainLayer.Enums;
+
 namespace ApplicationLayer.DtoModels.OrderDtos
 {
 	public class OrderListDto
@@ -10,6 +12,12 @@ namespace ApplicationLayer.DtoModels.OrderDtos
 		public string Status { get; set; }
 		public decimal Total { get; set; }
 		public DateTime CreatedAt { get; set; }
+		public DateTime ?UpdatedAt { get; set; }
+		public string? imageurl { get; set; }
+		public bool canBeCancelled { get; set; }
+		public string paymentMethod { get; set; }
+		public int itemCount { get; set; }
+		public PaymentStatus  PaymentStatus { get; set; }
 	}
 
 

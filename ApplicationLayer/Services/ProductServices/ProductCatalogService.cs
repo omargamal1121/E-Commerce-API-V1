@@ -512,7 +512,7 @@ namespace ApplicationLayer.Services.ProductServices
 		public async Task<Result<List<ProductDto>>> GetProductsBySubCategoryId(int SubCategoryid, bool? isActive, bool? deletedOnly)
 		{
 			
-			var cached = await _productCacheManger.GetProductListBySubcategoryidCacheAsync<List<ProductDto>>(SubCategoryid, isActive, deletedOnly);
+			var cached = await _productCacheManger.GetProductListBySubcategoryidCacheAsync<ProductDto>(SubCategoryid, isActive, deletedOnly);
 			if (cached != null)
 				return Result<List<ProductDto>>.Ok(cached, "Products by Category (from cache)", 200);
 			try

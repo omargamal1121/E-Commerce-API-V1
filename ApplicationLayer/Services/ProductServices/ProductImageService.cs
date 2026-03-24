@@ -201,7 +201,7 @@ namespace ApplicationLayer.Services.ProductServices
 					hasvaraint=p.ProductVariants.Any(v=>v.DeletedAt==null&&v.Quantity>0)
 				}).FirstOrDefault();
 			
-				if (productinfo==null||productinfo.isdeleted)
+				if (productinfo==null)
 				{
 					_logger.LogWarning("RemoveProductImageAsync: Product not found or deleted. productId: {ProductId}", productId);
 					return Result<bool>.Fail("Product not found", 404);

@@ -84,7 +84,7 @@ namespace ApplicationLayer.Services.ProductServices
             }
 
           
-            var cached = await _productCacheManger.GetProductListCacheAsync<List<ProductDto>>(
+            var cached = await _productCacheManger.GetProductListCacheAsync<ProductDto>(
                 null, isActive, deletedOnly, pageSize, page, "NewArrivals", IsAdmin);
                 
             if (cached != null)
@@ -106,7 +106,7 @@ namespace ApplicationLayer.Services.ProductServices
                 if (!products.Any())
                     return Result<List<ProductDto>>.Fail("No new arrivals found", 404);
 
-                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "NewArrial", IsAdmin, null));
+                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "NewArrivals", IsAdmin, null));
                 return Result<List<ProductDto>>.Ok(products, $"Found {products.Count} new arrivals", 200);
             }
             catch (Exception ex)
@@ -128,7 +128,7 @@ namespace ApplicationLayer.Services.ProductServices
                 deletedOnly = false;
             }
             
-            var cached = await _productCacheManger.GetProductListCacheAsync<List<ProductDto>>(
+            var cached = await _productCacheManger.GetProductListCacheAsync<ProductDto>(
                 null, isActive, deletedOnly, pageSize, page, "BestSeller", IsAdmin);
                 
             if (cached != null)
@@ -205,7 +205,7 @@ namespace ApplicationLayer.Services.ProductServices
 				}
 
 
-                var cached = await _productCacheManger.GetProductListCacheAsync<List<ProductDto>>(
+                var cached = await _productCacheManger.GetProductListCacheAsync<ProductDto>(
                     searchKey, isActive, deletedOnly, pageSize, page, "AdvancedSearch", IsAdmin);
                 
                 if (cached != null)
@@ -288,10 +288,10 @@ namespace ApplicationLayer.Services.ProductServices
                 var products = await  _productMapper.maptoProductDtoexpression(query,IsAdmin)
                     .ToListAsync();
 
-                if (!products.Any())
+                if (products is null||!products.Any())
                     return Result<List<ProductDto>>.Fail("No products found matching the search criteria", 404);
 
-                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products, searchKey, isActive, deletedOnly,pageSize,page,null,IsAdmin,null));
+                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync<ProductDto>(products, searchKey, isActive, deletedOnly,pageSize,page, "AdvancedSearch", IsAdmin,null));
 
                 return Result<List<ProductDto>>.Ok(products, $"Found {products.Count} products matching search criteria", 200);
             }
@@ -306,7 +306,7 @@ namespace ApplicationLayer.Services.ProductServices
         public async Task<Result<List<BestSellingProductDto>>> GetBestSellerProductsWithCountAsync(bool? isDeleted, bool? isActive, int page = 1, int pagesize = 10,bool IsAdmin=false)
         {
 
-            var cachedResult = await _productCacheManger.GetProductListCacheAsync<List<BestSellingProductDto>>(null, isActive, isDeleted, pagesize,page,"BestSeller",IsAdmin);
+            var cachedResult = await _productCacheManger.GetProductListCacheAsync<BestSellingProductDto>(null, isActive, isDeleted, pagesize,page,"BestSeller",IsAdmin);
             if (cachedResult is not null)
                 return Result<List<BestSellingProductDto>>.Ok(cachedResult);
 
@@ -364,7 +364,7 @@ namespace ApplicationLayer.Services.ProductServices
                     deletedOnly = false;
                 }
 
-                var cached = await _productCacheManger.GetProductListCacheAsync<List<BestSellingProductDto>>(
+                var cached = await _productCacheManger.GetProductListCacheAsync<BestSellingProductDto>(
                     null, isActive, deletedOnly, pageSize, page, "MostWishlisted", IsAdmin);
                 
                 if (cached != null)

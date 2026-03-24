@@ -252,8 +252,8 @@ namespace ApplicationLayer.Services.OrderService
 
                 var orders = await query
                     .OrderByDescending(o => o.CreatedAt).ThenBy(o=>o.ModifiedAt)
-                    .Select(_mapper.OrderListSelector)
-                    .Skip((page - 1) * pageSize)
+					.Select(_mapper.OrderListSelector).AsSplitQuery()
+					.Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
 

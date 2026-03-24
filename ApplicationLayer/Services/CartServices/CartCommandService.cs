@@ -483,6 +483,7 @@ namespace ApplicationLayer.Services.CartServices
                 .GetAll()
                 .Where(ci => productIds.Contains(ci.ProductId))
                 .Include(ci => ci.Product)
+                .Include(ci => ci.Cart)
                 .ToListAsync();
             HashSet<int> updatecartcheckout = new HashSet<int>();
 			foreach (var item in cartItems)
@@ -504,7 +505,11 @@ namespace ApplicationLayer.Services.CartServices
 			_unitOfWork.Repository<CartItem>().UpdateList(cartItems);
             await _unitOfWork.CommitAsync();
 
-            _cacheHelper.ClearCartCache();
+            var affectedUserIds = cartItems.Where(ci => ci.Cart != null).Select(ci => ci.Cart.UserId).Distinct();
+            foreach (var affectedUserId in affectedUserIds)
+            {
+                await _cacheHelper.RemoveCartCacheAsync(affectedUserId);
+            }
         }
 
 		public async Task UpdateCartItemsForProductsAfterRemoveDiscountAsync(List<int> productIds)
@@ -513,6 +518,7 @@ namespace ApplicationLayer.Services.CartServices
 				.GetAll()
 				.Where(ci => productIds.Contains(ci.ProductId))
 				.Include(ci => ci.Product)
+				.Include(ci => ci.Cart)
 				.ToListAsync();
 
 			HashSet<int> cartIds = new HashSet<int>();
@@ -533,7 +539,12 @@ namespace ApplicationLayer.Services.CartServices
 			}
 
 			await _unitOfWork.CommitAsync();
-			_cacheHelper.ClearCartCache();
+			
+			var affectedUserIds = cartItems.Where(ci => ci.Cart != null).Select(ci => ci.Cart.UserId).Distinct();
+			foreach (var affectedUserId in affectedUserIds)
+			{
+				await _cacheHelper.RemoveCartCacheAsync(affectedUserId);
+			}
 		}
 
 		public async Task ResetCheckoutStatusAndRecalculateAsync(int cartId)
@@ -558,7 +569,7 @@ namespace ApplicationLayer.Services.CartServices
                 return;
             cart.CheckoutDate = null;
             await _unitOfWork.CommitAsync();
-            _cacheHelper.ClearCartCache();
+            await _cacheHelper.RemoveCartCacheAsync(cart.UserId);
 		}
 
 		private async Task<Cart?> CreateNewCartAsync(string userId)

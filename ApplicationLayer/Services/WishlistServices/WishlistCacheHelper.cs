@@ -26,11 +26,12 @@ namespace ApplicationLayer.Services.WishlistServices
             return $"{CACHE_TAG_WISHLIST}_{userId}_page_{page}_size_{pageSize}";
         }
 
-        public async Task CacheWishlistAsync(string cacheKey, List<WishlistItemDto> items)
+        public async Task CacheWishlistAsync(string cacheKey, string userId, List<WishlistItemDto> items)
         {
             try
             {
-                await _cacheManager.SetAsync(cacheKey, items, TimeSpan.FromMinutes(10));
+                var tags = new[] { CACHE_TAG_WISHLIST + "_" + userId };
+                await _cacheManager.SetAsync(cacheKey, items, TimeSpan.FromMinutes(10), tags);
                 _logger.LogInformation("Successfully cached wishlist for key {CacheKey}", cacheKey);
             }
             catch (Exception ex)

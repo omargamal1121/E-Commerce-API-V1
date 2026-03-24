@@ -6,6 +6,7 @@ namespace ApplicationLayer.Services.OrderService
     public interface IOrderCacheHelper
     {
         void ClearOrderCache();
+        void ClearUserOrderCache(string userId);
         void NotifyAdminError(string message, string? stackTrace = null);
         
         // Order by ID cache methods

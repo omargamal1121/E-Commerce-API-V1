@@ -51,8 +51,7 @@ namespace ApplicationLayer.Services.CollectionServices
 			{
 				var collections = await _unitOfWork.Repository<DomainLayer.Models.Collection>()
 					.GetAll()
-					.Include(c => c.ProductCollections)
-						.ThenInclude(pc => pc.Product)
+					
 					.Where(c => c.DeletedAt == null &&
 								c.ProductCollections.Any(pc => pc.ProductId == productId))
 					.ToListAsync();

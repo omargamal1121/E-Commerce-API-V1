@@ -106,7 +106,7 @@ namespace ApplicationLayer.Services.DiscountServices
                     .OrderBy(d => d.CreatedAt)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
-                    .Select(_mapper.DiscountDtoSelector)
+                    .Select(_mapper.DiscountsDtoSelector)
                     .ToListAsync();
 
 
@@ -138,7 +138,7 @@ namespace ApplicationLayer.Services.DiscountServices
                         d.IsActive &&
                         d.StartDate <= now &&
                         d.EndDate >= now).Skip((page-1) * pagesize).Take(pagesize)
-                    .Select(_mapper.DiscountDtoSelector)
+                    .Select(_mapper.DiscountsDtoSelector)
                     .ToListAsync();
 
                 if (!discounts.Any())
@@ -168,7 +168,7 @@ namespace ApplicationLayer.Services.DiscountServices
                 var expiredDiscounts = await _unitOfWork.Repository<Discount>().GetAll().AsNoTracking()
                     .Where(d => d.DeletedAt == null && d.EndDate < now)
                     .OrderByDescending(d => d.EndDate).Skip((page-1)*pagesize).Take(pagesize)
-                    .Select(_mapper.DiscountDtoSelector)
+                    .Select(_mapper.DiscountsDtoSelector)
                     .ToListAsync();
 
                 if (expiredDiscounts.Count == 0)
@@ -198,7 +198,7 @@ namespace ApplicationLayer.Services.DiscountServices
                 var upcomingDiscounts = await _unitOfWork.Repository<Discount>().GetAll().AsNoTracking()
                     .Where(d => d.DeletedAt == null && d.StartDate > now)
                     .OrderBy(d => d.StartDate).Skip((page - 1) * pagesize).Take(pagesize)
-                    .Select(_mapper.DiscountDtoSelector)
+                    .Select(_mapper.DiscountsDtoSelector)
                     .ToListAsync();
 
                 if (upcomingDiscounts.Count == 0)
@@ -221,7 +221,7 @@ namespace ApplicationLayer.Services.DiscountServices
             {
                 var discounts = await _unitOfWork.Repository<Discount>().GetAll().AsNoTracking()
                     .Where(d => d.DeletedAt == null && d.CategoryId == categoryId)
-                    .Select(_mapper.DiscountDtoSelector)
+                    .Select(_mapper.DiscountsDtoSelector)
                     .ToListAsync();
 
                 if (!discounts.Any())

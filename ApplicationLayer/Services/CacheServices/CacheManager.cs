@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 
@@ -12,6 +13,12 @@ namespace ApplicationLayer.Services.Cache
         private const int DEFAULT_EXPIRY_MINUTES = 30;
         private const string TAG_PREFIX = "tag:";
         private const string KEY_TAGS_PREFIX = "key_tags:";
+
+        private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            ReferenceHandler = ReferenceHandler.IgnoreCycles
+        };
 
         public CacheManager(IConnectionMultiplexer redis, ILogger<CacheManager> logger)
         {
@@ -34,7 +41,7 @@ namespace ApplicationLayer.Services.Cache
                 }
 
                 _logger.LogInformation("Cache hit for key: {Key}", key);
-                return JsonSerializer.Deserialize<T>(value.ToString());
+                return JsonSerializer.Deserialize<T>(value.ToString(), _jsonOptions);
             }
             catch (JsonException ex)
             {
@@ -54,7 +61,7 @@ namespace ApplicationLayer.Services.Cache
             {
                 _logger.LogInformation("Setting cache for key: {Key}", key);
 
-                var serializedValue = JsonSerializer.Serialize(value);
+                var serializedValue = JsonSerializer.Serialize(value, _jsonOptions);
                 var expiryTime = expiry ?? TimeSpan.FromMinutes(DEFAULT_EXPIRY_MINUTES);
 
                 var transaction = _database.CreateTransaction();
@@ -62,7 +69,7 @@ namespace ApplicationLayer.Services.Cache
                 // Add main key-value pair
                 _ = transaction.StringSetAsync(key, serializedValue, expiryTime);
 
-                // Handle tags if provided
+      
                 if (tags?.Any() == true)
                 {
                     var keyTagsSet = $"{KEY_TAGS_PREFIX}{key}";
@@ -212,7 +219,7 @@ namespace ApplicationLayer.Services.Cache
             {
                 _logger.LogInformation("Removing cache by tags: [{Tags}]", string.Join(", ", tags));
 
-                // Collect all keys for all tags BEFORE creating transaction
+
                 var allKeys = new HashSet<string>();
                 foreach (var tag in tags)
                 {
@@ -230,7 +237,6 @@ namespace ApplicationLayer.Services.Cache
                     return;
                 }
 
-                // Read all related tags for each key BEFORE creating transaction
                 var keyTagsMap = new Dictionary<string, RedisValue[]>();
                 foreach (var key in allKeys)
                 {

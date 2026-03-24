@@ -74,7 +74,7 @@ namespace ApplicationLayer.Services.SubCategoryServices
 			_logger.LogInformation($"Executing {nameof(FilterAsync)} with filters");
 
 			var cachedData = await _subCategoryCacheHelper
-				.GetSubCategoryListCacheAsync<List<SubCategoryDto>>(search, isActive, isDeleted, page, pageSize, IsAdmin);
+				.GetSubCategoryListCacheAsync<SubCategoryDto>(search, isActive, isDeleted, page, pageSize, IsAdmin);
 
 			if (cachedData != null)
 				return Result<List<SubCategoryDto>>.Ok(cachedData, "Subcategories from cache", 200);
@@ -84,8 +84,8 @@ namespace ApplicationLayer.Services.SubCategoryServices
 			if (!string.IsNullOrWhiteSpace(search))
 			{
 				query = query.Where(sc =>
-					EF.Functions.Like(sc.Name, $"%{search}%") ||
-					EF.Functions.Like(sc.Description, $"%{search}%"));
+					EF.Functions.Like(sc.Name, $"%{search}") ||
+					EF.Functions.Like(sc.Description, $"%{search}"));
 			}
 
 			query = BasicFilter(query, isActive, isDeleted,IsAdmin);

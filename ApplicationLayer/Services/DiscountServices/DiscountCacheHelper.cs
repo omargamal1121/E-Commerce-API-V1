@@ -47,13 +47,9 @@ namespace ApplicationLayer.Services.DiscountServices
 
         public void ClearProductCache()
         {
-            _cacheManager.RemoveByTagsAsync(_discountTags);
+            _backgroundJobClient.Enqueue(()=>  _cacheManager.RemoveByTagsAsync(_discountTags));
             _productCacheManger.ClearProductCache();
-
-            // Clear collection cache that stores products
             _collectionCacheHelper.ClearCollectionCache();
-            
-            // Clear subcategory cache that stores products
             _subCategoryCacheHelper.ClearSubCategoryCache();
         }
         private string GetKey(int? id=null,bool? isActive=null,bool? isDeleted=null,string?Searchkey=null,int?page=null,int?PageSize=null,bool? IsAdmin=false)

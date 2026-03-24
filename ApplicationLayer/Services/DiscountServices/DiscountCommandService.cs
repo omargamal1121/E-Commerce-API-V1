@@ -231,7 +231,7 @@ namespace ApplicationLayer.Services.DiscountServices
 
                 _backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterRemoveDiscountAsync(productsids));
                 _cacheHelper.ClearProductCache();
-                _cacheHelper.ClearProductCache();
+
                 return Result<bool>.Ok(true, "Discount deleted", 200);
             }
             catch (Exception ex)

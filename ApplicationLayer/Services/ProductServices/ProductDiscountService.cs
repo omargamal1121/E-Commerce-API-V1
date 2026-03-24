@@ -18,6 +18,7 @@ using System.Linq.Expressions;
 using Microsoft.Extensions.Logging;
 using DomainLayer.Models;
 using ApplicationLayer.Services.CollectionServices;
+using ApplicationLayer.Services.DiscountServices;
 
 namespace ApplicationLayer.Services.ProductServices
 {
@@ -33,11 +34,13 @@ namespace ApplicationLayer.Services.ProductServices
 		private readonly IErrorNotificationService _errorNotificationService;
 		private readonly ICartServices _cartServices;
 		private readonly ICollectionCacheHelper _collectionCacheHelper ;
-	
+		private readonly IDiscountCacheHelper _discountCacheHelper;
+
 
 		private readonly ISubCategoryCacheHelper _SubCategoryCacheHelper;
 
 		public ProductDiscountService(
+			IDiscountCacheHelper discountCacheHelper,
 			ICollectionCacheHelper collectionCacheHelper,
 			ISubCategoryCacheHelper subCategoryCacheHelper,
 			IProductCacheManger productCacheManger,
@@ -60,6 +63,7 @@ namespace ApplicationLayer.Services.ProductServices
 			_logger = logger;
 			_adminOpreationServices = adminOpreationServices;
 			_errorNotificationService = errorNotificationService;
+			_discountCacheHelper = discountCacheHelper;
 		}
 
 		private void RemoveCacheAndRelatedCaches()
@@ -67,6 +71,8 @@ namespace ApplicationLayer.Services.ProductServices
 			_collectionCacheHelper.ClearCollectionDataCache();
 			_SubCategoryCacheHelper.ClearSubCategoryDataCache();
 			_productCacheManger.ClearProductCache();
+		
+		
 		}
 
 		public async Task<Result<List<ProductDto>>> ApplyDiscountToProductsAsync(ApplyDiscountToProductsDto dto, string userId)

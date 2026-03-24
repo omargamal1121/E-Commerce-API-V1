@@ -10,11 +10,11 @@ namespace ApplicationLayer.DtoModels.ProductDtos
 
 		public decimal FinalPrice { get; set; }
 
-		public string? DiscountName { get; set; }
+		public string DiscountName { get; set; }
 
-		public decimal? DiscountPrecentage { get; set; }
+		public decimal DiscountPrecentage { get; set; }
 
-		public string? MainImageUrl { get; set; } 
+		public string MainImageUrl { get; set; } 
 
 		public bool IsActive { get; set; }
 

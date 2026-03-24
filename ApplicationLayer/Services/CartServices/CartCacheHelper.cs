@@ -18,11 +18,6 @@ namespace ApplicationLayer.Services.CartServices
             _cacheManager = cacheManager;
         }
 
-        public void ClearCartCache()
-        {
-            _jobClient.Enqueue(() => _cacheManager.RemoveByTagAsync(CACHE_TAG_CART ));
-        }
-
         public void NotifyAdminError(string message, string? stackTrace = null)
         {
             _jobClient.Enqueue<IErrorNotificationService>(_ => _.SendErrorNotificationAsync(message, stackTrace));

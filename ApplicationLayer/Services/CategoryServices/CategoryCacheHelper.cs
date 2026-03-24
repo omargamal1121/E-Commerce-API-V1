@@ -42,19 +42,19 @@ namespace ApplicationLayer.Services.CategoryServices
 			_jobClient.Enqueue<IErrorNotificationService>(_ => _.SendErrorNotificationAsync(message, stackTrace));
 		}
 
-		public  void SetCategoryListCacheAsync(object data, string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false, TimeSpan? expiration = null)
+		public  void SetCategoryListCacheAsync<T>(List<T> data, string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false, TimeSpan? expiration = null)
 		{
 			var cacheKey = GetCategoryListKey(search, isActive, isDeleted, page, pageSize, IsAdmin);
 			_jobClient.Enqueue(()=> _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { CACHELIST }));
 		}
 
-		public async Task<T?> GetCategoryListCacheAsync<T>(string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false)
+		public async Task<List<T>?> GetCategoryListCacheAsync<T>(string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false)
 		{
 			var cacheKey = GetCategoryListKey(search, isActive, isDeleted, page, pageSize, IsAdmin);
-			return await _cacheManager.GetAsync<T>(cacheKey);
+			return await _cacheManager.GetAsync<List<T>>(cacheKey);
 		}
 
-		public void SetCategoryByIdCacheAsync(int id, bool? isActive, bool? isDeleted, object data,bool IsAdmin=false, TimeSpan? expiration = null)
+		public void SetCategoryByIdCacheAsync<T>(int id, bool? isActive, bool? isDeleted, T data,bool IsAdmin=false, TimeSpan? expiration = null)
 		{
 			var cacheKey = GetCategoryByIdKey(id, isActive, isDeleted,IsAdmin);
 			_jobClient.Enqueue(()=> _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[]{ CACHEWITHDATA }));

@@ -59,8 +59,6 @@ This repository provides scalable solutions for managing products, categories, i
 
 ## Architecture Diagram
 
-> **Note:**  
-> The diagram below uses simple text labels without HTML tags and is compatible with GitHub's Mermaid renderer. If it does not render, use [Mermaid Live Editor](https://mermaid-js.github.io/mermaid-live-editor/).
 
 ```mermaid
 graph TD
@@ -235,18 +233,6 @@ The entire codebase is structured with SOLID in mind:
 The solution is ready for unit and integration tests via xUnit or NUnit.  
 Coverage of business rules, data access, and controller contracts is recommended for quality assurance.
 
----
-
-## Contributing
-
-Contributions, suggestions, and bug reports are always welcome!  
-Fork the repo, open issues, or submit pull requests.  
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
----
-
-## License
-
 MIT License
 
 ```
@@ -279,7 +265,7 @@ SOFTWARE.
 
 - **Omar Gamal**
   - [GitHub](https://github.com/omargamal1121)
-  - [LinkedIn](https://www.linkedin.com/in/omar-gamal-2a55812b5/)
+  - [LinkedIn](https://www.linkedin.com/in/omar-gamal-226232292/)
 
 ---
 

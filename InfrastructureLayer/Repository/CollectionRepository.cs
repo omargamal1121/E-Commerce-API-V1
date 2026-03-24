@@ -139,7 +139,7 @@ namespace InfrastructureLayer.Repository
                 collection.IsActive = isActive;
                 collection.ModifiedAt = DateTime.UtcNow;
 
-                _context.Collections.Update(collection);
+
                 return true;
             }
             catch (Exception ex)

@@ -60,7 +60,7 @@ namespace ApplicationLayer.Services.CategoryServices
 		public async Task<Result<List<CategoryDto>>> FilterAsync(string? search, bool? isActive, bool? isDeleted, int page, int pageSize,bool IsAdmin=false)
 		{
 			_logger.LogInformation($"Executing {nameof(FilterAsync)} with filters");
-			var cached = await _categoryCacheHelper.GetCategoryListCacheAsync<List<CategoryDto>>(search, isActive, isDeleted, page, pageSize, IsAdmin);
+			var cached = await _categoryCacheHelper.GetCategoryListCacheAsync<CategoryDto>(search, isActive, isDeleted, page, pageSize, IsAdmin);
 			if (cached != null)
 			{
 				_logger.LogInformation($"Cache hit for FilterAsync ");

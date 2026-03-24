@@ -86,7 +86,7 @@ namespace ApplicationLayer.Services.WishlistServices
                 
                    
 
-                _backgroundJobClient.Enqueue(() => _cacheHelper.CacheWishlistAsync(cacheKey, list));
+                _backgroundJobClient.Enqueue(() => _cacheHelper.CacheWishlistAsync(cacheKey, userId, list));
 
                 return Result<List<WishlistItemDto>>.Ok(list, "Wishlist retrieved successfully", 200);
             }

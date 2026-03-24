@@ -91,7 +91,6 @@ namespace ApplicationLayer.Services.DiscountServices
 
             if (shouldDeactivate || shouldActivate)
             {
-                 _cartCacheHelper.ClearCartCache();
                 await _unitOfWork.CommitAsync();
             }
         }

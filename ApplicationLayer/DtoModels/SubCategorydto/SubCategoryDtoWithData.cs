@@ -5,7 +5,7 @@ namespace ApplicationLayer.DtoModels.SubCategorydto
 {
 	public class SubCategoryDtoWithData: SubCategoryDto
 	{
-		public IEnumerable<ProductDto>? Products { get; set; }
+		public List<ProductDto>? Products { get; set; }
 	}
 }
 

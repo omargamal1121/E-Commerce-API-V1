@@ -1,11 +1,6 @@
 using DomainLayer.Enums;
-using ApplicationLayer.DtoModels.CategoryDtos;
-using ApplicationLayer.DtoModels.CollectionDtos;
-using ApplicationLayer.DtoModels.DiscoutDtos;
 using ApplicationLayer.DtoModels.ImagesDtos;
 using ApplicationLayer.DtoModels.ProductDtos;
-using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.ErrorHnadling;
 using ApplicationLayer.Interfaces;
 using DomainLayer.Models;
 using ApplicationLayer.Services.EmailServices;
@@ -13,7 +8,6 @@ using ApplicationLayer.Services.EmailServices;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Linq.Expressions;
 using Microsoft.Extensions.Logging;
 
 namespace ApplicationLayer.Services.ProductServices
@@ -45,13 +39,13 @@ namespace ApplicationLayer.Services.ProductServices
             _errorNotificationService = errorNotificationService;
         }
 
-        private IQueryable<DomainLayer.Models.Product> BasicFilter(IQueryable<DomainLayer.Models.Product> query, bool? isActive, bool? DeletedOnly, bool IsAdmin = false)
+        private IQueryable<Product> BasicFilter(IQueryable<Product> query, bool? isActive, bool? DeletedOnly, bool IsAdmin = false)
         {
             if (!IsAdmin)
             {
                 isActive = true;
                 DeletedOnly = false;
-                query = query.Where(p => p.Quantity > 0); // Enforce stock check for customers
+                query = query.Where(p => p.Quantity > 0);
             }
             if (isActive.HasValue)
             {
@@ -70,23 +64,20 @@ namespace ApplicationLayer.Services.ProductServices
             return query;
         }
 
-    
         public async Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
         {
             if (page <= 0 || pageSize <= 0)
                 return Result<List<ProductDto>>.Fail("Invalid page or pageSize. Must be greater than 0.", 400);
 
-            // For non-admin users, restrict to active and non-deleted products
             if (!IsAdmin)
             {
                 isActive = true;
                 deletedOnly = false;
             }
 
-          
             var cached = await _productCacheManger.GetProductListCacheAsync<ProductDto>(
                 null, isActive, deletedOnly, pageSize, page, "NewArrivals", IsAdmin);
-                
+
             if (cached != null)
                 return Result<List<ProductDto>>.Ok(cached, $"Found {cached.Count} new arrivals", 200);
 
@@ -95,7 +86,7 @@ namespace ApplicationLayer.Services.ProductServices
                 var thirtyDaysAgo = DateTime.UtcNow.AddDays(-90);
                 var query = _unitOfWork.Product.GetAll().Where(p => p.CreatedAt >= thirtyDaysAgo);
 
-                query = BasicFilter(query, isActive, deletedOnly,IsAdmin);
+                query = BasicFilter(query, isActive, deletedOnly, IsAdmin);
 
                 var products = await _productMapper.maptoProductDtoexpression(query, IsAdmin)
                     .OrderByDescending(p => p.CreatedAt)
@@ -104,7 +95,7 @@ namespace ApplicationLayer.Services.ProductServices
                     .ToListAsync();
 
                 if (!products.Any())
-                    return Result<List<ProductDto>>.Fail("No new arrivals found", 404);
+                    return Result<List<ProductDto>>.Fail("No new arrivals found", 204);
 
                 _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "NewArrivals", IsAdmin, null));
                 return Result<List<ProductDto>>.Ok(products, $"Found {products.Count} new arrivals", 200);
@@ -117,72 +108,140 @@ namespace ApplicationLayer.Services.ProductServices
             }
         }
 
-        public async Task<Result<List<ProductDto>>> GetBestSellersAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+        public async Task<Result<List<ProductDto>>> GetBestSellersAsync(
+            int page,
+            int pageSize,
+            bool? isActive = null,
+            bool? deletedOnly = null,
+            bool IsAdmin = false)
         {
             if (page <= 0 || pageSize <= 0)
                 return Result<List<ProductDto>>.Fail("Invalid page or pageSize. Must be greater than 0.", 400);
-            
+
             if (!IsAdmin)
             {
                 isActive = true;
                 deletedOnly = false;
             }
-            
+
             var cached = await _productCacheManger.GetProductListCacheAsync<ProductDto>(
                 null, isActive, deletedOnly, pageSize, page, "BestSeller", IsAdmin);
-                
+
             if (cached != null)
                 return Result<List<ProductDto>>.Ok(cached, $"Found {cached.Count} best sellers", 200);
 
             try
             {
-                var bestSellerQuery = _unitOfWork.Repository<OrderItem>().GetAll()
-                    .Where(i => i.Order.Status != OrderStatus.CancelledByAdmin && i.Order.Status != OrderStatus.CancelledByUser)
+                var now = DateTime.UtcNow;
+
+                var productBaseQuery = _unitOfWork.Product.GetAll();
+                productBaseQuery = BasicFilter(productBaseQuery, isActive, deletedOnly, IsAdmin);
+
+                var query = _unitOfWork.Repository<OrderItem>().GetAll()
+                    .Where(i =>
+                        i.Order.Status != OrderStatus.CancelledByAdmin &&
+                        i.Order.Status != OrderStatus.CancelledByUser &&
+                        i.Order.Status != OrderStatus.Returned &&
+                        i.Order.Status != OrderStatus.Refunded &&
+                        i.Order.Status != OrderStatus.PaymentExpired)
                     .GroupBy(i => i.ProductId)
                     .Select(g => new
                     {
                         ProductId = g.Key,
                         TotalQuantity = g.Sum(x => x.Quantity)
                     })
-                    .OrderByDescending(g => g.TotalQuantity);
-
-                var productQuery = bestSellerQuery
-                    .Join(_unitOfWork.Product.GetAll().Include(p => p.Images),
-                          g => g.ProductId,
-                          p => p.Id,
-                          (g, p) => p)
-                    .AsQueryable();
-
-                productQuery = BasicFilter(productQuery, isActive, deletedOnly,IsAdmin);
-
-                var products = await _productMapper.maptoProductDtoexpression(productQuery, IsAdmin)
+                    .Join(productBaseQuery,
+                        g => g.ProductId,
+                        p => p.Id,
+                        (g, p) => new
+                        {
+                            Product = p,
+                            g.TotalQuantity,
+                            ValidDiscount =
+                                p.Discount != null &&
+                                p.Discount.IsActive &&
+                                p.Discount.DeletedAt == null &&
+                                p.Discount.EndDate > now
+                        })
+                    .OrderByDescending(x => x.TotalQuantity)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
-                    .ToListAsync();
+                    .Select(x => new ProductDto
+                    {
+                        Id = x.Product.Id,
+                        Name = x.Product.Name,
+                        Description = x.Product.Description,
+                        AvailableQuantity = x.Product.Quantity,
+                        Gender = x.Product.Gender,
+                        SubCategoryId = x.Product.SubCategoryId,
+                        Price = x.Product.Price,
+                        CreatedAt = x.Product.CreatedAt,
+                        ModifiedAt = x.Product.ModifiedAt,
+                        DeletedAt = x.Product.DeletedAt,
+                        fitType = x.Product.fitType,
+                        IsActive = x.Product.IsActive,
+                        TotalSold = x.TotalQuantity,
+                        FinalPrice =
+                            x.ValidDiscount
+                                ? x.Product.Price - ((x.Product.Discount!.DiscountPercent / 100m) * x.Product.Price)
+                                : x.Product.Price,
+                        EndAt =
+                            IsAdmin
+                                ? (x.Product.Discount != null ? x.Product.Discount.EndDate : null)
+                                : (x.ValidDiscount ? x.Product.Discount!.EndDate : null),
+                        DiscountName =
+                            IsAdmin
+                                ? (x.Product.Discount != null ? x.Product.Discount.Name : null)
+                                : (x.ValidDiscount ? x.Product.Discount!.Name : null),
+                        DiscountPrecentage =
+                            IsAdmin
+                                ? (x.Product.Discount != null ? x.Product.Discount.DiscountPercent : 0)
+                                : (x.ValidDiscount ? x.Product.Discount!.DiscountPercent : 0),
+                        images = x.Product.Images
+                            .Where(i => i.DeletedAt == null)
+                            .Select(i => new ImageDto
+                            {
+                                Id = i.Id,
+                                Url = i.Url,
+                                IsMain = i.IsMain
+                            })
+                    });
+
+                var products = await query.ToListAsync();
 
                 if (!products.Any())
                 {
-                    var query =  _unitOfWork.Product.GetAll()
-                        .Where(p => isActive == null || p.IsActive == isActive)
-                        .OrderBy(r => Guid.NewGuid())
+                    var fallbackQuery = productBaseQuery
+                        .OrderBy(p => p.Id)
                         .Take(pageSize);
-                    var fallbackProducts = await
-                       _productMapper.maptoProductDtoexpression(query, IsAdmin)
+
+                    var fallbackProducts = await _productMapper
+                        .maptoProductDtoexpression(fallbackQuery, IsAdmin)
                         .ToListAsync();
 
-                    return Result<List<ProductDto>>.Ok(fallbackProducts, "No best sellers found. Showing random products instead.", 200);
+                    return Result<List<ProductDto>>.Ok(
+                        fallbackProducts,
+                        "No best sellers found. Showing fallback products instead.",
+                        200);
                 }
 
-                var result = Result<List<ProductDto>>.Ok(products, $"Found {products.Count} best sellers", 200);
+                var result = Result<List<ProductDto>>.Ok(
+                    products,
+                    $"Found {products.Count} best sellers",
+                    200);
 
-                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products,null, isActive, deletedOnly,pageSize,page,"BestSeller", IsAdmin,null));
+                _backgroundJobClient.Enqueue(() =>
+                    _productCacheManger.SetProductListCacheAsync(
+                        products, null, isActive, deletedOnly,
+                        pageSize, page, "BestSeller", IsAdmin, null));
 
                 return result;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in GetBestSellersAsync");
-                _backgroundJobClient.Enqueue(() => _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
+                _backgroundJobClient.Enqueue(() =>
+                    _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
                 return Result<List<ProductDto>>.Fail("Error retrieving best sellers", 500);
             }
         }
@@ -196,25 +255,22 @@ namespace ApplicationLayer.Services.ProductServices
                 var serializedCriteria = JsonConvert.SerializeObject(searchCriteria);
                 string searchKey = $"advsearch_{serializedCriteria}_{page}_{pageSize}_{isActive}_{deletedOnly}";
 
-  
                 if (!IsAdmin)
                 {
                     isActive = true;
                     deletedOnly = false;
                     searchCriteria.InStock = true;
-				}
-
+                }
 
                 var cached = await _productCacheManger.GetProductListCacheAsync<ProductDto>(
                     searchKey, isActive, deletedOnly, pageSize, page, "AdvancedSearch", IsAdmin);
-                
+
                 if (cached != null)
                     return Result<List<ProductDto>>.Ok(cached, $"Found {cached.Count} products matching your search", 200);
 
                 var query = _unitOfWork.Product.GetAll();
-                query = BasicFilter(query, isActive, deletedOnly,IsAdmin);
+                query = BasicFilter(query, isActive, deletedOnly, IsAdmin);
 
-                // Apply filters
                 if (searchCriteria.Subcategoryid.HasValue)
                     query = query.Where(p => p.SubCategoryId == searchCriteria.Subcategoryid.Value);
 
@@ -247,7 +303,6 @@ namespace ApplicationLayer.Services.ProductServices
                         p.Discount.EndDate >= DateTime.UtcNow);
                 }
 
-                // Apply price filtering BEFORE ToListAsync
                 if (searchCriteria.MinPrice.HasValue)
                 {
                     var min = searchCriteria.MinPrice.Value;
@@ -272,7 +327,6 @@ namespace ApplicationLayer.Services.ProductServices
                          (p.Price - ((p.Discount.DiscountPercent / 100m) * p.Price)) <= max));
                 }
 
-                // Sorting
                 query = searchCriteria.SortBy?.ToLower() switch
                 {
                     "name" => searchCriteria.SortDescending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name),
@@ -284,14 +338,13 @@ namespace ApplicationLayer.Services.ProductServices
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize);
 
-
-                var products = await  _productMapper.maptoProductDtoexpression(query,IsAdmin)
+                var products = await _productMapper.maptoProductDtoexpression(query, IsAdmin)
                     .ToListAsync();
 
-                if (products is null||!products.Any())
-                    return Result<List<ProductDto>>.Fail("No products found matching the search criteria", 404);
+                if (products is null || !products.Any())
+                    return Result<List<ProductDto>>.Fail("No products found matching the search criteria", 204);
 
-                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync<ProductDto>(products, searchKey, isActive, deletedOnly,pageSize,page, "AdvancedSearch", IsAdmin,null));
+                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync<ProductDto>(products, searchKey, isActive, deletedOnly, pageSize, page, "AdvancedSearch", IsAdmin, null));
 
                 return Result<List<ProductDto>>.Ok(products, $"Found {products.Count} products matching search criteria", 200);
             }
@@ -303,50 +356,50 @@ namespace ApplicationLayer.Services.ProductServices
             }
         }
 
-        public async Task<Result<List<BestSellingProductDto>>> GetBestSellerProductsWithCountAsync(bool? isDeleted, bool? isActive, int page = 1, int pagesize = 10,bool IsAdmin=false)
+        public async Task<Result<List<BestSellingProductDto>>> GetBestSellerProductsWithCountAsync(bool? isDeleted, bool? isActive, int page = 1, int pagesize = 10, bool IsAdmin = false)
         {
-
-            var cachedResult = await _productCacheManger.GetProductListCacheAsync<BestSellingProductDto>(null, isActive, isDeleted, pagesize,page,"BestSeller",IsAdmin);
+            var cachedResult = await _productCacheManger.GetProductListCacheAsync<BestSellingProductDto>(null, isActive, isDeleted, pagesize, page, "BestSellerCount", IsAdmin);
             if (cachedResult is not null)
                 return Result<List<BestSellingProductDto>>.Ok(cachedResult);
 
-            var productsQuery = _unitOfWork.Product.GetAll()
-                .Include(p => p.ProductVariants)
-                    .ThenInclude(v => v.OrderItems)
-                .Include(p => p.Images)
-                .AsQueryable();
+            var productsQuery = _unitOfWork.Product.GetAll().AsQueryable();
+            productsQuery = BasicFilter(productsQuery, isActive, isDeleted, IsAdmin);
 
-            productsQuery = BasicFilter(productsQuery, isActive, isDeleted,IsAdmin);
+            var orderitemsquery = _unitOfWork.Repository<OrderItem>().GetAll().Where(oi =>
+                oi.Order.Status != OrderStatus.CancelledByAdmin &&
+                oi.Order.Status != OrderStatus.CancelledByUser &&
+                oi.Order.Status != OrderStatus.Returned &&
+                oi.Order.Status != OrderStatus.Refunded &&
+                oi.Order.Status != OrderStatus.PaymentExpired
+            );
 
-            var productSales = await productsQuery
-                .Select(p => new
+            var bestSellers = await orderitemsquery
+                .GroupBy(oi => oi.ProductId)
+                .Select(g => new
                 {
-                    Product = p,
-                    TotalSold = p.ProductVariants
-                        .SelectMany(v => v.OrderItems)
-                        .Where(oi => oi.Order.Status == OrderStatus.Confirmed)
-                        .Sum(oi => (int?)oi.Quantity) ?? 0,
-                         ImageUrl = p.Images
-                        .Where(i => i.IsMain && i.DeletedAt == null)
-                        .Select(i => i.Url)
-                        .FirstOrDefault()
+                    ProductId = g.Key,
+                    TotalSold = g.Sum(x => x.Quantity)
                 })
-                .Where(p => p.TotalSold > 0)
-                .OrderByDescending(p => p.TotalSold)
+                .Join(productsQuery,
+                    g => g.ProductId,
+                    p => p.Id,
+                    (g, p) => new BestSellingProductDto
+                    {
+                        ProductId = p.Id,
+                        ProductName = p.Name,
+                        TotalSoldQuantity = g.TotalSold,
+                        Image = p.Images
+                            .Where(i => i.IsMain && i.DeletedAt == null)
+                            .Select(i => i.Url)
+                            .FirstOrDefault()
+                    })
+                .OrderByDescending(x => x.TotalSoldQuantity)
                 .Skip((page - 1) * pagesize)
-                    .Take(pagesize)
+                .Take(pagesize)
                 .ToListAsync();
 
-            var bestSellers = productSales.Select(p => new BestSellingProductDto
-            {
-                ProductId = p.Product.Id,
-                ProductName = p.Product.Name,
-                Image = p.ImageUrl,
-                TotalSoldQuantity = p.TotalSold
-            }).ToList();
-
             _backgroundJobClient.Enqueue(() =>
-                _productCacheManger.SetProductListCacheAsync(bestSellers, null, isActive, isDeleted,pagesize,page,"BestSeller",IsAdmin,null));
+                _productCacheManger.SetProductListCacheAsync(bestSellers, null, isActive, isDeleted, pagesize, page, "BestSellerCount", IsAdmin, null));
 
             return Result<List<BestSellingProductDto>>.Ok(bestSellers);
         }
@@ -355,7 +408,7 @@ namespace ApplicationLayer.Services.ProductServices
         {
             try
             {
-                 if (page <= 0 || pageSize <= 0)
+                if (page <= 0 || pageSize <= 0)
                     return Result<List<BestSellingProductDto>>.Fail("Invalid page or pageSize. Must be greater than 0.", 400);
 
                 if (!IsAdmin)
@@ -366,7 +419,7 @@ namespace ApplicationLayer.Services.ProductServices
 
                 var cached = await _productCacheManger.GetProductListCacheAsync<BestSellingProductDto>(
                     null, isActive, deletedOnly, pageSize, page, "MostWishlisted", IsAdmin);
-                
+
                 if (cached != null)
                     return Result<List<BestSellingProductDto>>.Ok(cached, $"Found {cached.Count} most wishlisted products", 200);
 
@@ -395,16 +448,16 @@ namespace ApplicationLayer.Services.ProductServices
                           });
 
                 var products = await joinedQuery
+                    .OrderByDescending(x => x.TotalSoldQuantity)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
 
                 if (!products.Any())
                 {
-                 
                     var fallbackQuery = _unitOfWork.Product.GetAll();
                     fallbackQuery = BasicFilter(fallbackQuery, isActive, deletedOnly, IsAdmin);
-                    
+
                     var fallbackProducts = await fallbackQuery
                         .OrderBy(r => Guid.NewGuid())
                         .Take(pageSize)
@@ -431,7 +484,81 @@ namespace ApplicationLayer.Services.ProductServices
                 return Result<List<BestSellingProductDto>>.Fail("Error retrieving data", 500);
             }
         }
+
+        public async Task<Result<ProductSalesDto>> GetProductSalesAsync(int productId)
+        {
+            var cached = await _productCacheManger.GetProductSalesCacheAsync(productId);
+            if (cached != null)
+                return Result<ProductSalesDto>.Ok(cached, $"Product sales report retrieved from cache", 200);
+
+            try
+            {
+              
+				var product = await _unitOfWork.Product.GetAll()
+                    .Where(p => p.Id == productId)
+                    .Select(p => new { p.Id, p.Name })
+                    .FirstOrDefaultAsync();
+
+                if (product is null)
+                    return Result<ProductSalesDto>.Fail("Product not found.", 404);
+
+                var invalidStatuses = new[]
+                {
+                    OrderStatus.CancelledByAdmin,
+                    OrderStatus.CancelledByUser,
+                    OrderStatus.Returned,
+                    OrderStatus.Refunded,
+                    OrderStatus.PaymentExpired
+                };
+
+                var variantSales = await _unitOfWork.Repository<OrderItem>().GetAll()
+                    .Where(oi =>
+                        oi.ProductVariant.ProductId == productId &&
+                        !invalidStatuses.Contains(oi.Order.Status))
+                    .GroupBy(oi => oi.ProductVariantId)
+                    .Select(g => new
+                    {
+                        VariantId = g.Key,
+                        TotalSold = g.Sum(x => x.Quantity)
+                    })
+                    .Join(
+                        _unitOfWork.Repository<ProductVariant>().GetAll()
+                            .Where(v => v.ProductId == productId),
+                        g => g.VariantId,
+                        v => v.Id,
+                        (g, v) => new VariantSalesDto
+                        {
+                            VariantId = v.Id,
+                            Color = v.Color,
+                            Size = v.Size.HasValue ? v.Size.ToString() : null,
+                            Waist = v.Waist,
+                            Length = v.Length,
+                            TotalSold = g.TotalSold,
+                            RemainingQuantity=v.Quantity
+						})
+                    .OrderByDescending(v => v.TotalSold)
+                    .ToListAsync();
+
+                var totalSold = variantSales.Sum(v => v.TotalSold);
+
+                var salesDto = new ProductSalesDto
+                {
+                    ProductId = product.Id,
+                    ProductName = product.Name,
+                    TotalSold = totalSold,
+                    VariantSales = variantSales
+                };
+
+                _productCacheManger.SetProductSalesCacheAsync(productId, salesDto);
+
+                return Result<ProductSalesDto>.Ok(salesDto, $"Product '{product.Name}' has sold {totalSold} units in total.", 200);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetProductSalesAsync for productId={ProductId}", productId);
+                _backgroundJobClient.Enqueue(() => _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
+                return Result<ProductSalesDto>.Fail("Error retrieving product sales data.", 500);
+            }
+        }
     }
 }
-
-

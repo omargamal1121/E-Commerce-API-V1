@@ -1,4 +1,7 @@
 using ApplicationLayer.DtoModels.ProductDtos;
+using ApplicationLayer.DtoModels.CollectionDtos;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ApplicationLayer.Services.ProductServices
 {
@@ -9,7 +12,6 @@ namespace ApplicationLayer.Services.ProductServices
         Task<Result<List<ProductDto>>> GetBestSellersAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
         Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
         Task<Result<List<BestSellingProductDto>>> GetMostWishlistedProductsAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false);
+        Task<Result<ProductSalesDto>> GetProductSalesAsync(int productId);
     }
 }
-
-

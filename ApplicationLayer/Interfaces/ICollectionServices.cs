@@ -26,6 +26,7 @@ namespace ApplicationLayer.Interfaces
 
 		Task<Result<bool>> UpdateCollectionDisplayOrderAsync(int collectionId, int displayOrder, string userid);
         public Task<Result<List<CollectionSummaryDto>>> SearchCollectionsAsync(string? searchTerm, bool? IsActive = null, bool? IsDeleted = null, int page=1,int pagesize=10, bool IsAdmin = false);
+        Task<Result<List<CollectionSummaryDto>>> GetCollectionsByProductIdAsync(int productId, bool? IsActive = null, bool? IsDeleted = null, bool IsAdmin = false);
 
 
 	}

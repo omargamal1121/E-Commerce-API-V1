@@ -45,16 +45,16 @@ namespace ApplicationLayer.Services.CollectionServices
             _jobClient.Enqueue<IErrorNotificationService>(_ => _.SendErrorNotificationAsync(message, stackTrace));
         }
 
-        public  void SetCollectionListCacheAsync(object data, string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false, TimeSpan? expiration = null)
+        public  void SetCollectionListCacheAsync<T>(List<T> data, string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false, TimeSpan? expiration = null)
         {
             var cacheKey = GetCollectionListKey(search, isActive, isDeleted, page, pageSize, IsAdmin);
             _jobClient.Enqueue(()=> _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { CACHELIST }));
         }
 
-        public async Task<T?> GetCollectionListCacheAsync<T>(string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false)
+        public async Task<List<T>?> GetCollectionListCacheAsync<T>(string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false)
         {
             var cacheKey = GetCollectionListKey(search, isActive, isDeleted, page, pageSize, IsAdmin);
-            return await _cacheManager.GetAsync<T>(cacheKey);
+            return await _cacheManager.GetAsync<List<T>>(cacheKey);
         }
 
         public  void SetCollectionByIdCacheAsync(int id, bool? isActive, bool? isDeleted, object data, bool IsAdmin = false, TimeSpan? expiration = null)

@@ -1,6 +1,7 @@
 using ApplicationLayer.DtoModels.DiscoutDtos;
 using ApplicationLayer.DtoModels.ImagesDtos;
 using ApplicationLayer.DtoModels.ProductDtos;
+using ApplicationLayer.DtoModels.CollectionDtos;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -51,6 +52,8 @@ namespace ApplicationLayer.Services.ProductServices
 		public Task<Result<List<ProductDto>>> ApplyDiscountToProductsAsync(ApplyDiscountToProductsDto dto, string userid);
 		public Task<Result<List<ProductDto>>> RemoveDiscountFromProductsAsync(List<int> productIds, string userId);
 		Task<Result<List<ProductDto>>> GetProductsByDiscountIdAsync(int discountId);
+		Task<Result<ProductSalesDto>> GetProductSalesAsync(int productId);
+        Task<Result<List<CollectionSummaryDto>>> GetCollectionsByProductIdAsync(int productId, bool? IsActive = null, bool? IsDeleted = null, bool IsAdmin = false);
 	}
 }
 

@@ -337,6 +337,7 @@ namespace ApplicationLayer.Services.CollectionServices
                     .Where(c => c.Id == collectionId && c.DeletedAt == null)
                     .Select(c => new
                     {
+                        c.IsActive,
                         HasImages = c.Images.Any(),
                         HasProducts = c.ProductCollections.Select(pc => pc.Product).Where(p => p.IsActive && p.DeletedAt == null && p.Quantity > 0).Any()
                     })
@@ -344,8 +345,12 @@ namespace ApplicationLayer.Services.CollectionServices
 
                 if (collection == null)
                     return Result<bool>.Fail("Collection not found Check if deleted ", 404);
+                if(collection.IsActive)
+                {
+                    return Result<bool>.Fail("Collection is already active", 200);
+				}
 
-                if (!collection.HasImages)
+					if (!collection.HasImages)
                     return Result<bool>.Fail("Collection must have at least one image before activation", 400);
 
                 if (!collection.HasProducts)
@@ -392,11 +397,18 @@ namespace ApplicationLayer.Services.CollectionServices
 
             try
             {
-                var updated = await _collectionRepository.UpdateCollectionStatusAsync(collectionId, false);
-                if (!updated)
-                    return Result<bool>.Fail("Failed to deactivate collection", 500);
+                var check=await _unitOfWork.Collection.GetAll()
+                    .Where(c => c.Id == collectionId && c.DeletedAt == null&&c.IsActive==true)
+                    .FirstOrDefaultAsync();
+				if(check is  null)
+                {
+                    await transaction.RollbackAsync();
+                    return Result<bool>.Fail("Collection not found, deleted, or already inactive", 404);
+				}
+                check.IsActive = false;
+                await _unitOfWork.CommitAsync();
 
-                var adminLog = await _adminOperationServices.AddAdminOpreationAsync(
+				var adminLog = await _adminOperationServices.AddAdminOpreationAsync(
                     $"Make Collection {collectionId} Deactive",
 					Opreations.UpdateOpreation,
                     userId,

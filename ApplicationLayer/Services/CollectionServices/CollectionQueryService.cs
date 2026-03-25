@@ -95,7 +95,7 @@ namespace ApplicationLayer.Services.CollectionServices
 
             try
             {
-                var cached = await _cacheHelper.GetCollectionListCacheAsync<List<CollectionSummaryDto>>(searchTerm, IsActive, IsDeleted, page, pagesize, IsAdmin);
+                var cached = await _cacheHelper.GetCollectionListCacheAsync<CollectionSummaryDto>(searchTerm, IsActive, IsDeleted, page, pagesize, IsAdmin);
                 if (cached != null)
                 {
                     _logger.LogInformation("Cache hit for collection list search");
@@ -118,6 +118,39 @@ namespace ApplicationLayer.Services.CollectionServices
                 _logger.LogError($"Error searching collections: {ex.Message}");
                 _cacheHelper.NotifyAdminError($"Error searching collections: {ex.Message}", ex.StackTrace);
                 return Result<List<CollectionSummaryDto>>.Fail("An error occurred while searching collections", 500);
+            }
+        }
+
+        public async Task<Result<List<CollectionSummaryDto>>> GetCollectionsByProductIdAsync(int productId, bool? IsActive = null, bool? IsDeleted = null, bool IsAdmin = false)
+        {
+            _logger.LogInformation($"Getting collections for product ID: {productId}");
+
+            try
+            {
+                // Query collections that have a mapping to the specified productId
+                var query = _collectionRepository.GetAll()
+                    .Where(c => c.ProductCollections.Any(pc => pc.ProductId == productId));
+
+                // Apply basic filters (IsActive, IsDeleted, IsAdmin roles)
+                if (!IsAdmin)
+                {
+                    IsActive = true;
+                    IsDeleted = false;
+                }
+                query = BasicFilter(query, IsActive, IsDeleted, IsAdmin);
+
+                var collectionDtos = await _mapper.CollectionSelector(query, IsAdmin)
+                    .OrderBy(x => x.DisplayOrder)
+                    .ThenBy(x => x.CreatedAt)
+                    .ToListAsync();
+
+                return Result<List<CollectionSummaryDto>>.Ok(collectionDtos, "Related collections retrieved successfully", 200);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error getting collections for product {productId}: {ex.Message}");
+                _cacheHelper.NotifyAdminError($"Error getting collections for product {productId}: {ex.Message}", ex.StackTrace);
+                return Result<List<CollectionSummaryDto>>.Fail("An error occurred while retrieving related collections", 500);
             }
         }
     }

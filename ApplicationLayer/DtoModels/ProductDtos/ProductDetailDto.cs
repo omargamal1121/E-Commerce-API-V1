@@ -19,7 +19,8 @@ namespace ApplicationLayer.DtoModels.ProductDtos
 		public Gender Gender { get; set; }
 		public bool IsActive { get; set; }
 		public  FitType fitType { get; set; }
-
+		public string SubCategoryName { get; set; }
+	
 		public IEnumerable<ImageDto>? Images { get; set; }
 		public IEnumerable<ProductVariantDto>? Variants { get; set; }
 		public decimal? FinalPrice { get; set; }

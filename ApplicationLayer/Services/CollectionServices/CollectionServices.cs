@@ -109,6 +109,10 @@ namespace ApplicationLayer.Services.CollectionServices
         {
             return await _collectionQueryService.SearchCollectionsAsync(searchTerm, IsActive, IsDeleted, page, pagesize, IsAdmin);
         }
+
+        public async Task<Result<List<CollectionSummaryDto>>> GetCollectionsByProductIdAsync(int productId, bool? IsActive = null, bool? IsDeleted = null, bool IsAdmin = false)
+        {
+            return await _collectionQueryService.GetCollectionsByProductIdAsync(productId, IsActive, IsDeleted, IsAdmin);
+        }
     }
 }
-

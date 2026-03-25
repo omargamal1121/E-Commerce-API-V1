@@ -1,6 +1,6 @@
 namespace ApplicationLayer.DtoModels.ProductDtos
 {
-	public class BestSellingProductDto
+	public class BestSellingProductDto:ProductDto
     {
         public int ProductId { get; set; }
         public string ProductName { get; set; } = string.Empty;

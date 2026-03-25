@@ -1,7 +1,9 @@
 using ApplicationLayer.DtoModels.DiscoutDtos;
 using ApplicationLayer.DtoModels.ImagesDtos;
 using ApplicationLayer.DtoModels.ProductDtos;
+using ApplicationLayer.DtoModels.CollectionDtos;
 using ApplicationLayer.Services.ProductVariantServices;
+using ApplicationLayer.Services.CollectionServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -16,6 +18,7 @@ namespace ApplicationLayer.Services.ProductServices
 		private readonly IProductImageService _productImageService;
 		private readonly IProductVariantService _productVariantService;
 		private readonly IProductDiscountService _productDiscountService;
+		private readonly ICollectionQueryService _collectionQueryService;
 		private readonly ILogger<ProductsServices> _logger;
 
 		public ProductsServices(
@@ -24,6 +27,7 @@ namespace ApplicationLayer.Services.ProductServices
 			IProductImageService productImageService,
 			IProductVariantService productVariantService,
 			IProductDiscountService productDiscountService,
+			ICollectionQueryService collectionQueryService,
 			ILogger<ProductsServices> logger)
 		{
 			_productCatalogService = productCatalogService;
@@ -31,6 +35,7 @@ namespace ApplicationLayer.Services.ProductServices
 			_productImageService = productImageService;
 			_productVariantService = productVariantService;
 			_productDiscountService = productDiscountService;
+			_collectionQueryService = collectionQueryService;
 			_logger = logger;
 		}
 
@@ -173,6 +178,16 @@ namespace ApplicationLayer.Services.ProductServices
 		public async Task<Result<List<ProductDto>>> GetProductsByDiscountIdAsync(int discountId)
 		{
 			return await _productDiscountService.GetProductsByDiscountIdAsync(discountId);
+		}
+
+		public async Task<Result<ProductSalesDto>> GetProductSalesAsync(int productId)
+		{
+			return await _productSearchService.GetProductSalesAsync(productId);
+		}
+
+		public async Task<Result<List<CollectionSummaryDto>>> GetCollectionsByProductIdAsync(int productId, bool? IsActive = null, bool? IsDeleted = null, bool IsAdmin = false)
+		{
+			return await _collectionQueryService.GetCollectionsByProductIdAsync(productId, IsActive, IsDeleted, IsAdmin);
 		}
 	}
 }

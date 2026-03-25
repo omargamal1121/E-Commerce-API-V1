@@ -13,6 +13,8 @@ namespace ApplicationLayer.Services.SubCategoryServices
 		{
 			return new SubCategoryDto
 			{
+				CategoryId = subCategory.CategoryId,
+				CategoryName	= subCategory.Category.Name,
 				Id = subCategory.Id,
 				Name = subCategory.Name,
 				IsActive = subCategory.IsActive,
@@ -34,6 +36,8 @@ namespace ApplicationLayer.Services.SubCategoryServices
 			new SubCategoryDto
 			{
 				Id = subCategory.Id,
+				CategoryName = subCategory.Category.Name,
+				CategoryId	= subCategory.CategoryId,
 				Name = subCategory.Name,
 				IsActive = subCategory.IsActive,
 				CreatedAt = subCategory.CreatedAt,
@@ -51,50 +55,73 @@ namespace ApplicationLayer.Services.SubCategoryServices
 			});
 		}
 
-		public	IQueryable<SubCategoryDtoWithData> SubCategorySelectorWithData(IQueryable<SubCategory> subCategories,bool IsAdmin=false)
+		public IQueryable<SubCategoryDtoWithData> SubCategorySelectorWithData(
+	IQueryable<SubCategory> subCategories,
+	bool IsAdmin = false)
 		{
-			return subCategories.Select(subCategory =>
-			new SubCategoryDtoWithData
-			{
-				Id = subCategory.Id,
-				Name = subCategory.Name,
-				IsActive = subCategory.IsActive,
-				CreatedAt = subCategory.CreatedAt,
-				ModifiedAt = subCategory.ModifiedAt,
-				DeletedAt = subCategory.DeletedAt,
-				Description = subCategory.Description,
+			var now = DateTime.UtcNow;
 
-				Images = subCategory.Images
-			.Where(img => img.DeletedAt == null)
-			.Select(img => new ImageDto
-			{
-				Id = img.Id,
-				IsMain = img.IsMain,
-				Url = img.Url
-			}).ToList(),
-
-				Products = subCategory.Products.Where(p =>IsAdmin||( p.IsActive && p.DeletedAt == null)).Select(p => new ProductDto
+			return subCategories
+				.Select(sc => new
 				{
+					SubCategory = sc
+				})
+				.Select(x => new SubCategoryDtoWithData
+				{
+					Id = x.SubCategory.Id,
+					Name = x.SubCategory.Name,
+					CategoryId = x.SubCategory.CategoryId,
+					CategoryName = x.SubCategory.Category.Name,
+					IsActive = x.SubCategory.IsActive,
+					CreatedAt = x.SubCategory.CreatedAt,
+					ModifiedAt = x.SubCategory.ModifiedAt,
+					DeletedAt = x.SubCategory.DeletedAt,
+					Description = x.SubCategory.Description,
 
-					Id = p.Id,
-					Name = p.Name,
-					Description = p.Description,
-					AvailableQuantity = p.Quantity,
-					Gender = p.Gender,
-					SubCategoryId = p.SubCategoryId,
-					Price = p.Price,
-					CreatedAt = p.CreatedAt,
-					ModifiedAt = p.ModifiedAt,
-					DeletedAt = p.DeletedAt,
-					FinalPrice = (p.Discount != null && p.Discount.IsActive && (p.Discount.DeletedAt == null) && (p.Discount.EndDate > DateTime.UtcNow)) ? Math.Round(p.Price - (((p.Discount.DiscountPercent) / 100) * p.Price)) : p.Price,
-					fitType = p.fitType,
-					images = p.Images.Where(i => i.DeletedAt == null).Select(i => new ImageDto { Id = i.Id, Url = i.Url }).ToList(),
-					EndAt = (p.Discount != null && p.Discount.IsActive && p.Discount.EndDate > DateTime.UtcNow) && p.Discount.IsActive ? p.Discount.EndDate : null,
-					DiscountName = (p.Discount != null && p.Discount.IsActive && p.Discount.EndDate > DateTime.UtcNow) ? p.Discount.Name : null,
-					DiscountPrecentage = (p.Discount != null && p.Discount.IsActive && p.Discount.EndDate > DateTime.UtcNow) ? p.Discount.DiscountPercent : 0,
-					IsActive = p.IsActive,
-				}).ToList()
-			});
+					Images = x.SubCategory.Images
+						.Where(img => img.DeletedAt == null)
+						.Select(img => new ImageDto
+						{
+							Id = img.Id,
+							Url = img.Url,
+							IsMain = img.IsMain
+						}),
+
+					Products = x.SubCategory.Products
+						.Where(p => IsAdmin || (p.IsActive && p.DeletedAt == null))
+						.Select(p => new
+						{
+							Product = p,
+							ValidDiscount =
+								p.Discount != null &&
+								p.Discount.IsActive &&
+								p.Discount.DeletedAt == null &&
+								p.Discount.EndDate > now
+						})
+						.Select(p => new ProductDto
+						{
+							Id = p.Product.Id,
+							Name = p.Product.Name,
+							Price = p.Product.Price,
+							AvailableQuantity = p.Product.Quantity,
+
+							FinalPrice = p.ValidDiscount
+								? p.Product.Price - ((p.Product.Discount!.DiscountPercent / 100m) * p.Product.Price)
+								: p.Product.Price,
+
+							DiscountName = p.ValidDiscount ? p.Product.Discount!.Name : null,
+							DiscountPrecentage = p.ValidDiscount ? p.Product.Discount!.DiscountPercent : 0,
+							EndAt = p.ValidDiscount ? p.Product.Discount!.EndDate : null,
+
+							images = p.Product.Images
+								.Where(i => i.DeletedAt == null)
+								.Select(i => new ImageDto
+								{
+									Id = i.Id,
+									Url = i.Url
+								})
+						})
+				});
 		}
 		public SubCategoryDtoWithData MapToSubCategoryDtoWithData(SubCategory subCategory,bool IsAdmin=false)
 		{
@@ -107,7 +134,7 @@ namespace ApplicationLayer.Services.SubCategoryServices
 				{
 					Id = img.Id,
 					Url = img.Url
-				}).ToList(),
+				}),
 				Description = subCategory.Description,
 				DeletedAt = subCategory.DeletedAt,
 				CreatedAt = subCategory.CreatedAt,
@@ -139,7 +166,7 @@ namespace ApplicationLayer.Services.SubCategoryServices
 						Id = img.Id,
 						IsMain = img.IsMain,
 						Url = img.Url
-					})?.ToList()
+					})
 				}).ToList()
 			};
 		}

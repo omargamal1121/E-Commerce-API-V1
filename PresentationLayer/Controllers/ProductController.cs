@@ -11,6 +11,7 @@ using ApplicationLayer.ErrorHnadling;
 using ApplicationLayer.DtoModels.DiscoutDtos;
 using ApplicationLayer.Services.ProductServices;
 using ApplicationLayer.Interfaces;
+using ApplicationLayer.DtoModels.CollectionDtos;
 
 namespace DomainLayer.Controllers
 {
@@ -425,6 +426,22 @@ namespace DomainLayer.Controllers
 			var response = await _productsServices.AdvancedSearchAsync(searchDto, page, pageSize, isActive, includeDeleted,isAdmin);
 			return HandleResult(response, nameof(AdvancedSearch));
 		}
-       
+
+		[HttpGet("{id}/sales")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
+		public async Task<ActionResult<ApiResponse<ProductSalesDto>>> GetProductSales(int id)
+		{
+			var response = await _productsServices.GetProductSalesAsync(id);
+			return HandleResult(response, nameof(GetProductSales), id);
+		}
+
+		[HttpGet("{id}/collections")]
+		public async Task<ActionResult<ApiResponse<List<CollectionSummaryDto>>>> GetProductCollections(int id)
+		{
+			bool isAdmin = User.IsInRole("Admin") || User.IsInRole("SuperAdmin");
+			var response = await _productsServices.GetCollectionsByProductIdAsync(id, isAdmin);
+			return HandleResult(response, nameof(GetProductCollections), id);
+		}
+
     }
 }

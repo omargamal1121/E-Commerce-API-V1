@@ -2,6 +2,7 @@ using ApplicationLayer.DtoModels.DiscoutDtos;
 using ApplicationLayer.DtoModels.ImagesDtos;
 using ApplicationLayer.DtoModels.ProductDtos;
 using DomainLayer.Models;
+using static ApplicationLayer.Services.ProductServices.ProductSearchService;
 
 namespace ApplicationLayer.Services.ProductServices
 {
@@ -12,42 +13,6 @@ namespace ApplicationLayer.Services.ProductServices
             => d != null && d.IsActive && d.DeletedAt == null && d.EndDate > DateTime.UtcNow;
 
 
-        private static DiscountDto? MapDiscount(Discount? d, bool isAdmin)
-        {
-            if (d == null) return null;
-
-         
-            if (isAdmin)
-            {
-                return new DiscountDto
-                {
-                    Id = d.Id,
-                    DiscountPercent = d.DiscountPercent,
-                    IsActive = d.IsActive,
-                    StartDate = d.StartDate,
-                    EndDate = d.EndDate,
-                    Name = d.Name,
-                    Description = d.Description
-                };
-            }
-
-       
-            if (IsDiscountValidForUser(d))
-            {
-                return new DiscountDto
-                {
-                    Id = d.Id,
-                    DiscountPercent = d.DiscountPercent,
-                    IsActive = d.IsActive,
-                    StartDate = d.StartDate,
-                    EndDate = d.EndDate,
-                    Name = d.Name,
-                    Description = d.Description
-                };
-            }
-
-            return null;
-        }
 
         public ProductDto Maptoproductdto(Product p, bool isAdmin = false)
         {
@@ -102,110 +67,155 @@ namespace ApplicationLayer.Services.ProductServices
             };
         }
 
-        public IQueryable<ProductDetailDto> maptoProductDetailDtoexpression(IQueryable<Product> query, bool isAdmin = false)
-        {
-            return query.Select(p => new ProductDetailDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
-                AvailableQuantity = p.Quantity,
-                Gender = p.Gender,
-                CreatedAt = p.CreatedAt,
-                DeletedAt = p.DeletedAt,
-                ModifiedAt = p.ModifiedAt,
-                fitType = p.fitType,
-                IsActive = p.IsActive,
-                Price = p.Price,
-                SubCategoryId = p.SubCategoryId,
+		public IQueryable<ProductDetailDto> maptoProductDetailDtoexpression(
+		IQueryable<Product> query,
+		bool isAdmin = false)
+		{
+			var now = DateTime.UtcNow;
 
-                FinalPrice = isAdmin
-                    ? (p.Discount != null
-                        ? p.Price - ((p.Discount.DiscountPercent / 100m) * p.Price)
-                        : p.Price)
-                    : (p.Discount != null && p.Discount.IsActive && p.Discount.DeletedAt == null && p.Discount.EndDate > DateTime.UtcNow
-                        ? p.Price - ((p.Discount.DiscountPercent / 100m) * p.Price)
-                        : p.Price),
+			return query
+				.Select(p => new
+				{
+					Product = p,
+					ValidDiscount =
+						p.Discount != null &&
+						p.Discount.IsActive &&
+						p.Discount.DeletedAt == null &&
+						p.Discount.EndDate > now
+				})
+				.Select(x => new ProductDetailDto
+				{
+					Id = x.Product.Id,
+					Name = x.Product.Name,
+					Description = x.Product.Description,
+					AvailableQuantity = x.Product.Quantity,
+					Gender = x.Product.Gender,
+					CreatedAt = x.Product.CreatedAt,
+					DeletedAt = x.Product.DeletedAt,
+					ModifiedAt = x.Product.ModifiedAt,
+					fitType = x.Product.fitType,
+					IsActive = x.Product.IsActive,
+					Price = x.Product.Price,
+					SubCategoryId = x.Product.SubCategoryId,
+					SubCategoryName = x.Product.SubCategory.Name,
 
-                Discount = MapDiscount(p.Discount, isAdmin),
-                Images = p.Images
-                          .Where(i => i.DeletedAt == null)
-                          .Select(i => new ImageDto
-                          {
-                              Id = i.Id,
-                              Url = i.Url
-                          }).ToList(),
+					FinalPrice =
+						x.ValidDiscount
+						? x.Product.Price - ((x.Product.Discount!.DiscountPercent / 100m) * x.Product.Price)
+						: x.Product.Price,
 
-                Variants = (isAdmin
-                           ? p.ProductVariants
-                           : p.ProductVariants.Where(v => v.DeletedAt == null && v.Quantity != 0))
-                           .Select(v => new ProductVariantDto
-                           {
-                               Id = v.Id,
-                               Color = v.Color,
-                               Size = v.Size,
-                               Waist = v.Waist,
-                               Length = v.Length,
-                               Quantity = v.Quantity,
-                               ProductId = v.ProductId
-                           }).ToList()
-            });
-        }
+					Discount =
+						isAdmin
+						? (x.Product.Discount != null
+							? new DiscountDto
+							{
+								Id = x.Product.Discount.Id,
+								DiscountPercent = x.Product.Discount.DiscountPercent,
+								IsActive = x.Product.Discount.IsActive,
+								StartDate = x.Product.Discount.StartDate,
+								EndDate = x.Product.Discount.EndDate,
+								Name = x.Product.Discount.Name,
+								Description = x.Product.Discount.Description
+							}
+							: null)
+						: (x.ValidDiscount
+							? new DiscountDto
+							{
+								Id = x.Product.Discount!.Id,
+								DiscountPercent = x.Product.Discount.DiscountPercent,
+								IsActive = x.Product.Discount.IsActive,
+								StartDate = x.Product.Discount.StartDate,
+								EndDate = x.Product.Discount.EndDate,
+								Name = x.Product.Discount.Name,
+								Description = x.Product.Discount.Description
+							}
+							: null),
 
-        public IQueryable<ProductDto> maptoProductDtoexpression(IQueryable<Product> query, bool isAdmin = false)
-        {
-            return query.Select(p => new ProductDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
-                AvailableQuantity = p.Quantity,
-                Gender = p.Gender,
-                SubCategoryId = p.SubCategoryId,
-                Price = p.Price,
-                CreatedAt = p.CreatedAt,
-                ModifiedAt = p.ModifiedAt,
-                DeletedAt = p.DeletedAt,
-                fitType = p.fitType,
-                IsActive = p.IsActive,
+					Images = x.Product.Images
+						.Where(i => i.DeletedAt == null)
+						.Select(i => new ImageDto
+						{
+							Id = i.Id,
+							Url = i.Url
+						}),
 
-                FinalPrice = isAdmin
-                    ? (p.Discount != null
-                        ? p.Price - ((p.Discount.DiscountPercent / 100m) * p.Price)
-                        : p.Price)
-                    : (p.Discount != null && p.Discount.IsActive && p.Discount.DeletedAt == null && p.Discount.EndDate > DateTime.UtcNow
-                        ? p.Price - ((p.Discount.DiscountPercent / 100m) * p.Price)
-                        : p.Price),
+					Variants = (isAdmin
+						? x.Product.ProductVariants
+						: x.Product.ProductVariants.Where(v => v.DeletedAt == null && v.Quantity > 0))
+						.Select(v => new ProductVariantDto
+						{
+							Id = v.Id,
+							Color = v.Color,
+							Size = v.Size,
+							Waist = v.Waist,
+							Length = v.Length,
+							Quantity = v.Quantity,
+							ProductId = v.ProductId
+						})
+				});
+		}
+		public IQueryable<ProductDto> maptoProductDtoexpression(IQueryable<Product> query, bool IsAdmin = false)
+		{
+			var now = DateTime.UtcNow;
 
-                EndAt = isAdmin
-                    ? p.Discount!.EndDate
-                    : (p.Discount != null && p.Discount.IsActive && p.Discount.DeletedAt == null && p.Discount.EndDate > DateTime.UtcNow
-                        ? p.Discount.EndDate
-                        : null),
+			return query.Select(p => new
+			{
+				Product = p,
+				ValidDiscount =
+					p.Discount != null &&
+					p.Discount.IsActive &&
+					p.Discount.DeletedAt == null &&
+					p.Discount.EndDate > now
+			})
+			.Select(x => new ProductDto
+			{
+				Id = x.Product.Id,
+				Name = x.Product.Name,
+				Description = x.Product.Description,
+				AvailableQuantity = x.Product.Quantity,
+				Gender = x.Product.Gender,
+				SubCategoryId = x.Product.SubCategoryId,
+				Price = x.Product.Price,
+				CreatedAt = x.Product.CreatedAt,
+				ModifiedAt = x.Product.ModifiedAt,
+				DeletedAt = x.Product.DeletedAt,
+				fitType = x.Product.fitType,
+				IsActive = x.Product.IsActive,
 
-                DiscountName = isAdmin
-                    ? p.Discount!.Name
-                    : (p.Discount != null && p.Discount.IsActive && p.Discount.DeletedAt == null && p.Discount.EndDate > DateTime.UtcNow
-                        ? p.Discount.Name
-                        : null),
+				FinalPrice =
+					
+					 (x.ValidDiscount
+						? x.Product.Price - ((x.Product.Discount!.DiscountPercent / 100m) * x.Product.Price)
+						: x.Product.Price),
 
-                DiscountPrecentage = isAdmin
-                    ? (p.Discount!.DiscountPercent )
-                    : (p.Discount != null && p.Discount.IsActive && p.Discount.DeletedAt == null && p.Discount.EndDate > DateTime.UtcNow
-                        ? p.Discount.DiscountPercent
-                        : 0),
+				EndAt =
+					IsAdmin
+					? (x.Product.Discount != null ? x.Product.Discount.EndDate : null)
+					: (x.ValidDiscount ? x.Product.Discount!.EndDate : null),
 
-     
-                images = p.Images
-                          .Where(i => i.DeletedAt == null)
-                          .Select(i => new ImageDto
-                          {
-                              Id = i.Id,
-                              Url = i.Url
-                          })
-            });
-        }
-    }
+				DiscountName =
+					IsAdmin
+					? (x.Product.Discount != null ? x.Product.Discount.Name : null)
+					: (x.ValidDiscount ? x.Product.Discount!.Name : null),
+
+				DiscountPrecentage =
+					IsAdmin
+					? (x.Product.Discount != null ? x.Product.Discount.DiscountPercent : 0)
+					: (x.ValidDiscount ? x.Product.Discount!.DiscountPercent : 0),
+
+				images = x.Product.Images
+					.Where(i => i.DeletedAt == null)
+					.Select(i => new ImageDto
+					{
+						Id = i.Id,
+						Url = i.Url,
+						IsMain = i.IsMain
+					})
+			});
+		}
+
+
+	}
 }
 
 

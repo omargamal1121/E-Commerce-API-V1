@@ -35,10 +35,12 @@ namespace ApplicationLayer.DtoModels.ProductDtos
 
 		public bool IsActive { get; set; }
 		public IEnumerable<ImageDto>? images { get; set; }
+		public int TotalSold { get; set; }
 
 
 
 	}
+
 }
 
 

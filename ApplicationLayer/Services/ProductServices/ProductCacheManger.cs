@@ -23,6 +23,9 @@ namespace ApplicationLayer.Services.ProductServices
         private static string GetProductByIdKey(int id, bool? isActive, bool? isDeleted, bool IsAdmin = false)
             => $"Product:{id}_active:{isActive}_deleted:{isDeleted}_IsAdmin:{IsAdmin}";
 
+        private static string GetProductSalesKey(int id)
+            => $"ProductSales:{id}";
+
         private static string GetProductBySubCategoryIdKey(int id, bool? isActive, bool? isDeleted, int page = 1, int pageSize = 10, bool IsAdmin = false)
             => $"Subcategory:{id}_active:{isActive}_deleted:{isDeleted}_page:{page}_pageSize:{pageSize}_IsAdmin:{IsAdmin}";
 
@@ -85,6 +88,18 @@ namespace ApplicationLayer.Services.ProductServices
         {
             var cacheKey = GetProductByIdKey(id, isActive, isDeleted, IsAdmin);
             return await _cacheManager.GetAsync<T>(cacheKey);
+        }
+
+        public void SetProductSalesCacheAsync(int productId, ProductSalesDto data, TimeSpan? expiration = null)
+        {
+            var cacheKey = GetProductSalesKey(productId);
+            _jobClient.Enqueue(() => _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { _ProductListKey }));
+        }
+
+        public async Task<ProductSalesDto?> GetProductSalesCacheAsync(int productId)
+        {
+            var cacheKey = GetProductSalesKey(productId);
+            return await _cacheManager.GetAsync<ProductSalesDto>(cacheKey);
         }
     }
 }

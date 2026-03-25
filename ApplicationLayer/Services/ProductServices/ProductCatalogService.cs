@@ -11,6 +11,7 @@ using ApplicationLayer.Services.Cache;
 using Hangfire;
 using System.Linq.Expressions;
 using ApplicationLayer.Services.SubCategoryServices;
+using ApplicationLayer.Services.CategoryServices;
 using ApplicationLayer.Services.AdminOperationServices;
 
 using DomainLayer.Enums;
@@ -54,6 +55,7 @@ namespace ApplicationLayer.Services.ProductServices
 		private readonly ICollectionServices _collectionServices;
 		private readonly IErrorNotificationService _errorNotificationService;
 		private readonly ISubCategoryCacheHelper _subCategoryCacheHelper;
+		private readonly ICategoryCacheHelper _categoryCacheHelper;
 
 		public ProductCatalogService(
 			ICollectionCacheHelper collectionCacheHelper,
@@ -67,7 +69,8 @@ namespace ApplicationLayer.Services.ProductServices
 			ISubCategoryServices subCategoryServices,
 			ILogger<ProductCatalogService> logger,
 			IAdminOpreationServices adminOpreationServices,
-			IErrorNotificationService errorNotificationService
+			IErrorNotificationService errorNotificationService,
+			ICategoryCacheHelper categoryCacheHelper
 			)
 		{
 			_collectionCacheHelper = collectionCacheHelper;
@@ -82,6 +85,7 @@ namespace ApplicationLayer.Services.ProductServices
 			_logger = logger;
 			_adminOpreationServices = adminOpreationServices;
 			_errorNotificationService = errorNotificationService;
+			_categoryCacheHelper = categoryCacheHelper;
 		}
 		
 		private void DeactiveCollectionMethod(int productid)
@@ -100,6 +104,7 @@ namespace ApplicationLayer.Services.ProductServices
 		{
 			_collectionCacheHelper.ClearCollectionDataCache();
 			_subCategoryCacheHelper.ClearSubCategoryDataCache();
+			_categoryCacheHelper.ClearCategoryDataCache();
 			_productCacheManger.ClearProductCache();
 		}
 
@@ -332,15 +337,38 @@ namespace ApplicationLayer.Services.ProductServices
 				}
 				if (dto.SubCategoryid.HasValue)
 				{
-					var subCatCheck = await _unitOfWork.SubCategory.GetByIdAsync(dto.SubCategoryid.Value);
-					if (subCatCheck==null)
+					if (dto.SubCategoryid.Value != product.SubCategoryId)
 					{
-						await transaction.RollbackAsync();
-						_logger.LogWarning("UpdateProductAsync: SubCategory not found: {SubCategoryId}", dto.SubCategoryid.Value);
-						return Result<ProductDto>.Fail("SubCategory not found.", 404);
+						var oldSubCategoryId = product.SubCategoryId;
+						var newSubCatId = dto.SubCategoryid.Value;
+
+						var subCategoriesInfo = await _unitOfWork.SubCategory.GetAll()
+							.Where(sc => sc.Id == newSubCatId || sc.Id == oldSubCategoryId)
+							.Select(sc => new
+							{
+								Id = sc.Id,
+								HasOtherProducts = sc.Id == oldSubCategoryId ? sc.Products.Any(p => p.Id != product.Id) : false
+							})
+							.ToListAsync();
+
+						if (!subCategoriesInfo.Any(sc => sc.Id == newSubCatId))
+						{
+							await transaction.RollbackAsync();
+							_logger.LogWarning("UpdateProductAsync: SubCategory not found: {SubCategoryId}", newSubCatId);
+							return Result<ProductDto>.Fail("SubCategory not found.", 404);
+						}
+
+						updates.Add($"change SubCategory from: {oldSubCategoryId} to {newSubCatId}");
+						product.SubCategoryId = newSubCatId;
+						
+						var oldCatInfo = subCategoriesInfo.FirstOrDefault(sc => sc.Id == oldSubCategoryId);
+						if (oldCatInfo != null && !oldCatInfo.HasOtherProducts)
+						{
+							await _subCategoryServices.DeactivateSubCategoryAsync(oldSubCategoryId, userId);
+							_subCategoryCacheHelper.ClearSubCategoryDataCache();
+							_categoryCacheHelper.ClearCategoryDataCache();
+						}
 					}
-					updates.Add($"change SubCategory from: {product.SubCategoryId} to {dto.SubCategoryid.Value}");
-					product.SubCategoryId = dto.SubCategoryid.Value;
 				}
 				if (dto.Price.HasValue)
 				{

@@ -126,21 +126,12 @@ namespace InfrastructureLayer.Repository
             
             try
             {
-                var collection = await _context.Collections
-                    .Where(c => c.Id == collectionId && c.DeletedAt == null)
-                    .FirstOrDefaultAsync();
+                
+               var affectedrows= await  _context.Collections.Where(c=> c.Id == collectionId && c.DeletedAt == null&&c.IsActive!=isActive)
+                    .ExecuteUpdateAsync(s => s.SetProperty(c => c.IsActive, isActive)
+                    .SetProperty(c => c.ModifiedAt, DateTime.UtcNow));
 
-                if (collection == null)
-                {
-                    _logger.LogWarning($"Collection {collectionId} not found");
-                    return false;
-                }
-
-                collection.IsActive = isActive;
-                collection.ModifiedAt = DateTime.UtcNow;
-
-
-                return true;
+				return affectedrows>0;
             }
             catch (Exception ex)
             {

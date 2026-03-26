@@ -25,6 +25,8 @@ namespace ApplicationLayer.DtoModels.ProductDtos
 		public IEnumerable<ProductVariantDto>? Variants { get; set; }
 		public decimal? FinalPrice { get; set; }
 	}
+
+
 }
 
 

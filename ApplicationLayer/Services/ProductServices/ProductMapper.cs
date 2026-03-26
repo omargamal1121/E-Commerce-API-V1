@@ -56,7 +56,8 @@ namespace ApplicationLayer.Services.ProductServices
                                                (validDiscountForUser ? p.Discount!.DiscountPercent : 0),
                 DiscountName = isAdmin ? p.Discount?.Name :
                                          (validDiscountForUser ? p.Discount!.Name : null),
-                images = p.Images
+				DiscountStatus= p.Discount?.IsActive,
+				images = p.Images
                           .Where(i => i.DeletedAt == null)
                           .Select(i => new ImageDto
                           {
@@ -98,6 +99,7 @@ namespace ApplicationLayer.Services.ProductServices
 					Price = x.Product.Price,
 					SubCategoryId = x.Product.SubCategoryId,
 					SubCategoryName = x.Product.SubCategory.Name,
+					
 
 					FinalPrice =
 						x.ValidDiscount
@@ -181,6 +183,7 @@ namespace ApplicationLayer.Services.ProductServices
 				DeletedAt = x.Product.DeletedAt,
 				fitType = x.Product.fitType,
 				IsActive = x.Product.IsActive,
+				DiscountStatus = x.Product.Discount != null ? x.Product.Discount.IsActive : (bool?)null,
 
 				FinalPrice =
 					

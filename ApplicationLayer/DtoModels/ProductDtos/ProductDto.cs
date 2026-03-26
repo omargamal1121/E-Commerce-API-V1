@@ -30,6 +30,7 @@ namespace ApplicationLayer.DtoModels.ProductDtos
 		public decimal? DiscountPrecentage { get; set; }
 		public string? DiscountName { get; set; }
 
+		public bool? DiscountStatus { get; set; }
 		public DateTime? EndAt { get; set; }
 
 

@@ -180,7 +180,7 @@ namespace ApplicationLayer.Services.ProductServices
                         DeletedAt = x.Product.DeletedAt,
                         fitType = x.Product.fitType,
                         IsActive = x.Product.IsActive,
-                        TotalSold = x.TotalQuantity,
+                        TotalSold = IsAdmin? x.TotalQuantity:0,
                         FinalPrice =
                             x.ValidDiscount
                                 ? x.Product.Price - ((x.Product.Discount!.DiscountPercent / 100m) * x.Product.Price)

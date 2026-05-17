@@ -1,9 +1,10 @@
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.Services.CategoryServices;
-using InfrastructureLayer.Repository;
+using Application.Interfaces;
+using Application.Services.CategoryServices;
+using Infrastructure.Interfaces;
+using Infrastructure.Repository;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace E_Commerce.Registration.CategoryService
+namespace E_Commerce.Registration.CategoryServices
 {
     public static class CategoryServiceRegistration
     {
@@ -11,7 +12,7 @@ namespace E_Commerce.Registration.CategoryService
         {
             // Core Category Services
             services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<ICategoryServices, CategoryServices>();
+            services.AddScoped<ICategoryServices, Application.Services.CategoryServices.CategoryServices>();
             
             // Refactored Category Services
             services.AddScoped<ICategoryCommandService, CategoryCommandService>();

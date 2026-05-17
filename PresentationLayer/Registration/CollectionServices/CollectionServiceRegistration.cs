@@ -1,9 +1,10 @@
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.Services.CollectionServices;
-using InfrastructureLayer.Repository;
+using Infrastructure.Interfaces;
+using Application.Interfaces;
+using Application.Services.CollectionServices;
+using Infrastructure.Repository;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace E_Commerce.Registration.CollectionService
+namespace E_Commerce.Registration.CollectionServices
 {
     public static class CollectionServiceRegistration
     {
@@ -24,7 +25,7 @@ namespace E_Commerce.Registration.CollectionService
             services.AddScoped<ICollectionCommandService, CollectionCommandService>();
             
             // 4. Main Service (depends on query and command services)
-            services.AddScoped<ICollectionServices, CollectionServices>();
+            services.AddScoped<ICollectionServices, Application.Services.CollectionServices.CollectionServices>();
             
             return services;
         }

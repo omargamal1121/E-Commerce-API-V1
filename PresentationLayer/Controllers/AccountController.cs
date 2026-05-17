@@ -1,30 +1,24 @@
-using ApplicationLayer.DtoModels.AccountDtos;
-using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.DtoModels.TokenDtos;
-using ApplicationLayer.ErrorHnadling;
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.Services.AccountServices.AccountManagement;
-using ApplicationLayer.Services.AccountServices.Authentication;
-using ApplicationLayer.Services.AccountServices.Password;
-using ApplicationLayer.Services.AccountServices.Profile;
-using ApplicationLayer.Services.AccountServices.Registration;
-using ApplicationLayer.Services.EmailServices;
+using Application.DtoModels.AccountDtos;
+using Application.DtoModels.Responses;
+using Application.DtoModels.TokenDtos;
+using Application.ErrorHnadling;
+using Application.Interfaces;
+using Application.Services.AccountServices.AccountManagement;
+using Application.Services.AccountServices.Authentication;
+using Application.Services.AccountServices.Password;
+using Application.Services.AccountServices.Profile;
+using Application.Services.AccountServices.Registration;
+using Application.Services.EmailServices;
 
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.IdentityModel.Tokens;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using static ApplicationLayer.Services.AccountServices.UserMangment.UserQueryServiece;
 
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
 	/// <summary>
 	/// Controller for handling user account operations

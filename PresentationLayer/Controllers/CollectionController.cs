@@ -1,16 +1,14 @@
-using System.Security.Claims;
-using System.Threading.Tasks;
-using ApplicationLayer.DtoModels.CategoryDtos;
-using ApplicationLayer.DtoModels.CollectionDtos;
-using ApplicationLayer.DtoModels.ImagesDtos;
-using ApplicationLayer.DtoModels.ProductDtos;
-using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.Interfaces;
+using Application.DtoModels.CategoryDtos;
+using Application.DtoModels.CollectionDtos;
+using Application.DtoModels.ImagesDtos;
+using Application.DtoModels.ProductDtos;
+using Application.DtoModels.Responses;
+using Application.Interfaces;
+using E_Commerce.Controllers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

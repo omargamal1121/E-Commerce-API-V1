@@ -1,9 +1,9 @@
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.Services.CartServices;
-using InfrastructureLayer.Repository;
-using Microsoft.Extensions.DependencyInjection;
+using Application.Interfaces;
+using Application.Services.CartServices;
+using Infrastructure.Interfaces;
+using Infrastructure.Repository;
 
-namespace E_Commerce.Registration.CartService
+namespace E_Commerce.Registration.CartServices
 {
     public static class CartServiceRegistration
     {
@@ -11,7 +11,7 @@ namespace E_Commerce.Registration.CartService
         {
             // Core Cart Services
             services.AddScoped<ICartRepository,CartRepository>();
-            services.AddScoped<ICartServices, CartServices>();
+			services.AddScoped<ICartServices, Application.Services.CartServices.CartServices>();
             
             // Refactored Cart Services
             services.AddScoped<ICartCommandService, CartCommandService>();

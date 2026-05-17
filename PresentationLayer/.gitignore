@@ -1,7 +1,7 @@
-# Build results
+# Build
 bin/
 obj/
-out/+
+out/
 **/bin/
 **/obj/
 
@@ -9,7 +9,7 @@ out/+
 .vs/
 .vscode/
 
-# User-specific files
+# User files
 *.user
 *.suo
 *.userosscache
@@ -19,41 +19,34 @@ out/+
 *.log
 logs/
 
-# Configuration files containing secrets
+# Secrets
+.env
 appsettings.Development.json
 appsettings.Local.json
 appsettings.Secret.json
-appsettings.json
 *.secret.json
 
-# Sensitive data
-.env
-
-# Dependency folders
+# Node
 node_modules/
-packages/
 
-# Publish outputs
+# Publish
+publish/
 wwwroot/lib/
 wwwroot/dist/
-publish/
 
-# Temporary files
+# Temp
 *.tmp
 *.temp
 *.bak
 *.swp
-*.DS_Store
+.DS_Store
 Thumbs.db
 
-# Resharper / Rider
+# Rider / ReSharper
 .idea/
 _ReSharper*/
 *.DotSettings.user
 
-# Generated files
-*.generated.cs
-
-# Test results
+# Tests
 TestResults/
 coverage/

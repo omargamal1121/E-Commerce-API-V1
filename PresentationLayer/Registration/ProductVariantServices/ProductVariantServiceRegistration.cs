@@ -1,4 +1,4 @@
-using ApplicationLayer.Services.ProductVariantServices;
+using Application.Services.ProductVariantServices;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace E_Commerce.Registration.ProductVariantServices

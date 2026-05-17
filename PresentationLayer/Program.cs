@@ -1,34 +1,27 @@
-﻿using ApplicationLayer.DtoModels;
-using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.ErrorHnadling;
-using ApplicationLayer.Factory.CustomersFactory;
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.Services;
-using ApplicationLayer.Services.BackgroundServices;
-using ApplicationLayer.Services.Cache;
-using ApplicationLayer.Services.CustomerAddressServices;
-using ApplicationLayer.Services.Externallogin;
-using ApplicationLayer.Services.HangFireAuth;
-using ApplicationLayer.Services.WareHouseService;
+using Application.DtoModels;
+using Application.DtoModels.Responses;
+using Application.ErrorHnadling;
+using Application.Factory.CustomersFactory;
+using Application.Interfaces;
+using Application.Services;
+using Application.Services.BackgroundServices;
+using Application.Services.CacheServices;
+using Application.Services.CustomerAddressServices;
+using Application.Services.Externallogin;
+using Application.Services.HangFireAuth;
 using CloudinaryDotNet;
-using DomainLayer.BackgroundJops;
 
-using DomainLayer.Middleware;
-using DomainLayer.Models;
+using E_Commerce.Middleware;
 
 using E_Commerce.LinkBuilders;
 using E_Commerce.Registration.AccountServices;
-using E_Commerce.Registration.CartService;
-using E_Commerce.Registration.CategoryService;
 using E_Commerce.Registration.DiscountServices;
 using E_Commerce.Registration.Infrastructure;
-using E_Commerce.Registration.OrderService;
-using E_Commerce.Registration.PaymentService;
 using E_Commerce.Registration.ProductServices;
 using Hangfire;
 using Hangfire.MySql;
-using InfrastructureLayer.Context;
-using InfrastructureLayer.Repository;
+using Infrastructure.Context;
+using Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 
@@ -41,8 +34,16 @@ using Serilog;
 using StackExchange.Redis;
 using System.Text;
 using System.Threading.RateLimiting;
+using Domain.Models;
+using E_Commerce.Registration.WareHouseServices;
+using E_Commerce.Registration.OrderServices;
+using E_Commerce.Registration.CartServices;
+using E_Commerce.Registration.PaymentServices;
+using E_Commerce.Registration.CategoryServices;
+using Infrastructure.Interfaces;
+using E_Commerce.BackgroundJobs;
 
-namespace DomainLayer
+namespace E_Commerce
 {
 	public class Program
 	{
@@ -121,7 +122,7 @@ namespace DomainLayer
 				})
 				.AddEntityFrameworkStores<AppDbContext>()
 				.AddDefaultTokenProviders();
-			builder.Services.AddScoped<IImagesServices, ImagesServices>();
+			builder.Services.AddScoped<IImagesServices, Application.Services.ImageServices.ImagesServices>();
 			builder.Services.AddScoped<IImageRepository, ImageRepository>();
 			builder.Services.AddResponseCaching();
 			builder.Services.Configure<CloudinarySettings>(
@@ -162,7 +163,7 @@ namespace DomainLayer
 				(provider, options) =>
 				{
 					options.UseMySql(
-						builder.Configuration.GetConnectionString("ExternalDb"),
+						builder.Configuration.GetConnectionString("DBbyMonster"),
 						new MySqlServerVersion(new Version(8, 0, 21))
 					);
 				}
@@ -170,7 +171,7 @@ namespace DomainLayer
 			builder.Services.AddHangfire(config =>
 				config.UseStorage(
 					new MySqlStorage(
-						builder.Configuration.GetConnectionString("ExternalDb"),
+						builder.Configuration.GetConnectionString("DBbyMonster"),
 						new MySqlStorageOptions
 						{
 							TablesPrefix = "Hangfire_",

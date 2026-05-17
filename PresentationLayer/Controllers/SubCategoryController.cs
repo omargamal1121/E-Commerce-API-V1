@@ -4,14 +4,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.DtoModels.CategoryDtos;
-using ApplicationLayer.DtoModels.SubCategorydto;
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.ErrorHnadling;
-using ApplicationLayer.DtoModels.ImagesDtos;
+using Application.DtoModels.Responses;
+using Application.DtoModels.CategoryDtos;
+using Application.DtoModels.SubCategorydto;
+using Application.Interfaces;
+using Application.ErrorHnadling;
+using Application.DtoModels.ImagesDtos;
 
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
     [Route("api/subcategories")]
     [ApiController]

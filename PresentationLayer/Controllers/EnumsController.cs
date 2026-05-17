@@ -1,10 +1,10 @@
-﻿using ApplicationLayer.DtoModels.EnumDtos;
-using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.Services.EnumServices;
-using DomainLayer.Enums;
+using Application.DtoModels.EnumDtos;
+using Application.DtoModels.Responses;
+using Application.Services.EnumServices;
+using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]

@@ -1,12 +1,12 @@
-using ApplicationLayer.DtoModels.CartDtos;
-using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.ErrorHnadling;
-using ApplicationLayer.Interfaces;
+using Application.DtoModels.CartDtos;
+using Application.DtoModels.Responses;
+using Application.ErrorHnadling;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

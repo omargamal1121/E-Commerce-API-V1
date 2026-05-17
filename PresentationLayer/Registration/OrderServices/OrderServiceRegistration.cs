@@ -1,9 +1,9 @@
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.Services.OrderService;
-using Microsoft.Extensions.DependencyInjection;
-using InfrastructureLayer.Repository;
+using Application.Services.OrderServices;
+using Application.Interfaces;
+using Infrastructure.Repository;
+using Infrastructure.Interfaces;
 
-namespace E_Commerce.Registration.OrderService
+namespace E_Commerce.Registration.OrderServices
 {
     public static class OrderServiceRegistration
     {
@@ -11,7 +11,7 @@ namespace E_Commerce.Registration.OrderService
         {
             // Core Order Services
             services.AddScoped<IOrderRepository, OrderRepository>();
-            services.AddScoped<IOrderServices, OrderServices>();
+            services.AddScoped<IOrderServices, Application.Services.OrderServices.OrderServices>();
             
             // Refactored Order Services
             services.AddScoped<IOrderCommandService, OrderCommandService>();

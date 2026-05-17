@@ -1,9 +1,9 @@
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.Services.CustomerAddressServices;
-using InfrastructureLayer.Repository;
+using Application.Interfaces;
+using Application.Services.CustomerAddressServices;
+using Infrastructure.Repository;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace E_Commerce.Registration.CustomerAddressService
+namespace E_Commerce.Registration.CustomerAddressServices
 {
     public static class CustomerAddressServiceRegistration
     {
@@ -11,7 +11,7 @@ namespace E_Commerce.Registration.CustomerAddressService
         {
             // Customer Address Services
             services.AddScoped<ICustomerAddressRepository, CustomerAddressRepository>();
-            services.AddScoped<ICustomerAddressServices, CustomerAddressServices>();
+            services.AddScoped<ICustomerAddressServices, Application.Services.CustomerAddressServices.CustomerAddressServices>();
             
             return services;
         }

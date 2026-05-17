@@ -4,16 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
-using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.DtoModels.ImagesDtos;
-using ApplicationLayer.DtoModels.ProductDtos;
-using ApplicationLayer.ErrorHnadling;
-using ApplicationLayer.DtoModels.DiscoutDtos;
-using ApplicationLayer.Services.ProductServices;
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.DtoModels.CollectionDtos;
+using Application.DtoModels.Responses;
+using Application.DtoModels.ImagesDtos;
+using Application.DtoModels.ProductDtos;
+using Application.ErrorHnadling;
+using Application.DtoModels.DiscoutDtos;
+using Application.Services.ProductServices;
+using Application.Interfaces;
+using Application.DtoModels.CollectionDtos;
 
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
 	[Route("api/[controller]s")]
 	[ApiController]

@@ -1,14 +1,14 @@
-using ApplicationLayer.DtoModels.CategoryDtos;
-using ApplicationLayer.DtoModels.ImagesDtos;
-using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.ErrorHnadling;
-using ApplicationLayer.Interfaces;
+using Application.DtoModels.CategoryDtos;
+using Application.DtoModels.ImagesDtos;
+using Application.DtoModels.Responses;
+using Application.ErrorHnadling;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
 	[Route("api/categories")]
 	[ApiController]

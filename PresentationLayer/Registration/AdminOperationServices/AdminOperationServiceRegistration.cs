@@ -1,4 +1,4 @@
-using ApplicationLayer.Services.AdminOperationServices;
+using Application.Services.AdminOperationServices;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace E_Commerce.Registration.AdminOperationServices

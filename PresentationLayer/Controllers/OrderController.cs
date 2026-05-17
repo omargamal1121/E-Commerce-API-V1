@@ -1,14 +1,13 @@
-using ApplicationLayer.DtoModels.OrderDtos;
-using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.ErrorHnadling;
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.Services;
-using DomainLayer.Enums;
+using Application.DtoModels.OrderDtos;
+using Application.DtoModels.Responses;
+using Application.ErrorHnadling;
+using Application.Interfaces;
+using Application.Services;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]

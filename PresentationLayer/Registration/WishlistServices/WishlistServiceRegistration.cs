@@ -1,5 +1,5 @@
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.Services.WishlistServices;
+using Application.Interfaces;
+using Application.Services.WishlistServices;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace E_Commerce.Registration.WishlistServices

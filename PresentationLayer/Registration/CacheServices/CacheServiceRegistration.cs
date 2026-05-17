@@ -1,5 +1,5 @@
-using ApplicationLayer.Services.Cache;
-using ApplicationLayer.Services.EmailServices;
+using Application.Services.CacheServices;
+using Application.Services.EmailServices;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace E_Commerce.Registration.CacheServices

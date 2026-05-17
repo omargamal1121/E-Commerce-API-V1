@@ -1,9 +1,10 @@
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.Services.SubCategoryServices;
-using InfrastructureLayer.Repository;
+using Infrastructure.Interfaces;
+using Application.Interfaces;
+using Application.Services.SubCategoryServices;
+using Infrastructure.Repository;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace E_Commerce.Registration.SubCategoryService
+namespace E_Commerce.Registration.SubCategoryServices
 {
     public static class SubCategoryServiceRegistration
     {
@@ -24,7 +25,7 @@ namespace E_Commerce.Registration.SubCategoryService
             services.AddScoped<ISubCategoryCommandService, SubCategoryCommandService>();
             
             // 4. Main Service (depends on query and command services)
-            services.AddScoped<ISubCategoryServices, SubCategoryServices>();
+            services.AddScoped<ISubCategoryServices, Application.Services.SubCategoryServices.SubCategoryServices>();
             
             return services;
         }

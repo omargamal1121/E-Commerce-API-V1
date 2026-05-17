@@ -1,19 +1,19 @@
-﻿//using DomainLayer.DtoModels.DiscoutDtos;
-//using DomainLayer.DtoModels.InventoryDtos;
-//using DomainLayer.DtoModels.ProductDtos;
-//using DomainLayer.DtoModels.WareHouseDtos;
+//using E_Commerce.DtoModels.DiscoutDtos;
+//using E_Commerce.DtoModels.InventoryDtos;
+//using E_Commerce.DtoModels.ProductDtos;
+//using E_Commerce.DtoModels.WareHouseDtos;
 
 //using Microsoft.AspNetCore.Mvc;
 
 //using Microsoft.AspNetCore.Authorization;
 
-//using ApplicationLayer.DtoModels.Responses;
-//using ApplicationLayer.DtoModels.WareHouseDtos;
-//using ApplicationLayer.Services.WareHouseServices;
-//using ApplicationLayer.Interfaces;
-//using ApplicationLayer.Services.EmailServices;
+//using Application.DtoModels.Responses;
+//using Application.DtoModels.WareHouseDtos;
+//using Application.Services.WareHouseServices;
+//using Application.Interfaces;
+//using Application.Services.EmailServices;
 
-//namespace DomainLayer.Controllers
+//namespace E_Commerce.Controllers
 //{
 //	[Route("api/[controller]")]
 //	[ApiController]

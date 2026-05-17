@@ -1,17 +1,15 @@
-﻿using ApplicationLayer.DtoModels.AccountDtos;
-using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.ErrorHnadling;
-using ApplicationLayer.Services.AccountServices.UserMangment;
-using ApplicationLayer.Services.EmailServices;
+using Application.DtoModels.AccountDtos;
+using Application.DtoModels.Responses;
+using Application.ErrorHnadling;
+using Application.Services.AccountServices.UserMangment;
+using Application.Services.EmailServices;
 
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using static ApplicationLayer.Services.AccountServices.UserMangment.UserQueryServiece;
 
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -41,7 +39,7 @@ namespace DomainLayer.Controllers
             _userRoleMangementService = userRoleMangementService;
         }
 
-        // ✅ GET: api/usermanagement/users
+        // ? GET: api/usermanagement/users
         [HttpGet("users")]
         [ActionName(nameof(GetUsersAsync))]
         [ProducesResponseType(typeof(ApiResponse<List<Userdto>>), StatusCodes.Status200OK)]
@@ -71,7 +69,7 @@ namespace DomainLayer.Controllers
             }
         }
 
-        // ✅ GET: api/usermanagement/user/{id}
+        // ? GET: api/usermanagement/user/{id}
         [HttpGet("user/{id}")]
         [ActionName(nameof(GetUserByIdAsync))]
         [ProducesResponseType(typeof(ApiResponse<UserwithAddressdto>), StatusCodes.Status200OK)]
@@ -84,7 +82,7 @@ namespace DomainLayer.Controllers
             return HandleResult<UserwithAddressdto>(result, nameof(GetUserByIdAsync));
         }
 
-        // ✅ GET: api/usermanagement/roles
+        // ? GET: api/usermanagement/roles
         [HttpGet("roles")]
         [ActionName(nameof(GetAllRolesAsync))]
         [ProducesResponseType(typeof(ApiResponse<List<string>>), StatusCodes.Status200OK)]
@@ -96,7 +94,7 @@ namespace DomainLayer.Controllers
             return HandleResult<List<string>>(result, nameof(GetAllRolesAsync));
         }
 
-        // ✅ PATCH: api/usermanagement/add-role/{id}?role=Admin
+        // ? PATCH: api/usermanagement/add-role/{id}?role=Admin
         [HttpPatch("add-role/{id}")]
         [ActionName(nameof(AddRoleToUserAsync))]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
@@ -119,7 +117,7 @@ namespace DomainLayer.Controllers
             return HandleResult<bool>(result, nameof(AddRoleToUserAsync));
         }
 
-        // ✅ PATCH: api/usermanagement/remove-role/{id}?role=User
+        // ? PATCH: api/usermanagement/remove-role/{id}?role=User
         [HttpPatch("remove-role/{id}")]
         [ActionName(nameof(RemoveRoleToUserAsync))]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
@@ -142,7 +140,7 @@ namespace DomainLayer.Controllers
             return HandleResult<bool>(result, nameof(RemoveRoleToUserAsync));
         }
 
-        // ✅ PATCH: api/usermanagement/lock-user/{id}
+        // ? PATCH: api/usermanagement/lock-user/{id}
         [HttpPatch("lock-user/{id}")]
         [ActionName(nameof(LockUserAccountAsync))]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
@@ -158,7 +156,7 @@ namespace DomainLayer.Controllers
             return HandleResult<bool>(result, nameof(LockUserAccountAsync));
         }
 
-        // ✅ PATCH: api/usermanagement/unlock-user/{id}
+        // ? PATCH: api/usermanagement/unlock-user/{id}
         [HttpPatch("unlock-user/{id}")]
         [ActionName(nameof(UnlockUserAccountAsync))]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
@@ -174,7 +172,7 @@ namespace DomainLayer.Controllers
             return HandleResult<bool>(result, nameof(UnlockUserAccountAsync));
         }
 
-        // ✅ DELETE: api/usermanagement/delete-user/{id}
+        // ? DELETE: api/usermanagement/delete-user/{id}
         [HttpDelete("delete-user/{id}")]
         [ActionName(nameof(DeleteUserAccountAsync))]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
@@ -190,7 +188,7 @@ namespace DomainLayer.Controllers
             return HandleResult<bool>(result, nameof(DeleteUserAccountAsync));
         }
 
-        // ✅ PATCH: api/usermanagement/restore-user/{id}
+        // ? PATCH: api/usermanagement/restore-user/{id}
         [HttpPatch("restore-user/{id}")]
         [ActionName(nameof(RestoreUserAccountAsync))]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]

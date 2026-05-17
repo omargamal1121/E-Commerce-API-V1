@@ -1,8 +1,10 @@
-using ApplicationLayer.Interfaces;
-using InfrastructureLayer.Repository;
+using Application.Interfaces;
+using Application.Services.WareHouseServices;
+using Infrastructure.Interfaces;
+using Infrastructure.Repository;
 
 
-namespace ApplicationLayer.Services.WareHouseService
+namespace E_Commerce.Registration.WareHouseServices
 {
     public static class WareHouseServiceRegistration
     {
@@ -10,7 +12,7 @@ namespace ApplicationLayer.Services.WareHouseService
         {
             // Warehouse Services
             services.AddScoped<IWareHouseRepository, WareHouseRepository>();
-            services.AddScoped<IWareHouseServices, WareHouseServices>();
+            services.AddScoped<IWareHouseServices, Application.Services.WareHouseServices.WareHouseServices>();
 
             return services;
         }

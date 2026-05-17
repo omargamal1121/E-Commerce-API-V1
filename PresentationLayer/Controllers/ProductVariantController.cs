@@ -1,15 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
-
-using DomainLayer.Enums;
 using Microsoft.AspNetCore.Authorization;
+using Application.Services.ProductVariantServices;
+using Application.DtoModels.Responses;
+using Application.DtoModels.ProductDtos;
+using Domain.Enums;
+using Application.ErrorHnadling;
+using Application.Interfaces;
 
-using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.DtoModels.ProductDtos;
-using ApplicationLayer.ErrorHnadling;
-using ApplicationLayer.Services.ProductVariantServices;
-using ApplicationLayer.Interfaces;
-
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
     [ApiController]
     [Route("api/Products/{productId}/Variants")]

@@ -1,11 +1,11 @@
-using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.Services.PaymentMethodsServices;
+using Application.DtoModels.Responses;
+using Application.Services.PaymentMethodsServices;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]

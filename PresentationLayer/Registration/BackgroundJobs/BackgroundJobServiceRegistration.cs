@@ -1,5 +1,5 @@
 
-using DomainLayer.BackgroundJops;
+using E_Commerce.BackgroundJobs;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace E_Commerce.Registration.BackgroundJobs

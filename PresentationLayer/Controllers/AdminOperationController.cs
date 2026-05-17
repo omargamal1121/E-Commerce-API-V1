@@ -1,12 +1,11 @@
-﻿
-using ApplicationLayer.DtoModels;
-using ApplicationLayer.Services.AdminOperationServices;
-using DomainLayer.Enums;
+
+using Application.DtoModels;
+using Application.Services.AdminOperationServices;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
 		[Route("api/[Controller]")]
 		[ApiController]

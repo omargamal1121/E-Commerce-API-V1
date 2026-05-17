@@ -1,5 +1,5 @@
-using ApplicationLayer.DtoModels.Shared;
-using ApplicationLayer.Interfaces;
+using Application.DtoModels.Shared;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 

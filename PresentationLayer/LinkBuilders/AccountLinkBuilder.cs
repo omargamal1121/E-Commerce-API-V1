@@ -1,8 +1,8 @@
-using ApplicationLayer.DtoModels.Shared;
-using ApplicationLayer.Interfaces;
+using Application.DtoModels.Shared;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using DomainLayer.Controllers;
+using E_Commerce.Controllers;
 
 namespace E_Commerce.LinkBuilders
 {

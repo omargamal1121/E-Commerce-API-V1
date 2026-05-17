@@ -1,8 +1,9 @@
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.Services.ProductServices;
-using ApplicationLayer.Services.ProductVariantServices;
+using Application.Interfaces;
+using Application.Services.ProductServices;
+using Application.Services.ProductVariantServices;
 using E_Commerce.Registration.ProductVariantServices;
-using InfrastructureLayer.Repository;
+using Infrastructure.Interfaces;
+using Infrastructure.Repository;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace E_Commerce.Registration.ProductServices

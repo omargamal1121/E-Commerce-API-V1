@@ -1,14 +1,14 @@
-using ApplicationLayer.DtoModels.CustomerAddressDtos;
-using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.ErrorHnadling;
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.Services.EmailServices;
+using Application.DtoModels.CustomerAddressDtos;
+using Application.DtoModels.Responses;
+using Application.ErrorHnadling;
+using Application.Interfaces;
+using Application.Services.EmailServices;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]

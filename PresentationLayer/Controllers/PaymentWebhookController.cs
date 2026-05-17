@@ -1,14 +1,15 @@
-﻿using ApplicationLayer.DtoModels.PaymentDtos;
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.Services.PaymentWebhookService;
-
+using Infrastructure.Interfaces;
+using Application.DtoModels.PaymentDtos;
+using Application.Interfaces;
+using Application.Services.PaymentWebhookService;
+using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text.Json;
 
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
     [ApiController]
     [Route("api/payments/webhook/paymob")] // adjust route as needed

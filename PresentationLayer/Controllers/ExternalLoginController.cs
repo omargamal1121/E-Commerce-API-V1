@@ -1,10 +1,10 @@
-﻿using ApplicationLayer.Services.Externallogin;
+using Application.Services.Externallogin;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]

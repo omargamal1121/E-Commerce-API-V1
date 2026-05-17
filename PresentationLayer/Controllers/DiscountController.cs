@@ -1,12 +1,12 @@
-using ApplicationLayer.DtoModels.DiscoutDtos;
-using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.ErrorHnadling;
-using ApplicationLayer.Services.DiscountServices;
+using Application.DtoModels.DiscoutDtos;
+using Application.DtoModels.Responses;
+using Application.ErrorHnadling;
+using Application.Services.DiscountServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]

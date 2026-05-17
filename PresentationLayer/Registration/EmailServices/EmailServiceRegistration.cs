@@ -1,4 +1,4 @@
-using ApplicationLayer.Services.EmailServices;
+using Application.Services.EmailServices;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
 

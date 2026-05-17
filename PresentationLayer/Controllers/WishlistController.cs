@@ -1,13 +1,12 @@
 
+using Application.DtoModels.ProductDtos;
+using Application.DtoModels.Responses;
+using Application.ErrorHnadling;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.DtoModels.ProductDtos;
-using ApplicationLayer.ErrorHnadling;
-
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
     [ApiController]
    

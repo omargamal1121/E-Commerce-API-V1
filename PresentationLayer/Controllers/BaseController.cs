@@ -1,12 +1,12 @@
-﻿using ApplicationLayer.DtoModels.Responses;
-using ApplicationLayer.ErrorHnadling;
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.Services;
+﻿using Application.DtoModels.Responses;
+using Application.ErrorHnadling;
+using Application.Interfaces;
+using Application.Services;
 
 using Microsoft.AspNetCore.Mvc;
 
 
-namespace DomainLayer.Controllers
+namespace E_Commerce.Controllers
 {
     [ApiController]
     public abstract class BaseController : ControllerBase

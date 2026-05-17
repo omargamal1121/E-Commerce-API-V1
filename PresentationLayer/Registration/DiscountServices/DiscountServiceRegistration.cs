@@ -1,5 +1,5 @@
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.Services.DiscountServices;
+using Application.Interfaces;
+using Application.Services.DiscountServices;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace E_Commerce.Registration.DiscountServices

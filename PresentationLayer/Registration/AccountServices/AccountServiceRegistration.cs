@@ -1,17 +1,17 @@
-using ApplicationLayer.Interfaces;
-using ApplicationLayer.Services.AccountServices;
-using ApplicationLayer.Services.AccountServices.Registration;
-using ApplicationLayer.Services.AccountServices.Shared;
+using Application.Interfaces;
+using Application.Services.AccountServices;
+using Application.Services.AccountServices.Registration;
+using Application.Services.AccountServices.Shared;
 using Microsoft.Extensions.DependencyInjection;
-using ApplicationLayer.Services.EmailServices;
-using ApplicationLayer.Services.AccountServices.UserMangment;
-using ApplicationLayer.Services.AccountServices.Authentication;
-using ApplicationLayer.Services.AccountServices.AccountManagement;
-using ApplicationLayer.Services.AuthServices;
-using ApplicationLayer.Services.AccountServices.Password;
-using ApplicationLayer.Services.AccountServices.Profile;
-using ApplicationLayer.Services.AccountServices.Registration;
-using ApplicationLayer.Services.AccountServices.UserMangment;
+using Application.Services.EmailServices;
+using Application.Services.AccountServices.UserMangment;
+using Application.Services.AccountServices.Authentication;
+using Application.Services.AccountServices.AccountManagement;
+using Application.Services.AuthServices;
+using Application.Services.AccountServices.Password;
+using Application.Services.AccountServices.Profile;
+using Application.Services.AccountServices.Registration;
+using Application.Services.AccountServices.UserMangment;
 
 namespace E_Commerce.Registration.AccountServices
 {

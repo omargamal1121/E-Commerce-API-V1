@@ -1,0 +1,14 @@
+using Application.Services;
+
+namespace Application.Services.AccountServices.UserMangment
+{
+	public interface IUserRoleMangementService
+    {
+        Task<Result<bool>> AddRoleToUserAsync(string id, string role,string userid);
+        Task<Result<bool>> RemoveRoleFromUserAsync(string id, string role,string userid);
+        Task<Result<List<string>>> GetAllRolesAsync();
+
+    }
+}
+
+

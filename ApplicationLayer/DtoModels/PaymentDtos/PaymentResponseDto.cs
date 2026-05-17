@@ -1,0 +1,15 @@
+namespace Application.DtoModels.PaymentDtos
+{
+    public class PaymentResponseDto
+    {
+        public bool IsRedirectRequired { get; set; }
+        public string? RedirectUrl { get; set; }
+        public string Message { get; set; } = string.Empty;
+		public  int Paymentid { get; set; }
+		public long ProviderOrderId { get; set; }
+	}
+}
+
+
+
+

@@ -1,0 +1,58 @@
+# Build
+bin/
+obj/
+out/
+**/bin/
+**/obj/
+
+# Visual Studio
+.vs/
+.vscode/
+**/.vs/
+**/.vscode/
+
+# User files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+**/Logs/
+logs/
+
+# Secrets
+.env
+PresentationLayer/appsettings.Development.json
+PresentationLayer/appsettings.Local.json
+PresentationLayer/appsettings.Secret.json
+*.secret.json
+
+# Node
+node_modules/
+
+# Publish
+publish/
+PresentationLayer/wwwroot/lib/
+PresentationLayer/wwwroot/dist/
+
+# Temp
+*.tmp
+*.temp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+
+# Rider / ReSharper
+.idea/
+_ReSharper*/
+*.DotSettings.user
+
+# Tests
+TestResults/
+coverage/
+
+# Docker
+.dockerignore

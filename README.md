@@ -2,10 +2,10 @@
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/omargamal1121/E-Commerce-API-V1/main.yml?branch=main)](https://github.com/omargamal1121/E-Commerce-API-V1/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tech: C#, MySQL, Redis](https://img.shields.io/badge/Tech-C%23%2C%20MySQL%2C%20Redis%2C%20Docker-blue)](#technologies)
+[![Tech: C#, MySQL, Redis, JWT](https://img.shields.io/badge/Tech-C%23%2C%20MySQL%2C%20Redis%2C%20JWT%2C%20Docker-blue)](#technologies)
 
 A robust, modular, and extensible API for e-commerce platforms built using **C# (.NET Core)**.  
-This repository provides scalable solutions for managing products, categories, inventories, carts, orders, payment integrations, and more. It leverages **Clean Architecture** for maintainability and high-quality engineering—making it ideal for modern businesses and teams focused on growth and reliability.
+This repository provides scalable solutions for managing products, categories, inventories, carts, orders, payment integrations, and more. It leverages **Clean Architecture** for maintainability and **JWT authentication** for secure API access.
 
 ---
 
@@ -15,6 +15,8 @@ This repository provides scalable solutions for managing products, categories, i
 - [Badges & Tech Stack](#badges--tech-stack)
 - [Architecture Diagram](#architecture-diagram)
 - [Modules Overview](#modules-overview)
+- [Security](#security)
+- [Caching Strategy](#caching-strategy)
 - [Getting Started](#getting-started)
 - [API Documentation](#api-documentation)
 - [Example API Requests](#example-api-requests)
@@ -35,7 +37,8 @@ This repository provides scalable solutions for managing products, categories, i
 - **Shopping Cart System:** User-centric, supports add/remove/clear/count.
 - **Payment Integration:** Easily connect and manage payment gateways.
 - **Order Services:** Place, update, and track orders; extendable service architecture.
-- **Redis Caching** for performance and scalability.
+- **Redis Caching** for performance optimization and scalability.
+- **JWT Authentication & Authorization** for secure API access and token-based authentication.
 - **Entity Soft Delete & Restore:** Data integrity by reversible deletes.
 - **Structured Logging** for debugging and operational clarity.
 - Adheres strictly to **SOLID** and **Clean Architecture** principles for reliability.
@@ -46,12 +49,13 @@ This repository provides scalable solutions for managing products, categories, i
 
 - Build: [![Build Status](https://img.shields.io/github/actions/workflow/status/omargamal1121/E-Commerce-API-V1/main.yml?branch=main)](https://github.com/omargamal1121/E-Commerce-API-V1/actions)
 - License: [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-- Tech Stack: [![Tech: C#, MySQL, Redis, Docker](https://img.shields.io/badge/Tech-C%23%2C%20MySQL%2C%20Redis%2C%20Docker-blue)](#technologies)
+- Tech Stack: [![Tech: C#, MySQL, Redis, JWT, Docker](https://img.shields.io/badge/Tech-C%23%2C%20MySQL%2C%20Redis%2C%20JWT%2C%20Docker-blue)](#technologies)
 
 **Primary Technologies:**
 - **Language:** C#
 - **Database:** MySQL via Entity Framework Core
 - **Cache:** Redis
+- **Authentication:** JWT (JSON Web Tokens)
 - **Other:** Dapper, StackExchange.Redis, Microsoft.Extensions.Logging, Newtonsoft.Json
 - **Containerization:** Docker
 
@@ -66,6 +70,8 @@ graph TD
     ApplicationLayer --> DomainLayer["Domain Layer (Entities & Business Rules)"]
     DomainLayer --> InfrastructureLayer["Infrastructure Layer (Repositories, Persistence, Integrations)"]
     InfrastructureLayer --> ExternalSystems["External Systems"]
+    PresentationLayer -.->|JWT Validation| SecurityMiddleware["Security Middleware"]
+    ApplicationLayer -.->|Cache Operations| RedisCache["Redis Cache"]
 ```
 
 ---
@@ -78,6 +84,68 @@ graph TD
 | **Application**  | Defines service interfaces, use cases, data transfer objects, and orchestrates workflows.    |
 | **Infrastructure** | Handles data persistence, repository implementation, payment APIs, and cache strategies.   |
 | **Presentation** | Hosts API controllers/endpoints, managing HTTP requests and responses via RESTful patterns.  |
+
+---
+
+## Security
+
+### JWT Authentication
+
+The API implements **JSON Web Token (JWT)** authentication for secure API access:
+
+- **Token Generation:** Users receive JWT tokens upon successful login
+- **Token Validation:** All protected endpoints validate JWT tokens in the Authorization header
+- **Token Expiration:** Configurable token expiration times for enhanced security
+- **Claim-based Authorization:** Role-based access control (RBAC) using JWT claims
+
+**Bearer Token Format:**
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+### Security Features
+
+- Secure password hashing with industry standards
+- Protected sensitive endpoints requiring authentication
+- Support for role-based access control (Admin, User)
+- Token refresh mechanism for session management
+- External login integration support (OAuth providers)
+
+---
+
+## Caching Strategy
+
+### Redis Implementation
+
+The API leverages **Redis** for high-performance caching:
+
+**Cached Data:**
+- Product listings and details
+- Category information
+- User shopping carts
+- Order history summaries
+- User sessions and authentication tokens
+
+**Cache Benefits:**
+- Reduced database load
+- Faster response times for frequently accessed data
+- Improved scalability during peak traffic
+- Session management and token blacklisting support
+
+**Configuration:**
+```json
+{
+  "Redis": {
+    "Connection": "localhost:6379",
+    "DefaultExpiration": 3600
+  }
+}
+```
+
+**Cache Invalidation:**
+- Automatic expiration based on TTL (Time To Live)
+- Manual invalidation on data updates
+- Cascade invalidation for dependent data
 
 ---
 
@@ -100,6 +168,20 @@ graph TD
 
 2. **Configure environment**
    - Update `appsettings.json` with your MySQL and Redis details.
+   - Configure JWT secret key in `appsettings.json`:
+     ```json
+     {
+       "Jwt": {
+         "SecretKey": "your-secret-key-min-32-characters",
+         "Issuer": "YourAppName",
+         "Audience": "YourAppUsers",
+         "ExpirationMinutes": 60
+       },
+       "Redis": {
+         "Connection": "localhost:6379"
+       }
+     }
+     ```
    - Optionally, set environment variables as needed.
 
 3. **Restore & Build**
@@ -147,11 +229,33 @@ Explore the API endpoints interactively:
 
 ## Example API Requests
 
-#### Add a Product
+#### User Login (Obtain JWT Token)
+
+```bash
+curl -X POST "http://localhost:5000/api/auth/login" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "email": "user@example.com",
+           "password": "securePassword123"
+         }'
+```
+
+**Sample Response**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "expiresIn": 3600,
+  "userId": 1,
+  "email": "user@example.com"
+}
+```
+
+#### Add a Product (Requires JWT)
 
 ```bash
 curl -X POST "http://localhost:5000/api/products" \
      -H "Content-Type: application/json" \
+     -H "Authorization: Bearer YOUR_JWT_TOKEN" \
      -d '{
            "name": "New Product",
            "price": 49.99,
@@ -159,6 +263,7 @@ curl -X POST "http://localhost:5000/api/products" \
            "description": "A sample product"
          }'
 ```
+
 **Sample Response**
 ```json
 {
@@ -171,12 +276,14 @@ curl -X POST "http://localhost:5000/api/products" \
 }
 ```
 
-#### Get a Product
+#### Get a Product (Cached Response)
 
 ```bash
-curl "http://localhost:5000/api/products/123"
+curl "http://localhost:5000/api/products/123" \
+     -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
-**Sample Response**
+
+**Sample Response** (served from Redis cache)
 ```json
 {
   "id": 123,
@@ -233,6 +340,21 @@ The entire codebase is structured with SOLID in mind:
 The solution is ready for unit and integration tests via xUnit or NUnit.  
 Coverage of business rules, data access, and controller contracts is recommended for quality assurance.
 
+---
+
+## Contributing
+
+Contributions are welcome! Please follow these guidelines:
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/YourFeature`)
+3. Commit your changes (`git commit -m 'Add YourFeature'`)
+4. Push to the branch (`git push origin feature/YourFeature`)
+5. Open a Pull Request
+
+---
+
+## License
+
 MIT License
 
 ```
@@ -269,4 +391,4 @@ SOFTWARE.
 
 ---
 
-> For details, see source code, documentation, or reach out via issues.  
+> For details, see source code, documentation, or reach out via issues.

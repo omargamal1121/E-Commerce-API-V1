@@ -40,6 +40,8 @@ namespace Application.Services.EmailServices
 			{
 				using (SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587))
 				{
+					smtpClient.UseDefaultCredentials = false;
+
 					smtpClient.Credentials = new NetworkCredential(from.Address, from.Password);
 					smtpClient.EnableSsl = true;
 					await smtpClient.SendMailAsync(mailMessage);

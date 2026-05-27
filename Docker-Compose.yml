@@ -1,0 +1,97 @@
+services:
+  api:
+    image: e-commerce:1.0
+    container_name: e-commerce-api
+    ports:
+      - "7288:8080"
+
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+
+      # --- Connection Strings ---
+      - ConnectionStrings__DBbyMonster=Server=mysql;Port=3306;Database=${MYSQL_DATABASE};User Id=${MYSQL_USER};Password=${MYSQL_PASSWORD};SslMode=None;Allow User Variables=True;AllowPublicKeyRetrieval=True;
+      - ConnectionStrings__Redis=${ConnectionStrings__Redis}
+
+      # --- Frontend ---
+      - FrontEndUrl=${FrontEndUrl}
+
+      # --- Cloudinary ---
+      - CloudinarySettings__CloudName=${CloudinarySettings__CloudName}
+      - CloudinarySettings__ApiKey=${CloudinarySettings__ApiKey}
+      - CloudinarySettings__ApiSecret=${CloudinarySettings__ApiSecret}
+
+      # --- JWT ---
+      - Jwt__Key=${Jwt__Key}
+      - Jwt__Issuer=${Jwt__Issuer}
+      - Jwt__Audience=${Jwt__Audience}
+      - Jwt__ExpiresInMinutes=${Jwt__ExpiresInMinutes}
+
+      # --- Email (SMTP) ---
+      - Email__Address=${Email__Address}
+      - Email__Password=${Email__Password}
+      - Email__Host=${Email__Host}
+      - Email__Port=${Email__Port}
+      - Email__services=${Email__services}
+
+      # --- HangFire Dashboard ---
+      - HangFireAuth__UserName=${HangFireAuth__UserName}
+      - HangFireAuth__Pass=${HangFireAuth__Pass}
+
+      # --- Google OAuth ---
+      - Security__ExternalServices__Google__ClientId=${Security__ExternalServices__Google__ClientId}
+      - Security__ExternalServices__Google__ClientSecret=${Security__ExternalServices__Google__ClientSecret}
+
+      # --- Paymob ---
+      - Security__Paymob__HMAC=${Security__Paymob__HMAC}
+      - Security__Paymob__redirection_url=${Security__Paymob__redirection_url}
+
+    env_file:
+      - .env
+
+    volumes:
+      - logs:/app/logs
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  redis:
+    image: redis:latest
+    container_name: redis
+
+    ports:
+      - "6379:6379"
+
+    volumes:
+      - redis-data:/data
+
+volumes:
+  logs:
+  mysql-data:
+  redis-data:

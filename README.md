@@ -203,18 +203,66 @@ The API leverages **Redis** for high-performance caching:
    ```
    API will be accessible at [http://localhost:5000/swagger](http://localhost:5000/swagger).
 
-### Docker Setup
+### Docker Setup & Configuration
 
-1. **Build Docker Image**
-   ```bash
-   docker build -t ecommerce-api .
-   ```
+This project is fully containerized using **Docker** and orchestrated via **Docker Compose**. It spins up three services:
+1. **API:** The C# ASP.NET Core Web API container (`e-commerce-api`).
+2. **Database:** A MySQL 8.0 container (`mysql`) with persistent data volumes.
+3. **Cache:** A Redis container (`redis`) for caching.
 
-2. **Run with Docker**
+#### 1. Configure Environment Variables
+
+Before running Docker Compose, you must set up your environment variables. 
+
+1. Copy the `.env.example` file to create a `.env` file in the project root:
    ```bash
-   docker run -p 5000:80 ecommerce-api
+   cp .env.example .env
    ```
-   > Ensure MySQL and Redis are accessible to the container (using Docker Compose is recommended for local stack).
+2. Open `.env` and fill in your actual settings (passwords, JWT keys, Cloudinary credentials, SMTP secrets, etc.).
+
+> [!IMPORTANT]
+> The `.env` file is excluded from git version control via `.gitignore` and from the Docker image context via `.dockerignore` to ensure your production secrets remain safe.
+
+#### 2. ASP.NET Core Configuration Naming Convention
+
+This setup utilizes environment variables to override values in `appsettings.json`. ASP.NET Core uses a **double underscore (`__`)** as a separator to map to nested JSON hierarchy.
+For example:
+* `ConnectionStrings__DBbyMonster` maps to `ConnectionStrings:DBbyMonster`
+* `Jwt__Key` maps to `Jwt:Key`
+* `CloudinarySettings__CloudName` maps to `CloudinarySettings:CloudName`
+
+These environment variables are declared in `.env` and passed to the API container via `Docker-Compose.yml`.
+
+#### 3. Run the Entire Stack
+
+To build the API image and start all containers in detached mode, run:
+```bash
+docker compose up --build -d
+```
+
+* **MySQL Healthchecks:** The API container uses advanced `depends_on` rules. It will wait to start until the MySQL container is fully ready and healthy (verified via `mysqladmin ping`).
+* **Automatic Migrations:** On startup, the API container automatically applies any pending Entity Framework Core migrations to the MySQL database via `dbContext.Database.Migrate()` inside `Program.cs`.
+
+#### 4. Managing the Containers
+
+* **Stop the stack:**
+  ```bash
+  docker compose down
+  ```
+* **Stop and delete persistent volumes:**
+  ```bash
+  docker compose down -v
+  ```
+* **View logs:**
+  ```bash
+  docker compose logs -f api
+  ```
+* **Check container status:**
+  ```bash
+  docker compose ps
+  ```
+
+API Swagger documentation will be accessible locally at `http://localhost:7288/swagger` (HTTP) or `http://localhost:7289/swagger` (HTTPS / if configured).
 
 ---
 

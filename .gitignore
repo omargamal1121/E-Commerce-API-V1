@@ -24,6 +24,7 @@ logs/
 
 # Secrets
 .env
+PresentationLayer/appsettings.json
 PresentationLayer/appsettings.Development.json
 PresentationLayer/appsettings.Local.json
 PresentationLayer/appsettings.Secret.json

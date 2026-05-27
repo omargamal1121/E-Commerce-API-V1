@@ -141,17 +141,27 @@ namespace E_Commerce
 
 
 			
-			var redisUrl = builder.Configuration.GetSection("ConnectionStrings:Redis").Value ?? throw new Exception();
-
-			var uri = new Uri(redisUrl);
+			var redisUrl = builder.Configuration.GetSection("ConnectionStrings:Redis").Value ?? throw new Exception("Redis connection string is missing");
 
 			var config = new ConfigurationOptions
 			{
-				EndPoints = { $"{uri.Host}:{uri.Port}" },
-				Password = uri.UserInfo.Split(':')[1], // extract password
-				Ssl = true,
 				AbortOnConnectFail = false
 			};
+
+			if (redisUrl.StartsWith("redis://", StringComparison.OrdinalIgnoreCase) ||
+				redisUrl.StartsWith("rediss://", StringComparison.OrdinalIgnoreCase))
+			{
+				// External Redis (e.g. Upstash) — parse URI for host, password, and TLS
+				var uri = new Uri(redisUrl);
+				config.EndPoints.Add($"{uri.Host}:{uri.Port}");
+				config.Password = uri.UserInfo.Split(':')[1];
+				config.Ssl = redisUrl.StartsWith("rediss://", StringComparison.OrdinalIgnoreCase);
+			}
+			else
+			{
+				// Local Redis (e.g. Docker) — plain host:port, no auth, no TLS
+				config.EndPoints.Add(redisUrl);
+			}
 
 
 			builder.Services.AddSingleton<IConnectionMultiplexer>(
@@ -165,6 +175,7 @@ namespace E_Commerce
 					options.UseMySql(
 						builder.Configuration.GetConnectionString("DBbyMonster"),
 						new MySqlServerVersion(new Version(8, 0, 21))
+					
 					);
 				}
 			);

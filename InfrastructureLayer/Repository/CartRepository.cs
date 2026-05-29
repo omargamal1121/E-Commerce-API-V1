@@ -24,6 +24,8 @@ namespace Infrastructure.Repository
                        _logger.LogInformation("Locking cart for update");
             try
             {
+                
+                
                await  _context.Database.ExecuteSqlRawAsync(
                      "SELECT Id FROM Cart WHERE Id = {0} FOR UPDATE",
                      id);
@@ -35,9 +37,23 @@ namespace Infrastructure.Repository
             }
 
         }
+		public async Task<Cart?> GetCartForCheckoutWithLockAsync(string userId)
+		{
+			return await _context.Cart
+				.FromSqlInterpolated($@"
+            SELECT *
+            FROM Carts
+            WHERE UserId = {userId}
+            AND DeletedAt IS NULL
+            FOR UPDATE")
+				.Include(c => c.Items)
+					.ThenInclude(i => i.ProductVariant)
+				.Include(c => c.Items)
+					.ThenInclude(i => i.Product).ThenInclude(p=>p.Discount)
+				.FirstOrDefaultAsync();
+		}
 
-
-        public async Task<Cart?> GetCartByUserIdAsync(string userId)
+		public async Task<Cart?> GetCartByUserIdAsync(string userId)
         {
             _logger.LogInformation($"Retrieving cart for user: {userId}");
             

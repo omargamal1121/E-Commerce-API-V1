@@ -1,6 +1,6 @@
 services:
   api:
-    image: e-commerce:1.0
+    image: omargamal1132004/e-commerce:1.1
     container_name: e-commerce-api
     ports:
       - "7288:8080"

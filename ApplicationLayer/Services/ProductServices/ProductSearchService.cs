@@ -96,7 +96,7 @@ namespace Application.Services.ProductServices
                     .ToListAsync();
 
                 if (!products.Any())
-                    return Result<List<ProductDto>>.Fail("No new arrivals found", 204);
+                    return Result<List<ProductDto>>.Fail("No new arrivals found", 404);
 
                 _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "NewArrivals", IsAdmin, null));
                 return Result<List<ProductDto>>.Ok(products, $"Found {products.Count} new arrivals", 200);
@@ -343,7 +343,7 @@ namespace Application.Services.ProductServices
                     .ToListAsync();
 
                 if (products is null || !products.Any())
-                    return Result<List<ProductDto>>.Fail("No products found matching the search criteria", 204);
+                    return Result<List<ProductDto>>.Fail("No products found matching the search criteria", 404);
 
                 _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync<ProductDto>(products, searchKey, isActive, deletedOnly, pageSize, page, "AdvancedSearch", IsAdmin, null));
 

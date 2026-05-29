@@ -6,7 +6,9 @@ namespace Application.Services.CartServices
 {
     public interface ICartMapper
     {
-        Expression<Func<Cart, CartDto>> CartDtoSelector { get; }
+        public CartDto CartDtomapper(Cart cart);
+
+		Expression<Func<Cart, CartDto>> CartDtoSelector { get; }
         CartDto ToCartDto(Cart cart);
     }
 }

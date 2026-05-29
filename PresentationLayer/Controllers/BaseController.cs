@@ -84,9 +84,9 @@ namespace E_Commerce.Controllers
                 201 => StatusCode(201, apiResponse),
                 400 => BadRequest(apiResponse),
                 401 => Unauthorized(apiResponse),
-                403 => Forbid(),
-                404 => NotFound(apiResponse),
-                409 => Conflict(apiResponse),
+				403 => StatusCode(403, apiResponse),
+				404 => StatusCode(404, apiResponse),
+				409 => Conflict(apiResponse),
                 500 => StatusCode(500, apiResponse),
                 _ => StatusCode(result.StatusCode, apiResponse)
             };

@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using Infrastructure.Interfaces;
+using Application.Services.CartServices;
 
 namespace Application.Services.OrderServices
 {
@@ -27,7 +28,7 @@ namespace Application.Services.OrderServices
         private readonly IProductCacheManger _productCacheManger;
         private readonly ICollectionCacheHelper _collectionCacheHelper;
         private readonly ISubCategoryCacheHelper _subCategoryCacheHelper;
-
+        private readonly ICartRepository _cartRepository;
 		private readonly IUserOperationServices _UserOperationServices;
         private readonly IOrderRepository _orderRepository;
         private readonly ICartServices _cartServices;
@@ -38,16 +39,18 @@ namespace Application.Services.OrderServices
         private readonly UserManager<Customer> _userManager;
         private readonly IOrderCacheHelper _cacheHelper;
         private readonly IProductVariantCommandService _productVariantCommandService;
+        private readonly ICartMapper _cartmapper;
         
 
         private static readonly ConcurrentDictionary<int, SemaphoreSlim> _variantLocks = new();
 
         public OrderCommandService(
+            ICartRepository cartRepository,
             ISubCategoryCacheHelper subCategoryCacheHelper,
             IProductVariantCacheHelper productVariantCacheHelper,
             IProductCacheManger productCacheManger,
             ICollectionCacheHelper collectionCacheHelper,
-
+            ICartMapper cartMapper ,
 			IProductCatalogService productCatalogService,
             IBackgroundJobClient backgroundJobClient,
             IErrorNotificationService errorNotificationService,
@@ -61,6 +64,8 @@ namespace Application.Services.OrderServices
             IOrderCacheHelper cacheHelper,
             IProductVariantCommandService productVariantCommandService)
         {
+            _cartmapper = cartMapper;
+            _cartRepository = cartRepository;
             _subCategoryCacheHelper = subCategoryCacheHelper;
             _productVariantCacheHelper = productVariantCacheHelper;
             _collectionCacheHelper = collectionCacheHelper;
@@ -127,18 +132,19 @@ namespace Application.Services.OrderServices
                 if (!await _unitOfWork.CustomerAddress.IsExsistByIdAndUserIdAsync(orderDto.AddressId, userId))
                     return Result<OrderAfterCreatedto>.Fail("Address doesn't exist", 400);
 
-                var cartResult = await _cartServices.GetCartAsync(userId);
-                if (!cartResult.Success || cartResult.Data == null || cartResult.Data.IsEmpty)
+                var cart = await _cartRepository.GetCartForCheckoutWithLockAsync(userId);
+                if (cart is null|| cart.IsEmpty )
                     return Result<OrderAfterCreatedto>.Fail("Cart is empty", 400);
 
-                var cart = cartResult.Data;
 
                 if (cart.CheckoutDate == null || cart.CheckoutDate.Value.AddDays(7) < DateTime.UtcNow)
                     return Result<OrderAfterCreatedto>.Fail("Please checkout before creating order", 400);
+
+                var cartdto= _cartmapper.CartDtomapper(cart);
 				#endregion
 
 				#region Check Stock Availability (without reducing yet)
-				var variantIds = cart.Items
+				var variantIds = cartdto.Items
 					.Where(i => i.Product.IsActive && i.DeletedAt == null)
 					.Select(i => i.Product.productVariantForCartDto.Id)
 					.ToList();
@@ -165,7 +171,7 @@ namespace Application.Services.OrderServices
 				#endregion
 
 				#region Create Order + Items
-				var subtotal = cart.Items.Sum(i => i.Quantity * i.CurrentPrice);
+				var subtotal = cartdto.Items.Sum(i => i.Quantity * i.CurrentPrice);
                 var total = subtotal;
 
                 var orderNumber = await _orderRepository.GenerateOrderNumberAsync();
@@ -179,8 +185,19 @@ namespace Application.Services.OrderServices
                     Subtotal = subtotal,
                     Total = total,
                     Notes = orderDto.Notes,
-                    CreatedAt = DateTime.UtcNow
-                };
+                    CreatedAt = DateTime.UtcNow,
+                    Items = cartdto.Items.Select(item => new OrderItem
+					{
+						
+						ProductId = item.ProductId,
+						ProductVariantId = item.Product.productVariantForCartDto.Id,
+						Quantity = item.Quantity,
+						UnitPrice = item.CurrentPrice,
+						TotalPrice = item.Quantity * item.CurrentPrice,
+						OrderedAt = DateTime.UtcNow,
+						CreatedAt = DateTime.UtcNow
+					})
+				};
 
                 var createdOrder = await _orderRepository.CreateAsync(order);
                 if (createdOrder == null)
@@ -188,25 +205,13 @@ namespace Application.Services.OrderServices
                     await transaction.RollbackAsync();
                     return Result<OrderAfterCreatedto>.Fail("Failed to create order", 500);
                 }
-                await _unitOfWork.CommitAsync();
+             
 
-                var orderItems = cart.Items.Select(item => new OrderItem
-                {
-                    OrderId = createdOrder.Id,
-                    ProductId = item.ProductId,
-                    ProductVariantId = item.Product.productVariantForCartDto.Id,
-                    Quantity = item.Quantity,
-                    UnitPrice = item.CurrentPrice,
-                    TotalPrice = item.Quantity * item.CurrentPrice,
-                    OrderedAt = DateTime.UtcNow,
-                    CreatedAt = DateTime.UtcNow
-                }).ToList();
-
-                await _unitOfWork.Repository<OrderItem>().CreateRangeAsync(orderItems.ToArray());
+                
 				#endregion
 
-				#region Reduce Stock After Order Creation Succeeds
-				foreach (var item in cart.Items)
+				#region Reduce Stock After Order Creation
+				foreach (var item in cartdto.Items)
 				{
 					//var variant = variants.FirstOrDefault(v => v.Id == item.Product.productVariantForCartDto.Id);
 					//if (variant != null)

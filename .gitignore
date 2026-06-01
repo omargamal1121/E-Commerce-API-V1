@@ -57,3 +57,6 @@ coverage/
 
 # Docker
 .dockerignore
+
+# Publish profiles
+*/Properties/PublishProfiles/

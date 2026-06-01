@@ -62,8 +62,8 @@ namespace Application.Services.ProductVariantServices
         public async Task<Result<bool>> RestoreVariantAsync(int id, string userId)
             => await _commandService.RestoreVariantAsync(id, userId);
 
-        public async Task<Result<bool>> RemoveQuntityAfterOrder(int id, int quantity)
-            => await _commandService.RemoveQuntityAfterOrder(id, quantity);
+        public async Task<Result<bool>> RemoveQuntityAfterOrder(int id, int quantity, int? productId = null)
+            => await _commandService.RemoveQuntityAfterOrder(id, quantity, productId);
 
         public async Task<Result<bool>> AddQuntityAfterRestoreOrder(int id, int addQuantity)
             => await _commandService.AddQuntityAfterRestoreOrder(id, addQuantity);

@@ -98,7 +98,7 @@ namespace Application.Services.ProductVariantServices
             }
         }
 
-		public async Task<Result<bool>> RemoveQuntityAfterOrder(int id, int quantity)
+		public async Task<Result<bool>> RemoveQuntityAfterOrder(int id, int quantity, int? productId = null)
 		{
 			_logger.LogInformation($"Removing {quantity} from variant: {id}");
 
@@ -113,19 +113,17 @@ namespace Application.Services.ProductVariantServices
                 {
                     return Result<bool>.Fail("Not enough quantity or someone else already bought it", 409);
                 }
-                var variant = await _unitOfWork.Repository<ProductVariant>().GetByIdAsync(id);
 
-                if (variant.Quantity == 0)
-                {
-                    variant.IsActive = false;
-
-                    _backgroundJobClient.Enqueue(() =>
-                        CheckAndDeactivateProductIfAllVariantsInactiveOrZeroAsync(variant.ProductId)
-                    );
-                }
+                // If productId is not provided, fetch it as a fallback
+                var actualProductId = productId ?? await _unitOfWork.Repository<ProductVariant>()
+                    .GetAll()
+                    .AsNoTracking()
+                    .Where(v => v.Id == id)
+                    .Select(v => v.ProductId)
+                    .FirstOrDefaultAsync();
 
                 _backgroundJobClient.Enqueue(() =>
-                    _productCatalogService.UpdateProductQuantity(variant.ProductId));
+                    _productCatalogService.UpdateProductQuantity(actualProductId));
 
                 return Result<bool>.Ok(true);
             }
@@ -649,10 +647,9 @@ namespace Application.Services.ProductVariantServices
             {
                 var varaintinfo = await _unitOfWork.ProductVariant.GetAll().Where(v => v.Id == id).Select(v => new
                 {
-                    hasquntity = v.Quantity > 0,
+                    
                     isdeleted = v.DeletedAt != null,
-                    hassize = v.Size != null,
-                    haslengthandwaist = v.Length != 0 && v.Waist != 0,
+                  
                     productid = v.ProductId
                 }).FirstOrDefaultAsync();
 

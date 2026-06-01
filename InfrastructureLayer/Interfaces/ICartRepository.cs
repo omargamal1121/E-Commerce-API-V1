@@ -8,6 +8,7 @@ namespace Infrastructure.Interfaces
     {
 
         Task<Cart?> GetCartForCheckoutWithLockAsync(string userId);
+        IQueryable<Cart> GetCartForCheckoutNoTrackingQuery(string userId);
 
 		Task<bool> AddItemToCartAsync(int cartId, CartItem item);
         public  Task<Cart?> GetCartByUserIdAsync(string userId);

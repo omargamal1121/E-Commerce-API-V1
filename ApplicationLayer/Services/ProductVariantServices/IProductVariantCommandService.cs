@@ -18,7 +18,7 @@ namespace Application.Services.ProductVariantServices
         Task<Result<bool>> AddVariantQuantityAsync(int id, int addQuantity, string userId);
         Task<Result<bool>> RemoveVariantQuantityAsync(int id, int removeQuantity, string userId);
         Task<Result<bool>> RestoreVariantAsync(int id, string userId);
-        Task<Result<bool>> RemoveQuntityAfterOrder(int id, int quantity);
+        Task<Result<bool>> RemoveQuntityAfterOrder(int id, int quantity, int? productId = null);
         Task<Result<bool>> AddQuntityAfterRestoreOrder(int id, int addQuantity);
     }
 }

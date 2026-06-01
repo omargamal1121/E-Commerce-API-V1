@@ -1,4 +1,4 @@
-using Domain.Enums;
+﻿using Domain.Enums;
 using Application.DtoModels.OrderDtos;
 using Application.Interfaces;
 using Domain.Models;
@@ -117,61 +117,96 @@ namespace Application.Services.OrderServices
         {
             _logger.LogInformation("Creating order from cart for user: {UserId}", userId);
 
+            #region Validate User and Cart (Read-only, pre-transaction)
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return Result<OrderAfterCreatedto>.Fail("UnAuthorized", 401);
+
+            if (!await _unitOfWork.CustomerAddress.IsExsistByIdAndUserIdAsync(orderDto.AddressId, userId))
+                return Result<OrderAfterCreatedto>.Fail("Address doesn't exist", 400);
+
+            var cart = await _cartRepository.GetCartByUserIdAsync(userId);
+            if (cart is null)
+                return Result<OrderAfterCreatedto>.Fail("Cart is empty", 400);
+            #endregion
+
             await using var transaction = await _unitOfWork.BeginTransactionAsync();
 
             try
             {
-                #region Validate User and Cart
-                var user = await _userManager.FindByIdAsync(userId);
-                if (user == null)
-                    return Result<OrderAfterCreatedto>.Fail("UnAuthorized", 401);
+                #region Lock Cart and Fetch Cart Projection
+                await _cartRepository.LockCartForUpdateAsnyc(cart.Id);
 
-                if (!await _unitOfWork.Cart.IsExsistByUserId(userId))
-                    return Result<OrderAfterCreatedto>.Fail("Cart is empty", 400);
+                var cartdto = await _cartRepository
+					.GetCartForCheckoutNoTrackingQuery(userId)
+					.Select(_cartmapper.CartDtoSelector)
+					.FirstOrDefaultAsync();
 
-                if (!await _unitOfWork.CustomerAddress.IsExsistByIdAndUserIdAsync(orderDto.AddressId, userId))
-                    return Result<OrderAfterCreatedto>.Fail("Address doesn't exist", 400);
+				if (cartdto is null || !cartdto.Items.Any())
+				{
+					await transaction.RollbackAsync();
+					return Result<OrderAfterCreatedto>.Fail("Cart is empty", 400);
+				}
 
-                var cart = await _cartRepository.GetCartForCheckoutWithLockAsync(userId);
-                if (cart is null|| cart.IsEmpty )
-                    return Result<OrderAfterCreatedto>.Fail("Cart is empty", 400);
-
-
-                if (cart.CheckoutDate == null || cart.CheckoutDate.Value.AddDays(7) < DateTime.UtcNow)
-                    return Result<OrderAfterCreatedto>.Fail("Please checkout before creating order", 400);
-
-                var cartdto= _cartmapper.CartDtomapper(cart);
+				if (cartdto.CheckoutDate == null || cartdto.CheckoutDate.Value.AddDays(7) < DateTime.UtcNow)
+				{
+					await transaction.RollbackAsync();
+					return Result<OrderAfterCreatedto>.Fail("Please checkout before creating order", 400);
+				}
 				#endregion
 
-				#region Check Stock Availability (without reducing yet)
-				var variantIds = cartdto.Items
+				#region Filter Active Items and Pre-Check Stock Availability
+				var activeItems = cartdto.Items
 					.Where(i => i.Product.IsActive && i.DeletedAt == null)
+					.ToList();
+
+				if (!activeItems.Any())
+				{
+					await transaction.RollbackAsync();
+					return Result<OrderAfterCreatedto>.Fail("No active items found in the cart for checkout.", 400);
+				}
+
+				var variantIds = activeItems
 					.Select(i => i.Product.productVariantForCartDto.Id)
 					.ToList();
 
-				//var variants = await _unitOfWork.Repository<ProductVariant>()
-				//	.GetAll().AsNoTracking().Include(v=>v.Product)
-				//	.Where(v => variantIds.Contains(v.Id))
-				//	.ToListAsync();
+				// Fetch current DB quantities with no tracking — safe read inside the locked transaction
+				var variants = await _unitOfWork.Repository<ProductVariant>()
+					.GetAll()
+					.AsNoTracking()
+					.Where(v => variantIds.Contains(v.Id))
+					.Select(v => new { v.Id, v.Quantity, v.DeletedAt })
+					.ToListAsync();
 
-				//// Validate stock availability first without reducing
-				//foreach (var item in cart.Items)
-				//{
-				//	var variant = variants.FirstOrDefault(v => v.Id == item.Product.productVariantForCartDto.Id);
-				//	if (variant == null || variant.Quantity < item.Quantity)
-				//	{
-				//		await transaction.RollbackAsync();
-				//		return Result<OrderAfterCreatedto>.Fail(
-				//			$"Product '{item.Product.Name}' is not available in required quantity. " +
-				//			$"Requested: {item.Quantity}, Available: {(variant?.Quantity ?? 0)}",
-				//			400
-				//		);
-				//	}
-				//}
+				// Validate every active cart item against current DB stock
+				foreach (var item in activeItems)
+				{
+					var variantId = item.Product.productVariantForCartDto.Id;
+					var variant = variants.FirstOrDefault(v => v.Id == variantId);
+
+					if (variant == null || variant.DeletedAt != null)
+					{
+						await transaction.RollbackAsync();
+						return Result<OrderAfterCreatedto>.Fail(
+							$"Product '{item.Product.Name}' variant is no longer available.",
+							409
+						);
+					}
+
+					if (variant.Quantity < item.Quantity)
+					{
+						await transaction.RollbackAsync();
+						return Result<OrderAfterCreatedto>.Fail(
+							$"Product '{item.Product.Name}' is not available in required quantity. " +
+							$"Requested: {item.Quantity}, Available: {variant.Quantity}",
+							409
+						);
+					}
+				}
 				#endregion
 
-				#region Create Order + Items
-				var subtotal = cartdto.Items.Sum(i => i.Quantity * i.CurrentPrice);
+				#region Create Order + Items (Using strictly active items)
+				var subtotal = activeItems.Sum(i => i.Quantity * i.CurrentPrice);
                 var total = subtotal;
 
                 var orderNumber = await _orderRepository.GenerateOrderNumberAsync();
@@ -186,9 +221,8 @@ namespace Application.Services.OrderServices
                     Total = total,
                     Notes = orderDto.Notes,
                     CreatedAt = DateTime.UtcNow,
-                    Items = cartdto.Items.Select(item => new OrderItem
+                    Items = activeItems.Select(item => new OrderItem
 					{
-						
 						ProductId = item.ProductId,
 						ProductVariantId = item.Product.productVariantForCartDto.Id,
 						Quantity = item.Quantity,
@@ -196,7 +230,7 @@ namespace Application.Services.OrderServices
 						TotalPrice = item.Quantity * item.CurrentPrice,
 						OrderedAt = DateTime.UtcNow,
 						CreatedAt = DateTime.UtcNow
-					})
+					}).ToList()
 				};
 
                 var createdOrder = await _orderRepository.CreateAsync(order);
@@ -205,40 +239,26 @@ namespace Application.Services.OrderServices
                     await transaction.RollbackAsync();
                     return Result<OrderAfterCreatedto>.Fail("Failed to create order", 500);
                 }
-             
-
-                
 				#endregion
 
 				#region Reduce Stock After Order Creation
-				foreach (var item in cartdto.Items)
+				foreach (var item in activeItems)
 				{
-					//var variant = variants.FirstOrDefault(v => v.Id == item.Product.productVariantForCartDto.Id);
-					//if (variant != null)
-					//{
-					//	if (variant.Quantity < item.Quantity)
-					//	{
-					//		await transaction.RollbackAsync();
-					//		return Result<OrderAfterCreatedto>.Fail(
-					//			$"Insufficient stock for product '{item.Product.Name}'. " +
-					//			$"Requested: {item.Quantity}, Available: {variant.Quantity}",
-					//			400
-					//		);
-					//	}
+					var removeResult = await _productVariantCommandService.RemoveQuntityAfterOrder(
+						item.Product.productVariantForCartDto.Id,
+						item.Quantity,
+						item.ProductId);
 
-						var removeResult = await _productVariantCommandService.RemoveQuntityAfterOrder(item.Product.productVariantForCartDto.Id, item.Quantity);
-						if (!removeResult.Success)
-						{
-							await transaction.RollbackAsync();
-							return Result<OrderAfterCreatedto>.Fail(
-								$"Failed to reduce stock for product '{item.Product.Name}': No Enough Quntity",
-								409
-							);
-						}
-				//	}
+					if (!removeResult.Success)
+					{
+						await transaction.RollbackAsync();
+						return Result<OrderAfterCreatedto>.Fail(
+							$"Failed to reduce stock for product '{item.Product.Name}': {removeResult.Message}",
+							409
+						);
+					}
 				}
 				#endregion
-
 
 				#region Clear Cart + Commit
 				await _unitOfWork.Cart.ClearCartAsync(cart.Id);
@@ -247,7 +267,16 @@ namespace Application.Services.OrderServices
                 await transaction.CommitAsync();
                 #endregion
 
-                #region Log User Operation (best effort)
+                #region Safe Background Job Scheduling (Post-Commit)
+                _backgroundJobClient.Enqueue(() => DeactivateZeroQuantityVariantsAsync(variantIds));
+
+                _backgroundJobClient.Schedule(
+                    () => ExpireUnpaidOrderInBackground(createdOrder.Id),
+                    TimeSpan.FromHours(5)
+                );
+                #endregion
+
+                #region Log User Operation (best-effort, Post-Commit)
                 var logResult = await _UserOperationServices.AddUserOpreationAsync(
                     $"Created order {orderNumber} from cart",
                     Opreations.AddOpreation,
@@ -260,19 +289,13 @@ namespace Application.Services.OrderServices
                 #endregion
 
                 #region Prepare Response
-              
-
-            
-
                 RemoveCacheAndRelated();
 
-                var response = new OrderAfterCreatedto { OrderId=createdOrder.Id,
-                OrderNumber=order.OrderNumber};
-
-                _backgroundJobClient.Schedule(
-                    () => ExpireUnpaidOrderInBackground(createdOrder.Id),
-                    TimeSpan.FromHours(5)
-                );
+                var response = new OrderAfterCreatedto 
+                { 
+                    OrderId = createdOrder.Id,
+                    OrderNumber = order.OrderNumber
+                };
 
                 return Result<OrderAfterCreatedto>.Ok(response, "Order created successfully", 201);
                 #endregion
@@ -353,19 +376,54 @@ namespace Application.Services.OrderServices
 
 		private async Task ReduceQuantityOfProduct(List<OrderItem> orderItems)
         {
-            // Use ProductVariantCommandService methods instead of direct manipulation
             foreach (var orderItem in orderItems)
             {
-                var removeResult = await _productVariantCommandService.RemoveQuntityAfterOrder(orderItem.ProductVariantId, orderItem.Quantity);
+                var removeResult = await _productVariantCommandService.RemoveQuntityAfterOrder(orderItem.ProductVariantId, orderItem.Quantity, orderItem.ProductId);
                 if (!removeResult.Success)
                 {
                     _logger.LogError("Failed to reduce quantity for variant {VariantId}: {Message}", 
                         orderItem.ProductVariantId, removeResult.Message);
                 }
             }
+        }
 
+		/// <summary>
+		/// Deactivates all variants from the given IDs whose quantity has reached zero.
+		/// Uses a single bulk ExecuteUpdateAsync — one UPDATE WHERE statement, no entity loading.
+		/// Runs as a background job so the order response is not delayed.
+		/// </summary>
+		public async Task DeactivateZeroQuantityVariantsAsync(List<int> variantIds)
+		{
+			try
+			{
+				var affectedRows = await _unitOfWork.Repository<ProductVariant>()
+					.GetAll()
+					.Where(v => variantIds.Contains(v.Id)
+							 && v.DeletedAt == null
+							 && v.Quantity == 0
+							 && v.IsActive)
+					.ExecuteUpdateAsync(setters =>
+						setters.SetProperty(v => v.IsActive, false));
 
+				if (affectedRows == 0)
+					return;
+
+				_logger.LogInformation(
+					"{Count} variant(s) deactivated (zero stock) for variantIds: {Ids}",
+					affectedRows,
+					string.Join(", ", variantIds));
+
+				_backgroundJobClient.Enqueue(() => _productVariantCacheHelper.RemoveProductCachesAsync());
+				_backgroundJobClient.Enqueue(() => _productCacheManger.ClearProductCache());
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex,
+					"Error in DeactivateZeroQuantityVariantsAsync for variantIds: {Ids}",
+					string.Join(", ", variantIds));
+			}
 		}
+
         private void RemoveCacheAndRelated()
         {
             _cacheHelper.ClearOrderCache();
@@ -549,37 +607,44 @@ namespace Application.Services.OrderServices
             => UpdateStatusAsync(orderId, userId, OrderStatus.Shipped, "Shipped", "Order shipped successfully",notes: null);
 
         public Task<Result<bool>> DeliverOrderAsync(int orderId, string userId)
-            => UpdateStatusAsync(orderId, userId, OrderStatus.Delivered, "Delivered", "Order delivered successfully",notes: null);
+            => UpdateStatusAsync(orderId, userId, OrderStatus.Delivered, "Delivered", "Order delivered successfully", notes: null);
 
         public async Task<Result<bool>> CancelOrderByCustomerAsync(int orderId, string userId)
         {
+            _logger.LogInformation("Customer {UserId} attempting to cancel order {OrderId}", userId, orderId);
+
+            #region Validate Order (Read-only, pre-transaction)
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order == null || order.CustomerId != userId)
+            {
+                return Result<bool>.Fail("Order not found or access denied", 404);
+            }
+
+            if (order.Status == OrderStatus.CancelledByAdmin || order.Status == OrderStatus.CancelledByUser)
+            {
+                return Result<bool>.Fail("Order is already cancelled", 400);
+            }
+
+            if (order.Status is not (OrderStatus.PendingPayment or OrderStatus.PaymentExpired))
+            {
+                return Result<bool>.Fail("Order cannot be canceled in its current status", 400);
+            }
+            #endregion
+
             await using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
-                var order = await _orderRepository.GetByIdAsync(orderId);
-                if (order == null || order.CustomerId != userId)
-                {
-                    await transaction.RollbackAsync();
-                    return Result<bool>.Fail("Order not found or access denied", 404);
-                }
-
-                await _unitOfWork.Order.LockOrderForUpdateAsync(
-                    order.Id);
-
-                if (order.Status == OrderStatus.CancelledByAdmin || order.Status == OrderStatus.CancelledByUser)
-                {
-                    await transaction.RollbackAsync();
-                    return Result<bool>.Fail("Order is already cancelled", 400);
-                }
-
-                if (order.Status is not (OrderStatus.PendingPayment or OrderStatus.PaymentExpired))
-                {
-                    await transaction.RollbackAsync();
-                    return Result<bool>.Fail("Order cannot be canceled in its current status", 400);
-                }
+                // Lock row inside transaction scope
+                await _unitOfWork.Order.LockOrderForUpdateAsync(order.Id);
 
                 order.CancelledAt = DateTime.UtcNow;
                 order.Status = OrderStatus.CancelledByUser;
+
+                await _unitOfWork.CommitAsync();
+                await transaction.CommitAsync();
+
+                #region Safe Operations Post-Commit (Best effort, non-blocking)
+                _backgroundJobClient.Enqueue(() => RestockOrderItemsInBackground(orderId));
 
                 var operationAdded = await _UserOperationServices.AddUserOpreationAsync(
                     $"Cancelled order {order.Id}",
@@ -590,16 +655,11 @@ namespace Application.Services.OrderServices
 
                 if (!operationAdded.Success)
                 {
-                    await transaction.RollbackAsync();
-                    return Result<bool>.Fail("Failed to record user operation", 500);
+                    _logger.LogWarning("Failed to record customer cancellation log for order {OrderId}", orderId);
                 }
-
-                await _unitOfWork.CommitAsync();
-                await transaction.CommitAsync();
+                #endregion
 
                 RemoveCacheAndRelated();
-                _backgroundJobClient.Enqueue(() => RestockOrderItemsInBackground(orderId));
-
                 return Result<bool>.Ok(true, "Order cancelled successfully", 200);
             }
             catch (DbUpdateConcurrencyException e)
@@ -619,38 +679,44 @@ namespace Application.Services.OrderServices
 
         public async Task<Result<bool>> CancelOrderByAdminAsync(int orderId, string adminId)
         {
+            _logger.LogInformation("Admin {AdminId} attempting to cancel order {OrderId}", adminId, orderId);
+
+            #region Validate Order (Read-only, pre-transaction)
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order == null)
+            {
+                return Result<bool>.Fail("Order not found", 404);
+            }
+
+            if (order.Status == OrderStatus.Delivered
+                || order.Status == OrderStatus.Refunded
+                || order.Status == OrderStatus.Returned)
+            {
+                return Result<bool>.Fail("Can't cancel delivered, refunded, or returned orders", 400);
+            }
+
+            if (order.Status == OrderStatus.CancelledByAdmin
+                || order.Status == OrderStatus.CancelledByUser)
+            {
+                return Result<bool>.Fail("Order is already cancelled", 400);
+            }
+            #endregion
+
             await using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
-                var order = await _orderRepository.GetByIdAsync(orderId);
-                if (order == null)
-                {
-                    return Result<bool>.Fail("Order not found", 404);
-                }
-                await _unitOfWork.Order.LockOrderForUpdateAsync(
-                                   order.Id);
+                // Lock row inside transaction scope
+                await _unitOfWork.Order.LockOrderForUpdateAsync(order.Id);
 
-                if (order.Status == OrderStatus.Delivered
-                    || order.Status == OrderStatus.Refunded
-                    || order.Status == OrderStatus.Returned)
-                {
-                    return Result<bool>.Fail("Can't cancel delivered, refunded, or returned orders", 400);
-                }
-
-                if (order.Status == OrderStatus.CancelledByAdmin
-                    || order.Status == OrderStatus.CancelledByUser)
-                {
-                    return Result<bool>.Fail("Order is already cancelled", 400);
-                }
-
-                // ✅ Update order
                 order.CancelledAt = DateTime.UtcNow;
                 order.Status = OrderStatus.CancelledByAdmin;
 
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
-                // ✅ Log admin operation (best-effort)
+                #region Safe Operations Post-Commit (Best effort, non-blocking)
+                _backgroundJobClient.Enqueue(() => RestockOrderItemsInBackground(orderId));
+
                 var adminOperationResult = await _adminOperationServices.AddAdminOpreationAsync(
                     $"Cancelled order {orderId} by admin {adminId}",
                     Opreations.UpdateOpreation,
@@ -661,11 +727,9 @@ namespace Application.Services.OrderServices
                 {
                     _logger.LogWarning("Failed to log admin operation for order {OrderId} by admin {AdminId}", orderId, adminId);
                 }
+                #endregion
 
-                // ✅ Schedule background jobs
                 RemoveCacheAndRelated();
-                _backgroundJobClient.Enqueue(() => RestockOrderItemsInBackground(orderId));
-
                 return Result<bool>.Ok(true, "Order cancelled by admin", 200);
             }
             catch (DbUpdateConcurrencyException e)
@@ -686,35 +750,39 @@ namespace Application.Services.OrderServices
 
         public async Task ExpireUnpaidOrderInBackground(int orderId)
         {
+            _logger.LogInformation("Evaluating unpaid order {OrderId} for expiration in background", orderId);
+
+            #region Validate Order (Read-only, pre-transaction)
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order == null)
+            {
+                _logger.LogWarning("Expire skipped: order {OrderId} not found", orderId);
+                return;
+            }
+
+            if (order.Status != OrderStatus.PendingPayment)
+            {
+                _logger.LogInformation("Expire skipped: order {OrderId} status is {Status}", orderId, order.Status);
+                return;
+            }
+
+            if (!IsValidTransition(order.Status, OrderStatus.PaymentExpired))
+            {
+                _logger.LogWarning("Cannot change order {OrderId} status to PaymentExpired from {CurrentStatus}", orderId, order.Status);
+                return;
+            }
+            #endregion
+
             await using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
-                var order = await _orderRepository.GetByIdAsync(orderId);
-                if (order == null)
-                {
-                    _logger.LogWarning("Expire skipped: order {OrderId} not found", orderId);
-                    return;
-                }
-
-                await _unitOfWork.Order.LockOrderForUpdateAsync(
-                    order.Id);
-
-                if (order.Status != OrderStatus.PendingPayment)
-                {
-                    _logger.LogInformation("Expire skipped: order {OrderId} status is {Status}", orderId, order.Status);
-                    return;
-                }
-
-
-                if (!IsValidTransition(order.Status, OrderStatus.PaymentExpired))
-                {
-                    _logger.LogWarning("Cannot change order {OrderId} status to PaymentExpired from {CurrentStatus}", orderId, order.Status);
-                    return;
-                }
+                await _unitOfWork.Order.LockOrderForUpdateAsync(order.Id);
 
                 order.Status = OrderStatus.PaymentExpired;
+
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
+
                 _backgroundJobClient.Enqueue(() => RestockOrderItemsInBackground(orderId));
                 RemoveCacheAndRelated();
                 _logger.LogInformation("Order {OrderId} auto-expired and restock scheduled", orderId);
@@ -733,32 +801,34 @@ namespace Application.Services.OrderServices
 
         public async Task RestockOrderItemsInBackground(int orderId)
         {
-            
+            _logger.LogInformation("Running background restock evaluation for order {OrderId}", orderId);
 
+            await using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
+                // Lock row and fetch fresh DB snapshot inside the transaction boundary
+                await _unitOfWork.Order.LockOrderForUpdateAsync(orderId);
+
                 var order = await _unitOfWork.Repository<Domain.Models.Order>().GetByIdAsync(orderId);
                 if (order == null)
                 {
-                    _logger.LogWarning("Restock skipped: order {OrderId} not found", orderId);
+                    _logger.LogWarning("Restock skipped: order {OrderId} not found inside transaction scope", orderId);
+                    await transaction.RollbackAsync();
                     return;
                 }
-
-                await _unitOfWork.Order.LockOrderForUpdateAsync(
-                   order.Id);
 
                 if (order.RestockedAt.HasValue)
                 {
                     _logger.LogInformation("Restock skipped: order {OrderId} already restocked at {RestockedAt}", orderId, order.RestockedAt);
+                    await transaction.RollbackAsync();
                     return;
                 }
 
-                // Only change status if it's still PendingPayment and has expired
+                // Check for payment expiration transition if necessary
                 if (order.Status == OrderStatus.PendingPayment &&
                     order.CreatedAt.HasValue &&
                     order.CreatedAt.Value.AddHours(2) < DateTime.UtcNow)
                 {
-                    // Validate the transition before changing status
                     if (IsValidTransition(order.Status, OrderStatus.PaymentExpired))
                     {
                         order.Status = OrderStatus.PaymentExpired;
@@ -766,16 +836,18 @@ namespace Application.Services.OrderServices
                     else
                     {
                         _logger.LogWarning("Cannot change order {OrderId} status to PaymentExpired from {CurrentStatus}", orderId, order.Status);
+                        await transaction.RollbackAsync();
                         return;
                     }
                 }
 
-                // Allow restock only if status is cancelled/expired
+                // Allow restock only if status is cancelled or expired
                 if (order.Status != OrderStatus.CancelledByAdmin &&
                     order.Status != OrderStatus.CancelledByUser &&
                     order.Status != OrderStatus.PaymentExpired)
                 {
                     _logger.LogInformation("Restock skipped: order {OrderId} status is {Status}", orderId, order.Status);
+                    await transaction.RollbackAsync();
                     return;
                 }
 
@@ -788,49 +860,35 @@ namespace Application.Services.OrderServices
                 if (!orderItems.Any())
                 {
                     _logger.LogInformation("Restock skipped: order {OrderId} has no items", orderId);
+                    await transaction.RollbackAsync();
                     return;
                 }
 
-                await using var transaction = await _unitOfWork.BeginTransactionAsync();
-                try
+                foreach (var item in orderItems)
                 {
-                    // Refresh order in transaction
-                    await _unitOfWork.Order.LockOrderForUpdateAsync(orderId);
-                    
-                    if (order.RestockedAt.HasValue)
+                    var addResult = await _productVariantCommandService.AddQuntityAfterRestoreOrder(item.ProductVariantId, item.Quantity);
+                    if (!addResult.Success)
                     {
-                        await transaction.RollbackAsync();
-                        return;
+                        _logger.LogError("Failed to restock variant {VariantId}: {Message}", item.ProductVariantId, addResult.Message);
                     }
-
-                    foreach (var item in orderItems)
-                    {
-                        var addResult = await _productVariantCommandService.AddQuntityAfterRestoreOrder(item.ProductVariantId, item.Quantity);
-                        if (!addResult.Success)
-                        {
-                             _logger.LogError("Failed to restock variant {VariantId}: {Message}", item.ProductVariantId, addResult.Message);
-                        }
-                    }
-
-                    order.RestockedAt = DateTime.UtcNow;
-                    await _unitOfWork.CommitAsync();
-                    await transaction.CommitAsync();
-                    
-                    RemoveCacheAndRelated();
-                    _logger.LogInformation("Restocked inventory for order {OrderId}", orderId);
                 }
-                catch (Exception)
-                {
-                    await transaction.RollbackAsync();
-                    throw;
-                }
+
+                order.RestockedAt = DateTime.UtcNow;
+
+                await _unitOfWork.CommitAsync();
+                await transaction.CommitAsync();
+
+                RemoveCacheAndRelated();
+                _logger.LogInformation("Restocked inventory successfully for order {OrderId}", orderId);
             }
             catch (DbUpdateConcurrencyException e)
             {
+                await transaction.RollbackAsync();
                 _logger.LogWarning(e, "Concurrency conflict while restocking order {OrderId}", orderId);
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error while restocking inventory for order {OrderId}", orderId);
 
                 _backgroundJobClient.Enqueue(() =>
@@ -839,5 +897,3 @@ namespace Application.Services.OrderServices
         }
     }
 }
-
-

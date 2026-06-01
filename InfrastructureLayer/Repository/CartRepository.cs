@@ -53,6 +53,29 @@ namespace Infrastructure.Repository
 				.FirstOrDefaultAsync();
 		}
 
+		public async Task<Cart?> GetCartForCheckoutNoTrackingAsync(string userId)
+		{
+			return await _context.Cart
+				.AsNoTracking()
+				.Include(c => c.Items)
+					.ThenInclude(i => i.ProductVariant)
+				.Include(c => c.Items)
+					.ThenInclude(i => i.Product).ThenInclude(p => p.Discount)
+				.FirstOrDefaultAsync(c => c.UserId == userId && c.DeletedAt == null);
+		}
+
+		/// <summary>
+		/// Returns a composable no-tracking IQueryable for the user's active cart,
+		/// including all navigation properties needed for checkout projections.
+		/// </summary>
+		public IQueryable<Cart> GetCartForCheckoutNoTrackingQuery(string userId)
+		{
+			return _context.Cart
+				.AsNoTracking()
+				
+				.Where(c => c.UserId == userId && c.DeletedAt == null);
+		}
+
 		public async Task<Cart?> GetCartByUserIdAsync(string userId)
         {
             _logger.LogInformation($"Retrieving cart for user: {userId}");

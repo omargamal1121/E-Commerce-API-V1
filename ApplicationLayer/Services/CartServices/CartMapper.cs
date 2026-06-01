@@ -74,6 +74,20 @@ namespace Application.Services.CartServices
 						}
 					},
 					PriceAtAddTime = item.UnitPrice,
+					CurrentPrice = Math.Round(
+						item.Product.Discount != null
+						&& item.Product.Discount.IsActive
+						&& item.Product.Discount.DeletedAt == null
+						&& item.Product.Discount.EndDate > DateTime.UtcNow
+							? item.Product.Price - item.Product.Discount.DiscountPercent / 100m * item.Product.Price
+							: item.Product.Price, 2),
+					IsPriceChanged = item.UnitPrice != Math.Round(
+						item.Product.Discount != null
+						&& item.Product.Discount.IsActive
+						&& item.Product.Discount.DeletedAt == null
+						&& item.Product.Discount.EndDate > DateTime.UtcNow
+							? item.Product.Price - item.Product.Discount.DiscountPercent / 100m * item.Product.Price
+							: item.Product.Price, 2)
 				}).ToList()
 
 			};
@@ -151,6 +165,20 @@ namespace Application.Services.CartServices
                         }
                     },
                     PriceAtAddTime = item.UnitPrice,
+                    CurrentPrice = Math.Round(
+                        item.Product.Discount != null
+                        && item.Product.Discount.IsActive
+                        && item.Product.Discount.DeletedAt == null
+                        && item.Product.Discount.EndDate > DateTime.UtcNow
+                            ? item.Product.Price - item.Product.Discount.DiscountPercent / 100m * item.Product.Price
+                            : item.Product.Price, 2),
+                    IsPriceChanged = item.UnitPrice != Math.Round(
+                        item.Product.Discount != null
+                        && item.Product.Discount.IsActive
+                        && item.Product.Discount.DeletedAt == null
+                        && item.Product.Discount.EndDate > DateTime.UtcNow
+                            ? item.Product.Price - item.Product.Discount.DiscountPercent / 100m * item.Product.Price
+                            : item.Product.Price, 2)
                 }).ToList()
         };
 

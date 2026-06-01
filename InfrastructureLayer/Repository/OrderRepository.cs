@@ -1,4 +1,4 @@
-using Infrastructure.Interfaces;
+﻿using Infrastructure.Interfaces;
 using Domain.Enums;
 using Domain.Models;
 using Infrastructure.Context;
@@ -174,20 +174,20 @@ namespace Infrastructure.Repository
 		public async Task<decimal> GetTotalRevenueByDateRangeAsync(DateTime startDate, DateTime endDate)
         {
             return await _context.Orders
-					.Where(o =>
-					o.DeletedAt == null &&
-					(
-						o.Status == OrderStatus.Complete ||
-						o.Status == OrderStatus.Delivered ||
-						o.Status == OrderStatus.Confirmed ||
-						o.Status == OrderStatus.Processing ||
-						o.Status == OrderStatus.Shipped
-					)
+				.Where(o =>
+				o.DeletedAt == null &&
+				o.CreatedAt >= startDate &&
+				o.CreatedAt <= endDate &&
+				(
+					o.Status == OrderStatus.Complete ||
+					o.Status == OrderStatus.Delivered ||
+					o.Status == OrderStatus.Confirmed ||
+					o.Status == OrderStatus.Processing ||
+					o.Status == OrderStatus.Shipped
 				)
-				.SumAsync(o => o.Total);
+			)
+			.SumAsync(o => o.Total);
         }
-
-      
 
         public async Task<int> GetTotalOrderCountAsync(OrderStatus? status = null)
         {
@@ -201,4 +201,4 @@ namespace Infrastructure.Repository
             return await query.CountAsync();
         }
     }
-} 
+}

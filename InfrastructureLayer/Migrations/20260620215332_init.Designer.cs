@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260517202103_init")]
+    [Migration("20260620215332_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -127,7 +127,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductVariantId")
+                    b.Property<int>("ProductVariantId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -148,7 +148,8 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ProductVariantId");
 
-                    b.HasIndex("CartId", "ProductId", "ProductVariantId");
+                    b.HasIndex("CartId", "ProductId", "ProductVariantId")
+                        .IsUnique();
 
                     b.ToTable("CartItems");
                 });
@@ -656,9 +657,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasIndex("PaymentMethodId");
 
                     b.HasIndex("PaymentProviderId");
-
-                    b.HasIndex("OrderId", "PaymentMethodId")
-                        .IsUnique();
 
                     b.ToTable("Payments");
                 });
@@ -1624,7 +1622,8 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasOne("Domain.Models.ProductVariant", "ProductVariant")
                         .WithMany("CartItems")
                         .HasForeignKey("ProductVariantId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Cart");
 

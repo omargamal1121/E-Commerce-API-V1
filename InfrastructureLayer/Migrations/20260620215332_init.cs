@@ -796,7 +796,7 @@ namespace ECommerce.Infrastructure.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CartId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    ProductVariantId = table.Column<int>(type: "int", nullable: true),
+                    ProductVariantId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     RowVersion = table.Column<byte[]>(type: "binary(8)", rowVersion: true, nullable: true),
@@ -819,7 +819,7 @@ namespace ECommerce.Infrastructure.Migrations
                         column: x => x.ProductVariantId,
                         principalTable: "ProductVariants",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_CartItems_Products_ProductId",
                         column: x => x.ProductId,
@@ -1196,7 +1196,8 @@ namespace ECommerce.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_CartItems_CartId_ProductId_ProductVariantId",
                 table: "CartItems",
-                columns: new[] { "CartId", "ProductId", "ProductVariantId" });
+                columns: new[] { "CartId", "ProductId", "ProductVariantId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CartItems_ProductId",
@@ -1303,12 +1304,6 @@ namespace ECommerce.Infrastructure.Migrations
                 name: "IX_Payments_OrderId",
                 table: "Payments",
                 column: "OrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Payments_OrderId_PaymentMethodId",
-                table: "Payments",
-                columns: new[] { "OrderId", "PaymentMethodId" },
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_PaymentMethodId",

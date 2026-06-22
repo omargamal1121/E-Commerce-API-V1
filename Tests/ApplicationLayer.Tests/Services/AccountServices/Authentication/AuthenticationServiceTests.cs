@@ -342,7 +342,7 @@ namespace Application.Tests.Services.AccountServices.Authentication
             context.Request.Headers["Cookie"] = "Refresh=oktoken";
             http.Setup(x => x.HttpContext).Returns(context);
 
-            refresh.Setup(x => x.RefreshTokenAsync("oktoken")).ReturnsAsync(Result<RefreshTokenResponse>.Ok(new RefreshTokenResponse { }));
+            refresh.Setup(x => x.RefreshTokenAsync("oktoken")).ReturnsAsync(Result<RefreshTokenResponse>.Ok(new RefreshTokenResponse { RefreshToken = "oktoken", Token = "newtoken" }));
 
             var sut = CreateSut(http, logger, userManager, refresh, token);
             var result = await sut.RefreshTokenAsync();

@@ -74,15 +74,12 @@ namespace Application.Services.PaymentServices
         {
             _logger.LogInformation("Starting UpdatePaymentAfterPaid for order {OrderId} with status {Status}", orderId, status);
 
-            using var transaction = await _unitOfWork.BeginTransactionAsync();
-            
             try
             {
                 if (string.IsNullOrEmpty(transactionId))
                 {
                     _logger.LogWarning("Transaction ID is null or empty for order {OrderId}", orderId);
-                    await transaction.RollbackAsync();
-                    return Result<int>.Fail("Transaction ID is required", 400,null);
+                    return Result<int>.Fail("Transaction ID is required", 400, null);
                 }
 
                 var latestPayment = await _unitOfWork.Repository<Payment>()
@@ -94,16 +91,13 @@ namespace Application.Services.PaymentServices
                 if (latestPayment == null)
                 {
                     _logger.LogWarning("Payment not found for order {OrderId} with provider order ID {ProviderOrderId}", orderId, providerOrderId);
-                    await transaction.RollbackAsync();
-                    return Result<int>.Fail("Payment not found", 404,null);
+                    return Result<int>.Fail("Payment not found", 404, null);
                 }
-
 
                 await _unitOfWork.Payment.LockPaymentForUpdateAsync(latestPayment.Id);
                 if (latestPayment.Status == status)
                 {
                     _logger.LogInformation("Payment {PaymentId} already has status {Status}, no update needed", latestPayment.Id, status);
-                    await transaction.RollbackAsync();
                     return Result<int>.Ok(latestPayment.Id);
                 }
 
@@ -118,11 +112,9 @@ namespace Application.Services.PaymentServices
                 if (!updated)
                 {
                     _logger.LogError("Payment update failed for Payment ID {PaymentId}", latestPayment.Id);
-                    await transaction.RollbackAsync();
                     return Result<int>.Fail("Failed to update payment", 500, null);
                 }
 				await _unitOfWork.CommitAsync();
-                await transaction.CommitAsync();
                 _logger.LogInformation("Payment {PaymentId} updated successfully", latestPayment.Id);
 				RemoveCacheAndRelated();
 				return Result<int>.Ok(latestPayment.Id);
@@ -130,13 +122,11 @@ namespace Application.Services.PaymentServices
             catch (DbUpdateConcurrencyException e)
             {
                 _logger.LogWarning(e, "Concurrency conflict while updating payment for order {OrderId}", orderId);
-                await transaction.RollbackAsync();
                 return Result<int>.Fail("Payment was modified by another process.", 409, null);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating payment for order {OrderId}", orderId);
-                await transaction.RollbackAsync();
                 
                 _backgroundJobClient.Enqueue(() =>
                     _errorNotificationService.SendErrorNotificationAsync("Error in UpdatePaymentAfterPaid", ex.Message));
@@ -272,10 +262,7 @@ namespace Application.Services.PaymentServices
                   
                     response = onlinePaymentResult.Data;
                 }
-                else
-                {
-                   _backgroundJobClient.Enqueue(()=> _orderservices.ConfirmOrderAsync(order.Id, userid,true,false,null));
-                }
+              
                 var createdPayment = await _unitOfWork.Repository<Payment>().CreateAsync(payment);
                 // await _unitOfWork.CommitAsync();  // Removed intermediate commit
 
@@ -310,8 +297,12 @@ namespace Application.Services.PaymentServices
                         CheckAndUpdatePaymentStatusAsync(createdPayment.Id),
                         TimeSpan.FromMinutes(8));
                 }
+				else
+				{
+					_backgroundJobClient.Enqueue(() => _orderservices.ConfirmOrderAsync(order.Id, userid, true, false, null));
+				}
 
-                return Result<PaymentResponseDto>.Ok(response!);
+				return Result<PaymentResponseDto>.Ok(response!);
             }
            
             catch (DbUpdateException e)
@@ -467,8 +458,13 @@ namespace Application.Services.PaymentServices
                     ? OrderStatus.Confirmed
                     : OrderStatus.PaymentExpired;
 
-              _backgroundJobClient.Enqueue(()=>  _orderservices.UpdateOrderAfterPaid(payment.OrderId, orderStatus));
-          
+                var orderUpdateResult = await _orderservices.UpdateOrderAfterPaid(payment.OrderId, orderStatus);
+                if (!orderUpdateResult.Success)
+                {
+                    _logger.LogError("Failed to update order status to {Status} for payment {PaymentId}", orderStatus, paymentId);
+                    await transaction.RollbackAsync();
+                    return;
+                }
 
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();

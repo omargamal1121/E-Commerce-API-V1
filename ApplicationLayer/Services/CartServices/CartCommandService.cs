@@ -2,7 +2,7 @@
 using Application.DtoModels.CartDtos;
 using Application.DtoModels.Responses;
 using Application.Interfaces;
-
+using Application.Services.ProductVariantServices;
 using Application.Services.UserOperationServices;
 using Domain.Enums;
 using Domain.Models;
@@ -23,8 +23,11 @@ namespace Application.Services.CartServices
         private readonly ICartRepository _cartRepository;
         private readonly IUserOperationServices  _UserOperationServices ;
         private readonly ICartCacheHelper _cacheHelper;
+        private readonly ICartMapper _cartMapper;
 
         public CartCommandService(
+            ICartMapper cartMapper,
+           
             ILogger<CartCommandService> logger,
             IBackgroundJobClient backgroundJobClient,
             UserManager<Customer> userManager,
@@ -33,6 +36,7 @@ namespace Application.Services.CartServices
             IUserOperationServices UserOperationServices,
             ICartCacheHelper cacheHelper)
         {
+            _cartMapper = cartMapper;
             _logger = logger;
             _backgroundJobClient = backgroundJobClient;
             _userManager = userManager;
@@ -49,14 +53,35 @@ namespace Application.Services.CartServices
             using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
-                var customer = await _userManager.FindByIdAsync(userId);
+                // Validate quantity before acquiring any locks
+                if (itemDto.Quantity <= 0)
+                {
+                    await transaction.RollbackAsync();
+                    return Result<bool>.Fail("Quantity must be greater than 0", 400);
+                }
 
+                var customer = await _userManager.FindByIdAsync(userId);
                 if (customer == null)
                 {
                     await transaction.RollbackAsync();
                     return Result<bool>.Fail($"No customer with this id:{userId}", 404);
                 }
 
+                // Get or create cart first, then lock it immediately before any other DB reads
+                var cart = await _cartRepository.GetCartByUserIdAsync(userId);
+                if (cart == null)
+                {
+                    cart = await CreateNewCartAsync(userId);
+                    if (cart == null)
+                    {
+                        await transaction.RollbackAsync();
+                        return Result<bool>.Fail("Failed to create cart", 500);
+                    }
+                }
+
+                // Concurrency is handled by EF Core optimistic concurrency tokens (RowVersion) and unique DB constraint.
+
+                // Now fetch product & variant data while holding the cart lock
                 var product = await _unitOfWork.Product.GetAll()
                     .Where(p => p.Id == itemDto.ProductId && p.DeletedAt == null && p.IsActive)
                     .Select(p => new {
@@ -90,19 +115,6 @@ namespace Application.Services.CartServices
                     return Result<bool>.Fail("No variant with this id or no quantity", 404);
                 }
 
-                var cart = await _cartRepository.GetCartByUserIdAsync(userId);
-                if (cart == null)
-                {
-                    cart = await CreateNewCartAsync(userId);
-                    if (cart == null)
-                    {
-                        await transaction.RollbackAsync();
-                        return Result<bool>.Fail("Failed to create cart", 500);
-                    }
-                }
-
-                // Lock the cart row to serialize modifications
-                await _cartRepository.LockCartForUpdateAsnyc(cart.Id);
                 if (itemDto.Quantity > product.varint.Quantity)
                 {
                     await transaction.RollbackAsync();
@@ -171,7 +183,7 @@ namespace Application.Services.CartServices
                     return Result<bool>.Fail("Failed to log admin operation", 500);
                 }
 
-                _backgroundJobClient.Enqueue(()=> RemoveCheckoutAsync(cart.Id));
+                cart.CheckoutDate = null;
 				await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
@@ -231,7 +243,7 @@ namespace Application.Services.CartServices
                     return Result<bool>.Fail("Cart not found", 404);
                 }
 
-                await _cartRepository.LockCartForUpdateAsnyc(cart.Id);
+                // Concurrency is handled by EF Core optimistic concurrency tokens (RowVersion).
 
                 var cartItem = cart.Items.FirstOrDefault(i => i.ProductId == productId && i.ProductVariantId == productVariantId);
                 if (cartItem == null)
@@ -298,9 +310,9 @@ namespace Application.Services.CartServices
 
 
 
+				cart.CheckoutDate = null;
 				await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-				_backgroundJobClient.Enqueue(() => RemoveCheckoutAsync(cart.Id));
 
                 _=_cacheHelper.RemoveCartCacheAsync(userId);
 
@@ -336,7 +348,7 @@ namespace Application.Services.CartServices
                     return Result<bool>.Fail("Cart not found", 404);
                 }
 
-                await _cartRepository.LockCartForUpdateAsnyc(cart.Id);
+                // Concurrency is handled by EF Core optimistic concurrency tokens (RowVersion).
 
                 var removeResult = await _cartRepository.RemoveCartItemAsync(cart.Id, itemDto.ProductId, itemDto.ProductVariantId);
                 if (!removeResult)
@@ -364,7 +376,6 @@ namespace Application.Services.CartServices
 				await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
-				_backgroundJobClient.Enqueue(() => RemoveCheckoutAsync(cart.Id));
                 _=_cacheHelper.RemoveCartCacheAsync(userId);
 
                 _logger.LogInformation($"Item removed from cart for user: {userId}, product: {itemDto.ProductId}");
@@ -399,7 +410,7 @@ namespace Application.Services.CartServices
                     return Result<bool>.Fail("Cart not found", 404);
                 }
 
-                await _cartRepository.LockCartForUpdateAsnyc(cart.Id);
+                // Concurrency is handled by EF Core optimistic concurrency tokens (RowVersion).
 
                 var clearResult = await _cartRepository.ClearCartAsync(cart.Id);
                 if (!clearResult)
@@ -421,7 +432,7 @@ namespace Application.Services.CartServices
                     _logger.LogWarning($"Failed to log admin operation: {adminLog.Message}");
                     return Result<bool>.Fail("An error occurred while clearing cart", 500);
                 }
-				_backgroundJobClient.Enqueue(() => RemoveCheckoutAsync(cart.Id));
+                cart.CheckoutDate = null;
 
 				await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
@@ -448,33 +459,68 @@ namespace Application.Services.CartServices
         {
             _logger.LogInformation($"Checkout of cart for user: {userId}");
 
-            var cart = await _cartRepository.GetCartByUserIdAsync(userId);
-            if (cart == null)
-            {
-                var newCart = await CreateNewCartAsync(userId);
-                if (newCart == null)
-                {
-                    _logger.LogError("Failed to create new cart during checkout.");
-                    return Result<bool>.Fail("Unexpected error while creating a new cart");
-                }
-
-                return Result<bool>.Fail("Cart is empty. Add items before checkout.");
-            }
-
-            cart.CheckoutDate = DateTime.UtcNow;
-
+            using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
+                var cart = await _cartRepository.GetAll().Where(c=>c.UserId==userId).Select(_cartMapper.CartDtoSelector).FirstOrDefaultAsync();
+                if (cart == null || !cart.Items.Any(i => i.DeletedAt == null))
+                {
+                    await transaction.RollbackAsync();
+                    return Result<bool>.Fail("Cart is empty. Add items before checkout.", 400);
+                }
+                // Concurrency is handled by EF Core optimistic concurrency tokens (RowVersion).
+                var items =await _cartRepository.GetCartItems(cart.Id).ToDictionaryAsync(ct=>ct.Id);
+                // Fetch current details of products, variants, and discounts for items in the cart
+              
+
+                foreach (var item in cart.Items.Where(i => i.DeletedAt == null))
+                {
+                     
+                    if (item.Product ==null|| item.Product.productVariantForCartDto == null)
+                    {
+                        await transaction.RollbackAsync();
+                        return Result<bool>.Fail("A product variant in your cart is no longer active or available.", 400);
+                    }
+
+                    if (item.Product.productVariantForCartDto.Quantity < item.Quantity)
+                    {
+                        await transaction.RollbackAsync();
+                        return Result<bool>.Fail($"Insufficient stock for '{item. Product.Name}'. Available: {item.Product.productVariantForCartDto.Quantity}, Requested: {item.Quantity}.", 400);
+                    }
+
+                  
+
+                    if (item.PriceAtAddTime != item.Product.FinalPrice)
+                    {
+                        
+                       items.TryGetValue(item.Id, out var itemtoupdate);
+                        if (itemtoupdate != null)
+                        {
+                            itemtoupdate.UnitPrice = item.Product.FinalPrice;
+                        }
+
+                    }
+                }
+
+
                 await _unitOfWork.CommitAsync();
+                await transaction.CommitAsync();
 
-                _=_cacheHelper.RemoveCartCacheAsync(userId);
+                await _cacheHelper.RemoveCartCacheAsync(userId);
 
-                return Result<bool>.Ok(true, "Checkout successful");
+                return Result<bool>.Ok(true, "Checkout successful", 200);
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogWarning(e, "Concurrency conflict during checkout for user {UserId}", userId);
+                return Result<bool>.Fail("Checkout was modified by another process.", 409);
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 _logger.LogError($"Error while updating cart for checkout: {ex.Message}");
-                return Result<bool>.Fail("Error occurred during checkout. Try again later.");
+                return Result<bool>.Fail("Error occurred during checkout. Try again later.", 500);
             }
         }
 
@@ -497,11 +543,19 @@ namespace Application.Services.CartServices
                     item.ModifiedAt = DateTime.UtcNow;
                 }
             }
-            foreach (var id in updatecartcheckout)
+            if (updatecartcheckout.Any())
             {
-              
-                await RemoveCheckoutAsync(id);
-			}
+                var cartsToUpdate = await _unitOfWork.Repository<Cart>()
+                    .GetAll()
+                    .Where(c => updatecartcheckout.Contains(c.Id))
+                    .ToListAsync();
+                foreach (var cart in cartsToUpdate)
+                {
+                    cart.CheckoutDate = null;
+                    cart.ModifiedAt = DateTime.UtcNow;
+                }
+                _unitOfWork.Repository<Cart>().UpdateList(cartsToUpdate);
+            }
 
 			_unitOfWork.Repository<CartItem>().UpdateList(cartItems);
             await _unitOfWork.CommitAsync();
@@ -531,14 +585,21 @@ namespace Application.Services.CartServices
 				cartIds.Add(item.CartId);
 			}
 
+            if (cartIds.Any())
+            {
+                var cartsToUpdate = await _unitOfWork.Repository<Cart>()
+                    .GetAll()
+                    .Where(c => cartIds.Contains(c.Id))
+                    .ToListAsync();
+                foreach (var cart in cartsToUpdate)
+                {
+                    cart.CheckoutDate = null;
+                    cart.ModifiedAt = DateTime.UtcNow;
+                }
+                _unitOfWork.Repository<Cart>().UpdateList(cartsToUpdate);
+            }
+
 			_unitOfWork.Repository<CartItem>().UpdateList(cartItems);
-
-
-			foreach (var cartId in cartIds)
-			{
-				await ResetCheckoutStatusAndRecalculateAsync(cartId);
-			}
-
 			await _unitOfWork.CommitAsync();
 			
 			var affectedUserIds = cartItems.Where(ci => ci.Cart != null).Select(ci => ci.Cart.UserId).Distinct();

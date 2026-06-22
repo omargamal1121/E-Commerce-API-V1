@@ -3,7 +3,6 @@ using Domain.Enums;
 using Application.Interfaces;
 using Domain.Models;
 using Application.Services.PaymentServices;
-// using Infrastructure.UOW;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
@@ -66,7 +65,7 @@ namespace Application.Services.PaymentWebhookService
 
             // validate HMAC
             string? secretKey = _configuration["Security:Paymob:HMAC"];
-			_logger.LogInformation(secretKey);
+	
 			if (string.IsNullOrEmpty(secretKey))
 			{
 				_logger.LogError("Paymob HMAC secret key not configured");
@@ -89,7 +88,6 @@ namespace Application.Services.PaymentWebhookService
 		
 					return false;
 				}
-					await _unitOfWork.CommitAsync();
 				_logger.LogInformation("Successfully processed Paymob webhook for Order {OrderId}", webhookResult.OrderId);
 				return true;
 			}
@@ -141,59 +139,95 @@ namespace Application.Services.PaymentWebhookService
 				webhook.PaymobOrderId = transaction.Order.Id;
 			}
 
-			int localOrderId = await ExtractAndValidateOrderId(transaction);
-			if (localOrderId > 0)
+			using var dbTransaction = await _unitOfWork.BeginTransactionAsync();
+			try
 			{
-				webhook.OrderId = localOrderId;
+				var order = await ExtractAndValidateOrderId(transaction);
+				if (order != null)
+				{
+					webhook.OrderId = order.Id;
+				}
+				else
+				{
+					_logger.LogWarning("Webhook could not be linked to a local order. TxnId: {TxnId}", transaction.Id);
+					await dbTransaction.RollbackAsync();
+					return (true, 0);
+				}
+
+				if (order.Status == OrderStatus.Confirmed || 
+					order.Status == OrderStatus.Processing || 
+					order.Status == OrderStatus.Shipped || 
+					order.Status == OrderStatus.Delivered || 
+					order.Status == OrderStatus.Complete)
+				{
+					_logger.LogInformation("Order {OrderId} is already paid (Status: {Status}). Webhook processing skipped.", order.Id, order.Status);
+					await dbTransaction.RollbackAsync();
+					return (true, order.Id);
+				}
+
+				int localOrderId = order.Id;
+
+				// Amount validation – only enforce on successful transactions to avoid
+				// blocking failed/pending webhook logs.
+				if (transaction.Success)
+				{
+					long expectedAmountCents = (long)Math.Round(order.Total * 100, MidpointRounding.AwayFromZero);
+					if (transaction.AmountCents != expectedAmountCents)
+					{
+						_logger.LogError(
+							"Amount mismatch for Order {OrderId}: expected {Expected} piastres, received {Received} piastres. TxnId={TxnId}",
+							order.Id, expectedAmountCents, transaction.AmountCents, transaction.Id);
+						_=_errorNotificationService.SendErrorNotificationAsync(
+							$"Payment amount mismatch on Order {order.OrderNumber}. Expected {expectedAmountCents} piastres, got {transaction.AmountCents}.");
+						await dbTransaction.RollbackAsync();
+						return (false, localOrderId);
+					}
+				}
+
+				bool isExist = await _unitOfWork.Repository<PaymentWebhook>()
+					.GetAll()
+					.AnyAsync(w => w.WebhookUniqueKey == webhook.WebhookUniqueKey);
+
+				if (isExist)
+				{
+					_logger.LogWarning("Duplicate webhook detected with key: {WebhookUniqueKey}", webhook.WebhookUniqueKey);
+					await dbTransaction.RollbackAsync();
+					return (true, localOrderId); 
+				}
+
+				var updateResult = await UpdatePaymentAndOrderStatus(transaction, localOrderId);
+				if (!updateResult.Success)
+				{
+					await dbTransaction.RollbackAsync();
+					return (false, localOrderId);
+				}
+					
+				webhook.PaymentId = updateResult.PaymentId;
+
+				await _unitOfWork.Repository<PaymentWebhook>().CreateAsync(webhook);
+				await _unitOfWork.CommitAsync();
+
+				await dbTransaction.CommitAsync();
+				return (true, localOrderId);
 			}
-
-			bool isExist = await _unitOfWork.Repository<PaymentWebhook>()
-				.GetAll()
-				.AnyAsync(w => w.WebhookUniqueKey == webhook.WebhookUniqueKey);
-
-			if (isExist)
+			catch (Exception ex)
 			{
-				_logger.LogWarning("Duplicate webhook detected with key: {WebhookUniqueKey}", webhook.WebhookUniqueKey);
-				return (true, localOrderId); 
+				_logger.LogError(ex, "Error processing webhook database updates for TxnId={TxnId}", transaction.Id);
+				await dbTransaction.RollbackAsync();
+				throw;
 			}
-
-			await _unitOfWork.Repository<PaymentWebhook>().CreateAsync(webhook);
-            // Commit here to ensure we log the webhook regardless of what happens next
-            await _unitOfWork.CommitAsync();
-
-			if (localOrderId <= 0)
-			{
-				_logger.LogWarning("Webhook could not be linked to a local order. TxnId: {TxnId}", transaction.Id);
-				return (true, 0); 
-			}
-
-		
-			var updateResult = await UpdatePaymentAndOrderStatus(transaction, localOrderId);
-			if (!updateResult.Success)
-			{
-				return (false, localOrderId);
-			}
-				
-			webhook.PaymentId = updateResult.PaymentId;
-            // Update the webhook with the payment ID
-            _unitOfWork.Repository<PaymentWebhook>().Update(webhook);
-            await _unitOfWork.CommitAsync();
-
-			return (true, localOrderId);
 		}
 
-    private async Task<int> ExtractAndValidateOrderId(PaymobTransactionObj transaction)
+    private async Task<Order?> ExtractAndValidateOrderId(PaymobTransactionObj transaction)
     {
         var merchantOrderNumber = transaction.Order?.MerchantOrderId;
 
         if (string.IsNullOrWhiteSpace(merchantOrderNumber))
-            return 0;
+            return null;
 
-        var order = await _unitOfWork.Repository<Order>()
+        return await _unitOfWork.Repository<Order>()
             .GetAll()
             .FirstOrDefaultAsync(o => o.OrderNumber == merchantOrderNumber);
-
-        return order?.Id ?? 0;
     }
 
 
@@ -265,39 +299,50 @@ namespace Application.Services.PaymentWebhookService
    
     private async Task<(bool Success, int? PaymentId)> UpdatePaymentAndOrderStatus(PaymobTransactionObj transaction, int localOrderId)
     {
-        PaymentStatus status = PaymentStatus.Failed;
-        OrderStatus orderStatus = OrderStatus.PendingPayment;
-        
-        if (transaction.Pending) 
-        {
-            status = PaymentStatus.Pending;
-        }
-        else if (transaction.Success)
-        {
-            status = PaymentStatus.Completed;
-            orderStatus = OrderStatus.Confirmed;
-        }
+			try
+			{
+				PaymentStatus status = PaymentStatus.Failed;
+				OrderStatus orderStatus = OrderStatus.PendingPayment;
 
-        var paymentResult = await _paymentServices.UpdatePaymentAfterPaid(
-            localOrderId, 
-            transaction.Id.ToString(), 
-            transaction.Order?.Id ?? 0, 
-            status);
+				if (transaction.Pending)
+				{
+					status = PaymentStatus.Pending;
+				}
+				else if (transaction.Success&&transaction.AmountCents>0)
+				{
+					status = PaymentStatus.Completed;
+					orderStatus = OrderStatus.Confirmed;
+				}
 
-        if (!paymentResult.Success)
-        {
-            _logger.LogError("Failed to update payment for order {OrderId}", localOrderId);
-            return (false, null);
-        }
+				var paymentResult = await _paymentServices.UpdatePaymentAfterPaid(
+					localOrderId,
+					transaction.Id.ToString(),
+					transaction.Order?.Id ?? 0,
+					status);
 
-        var orderUpdateResult = await _orderServices.UpdateOrderAfterPaid(localOrderId, orderStatus);
-        if (!orderUpdateResult.Success)
-        {
-            _logger.LogError("Failed to update order status for order {OrderId}", localOrderId);
-            return (false, paymentResult.Data);
-        }
+				if (!paymentResult.Success)
+				{
+					_logger.LogError("Failed to update payment for order {OrderId}", localOrderId);
+					return (false, null);
+				}
 
-        return (true, paymentResult.Data);
+				if (status == PaymentStatus.Completed)
+				{
+					var orderUpdateResult = await _orderServices.UpdateOrderAfterPaid(localOrderId, orderStatus);
+					if (!orderUpdateResult.Success)
+					{
+						_logger.LogError("Failed to update order status for order {OrderId}", localOrderId);
+						return (false, paymentResult.Data);
+					}
+				}
+
+				return (true, paymentResult.Data);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error in UpdatePaymentAndOrderStatus for order {OrderId}", localOrderId);
+				return (false, null);
+			}
     }
 
 	

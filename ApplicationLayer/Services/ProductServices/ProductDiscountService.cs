@@ -104,10 +104,10 @@ namespace Application.Services.ProductServices
                 }
 
                 var now = DateTime.UtcNow;
-                var isDiscountActive = discount.IsActive ||( 
+                var isDiscountActive = discount.IsActive && 
                                       discount.StartDate <= now && 
                                       discount.EndDate >= now && 
-                                      discount.DeletedAt == null);
+                                      discount.DeletedAt == null;
 
                 _logger.LogInformation($"Discount {dto.Discountid} active status: {isDiscountActive} (IsActive: {discount.IsActive}, StartDate: {discount.StartDate}, EndDate: {discount.EndDate}, DeletedAt: {discount.DeletedAt})");
 

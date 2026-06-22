@@ -141,7 +141,7 @@ namespace Application.Services.DiscountServices
                     changes.Add($"StartDate changed from {discount.StartDate} to {dto.StartDate.Value}");
                     discount.StartDate = dto.StartDate.Value;
                 }
-                if (dto.EndDate.HasValue && dto.EndDate.Value != discount.EndDate && discount.EndDate < DateTime.UtcNow)
+                if (dto.EndDate.HasValue && dto.EndDate.Value != discount.EndDate)
                 {
                     changes.Add($"EndDate changed from {discount.EndDate} to {dto.EndDate.Value}");
                     discount.EndDate = dto.EndDate.Value;
@@ -154,6 +154,9 @@ namespace Application.Services.DiscountServices
 
                 if (discount.StartDate >= discount.EndDate)
                     return Result<DiscountDto>.Fail("Start date must be before end date", 400);
+
+                if (discount.EndDate < DateTime.UtcNow)
+                    return Result<DiscountDto>.Fail("End date cannot be in the past", 400);
 
                 var result = _unitOfWork.Repository<Discount>().Update(discount);
                 if (!result)

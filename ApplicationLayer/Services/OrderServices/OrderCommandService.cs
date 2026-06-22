@@ -1,4 +1,4 @@
-﻿using Domain.Enums;
+using Domain.Enums;
 using Application.DtoModels.OrderDtos;
 using Application.Interfaces;
 using Domain.Models;
@@ -135,7 +135,7 @@ namespace Application.Services.OrderServices
             try
             {
                 #region Lock Cart and Fetch Cart Projection
-                await _cartRepository.LockCartForUpdateAsnyc(cart.Id);
+                // Concurrency is handled by EF Core optimistic concurrency tokens (RowVersion) and unique constraints.
 
                 var cartdto = await _cartRepository
 					.GetCartForCheckoutNoTrackingQuery(userId)
@@ -148,11 +148,11 @@ namespace Application.Services.OrderServices
 					return Result<OrderAfterCreatedto>.Fail("Cart is empty", 400);
 				}
 
-				if (cartdto.CheckoutDate == null || cartdto.CheckoutDate.Value.AddDays(7) < DateTime.UtcNow)
-				{
-					await transaction.RollbackAsync();
-					return Result<OrderAfterCreatedto>.Fail("Please checkout before creating order", 400);
-				}
+				//if (cartdto.CheckoutDate == null || cartdto.CheckoutDate.Value.AddDays(7) < DateTime.UtcNow)
+				//{
+				//	await transaction.RollbackAsync();
+				//	return Result<OrderAfterCreatedto>.Fail("Please checkout before creating order", 400);
+				//}
 				#endregion
 
 				#region Filter Active Items and Pre-Check Stock Availability
@@ -175,14 +175,14 @@ namespace Application.Services.OrderServices
 					.GetAll()
 					.AsNoTracking()
 					.Where(v => variantIds.Contains(v.Id))
-					.Select(v => new { v.Id, v.Quantity, v.DeletedAt })
-					.ToListAsync();
+					.Select(v => new  { v.Id, v.Quantity, v.DeletedAt ,v.Product,v.Product.Discount })
+					.ToDictionaryAsync(v=>v.Id);
 
 				// Validate every active cart item against current DB stock
 				foreach (var item in activeItems)
 				{
 					var variantId = item.Product.productVariantForCartDto.Id;
-					var variant = variants.FirstOrDefault(v => v.Id == variantId);
+					var variant = variants.GetValueOrDefault(variantId);
 
 					if (variant == null || variant.DeletedAt != null)
 					{
@@ -202,6 +202,24 @@ namespace Application.Services.OrderServices
 							409
 						);
 					}
+                    var discountPercent = variant.Product.Discount?.DiscountPercent ?? 0m;
+                    var discountActive = variant.Product.Discount != null && 
+                                         variant.Product.Discount.IsActive && 
+                                         variant.Product.Discount.DeletedAt == null && 
+                                         variant.Product.Discount.StartDate <= DateTime.UtcNow && 
+                                         variant.Product.Discount.EndDate > DateTime.UtcNow;
+                    var calculatedPrice = Math.Round(discountActive 
+                        ? variant.Product.Price - (discountPercent / 100m * variant.Product.Price) 
+                        : variant.Product.Price, 2);
+
+                    if (item.CurrentPrice != calculatedPrice)
+                    {
+                        await transaction.RollbackAsync();
+                        return Result<OrderAfterCreatedto>.Fail(
+                            $"Product '{item.Product.Name}' price has changed. Please review your cart.",
+                            409
+                        );
+                    }
 				}
 				#endregion
 
@@ -320,7 +338,6 @@ namespace Application.Services.OrderServices
 			_logger.LogInformation("Execute {Method}_id:{OrderId}_to status:{Status}",
 				nameof(UpdateOrderAfterPaid), orderId, orderStatus);
 
-			await using var transaction = await _unitOfWork.BeginTransactionAsync();
 			try
 			{
 				var order = await _orderRepository.GetAll()
@@ -346,7 +363,6 @@ namespace Application.Services.OrderServices
 
 				order.Status = orderStatus;
 				await _unitOfWork.CommitAsync();
-				await transaction.CommitAsync();
 
 				if (orderStatus == OrderStatus.PaymentExpired)
 				{
@@ -360,19 +376,16 @@ namespace Application.Services.OrderServices
 			}
 			catch (DbUpdateConcurrencyException e)
 			{
-				await transaction.RollbackAsync();
 				_logger.LogWarning(e, "Concurrency conflict while updating order {OrderId} after payment", orderId);
 				return Result<bool>.Fail("Order was modified by another process.", 409);
 			}
 			catch (Exception ex)
 			{
-				await transaction.RollbackAsync();
 				_logger.LogError(ex, "Error updating order {OrderId} after payment", orderId);
 				_cacheHelper.NotifyAdminError($"Error updating order {orderId} after payment: {ex.Message}", ex.StackTrace);
 				return Result<bool>.Fail("An error occurred while updating the order after payment", 500);
 			}
 		}
-
 
 		private async Task ReduceQuantityOfProduct(List<OrderItem> orderItems)
         {

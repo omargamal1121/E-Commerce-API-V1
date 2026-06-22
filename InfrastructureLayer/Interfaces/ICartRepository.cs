@@ -6,8 +6,9 @@ namespace Infrastructure.Interfaces
 {
     public interface ICartRepository : IRepository<Cart>
     {
+        public IQueryable<CartItem> GetCartItems(int cartid);
 
-        Task<Cart?> GetCartForCheckoutWithLockAsync(string userId);
+		Task<Cart?> GetCartForCheckoutWithLockAsync(string userId);
         IQueryable<Cart> GetCartForCheckoutNoTrackingQuery(string userId);
 
 		Task<bool> AddItemToCartAsync(int cartId, CartItem item);

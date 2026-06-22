@@ -3,12 +3,6 @@ using Domain.Models;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repository
 {
@@ -26,7 +20,7 @@ namespace Infrastructure.Repository
 		{
 			_logger.LogInformation($"Locking payment with ID: {id} for update.");
 			var payment = await _context.Database.ExecuteSqlRawAsync(
-        "SELECT Id FROM Orders WHERE Id = {0} FOR UPDATE",
+        "SELECT Id FROM Payments WHERE Id = {0} FOR UPDATE",
        id);
 
 

@@ -1,3 +1,4 @@
+using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -88,15 +89,11 @@ namespace Infrastructure.Context
             builder.Entity<Payment>().HasIndex(p => p.OrderId);
             builder.Entity<Payment>().HasIndex(p => p.PaymentMethodId);
             builder.Entity<Payment>().HasIndex(p => p.PaymentProviderId);
-            builder.Entity<Payment>()
-    .HasIndex(p => new { p.OrderId,p.PaymentMethodId })
-    .IsUnique();
-
-
+    
             builder.Entity<Cart>().HasIndex(c => c.CustomerId);
 
 
-            builder.Entity<CartItem>().HasIndex(ci => new { ci.CartId, ci.ProductId, ci.ProductVariantId });
+            builder.Entity<CartItem>().HasIndex(ci => new { ci.CartId, ci.ProductId, ci.ProductVariantId }).IsUnique();
 
 
             builder.Entity<Review>().HasIndex(r => new { r.CustomerId, r.ProductId });
@@ -309,7 +306,7 @@ namespace Infrastructure.Context
 				.HasMany(pv => pv.CartItems)
 				.WithOne(ci => ci.ProductVariant)
 				.HasForeignKey(ci => ci.ProductVariantId)
-				.OnDelete(DeleteBehavior.SetNull);
+				.OnDelete(DeleteBehavior.Restrict);
 
 			// Product - OrderItem (1:M)
 			builder.Entity<Product>()

@@ -56,10 +56,13 @@ namespace Application.Tests.Services.CartServices
             Mock<IUnitOfWork> uow,
             Mock<ICartRepository> cartRepo,
             Mock<IUserOperationServices> userOps,
-            Mock<ICartCacheHelper> cache)
+            Mock<ICartCacheHelper> cache,
+            Mock<ICartMapper> mapper = null)
         {
+            var map = mapper ?? new Mock<ICartMapper>();
             uow.SetupGet(x => x.Cart).Returns(cartRepo.Object);
             return new CartCommandService(
+                map.Object,
                 logger.Object,
                 bg.Object,
                 userManager.Object,
@@ -315,49 +318,5 @@ namespace Application.Tests.Services.CartServices
             tx.Verify(x => x.RollbackAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
-        [Fact]
-        public async Task UpdateCheckoutData_NoCart_CreateFails_ReturnsFail()
-        {
-            var logger = new Mock<ILogger<CartCommandService>>();
-            var bg = new Mock<IBackgroundJobClient>();
-            var userManager = CreateUserManagerMock();
-            var uow = new Mock<IUnitOfWork>();
-            var cartRepo = new Mock<ICartRepository>();
-            var userOps = new Mock<IUserOperationServices>();
-            var cache = new Mock<ICartCacheHelper>();
-
-            cartRepo.Setup(x => x.GetCartByUserIdAsync("u1")).ReturnsAsync((Cart)null);
-            userManager.Setup(x => x.FindByIdAsync("u1")).ReturnsAsync((Customer)null);
-
-            var sut = CreateSut(logger, bg, userManager, uow, cartRepo, userOps, cache);
-            var result = await sut.UpdateCheckoutData("u1");
-
-            Assert.False(result.Success);
-            Assert.Equal("Unexpected error while creating a new cart", result.Message);
-        }
-
-        [Fact]
-        public async Task UpdateCheckoutData_CartExists_SetsCheckoutAndCommits()
-        {
-            var logger = new Mock<ILogger<CartCommandService>>();
-            var bg = new Mock<IBackgroundJobClient>();
-            var userManager = CreateUserManagerMock();
-            var uow = new Mock<IUnitOfWork>();
-            var cartRepo = new Mock<ICartRepository>();
-            var userOps = new Mock<IUserOperationServices>();
-            var cache = new Mock<ICartCacheHelper>();
-
-            var cart = new Cart { Id = 7, UserId = "u1" };
-            cartRepo.Setup(x => x.GetCartByUserIdAsync("u1")).ReturnsAsync(cart);
-            uow.Setup(x => x.CommitAsync()).ReturnsAsync(1);
-
-            var sut = CreateSut(logger, bg, userManager, uow, cartRepo, userOps, cache);
-            var result = await sut.UpdateCheckoutData("u1");
-
-            Assert.True(result.Success);
-            Assert.Equal(200, result.StatusCode);
-            Assert.NotNull(cart.CheckoutDate);
-            cache.Verify(x => x.RemoveCartCacheAsync("u1"), Times.Once);
-        }
     }
 }

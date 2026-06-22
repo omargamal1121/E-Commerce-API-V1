@@ -8,6 +8,7 @@ namespace Application.DtoModels.CartDtos
         [Range(1, int.MaxValue, ErrorMessage = "Product ID must be greater than 0")]
         public int ProductId { get; set; }
 
+        [Range(1,50,ErrorMessage = "Quantity Must be between 1 to 50 ")]
         [Required(ErrorMessage = "Quantity is required")]
         public int Quantity { get; set; }
 
@@ -16,6 +17,7 @@ namespace Application.DtoModels.CartDtos
 
     public class UpdateCartItemDto
     {
+        [Range(1, 50, ErrorMessage = "Quantity Must be between 1 to 50 ")]
         [Required(ErrorMessage = "Quantity is required")]
         public int Quantity { get; set; }
     }

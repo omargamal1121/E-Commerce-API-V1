@@ -21,28 +21,32 @@ namespace Infrastructure.Repository
 
         public async Task LockCartForUpdateAsnyc(int id)
         {
-                       _logger.LogInformation("Locking cart for update");
+            _logger.LogInformation("Locking cart for update");
             try
             {
-                
-                
-               await  _context.Database.ExecuteSqlRawAsync(
-                     "SELECT Id FROM Cart WHERE Id = {0} FOR UPDATE",
-                     id);
+                await _context.Database.ExecuteSqlRawAsync(
+                    "SELECT Id FROM Cart WHERE Id = {0} FOR UPDATE",
+                    id);
                 _logger.LogInformation("Cart locked successfully");
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error locking cart: {ex.Message}");
+                throw;
             }
 
         }
+		public async Task<bool> UpdateItemPrice(int id,decimal newprice)
+		{
+			 return  (await	 _context.CartItems.Where(ct=>ct.Id==id).ExecuteUpdateAsync(ct=>ct.SetProperty(ct=>ct.UnitPrice, newprice)))>0;
+
+		}
 		public async Task<Cart?> GetCartForCheckoutWithLockAsync(string userId)
 		{
 			return await _context.Cart
 				.FromSqlInterpolated($@"
             SELECT *
-            FROM Carts
+            FROM Cart
             WHERE UserId = {userId}
             AND DeletedAt IS NULL
             FOR UPDATE")
@@ -199,6 +203,10 @@ namespace Infrastructure.Repository
                 .SelectMany(c => c.Items.Where(i => i.DeletedAt == null))
                 .SumAsync(i => i.Quantity);
         }
+		public IQueryable<CartItem> GetCartItems(int cartid)
+		{
+		  return 	_context.CartItems.Where(ct => ct.CartId == cartid).AsTracking();
+		}
 
      
     }

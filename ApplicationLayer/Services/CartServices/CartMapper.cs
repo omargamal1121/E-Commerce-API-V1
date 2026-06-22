@@ -181,6 +181,84 @@ namespace Application.Services.CartServices
                             : item.Product.Price, 2)
                 }).ToList()
         };
+		public Expression<Func<Cart, CartDto>> CartDtoSelectorForCheckout => cart => new CartDto
+        {
+            Id = cart.Id,
+            UserId = cart.UserId,
+            TotalItems = cart.Items.Count,
+            CheckoutDate = cart.CheckoutDate,
+            CreatedAt = cart.CreatedAt,
+
+            Items = cart.Items
+                .Where(item => item.Product.IsActive && item.Product.DeletedAt == null)
+                .Select(item => new CartItemDto
+                {
+                    Id = item.Id,
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    AddedAt = item.AddedAt,
+
+                    Product = new DtoModels.ProductDtos.ProductForCartDto
+                    {
+                        Id = item.Product.Id,
+                        Name = item.Product.Name,
+                        Price = item.Product.Price,
+
+                        FinalPrice =
+                            item.Product.Discount != null
+                            && item.Product.Discount.IsActive
+                            && item.Product.Discount.DeletedAt == null
+                            && item.Product.Discount.EndDate > DateTime.UtcNow
+                                ? item.Product.Price - item.Product.Discount.DiscountPercent / 100 * item.Product.Price
+                                : item.Product.Price,
+
+                        DiscountName =
+                            item.Product.Discount != null
+                            && item.Product.Discount.IsActive
+                            && item.Product.Discount.DeletedAt == null
+                            && item.Product.Discount.EndDate > DateTime.UtcNow
+                                ? item.Product.Discount.Name
+                                : null,
+
+                        DiscountPrecentage =
+                            item.Product.Discount != null
+                            && item.Product.Discount.IsActive
+                            && item.Product.Discount.DeletedAt == null
+                            && item.Product.Discount.EndDate > DateTime.UtcNow
+                                ? item.Product.Discount.DiscountPercent
+                                : 0,
+
+                      
+
+                        IsActive = item.Product.IsActive,
+
+                        productVariantForCartDto = new DtoModels.ProductDtos.ProductVariantForCartDto
+                        {
+                            
+                            Id = item.ProductVariant.Id,
+                            
+                            DeletedAt = item.ProductVariant.DeletedAt,
+                            
+                            Quantity = item.ProductVariant.Quantity
+                        }
+                    },
+                    PriceAtAddTime = item.UnitPrice,
+                    CurrentPrice = Math.Round(
+                        item.Product.Discount != null
+                        && item.Product.Discount.IsActive
+                        && item.Product.Discount.DeletedAt == null
+                        && item.Product.Discount.EndDate > DateTime.UtcNow
+                            ? item.Product.Price - item.Product.Discount.DiscountPercent / 100m * item.Product.Price
+                            : item.Product.Price, 2),
+                    IsPriceChanged = item.UnitPrice != Math.Round(
+                        item.Product.Discount != null
+                        && item.Product.Discount.IsActive
+                        && item.Product.Discount.DeletedAt == null
+                        && item.Product.Discount.EndDate > DateTime.UtcNow
+                            ? item.Product.Price - item.Product.Discount.DiscountPercent / 100m * item.Product.Price
+                            : item.Product.Price, 2)
+                }).ToList()
+        };
 
         public CartDto ToCartDto(Cart cart)
         {

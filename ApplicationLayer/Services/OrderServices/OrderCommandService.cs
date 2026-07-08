@@ -290,7 +290,7 @@ namespace Application.Services.OrderServices
 
                 _backgroundJobClient.Schedule(
                     () => ExpireUnpaidOrderInBackground(createdOrder.Id),
-                    TimeSpan.FromHours(5)
+                    TimeSpan.FromMinutes(5)
                 );
                 #endregion
 

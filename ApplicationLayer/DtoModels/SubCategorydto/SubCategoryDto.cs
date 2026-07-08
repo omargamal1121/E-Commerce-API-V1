@@ -15,7 +15,7 @@ namespace Application.DtoModels.SubCategorydto
 		public IEnumerable<ImageDto>? Images { get; set; }
 
 		public bool IsActive { get; set; } = false;
-		public string CategoryName { get; set; }
+		public string? CategoryName { get; set; }
 		public int CategoryId { get; set; }
 	}
 }

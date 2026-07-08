@@ -65,7 +65,7 @@ namespace Application.Services.ProductVariantServices
 		public async Task<Result<bool>> AddQuntityAfterRestoreOrder(int id, int addQuantity)
         {
             _logger.LogInformation($"Adding quantity for variant: {id}");
-            using var transaction = await _unitOfWork.BeginTransactionAsync();
+         //   using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
                 if (addQuantity <= 0)
@@ -74,14 +74,14 @@ namespace Application.Services.ProductVariantServices
 				var affectedRows = await _unitOfWork.ProductVariant.AddNewQuntityAsync(id, addQuantity);
                 if (affectedRows == 0)
 				{
-					await transaction.RollbackAsync();
+				
 					return Result<bool>.Fail("Variant not found", 404);
 				}
 
 				var variant = await _unitOfWork.Repository<ProductVariant>().GetByIdAsync(id);
 
-				await _unitOfWork.CommitAsync();
-				await transaction.CommitAsync();
+				
+				
 
 				_backgroundJobClient.Enqueue(() => _productCatalogService.UpdateProductQuantity(variant.ProductId));
 				_logger.LogInformation($"Quantity for variant {id} increased by {addQuantity}");
@@ -89,7 +89,7 @@ namespace Application.Services.ProductVariantServices
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
+              
                 _logger.LogError(ex, $"Error in AddQuntityAfterRestoreOrder for id: {id}");
                 _backgroundJobClient.Enqueue(() =>
                     _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace)

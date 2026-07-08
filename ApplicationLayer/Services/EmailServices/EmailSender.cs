@@ -42,8 +42,8 @@ namespace Application.Services.EmailServices
 				{
 					smtpClient.UseDefaultCredentials = false;
 
-					smtpClient.Credentials = new NetworkCredential(from.Address, from.Password);
 					smtpClient.EnableSsl = true;
+					smtpClient.Credentials = new NetworkCredential(from.Address, from.Password);
 					await smtpClient.SendMailAsync(mailMessage);
 				}
 

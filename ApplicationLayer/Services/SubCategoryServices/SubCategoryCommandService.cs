@@ -110,8 +110,12 @@ namespace Application.Services.SubCategoryServices
 				}
 				_subCategoryCacheHelper.ClearSubCategoryCache();
 				_categoryCacheHelper.ClearCategoryDataCache();
-				await transaction.CommitAsync();
+
+			
 				var subcategorydto = _subCategoryMapper.ToSubCategoryDto(creationResult);
+
+				await _unitOfWork.CommitAsync();
+				await transaction.CommitAsync();
 
 				_logger.LogInformation($"Successfully mapped subcategory to DTO");
 

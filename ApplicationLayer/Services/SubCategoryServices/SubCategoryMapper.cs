@@ -14,7 +14,7 @@ namespace Application.Services.SubCategoryServices
 			return new SubCategoryDto
 			{
 				CategoryId = subCategory.CategoryId,
-				CategoryName	= subCategory.Category.Name,
+				CategoryName	= subCategory.Category?.Name,
 				Id = subCategory.Id,
 				Name = subCategory.Name,
 				IsActive = subCategory.IsActive,

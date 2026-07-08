@@ -135,8 +135,8 @@ namespace Infrastructure.Repository
 
             var effectedRows = await _context.Database.ExecuteSqlRawAsync(
                 "UPDATE ProductVariants SET Quantity = Quantity - {0} WHERE Id = {1} AND Quantity >= {0}",
-                removeQuantity, id
-            );
+                removeQuantity, id, removeQuantity
+			);
 
             if (effectedRows > 0)
             {

@@ -7,12 +7,12 @@ namespace Domain.Models
 	public class Order : BaseEntity
 	{
 		[ForeignKey("Customer")]
-		public string CustomerId { get; set; } = string.Empty;
-		public  Customer Customer { get; set; }
+		public string ?CustomerId { get; set; } = string.Empty;
+		public  Customer ?Customer { get; set; }
 		[ForeignKey("CustomerAddress")]
-		public int CustomerAddressId { get; set; }
+		public int? CustomerAddressId { get; set; }
 
-		public CustomerAddress  CustomerAddress { get; set; }
+		public CustomerAddress?  CustomerAddress { get; set; }
 
 		[Required]
 		[StringLength(50, MinimumLength = 3, ErrorMessage = "Order number must be between 3 and 50 characters")]
@@ -48,10 +48,19 @@ namespace Domain.Models
         [Timestamp]
         [Column(TypeName = "binary(8)")]
         public byte[]? RowVersion { get; set; } = null;
-        public IEnumerable<OrderItem> Items { get; set; } = new List<OrderItem>();
-		public  List <Payment>? Payment { get; set; }
+        public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
+		public ICollection<Payment>? Payment { get; set; }
 		public ICollection<ReturnRequest> ReturnRequests { get; set; } = new List<ReturnRequest>();
+		public string? CustomerName { get; set; }
+		public string? PhoneNumber { get; set; }
+		public string? Email { get; set; }
 
+		public string? Governorate { get; set; }
+		public string? City { get; set; }
+		public string? Street { get; set; }
+		public string? Building { get; set; }
 		
+	
+
 	}
 }

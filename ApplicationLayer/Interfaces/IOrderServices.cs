@@ -38,11 +38,10 @@ namespace Application.Interfaces
 		Task<Result<bool>> DeliverOrderAsync(int orderId, string userId);
 		Task<Result<int?>> GetOrderCountByCustomerAsync(string userId);
 		Task<Result<decimal>> GetTotalRevenueByCustomerAsync(string userId);
-
-
-
+		Task RestockOrderItemsInBackground(int orderId);
+		void RemoveCacheAndRelated();
+		Task<Result<OrderAfterCreatedto>> CreateGuestOrderAsync(CreateGuestOrderDto orderDto);
 	
 		Task<Result<int?>> GetTotalOrderCountAsync(OrderStatus? status);
 	}
-} 
-
+}

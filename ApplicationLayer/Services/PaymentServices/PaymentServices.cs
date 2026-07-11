@@ -95,29 +95,30 @@ namespace Application.Services.PaymentServices
                 }
 
                 await _unitOfWork.Payment.LockPaymentForUpdateAsync(latestPayment.Id);
-                if (latestPayment.Status == status)
+                var payment= await _unitOfWork.Repository<Payment>().GetByIdAsync(latestPayment.Id);
+                if (payment is null|| payment.Status == status)
                 {
                     _logger.LogInformation("Payment {PaymentId} already has status {Status}, no update needed", latestPayment.Id, status);
                     return Result<int>.Ok(latestPayment.Id);
                 }
 
-                latestPayment.Status = status;
-                latestPayment.TransactionId = transactionId;
-                latestPayment.ModifiedAt = DateTime.UtcNow;
+				payment.Status = status;
+				payment.TransactionId = transactionId;
+				payment.ModifiedAt = DateTime.UtcNow;
 
                 _logger.LogInformation("Updating payment {PaymentId} with status {Status} and transaction ID {TransactionId}",
-                    latestPayment.Id, status, transactionId);
+					payment.Id, status, transactionId);
 
-                var updated = _unitOfWork.Repository<Payment>().Update(latestPayment);
+                var updated = _unitOfWork.Repository<Payment>().Update(payment);
                 if (!updated)
                 {
-                    _logger.LogError("Payment update failed for Payment ID {PaymentId}", latestPayment.Id);
+                    _logger.LogError("Payment update failed for Payment ID {PaymentId}", payment.Id);
                     return Result<int>.Fail("Failed to update payment", 500, null);
                 }
-				await _unitOfWork.CommitAsync();
-                _logger.LogInformation("Payment {PaymentId} updated successfully", latestPayment.Id);
+				
+                _logger.LogInformation("Payment {PaymentId} updated successfully", payment.Id);
 				RemoveCacheAndRelated();
-				return Result<int>.Ok(latestPayment.Id);
+				return Result<int>.Ok(payment.Id);
             }
             catch (DbUpdateConcurrencyException e)
             {
@@ -177,9 +178,13 @@ namespace Application.Services.PaymentServices
                     return Result<PaymentResponseDto>.Fail("There is already a pending payment...");
                 }
 
-                if (order.CustomerId != userid)
+                bool isGuestOrder = string.IsNullOrEmpty(order.CustomerId);
+                bool isGuestRequest = string.IsNullOrEmpty(userid);
+
+                if ((isGuestOrder && !isGuestRequest) || (!isGuestOrder && order.CustomerId != userid))
                 {
-                    _logger.LogWarning("Order {OrderId} does not belong to user {UserId}", order.Id, userid);
+                    _logger.LogWarning("Order {OrderId} access mismatch. Order Customer: '{OrderCust}', Request User: '{ReqUser}'", 
+                        order.Id, order.CustomerId, userid);
                     await transaction.RollbackAsync();
                     return Result<PaymentResponseDto>.Fail("Unauthorized access to this order.");
                 }
@@ -371,17 +376,46 @@ namespace Application.Services.PaymentServices
             int timeRemainingSeconds =
                 (int)Math.Min(remainingTime.TotalSeconds, maxTime.TotalSeconds);
 
+            string? governorate = order.Governorate;
+            string? city = order.City;
+            string? street = order.Street;
+           
+            string? customerName = order.CustomerName;
+            string? phoneNumber = order.PhoneNumber;
+            string? email = order.Email;
+
+            if (order.CustomerAddressId.HasValue)
+            {
+                var address = await _unitOfWork.CustomerAddress.GetAddressByIdAsync(order.CustomerAddressId.Value);
+                if (address != null)
+                {
+                    governorate = address.Country;
+                    city = address.City;
+                    street = address.StreetAddress;
+                  
+                    if (string.IsNullOrEmpty(phoneNumber))
+                    {
+                        phoneNumber = address.PhoneNumber;
+                    }
+                }
+            }
 
             CreatePayment createPayment = new CreatePayment
             {
                 Amount = payment.Amount,
                 Currency = paymentdto.Currency,
-                CustomerId = payment.CustomerId, 
+                CustomerId = payment.CustomerId ?? string.Empty, 
                 Notes = paymentdto.Notes,
                 Ordernumber = order.OrderNumber,
                 PaymentMethod = paymentdto.PaymentMethod,
                 WalletPhoneNumber = paymentdto.WalletPhoneNumber,
-                AddressId = order.CustomerAddressId
+                CustomerName = customerName,
+                PhoneNumber = phoneNumber,
+                Email = email,
+                Governorate = governorate,
+                City = city,
+                Street = street,
+                
             };
 
             var onlinePaymentResult = await _paymentProcessor.GetPaymentLinkAsync(createPayment, timeRemainingSeconds, providerorderid);

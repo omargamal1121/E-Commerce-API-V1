@@ -13,8 +13,8 @@ namespace Domain.Models
         public byte[]? RowVersion { get; set; } = null;
 
         [ForeignKey("Customer")]
-		public string CustomerId { get; set; } = string.Empty;
-		public  Customer Customer { get; set; }
+		public string? CustomerId { get; set; } = string.Empty;
+		public  Customer? Customer { get; set; }
 
 		[ForeignKey("PaymentMethod")]
 		public int PaymentMethodId { get; set; }

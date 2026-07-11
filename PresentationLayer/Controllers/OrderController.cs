@@ -127,6 +127,34 @@ namespace E_Commerce.Controllers
 		}
 
 		/// <summary>
+		/// Create guest order (RESTful)
+		/// POST /api/order/guest
+		/// </summary>
+		[HttpPost("guest")]
+		[AllowAnonymous]
+		public async Task<ActionResult<ApiResponse<OrderAfterCreatedto>>> CreateGuestOrder([FromBody] CreateGuestOrderDto orderDto)
+		{
+			try
+			{
+				if (!ModelState.IsValid)
+				{
+					var errors = GetModelErrors();
+					_logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
+					return BadRequest(ApiResponse<OrderAfterCreatedto>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
+				}
+
+				_logger.LogInformation("Executing CreateGuestOrder");
+				var result = await _orderServices.CreateGuestOrderAsync(orderDto);
+				return HandleResult(result, nameof(CreateGuestOrder));
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Error in CreateGuestOrder: {ex.Message}");
+				return StatusCode(500, ApiResponse<OrderAfterCreatedto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while creating the guest order"), 500));
+			}
+		}
+
+		/// <summary>
 		/// Update order status (RESTful)
 		/// PUT /api/order/{orderId}/status?status={status}
 		/// - Admins can set any supported status
@@ -184,7 +212,7 @@ namespace E_Commerce.Controllers
 		/// GET /api/order/number/{orderNumber}
 		/// </summary>
 		[HttpGet("number/{orderNumber}")]
-		[Authorize(Roles = "User,Admin,SuperAdmin,DeliveryCompany")]
+		[AllowAnonymous]
 		public async Task<ActionResult<ApiResponse<OrderDto>>> GetOrderByNumber(string orderNumber)
 		{
 			try

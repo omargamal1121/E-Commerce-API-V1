@@ -329,19 +329,22 @@ namespace Application.Services.PayMobServices
 					return Result<PaymentLinkResult>.Fail("Authentication failed", 401);
 				}
 
-				var user = await _userManager.FindByIdAsync(dto.CustomerId);
-				if (user == null)
+				Customer? user = null;
+				if (!string.IsNullOrEmpty(dto.CustomerId))
 				{
-					_logger.LogWarning("User not found for payment: {CustomerId}", dto.CustomerId);
-					return Result<PaymentLinkResult>.Fail("User not found", 404);
+					user = await _userManager.FindByIdAsync(dto.CustomerId);
+					if (user == null)
+					{
+						_logger.LogWarning("User not found for payment: {CustomerId}", dto.CustomerId);
+					}
 				}
 
-				var address = await _unitOfWork.CustomerAddress.GetAddressByIdAsync(dto.AddressId);
-				if (address == null)
-				{
-					_logger.LogWarning("Address not found for payment: {AddressId}", dto.AddressId);
-					return Result<PaymentLinkResult>.Fail("Address not found", 404);
-				}
+				//var address = await _unitOfWork.CustomerAddress.GetAddressByIdAsync(dto.AddressId);
+				//if (address == null)
+				//{
+				//	_logger.LogWarning("Address not found for payment: {AddressId}", dto.AddressId);
+				//	return Result<PaymentLinkResult>.Fail("Address not found", 404);
+				//}
 
 
 
@@ -399,15 +402,15 @@ namespace Application.Services.PayMobServices
 					redirection_url=redirection_url,
 					billing_data = new billing_data
 					{
-						city = address.City ?? "NA",
-						country = address.Country ?? "EG",
-						state = address.State ?? "NA",
-						postal_code = address.PostalCode ?? "NA",
-						street = address.StreetAddress,
-						first_name = user.Name?.Split(" ").FirstOrDefault() ?? "NA",
-						last_name = user.Name?.Split(" ").Skip(1).FirstOrDefault() ?? "NA",
-						email = user.Email,
-						phone_number = user.PhoneNumber??address.PhoneNumber
+						city = dto.City ?? "NA",
+						country = "EG",
+						state = dto.State ?? "NA",
+						postal_code = dto.PostalCode ?? "NA",
+						street = string.IsNullOrWhiteSpace(dto.Street) ? "NA" : $"{dto.Street} {dto.Building} {dto.Floor}".Trim(),
+						first_name = user != null ? (user.Name?.Split(" ").FirstOrDefault() ?? "NA") : (dto.CustomerName?.Split(" ").FirstOrDefault() ?? "NA"),
+						last_name = user != null ? ((user.Name?.Split(" ").Skip(1).ToArray() is var ln && ln.Length > 0) ? string.Join(" ", ln) : "NA") : ((dto.CustomerName?.Split(" ").Skip(1).ToArray() is var dln && dln.Length > 0) ? string.Join(" ", dln) : "NA"),
+						email = user != null ? (user.Email ?? "NA") : (dto.Email ?? "NA"),
+						phone_number = user != null ? (user.PhoneNumber ?? dto.PhoneNumber ?? "NA") : (dto.PhoneNumber ?? "NA")
 					}
 					,
 

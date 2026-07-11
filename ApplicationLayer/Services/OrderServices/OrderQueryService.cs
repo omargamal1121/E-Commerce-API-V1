@@ -92,9 +92,23 @@ namespace Application.Services.OrderServices
 
             try
             {
-                bool exists = isAdmin
-                    ? await _orderRepository.IsExistByOrderNumberAsync(orderNumber)
-                    : await _orderRepository.IsExistByOrderNumberAndUserIdAsync(orderNumber, userId);
+                bool exists = false;
+                if (isAdmin)
+                {
+                    exists = await _orderRepository.IsExistByOrderNumberAsync(orderNumber);
+                }
+                else if (string.IsNullOrEmpty(userId))
+                {
+                    var orderToCheck = await _unitOfWork.Repository<Domain.Models.Order>()
+                        .GetAll()
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(o => o.OrderNumber == orderNumber && o.DeletedAt == null);
+                    exists = orderToCheck != null && string.IsNullOrEmpty(orderToCheck.CustomerId);
+                }
+                else
+                {
+                    exists = await _orderRepository.IsExistByOrderNumberAndUserIdAsync(orderNumber, userId);
+                }
 
                 if (!exists)
                 {
@@ -115,7 +129,8 @@ namespace Application.Services.OrderServices
                 }
 
                 // If not admin, double-check ownership (defensive)
-                if (!isAdmin && order?.Customer?.Id != userId)
+                bool isRegisteredOrder = order?.Customer != null && !string.IsNullOrEmpty(order.Customer.Id);
+                if (!isAdmin && isRegisteredOrder && order.Customer.Id != userId)
                 {
                     _logger.LogWarning("User {UserId} tried to access order {OrderNumber} they don't own", userId, orderNumber);
                     return Result<OrderDto>.Fail("Access denied", 403);

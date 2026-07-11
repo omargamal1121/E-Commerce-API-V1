@@ -13,7 +13,7 @@ namespace Application.Services.OrderServices
         {
             Id = o.Id,
             OrderNumber = o.OrderNumber,
-            CustomerName = o.Customer.Name,
+            CustomerName = o.Customer != null ? o.Customer.Name : o.CustomerName,
             Status = o.Status.ToString(),
             Total = o.Total,
             CreatedAt = o.CreatedAt??default,
@@ -70,13 +70,30 @@ namespace Application.Services.OrderServices
 				ProviderOrderId = p.ProviderOrderId
 			}),
 
-			Customer = order.Customer == null ? null : new CustomerDto
+			Customer = order.Customer == null ? 
+				(string.IsNullOrEmpty(order.CustomerName) ? null : new CustomerDto
+				{
+					Id = string.Empty,
+					FullName = order.CustomerName,
+					Email = order.Email ?? string.Empty,
+					PhoneNumber = order.PhoneNumber ?? string.Empty,
+					customerAddress = new CustomerAddressDto
+					{
+						Id = 0,
+						City = order.City ?? string.Empty,
+						Country = "EG",
+						StreetAddress = ((order.Street ?? "") + " " + (order.Building ?? "")).Trim(),
+						
+						PhoneNumber = order.PhoneNumber ?? string.Empty,
+						
+					}
+				}) : new CustomerDto
 			{
 				Id = order.Customer.Id,
 				FullName = order.Customer.Name,
 				Email = order.Customer.Email,
 				PhoneNumber = order.Customer.PhoneNumber,
-				customerAddress = new CustomerAddressDto
+				customerAddress = order.CustomerAddress == null ? null : new CustomerAddressDto
 				{
 					Id = order.CustomerAddress.Id,
 					AdditionalNotes = order.CustomerAddress.AdditionalNotes,

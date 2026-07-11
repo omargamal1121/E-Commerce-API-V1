@@ -340,6 +340,8 @@ namespace Application.Services.OrderServices
 
 			try
 			{
+				await _unitOfWork.Order.LockOrderForUpdateAsync(orderId);
+
 				var order = await _orderRepository.GetAll()
 					.Include(o => o.Items)
 					.FirstOrDefaultAsync(o => o.Id == orderId);
@@ -350,26 +352,13 @@ namespace Application.Services.OrderServices
 					return Result<bool>.Fail("Can't find order", 404);
 				}
 
-
-                await _unitOfWork.Order.LockOrderForUpdateAsync(
-                    order.Id);
-
                 if (!IsValidTransition(order.Status, orderStatus))
 				{
 					_logger.LogWarning("Invalid status transition from {Old} to {New}", order.Status, orderStatus);
 					return Result<bool>.Fail($"Invalid status transition from {order.Status} to {orderStatus}", 400);
 				}
- 
 
 				order.Status = orderStatus;
-				await _unitOfWork.CommitAsync();
-
-				if (orderStatus == OrderStatus.PaymentExpired)
-				{
-					_backgroundJobClient.Enqueue(() => RestockOrderItemsInBackground(orderId));
-				}
-
-				_backgroundJobClient.Enqueue(()=> RemoveCacheAndRelated()) ;
 
 				_logger.LogInformation("Updated order {OrderId} to {Status} after payment", orderId, order.Status);
 				return Result<bool>.Ok(true, "Order updated after payment", 200);
@@ -437,7 +426,7 @@ namespace Application.Services.OrderServices
 			}
 		}
 
-        private void RemoveCacheAndRelated()
+        public void RemoveCacheAndRelated()
         {
             _cacheHelper.ClearOrderCache();
 			_productVariantCacheHelper.RemoveProductCachesAsync();
@@ -819,7 +808,7 @@ namespace Application.Services.OrderServices
             await using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
-                // Lock row and fetch fresh DB snapshot inside the transaction boundary
+                
                 await _unitOfWork.Order.LockOrderForUpdateAsync(orderId);
 
                 var order = await _unitOfWork.Repository<Domain.Models.Order>().GetByIdAsync(orderId);
@@ -906,6 +895,171 @@ namespace Application.Services.OrderServices
 
                 _backgroundJobClient.Enqueue(() =>
                     _errorNotificationService.SendErrorNotificationAsync(ex.Message, null));
+            }
+        }
+
+        public async Task<Result<OrderAfterCreatedto>> CreateGuestOrderAsync(CreateGuestOrderDto orderDto)
+        {
+            _logger.LogInformation("Creating guest order");
+
+            var variantIds = orderDto.Items.Select(i => i.ProductVariantId).ToList();
+
+            await using var transaction = await _unitOfWork.BeginTransactionAsync();
+
+            try
+            {
+                // Fetch product & variant data from DB
+                var variants = await _unitOfWork.Repository<ProductVariant>()
+                    .GetAll()
+                    .AsNoTracking()
+                    .Where(v => variantIds.Contains(v.Id) && v.DeletedAt == null && v.IsActive)
+                    .Select(v => new { 
+                        v.Id, 
+                        v.Quantity, 
+                        v.ProductId,
+                        v.Product.Price, 
+                        v.Product.IsActive, 
+                        v.Product.Name,
+                        Discount = v.Product.Discount != null ? new
+                        {
+                            v.Product.Discount.EndDate,
+                            v.Product.Discount.StartDate,
+                            v.Product.Discount.DiscountPercent,
+                            v.Product.Discount.DeletedAt,
+                            v.Product.Discount.IsActive
+                        } : null
+                    })
+                    .ToDictionaryAsync(v => v.Id);
+
+                decimal subtotal = 0m;
+                var orderItems = new List<OrderItem>();
+
+                foreach (var item in orderDto.Items)
+                {
+                    var variant = variants.GetValueOrDefault(item.ProductVariantId);
+
+                    if (variant == null || !variant.IsActive)
+                    {
+                        await transaction.RollbackAsync();
+                        return Result<OrderAfterCreatedto>.Fail($"Product variant ID {item.ProductVariantId} is not available.", 409);
+                    }
+
+                    if (variant.Quantity < item.Quantity)
+                    {
+                        await transaction.RollbackAsync();
+                        return Result<OrderAfterCreatedto>.Fail(
+                            $"Product '{variant.Name}' is not available in required quantity. " +
+                            $"Requested: {item.Quantity}, Available: {variant.Quantity}",
+                            409
+                        );
+                    }
+
+                    // Calculate price
+                    var discountPercent = variant.Discount?.DiscountPercent ?? 0m;
+                    var discountActive = variant.Discount != null && 
+                                         variant.Discount.IsActive && 
+                                         variant.Discount.DeletedAt == null && 
+                                         variant.Discount.StartDate <= DateTime.UtcNow && 
+                                         variant.Discount.EndDate > DateTime.UtcNow;
+
+                    var calculatedPrice = Math.Round(discountActive 
+                        ? variant.Price - (discountPercent / 100m * variant.Price) 
+                        : variant.Price, 2);
+
+                    var itemTotal = item.Quantity * calculatedPrice;
+                    subtotal += itemTotal;
+
+                    orderItems.Add(new OrderItem
+                    {
+                        ProductId = variant.ProductId,
+                        ProductVariantId = variant.Id,
+                        Quantity = item.Quantity,
+                        UnitPrice = calculatedPrice,
+                        TotalPrice = itemTotal,
+                        OrderedAt = DateTime.UtcNow,
+                        CreatedAt = DateTime.UtcNow
+                    });
+                }
+
+                var orderNumber = await _orderRepository.GenerateOrderNumberAsync();
+
+                var order = new Domain.Models.Order
+                {
+                    CustomerId = null,
+                    CustomerAddressId = null,
+                    OrderNumber = orderNumber,
+                    Status = OrderStatus.PendingPayment,
+                    Subtotal = subtotal,
+                    Total = subtotal,
+                    Notes = orderDto.Notes,
+                    CreatedAt = DateTime.UtcNow,
+                    Items = orderItems,
+                    
+                    // Guest Info
+                    CustomerName = orderDto.CustomerName,
+                    PhoneNumber = orderDto.PhoneNumber,
+                    Email = orderDto.Email,
+                    Governorate = orderDto.Governorate,
+                    City = orderDto.City,
+                    Street = orderDto.Street,
+                    Building = orderDto.Building,
+                 
+                };
+
+                var createdOrder = await _orderRepository.CreateAsync(order);
+                if (createdOrder == null)
+                {
+                    await transaction.RollbackAsync();
+                    return Result<OrderAfterCreatedto>.Fail("Failed to create order", 500);
+                }
+
+                // Reduce stock
+                foreach (var item in orderItems)
+                {
+                    var removeResult = await _productVariantCommandService.RemoveQuntityAfterOrder(
+                        item.ProductVariantId,
+                        item.Quantity,
+                        item.ProductId);
+
+                    if (!removeResult.Success)
+                    {
+                        await transaction.RollbackAsync();
+                        return Result<OrderAfterCreatedto>.Fail($"Failed to reduce stock: {removeResult.Message}", 409);
+                    }
+                }
+
+                await _unitOfWork.CommitAsync();
+                await transaction.CommitAsync();
+
+                // Safe Background Job Scheduling
+                _backgroundJobClient.Enqueue(() => DeactivateZeroQuantityVariantsAsync(variantIds));
+                _backgroundJobClient.Schedule(
+                    () => ExpireUnpaidOrderInBackground(createdOrder.Id),
+                    TimeSpan.FromMinutes(5)
+                );
+
+                RemoveCacheAndRelated();
+
+                var response = new OrderAfterCreatedto 
+                { 
+                    OrderId = createdOrder.Id,
+                    OrderNumber = order.OrderNumber
+                };
+
+                return Result<OrderAfterCreatedto>.Ok(response, "Guest order created successfully", 201);
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogWarning(e, "Concurrency conflict while creating guest order");
+                return Result<OrderAfterCreatedto>.Fail("Order was modified by another process.", 409);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Exception while creating guest order");
+                _cacheHelper.NotifyAdminError($"Exception creating guest order: {ex.Message}", ex.StackTrace);
+                return Result<OrderAfterCreatedto>.Fail("An error occurred while creating the order", 500);
             }
         }
     }

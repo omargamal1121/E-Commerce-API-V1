@@ -4,6 +4,7 @@ using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260709124246_add-feilds-for-guest-users")]
+    partial class addfeildsforguestusers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -465,6 +468,9 @@ namespace ECommerce.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Apartment")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Building")
                         .HasColumnType("longtext");
 
@@ -499,6 +505,9 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Floor")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Governorate")
                         .HasColumnType("longtext");
 
@@ -517,6 +526,9 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("PostalCode")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime?>("RestockedAt")
                         .HasColumnType("datetime(6)");
 
@@ -531,6 +543,9 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<decimal>("ShippingCost")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("State")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");

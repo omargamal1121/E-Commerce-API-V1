@@ -91,8 +91,16 @@ namespace Application.Services.OrderServices
 
 		public async Task<Result<int>> CountOrdersAsync(OrderStatus? status = null, bool? isDelete = null, bool isAdmin = false)
 		{
-		    return await    _orderCommandService.CountOrdersAsync(status, isDelete, isAdmin);
+			return await    _orderCommandService.CountOrdersAsync(status, isDelete, isAdmin);
 		}
+
+		public void RemoveCacheAndRelated()
+		{
+			_orderCommandService.RemoveCacheAndRelated();
+		}
+
+		public Task<Result<OrderAfterCreatedto>> CreateGuestOrderAsync(CreateGuestOrderDto orderDto)
+			=> _orderCommandService.CreateGuestOrderAsync(orderDto);
 	}
 }
 

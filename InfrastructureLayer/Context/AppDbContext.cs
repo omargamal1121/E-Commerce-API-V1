@@ -380,6 +380,13 @@ namespace Infrastructure.Context
 				.WithOne(w => w.Payment)
 				.HasForeignKey(w => w.PaymentId)
 				.OnDelete(DeleteBehavior.Cascade);
+
+			builder.Entity<PaymentWebhook>().HasIndex(w =>
+			
+				w.WebhookUniqueKey
+			).IsUnique();
+
+
 			builder.Entity<Customer>().HasIndex(c=>c.UserName).IsUnique();
 			builder.Entity<Customer>().HasIndex(c=>c.Email).IsUnique();
           

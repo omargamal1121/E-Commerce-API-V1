@@ -11,6 +11,8 @@ using Application.Services.EmailServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Infrastructure.Interfaces;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
+using Hangfire;
 
 namespace Application.Services.PaymentWebhookService
 {
@@ -27,6 +29,7 @@ namespace Application.Services.PaymentWebhookService
 		private readonly IPaymentServices _paymentServices;
 		private readonly IOrderServices _orderServices;
 		private readonly IConfiguration _configuration;
+		private readonly IBackgroundJobClient _backgroundJobClient;
 
 		private static readonly string[] HmacFieldsOrder = new[]
 		{
@@ -42,7 +45,8 @@ namespace Application.Services.PaymentWebhookService
 			IPaymentServices paymentServices,
 			IUnitOfWork unitOfWork,
 			ILogger<PaymentWebhookService> logger,
-			IConfiguration configuration)
+			IConfiguration configuration,
+			IBackgroundJobClient backgroundJobClient)
 		{
 			_errorNotificationService = errorNotificationService;
 			_orderServices = orderServices;
@@ -50,6 +54,7 @@ namespace Application.Services.PaymentWebhookService
 			_unitOfWork = unitOfWork;
 			_logger = logger;
 			_configuration = configuration;
+			_backgroundJobClient = backgroundJobClient;
 		}
 
 		public async Task<bool> HandlePaymobAsync(PaymobWebhookDto dto, string receivedHmac)
@@ -167,8 +172,7 @@ namespace Application.Services.PaymentWebhookService
 
 				int localOrderId = order.Id;
 
-				// Amount validation – only enforce on successful transactions to avoid
-				// blocking failed/pending webhook logs.
+				
 				if (transaction.Success)
 				{
 					long expectedAmountCents = (long)Math.Round(order.Total * 100, MidpointRounding.AwayFromZero);
@@ -208,8 +212,12 @@ namespace Application.Services.PaymentWebhookService
 				await _unitOfWork.CommitAsync();
 
 				await dbTransaction.CommitAsync();
+
+				_backgroundJobClient.Enqueue<IOrderServices>(x => x.RemoveCacheAndRelated());
+
 				return (true, localOrderId);
 			}
+		
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, "Error processing webhook database updates for TxnId={TxnId}", transaction.Id);

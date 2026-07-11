@@ -26,7 +26,7 @@ namespace E_Commerce.Controllers
 		/// POST /api/payment
 		/// </summary>
 		[HttpPost]
-		[Authorize(Roles = "User,Admin,SuperAdmin")]
+		[AllowAnonymous]
 		public async Task<ActionResult<ApiResponse<PaymentResponseDto>>> CreatePayment([FromBody] CreatePaymentRequestDto paymentRequest)
 		{
 			try

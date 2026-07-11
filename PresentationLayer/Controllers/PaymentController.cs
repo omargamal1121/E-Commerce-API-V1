@@ -4,6 +4,7 @@ using Application.ErrorHnadling;
 using Application.Services.PaymentServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 
 namespace E_Commerce.Controllers
@@ -25,6 +26,7 @@ namespace E_Commerce.Controllers
 		/// Create payment for order (RESTful)
 		/// POST /api/payment
 		/// </summary>
+		[EnableRateLimiting("payment")]
 		[HttpPost]
 		[AllowAnonymous]
 		public async Task<ActionResult<ApiResponse<PaymentResponseDto>>> CreatePayment([FromBody] CreatePaymentRequestDto paymentRequest)
@@ -40,7 +42,7 @@ namespace E_Commerce.Controllers
 
 				_logger.LogInformation($"Executing CreatePayment for order: {paymentRequest.OrderNumber}");
 				var userId = GetUserId();
-				var result = await _paymentServices.CreatePaymentMethod(paymentRequest.OrderNumber, paymentRequest.PaymentDetails, userId);
+				var result = await _paymentServices.CreatePaymentMethod(paymentRequest.OrderNumber, paymentRequest.PaymentDetails,userId);
 				return HandleResult(result, nameof(CreatePayment),  result.Data?.Paymentid );
 			}
 			catch (Exception ex)
@@ -137,19 +139,17 @@ namespace E_Commerce.Controllers
 
 		#region Helper Methods
 
-		private string GetUserId()
-		{
-			return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
-		}
-
+	
 		private string GetUserRole()
 		{
 			return User.FindFirst(ClaimTypes.Role)?.Value ?? "User";
 		}
+		protected new string? GetUserId() =>
+		 HttpContext?.Items?["UserId"]?.ToString();
 
-	
 
-	
+
+
 		#endregion
 	}
 }

@@ -48,6 +48,16 @@ namespace Application.Services.EmailServices
 				}
 
 			}
+			catch (SmtpException ex)
+			{
+				new InvalidOperationException(string.Format(
+					"SMTP failed. Email={Email}, Host={Host}, Port={Port}",
+					from.Address,
+					from.Host,
+					from.Port, ex));
+
+				throw;
+			}
 			catch (Exception ex)
 			{
 

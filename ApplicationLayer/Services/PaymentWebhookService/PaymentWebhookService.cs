@@ -293,7 +293,14 @@ namespace Application.Services.PaymentWebhookService
             _logger.LogInformation("Calculated HMAC: {CalculatedHmac}", calculatedHmac);
             _logger.LogInformation("Received HMAC: {ReceivedHmac}", receivedHmac);
 
-            bool isValid = string.Equals(calculatedHmac, receivedHmac, StringComparison.OrdinalIgnoreCase);
+            // Use constant-time comparison to prevent timing side-channel attacks.
+            // string.Equals short-circuits on first mismatch, leaking information about
+            // how many leading characters match — attackers can exploit this to brute-force
+            // the HMAC one nibble at a time. FixedTimeEquals always takes the same time.
+            var calculatedBytes = Encoding.UTF8.GetBytes(calculatedHmac);
+            var receivedBytes  = Encoding.UTF8.GetBytes(receivedHmac.ToLowerInvariant());
+            bool isValid = calculatedBytes.Length == receivedBytes.Length
+                           && CryptographicOperations.FixedTimeEquals(calculatedBytes, receivedBytes);
             _logger.LogInformation("HMAC validation result: {IsValid}", isValid);
 
             return isValid;

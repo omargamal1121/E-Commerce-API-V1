@@ -409,7 +409,7 @@ namespace Application.Services.PayMobServices
 						street = string.IsNullOrWhiteSpace(dto.Street) ? "NA" : $"{dto.Street} {dto.Building} {dto.Floor}".Trim(),
 						first_name = user != null ? (user.Name?.Split(" ").FirstOrDefault() ?? "NA") : (dto.CustomerName?.Split(" ").FirstOrDefault() ?? "NA"),
 						last_name = user != null ? ((user.Name?.Split(" ").Skip(1).ToArray() is var ln && ln.Length > 0) ? string.Join(" ", ln) : "NA") : ((dto.CustomerName?.Split(" ").Skip(1).ToArray() is var dln && dln.Length > 0) ? string.Join(" ", dln) : "NA"),
-						email = user != null ? (user.Email ?? "NA") : (dto.Email ?? "NA"),
+						email = user != null? (string.IsNullOrWhiteSpace(user.Email)? $"{user.Id}@gmail.com": user.Email): (string.IsNullOrWhiteSpace(dto.Email)? $"guest_{dto.PhoneNumber}@example.com": dto.Email),
 						phone_number = user != null ? (user.PhoneNumber ?? dto.PhoneNumber ?? "NA") : (dto.PhoneNumber ?? "NA")
 					}
 					,

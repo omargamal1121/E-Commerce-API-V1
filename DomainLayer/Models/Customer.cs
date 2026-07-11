@@ -39,6 +39,7 @@ namespace Domain.Models
 		public ICollection<ReturnRequest> ReturnRequests { get; set; } = new List<ReturnRequest>();
 
 		public ICollection<WishlistItem> WishlistItems { get; set; } = new List<WishlistItem>();
+		public ICollection<Payment>  Payments { get; set; } = new List<Payment>();
 		
 	}
 }

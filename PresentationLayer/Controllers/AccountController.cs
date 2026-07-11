@@ -155,6 +155,7 @@ namespace E_Commerce.Controllers
 		/// <summary>
 		/// Refreshes the JWT token using a refresh token
 		/// </summary>
+		[EnableRateLimiting("refresh-token")]
 		[HttpGet("refresh-token")]
 		[ActionName(nameof(RefreshTokenAsync))]
 		[ProducesResponseType(typeof(ApiResponse<TokensDto>), StatusCodes.Status200OK)]

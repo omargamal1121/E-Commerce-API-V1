@@ -20,7 +20,7 @@ namespace Application.Services.PaymentServices
 {
     public interface IPaymentServices
     {
-        Task<Result<PaymentResponseDto>> CreatePaymentMethod(string ordernumber, CreatePaymentOfCustomer paymentdto, string userid);
+        Task<Result<PaymentResponseDto>> CreatePaymentMethod(string ordernumber, CreatePaymentOfCustomer paymentdto, string? userid);
         Task<Result<int>> UpdatePaymentAfterPaid(int orderid, string TransactionId, long orderidofpaymob, PaymentStatus status);
     }
 
@@ -136,7 +136,7 @@ namespace Application.Services.PaymentServices
             }
         }
 
-        public async Task<Result<PaymentResponseDto>> CreatePaymentMethod(string ordernumber, CreatePaymentOfCustomer paymentdto, string userid)
+        public async Task<Result<PaymentResponseDto>> CreatePaymentMethod(string ordernumber, CreatePaymentOfCustomer paymentdto, string? userid)
         {
             _logger.LogInformation("Starting CreatePaymentMethod for order {OrderNumber} by user {UserId}", ordernumber, userid);
 
@@ -244,7 +244,7 @@ namespace Application.Services.PaymentServices
                     PaymentProviderId = paymentMethodEntity.PaymentProviderId,
                     
                     OrderId = order.Id,
-                    CustomerId = userid,
+                    CustomerId = string.IsNullOrWhiteSpace(userid) ? null : userid,
                     CreatedAt = DateTime.UtcNow
                 };
 
@@ -278,17 +278,19 @@ namespace Application.Services.PaymentServices
                     return Result<PaymentResponseDto>.Fail("Error while creating payment.");
                 }
 
-                var logResult = await _UserOperationServices.AddUserOpreationAsync(
-                    $"Created payment for order {order.Id}",
-                    Opreations.AddOpreation,
-                    userid,
-                    createdPayment.Id
-                );
-
-                if (!logResult.Success)
+                if (!string.IsNullOrWhiteSpace(userid))
                 {
-                    _logger.LogWarning("Failed to log user operation for Payment ID {Id}", createdPayment.Id);
-       
+                    var logResult = await _UserOperationServices.AddUserOpreationAsync(
+                        $"Created payment for order {order.Id}",
+                        Opreations.AddOpreation,
+                        userid,
+                        createdPayment.Id
+                    );
+
+                    if (!logResult.Success)
+                    {
+                        _logger.LogWarning("Failed to log user operation for Payment ID {Id}", createdPayment.Id);
+                    }
                 }
 				await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();

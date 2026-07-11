@@ -249,6 +249,28 @@ namespace E_Commerce
 							Window = TimeSpan.FromMinutes(1),
 							AutoReplenishment = true
 						}));
+
+				options.AddPolicy("payment", context =>
+					RateLimitPartition.GetSlidingWindowLimiter(
+						partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+						factory: _ => new SlidingWindowRateLimiterOptions
+						{
+							PermitLimit = 10,
+							SegmentsPerWindow = 2,
+							Window = TimeSpan.FromMinutes(1),
+							AutoReplenishment = true
+						}));
+
+				options.AddPolicy("refresh-token", context =>
+					RateLimitPartition.GetSlidingWindowLimiter(
+						partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+						factory: _ => new SlidingWindowRateLimiterOptions
+						{
+							PermitLimit = 15,
+							SegmentsPerWindow = 3,
+							Window = TimeSpan.FromMinutes(1),
+							AutoReplenishment = true
+						}));
 				options.OnRejected = async (context, token) =>
 				{
 					context.HttpContext.Response.StatusCode = 429;

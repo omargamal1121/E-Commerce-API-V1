@@ -93,6 +93,7 @@ namespace Application.Services.AuthServices
             {
                 new(JwtRegisteredClaimNames.Jti, jti),
                 new(ClaimTypes.NameIdentifier, user.Id),
+                new("SecurityStamp", user.SecurityStamp ?? string.Empty),
                 new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
             };
 

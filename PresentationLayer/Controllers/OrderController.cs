@@ -212,7 +212,7 @@ namespace E_Commerce.Controllers
 		/// GET /api/order/number/{orderNumber}
 		/// </summary>
 		[HttpGet("number/{orderNumber}")]
-		[AllowAnonymous]
+		[Authorize(Roles = "User,Admin,SuperAdmin,DeliveryCompany")]
 		public async Task<ActionResult<ApiResponse<OrderDto>>> GetOrderByNumber(string orderNumber)
 		{
 			try

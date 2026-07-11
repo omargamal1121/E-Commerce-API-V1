@@ -81,20 +81,22 @@ namespace Infrastructure.Context
             builder.Entity<Image>().HasIndex(i => i.SubCategoryId);
             builder.Entity<Image>().HasIndex(i => i.CollectionId);
 
-
             builder.Entity<Order>().HasIndex(o => o.CustomerId);
-            builder.Entity<Order>().HasIndex(o => o.Status); 
-
+            builder.Entity<Order>().HasIndex(o => o.Status);
 
             builder.Entity<Payment>().HasIndex(p => p.OrderId);
             builder.Entity<Payment>().HasIndex(p => p.PaymentMethodId);
             builder.Entity<Payment>().HasIndex(p => p.PaymentProviderId);
-    
+            // Prevents duplicate Pending payments for the same order+method.
+            // PaymentServices.CreatePaymentMethod catch block references this index name for a 409.
+            builder.Entity<Payment>()
+                .HasIndex(p => new { p.OrderId, p.Status, p.PaymentMethodId })
+                .IsUnique()
+                .HasDatabaseName("IX_Payments_OrderId_Status_PaymentMethodId");
+
             builder.Entity<Cart>().HasIndex(c => c.CustomerId);
 
-
             builder.Entity<CartItem>().HasIndex(ci => new { ci.CartId, ci.ProductId, ci.ProductVariantId }).IsUnique();
-
 
             builder.Entity<Review>().HasIndex(r => new { r.CustomerId, r.ProductId });
 
@@ -389,8 +391,13 @@ namespace Infrastructure.Context
 
 			builder.Entity<Customer>().HasIndex(c=>c.UserName).IsUnique();
 			builder.Entity<Customer>().HasIndex(c=>c.Email).IsUnique();
-          
+			builder.Entity<Payment>()
+		  .HasOne(p => p.Customer)
+		  .WithMany(c => c.Payments)
+		  .HasForeignKey(p => p.CustomerId)
+		  .IsRequired(false)
+		  .OnDelete(DeleteBehavior.Restrict);
 
-        }
+		}
     }
 }

@@ -21,6 +21,7 @@ namespace Infrastructure.Interfaces
         Task<decimal> GetTotalRevenueByDateRangeAsync(DateTime startDate, DateTime endDate);
      
         Task<int> GetTotalOrderCountAsync(OrderStatus? status = null);
+        Task<List<Order>> GetGuestOrdersByTokenHashAsync(string guestTokenHash);
     }
 }
 

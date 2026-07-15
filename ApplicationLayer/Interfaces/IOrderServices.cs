@@ -21,6 +21,7 @@ namespace Application.Interfaces
 		public  Task<Result<bool>> UpdateOrderAfterPaid(int orderId,OrderStatus orderStatus);
 		Task<Result<OrderDto>> GetOrderByIdAsync(int orderId, string userId, bool isAdmin = false);
 		public  Task<Result<OrderDto>> GetOrderByNumberAsync(string orderNumber, string userId, bool isAdmin = false);
+		public Task<Result<OrderDto>> GetGuestOrderByNumberAsync(string orderNumber, string guestToken);
 		public Task<Result<OrderAfterCreatedto>> CreateOrderFromCartAsync(string userId, CreateOrderDto orderDto);
 		Task<Result<bool>> ConfirmOrderAsync(int orderId, string adminId, bool IsSysyem = false,
             bool IsAdmin = false, string? notes = null);
@@ -40,7 +41,9 @@ namespace Application.Interfaces
 		Task<Result<decimal>> GetTotalRevenueByCustomerAsync(string userId);
 		Task RestockOrderItemsInBackground(int orderId);
 		void RemoveCacheAndRelated();
-		Task<Result<OrderAfterCreatedto>> CreateGuestOrderAsync(CreateGuestOrderDto orderDto);
+		Task<Result<OrderAfterCreatedto>> CreateGuestOrderAsync(CreateGuestOrderDto orderDto, string? guestToken = null);
+		Task<Result<int>> ClaimGuestOrdersAsync(string userId, string guestToken);
+		Task<Result<List<OrderListDto>>> GetGuestOrdersByTokenHashAsync(string guestToken, int page = 1, int pageSize = 10);
 	
 		Task<Result<int?>> GetTotalOrderCountAsync(OrderStatus? status);
 	}

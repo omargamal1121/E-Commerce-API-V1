@@ -144,13 +144,79 @@ namespace E_Commerce.Controllers
 				}
 
 				_logger.LogInformation("Executing CreateGuestOrder");
-				var result = await _orderServices.CreateGuestOrderAsync(orderDto);
+				string? guestToken = Request.Headers["X-Guest-Token"].FirstOrDefault();
+				var result = await _orderServices.CreateGuestOrderAsync(orderDto, guestToken);
 				return HandleResult(result, nameof(CreateGuestOrder));
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Error in CreateGuestOrder: {ex.Message}");
 				return StatusCode(500, ApiResponse<OrderAfterCreatedto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while creating the guest order"), 500));
+			}
+		}
+		
+		/// <summary>
+		/// Get my orders (RESTful)
+		/// GET /api/order/my
+		/// </summary>
+		[HttpGet("my")]
+		[AllowAnonymous]
+		public async Task<ActionResult<ApiResponse<List<OrderListDto>>>> GetMyOrders([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+		{
+			try
+			{
+				_logger.LogInformation("Executing GetMyOrders");
+				
+				var userId = GetUserId();
+				if (!string.IsNullOrWhiteSpace(userId))
+				{
+					var result = await _orderServices.FilterOrdersAsync(userId, null, page, pageSize, null, false);
+					return HandleResult(result);
+				}
+				else
+				{
+					string? guestToken = Request.Headers["X-Guest-Token"].FirstOrDefault();
+					if (string.IsNullOrWhiteSpace(guestToken))
+					{
+						return Unauthorized(ApiResponse<List<OrderListDto>>.CreateErrorResponse("Unauthorized", new ErrorResponse("Unauthorized", "X-Guest-Token header is required"), 401));
+					}
+					
+					var result = await _orderServices.GetGuestOrdersByTokenHashAsync(guestToken, page, pageSize);
+					return HandleResult(result);
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Error in GetMyOrders: {ex.Message}");
+				return StatusCode(500, ApiResponse<List<OrderListDto>>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while getting orders"), 500));
+			}
+		}
+		
+		/// <summary>
+		/// Claim guest orders (RESTful)
+		/// POST /api/order/claim-guest
+		/// </summary>
+		[HttpPost("claim-guest")]
+		[Authorize(Roles = "User,Admin,SuperAdmin,DeliveryCompany")]
+		public async Task<ActionResult<ApiResponse<int>>> ClaimGuestOrders()
+		{
+			try
+			{
+				_logger.LogInformation("Executing ClaimGuestOrders");
+				string? guestToken = Request.Headers["X-Guest-Token"].FirstOrDefault();
+				if (string.IsNullOrWhiteSpace(guestToken))
+				{
+					return BadRequest(ApiResponse<int>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", "X-Guest-Token header is required"), 400));
+				}
+				
+				var userId = GetUserId();
+				var result = await _orderServices.ClaimGuestOrdersAsync(userId, guestToken);
+				return HandleResult(result, nameof(ClaimGuestOrders));
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Error in ClaimGuestOrders: {ex.Message}");
+				return StatusCode(500, ApiResponse<int>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while claiming guest orders"), 500));
 			}
 		}
 
@@ -229,6 +295,34 @@ namespace E_Commerce.Controllers
 				return StatusCode(500, ApiResponse<OrderDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while retrieving the order"), 500));
 			}
 		}
+
+		/// <summary>
+		/// Get guest order by order number (RESTful sub-resource)
+		/// GET /api/order/guest/number/{orderNumber}
+		/// </summary>
+		[HttpGet("guest/number/{orderNumber}")]
+		[AllowAnonymous]
+		public async Task<ActionResult<ApiResponse<OrderDto>>> GetGuestOrderByNumber(string orderNumber)
+		{
+			try
+			{
+				_logger.LogInformation($"Executing GetGuestOrderByNumber for number: {orderNumber}");
+				string? guestToken = Request.Headers["X-Guest-Token"].FirstOrDefault();
+				if (string.IsNullOrWhiteSpace(guestToken))
+				{
+					return Unauthorized(ApiResponse<OrderDto>.CreateErrorResponse("Unauthorized", new ErrorResponse("Unauthorized", "X-Guest-Token header is required"), 401));
+				}
+
+				var result = await _orderServices.GetGuestOrderByNumberAsync(orderNumber, guestToken);
+				return HandleResult(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Error in GetGuestOrderByNumber: {ex.Message}");
+				return StatusCode(500, ApiResponse<OrderDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while retrieving the order"), 500));
+			}
+		}
+	
 
 		/// <summary>
 		/// Get order count (RESTful)

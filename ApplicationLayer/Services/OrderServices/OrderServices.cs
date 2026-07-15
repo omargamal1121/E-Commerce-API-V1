@@ -74,6 +74,9 @@ namespace Application.Services.OrderServices
         public Task<Result<OrderDto>> GetOrderByNumberAsync(string orderNumber, string userId, bool isAdmin = false)
             => _orderQueryService.GetOrderByNumberAsync(orderNumber, userId, isAdmin);
 
+        public Task<Result<OrderDto>> GetGuestOrderByNumberAsync(string orderNumber, string guestToken)
+            => _orderQueryService.GetGuestOrderByNumberAsync(orderNumber, guestToken);
+
         public Task<Result<int?>> GetOrderCountByCustomerAsync(string userId)
             => _orderQueryService.GetOrderCountByCustomerAsync(userId);
 
@@ -99,8 +102,14 @@ namespace Application.Services.OrderServices
 			_orderCommandService.RemoveCacheAndRelated();
 		}
 
-		public Task<Result<OrderAfterCreatedto>> CreateGuestOrderAsync(CreateGuestOrderDto orderDto)
-			=> _orderCommandService.CreateGuestOrderAsync(orderDto);
-	}
+		public Task<Result<OrderAfterCreatedto>> CreateGuestOrderAsync(CreateGuestOrderDto orderDto, string? guestToken = null)
+            => _orderCommandService.CreateGuestOrderAsync(orderDto, guestToken);
+        
+        public Task<Result<int>> ClaimGuestOrdersAsync(string userId, string guestToken)
+            => _orderCommandService.ClaimGuestOrdersAsync(userId, guestToken);
+            
+        public Task<Result<List<OrderListDto>>> GetGuestOrdersByTokenHashAsync(string guestToken, int page = 1, int pageSize = 10)
+            => _orderQueryService.GetGuestOrdersByTokenHashAsync(guestToken, page, pageSize);
+    }
 }
 

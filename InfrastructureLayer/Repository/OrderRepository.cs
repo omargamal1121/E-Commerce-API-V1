@@ -1,4 +1,4 @@
-﻿using Infrastructure.Interfaces;
+using Infrastructure.Interfaces;
 using Domain.Enums;
 using Domain.Models;
 using Infrastructure.Context;
@@ -199,6 +199,14 @@ namespace Infrastructure.Repository
             }
 
             return await query.CountAsync();
+        }
+
+        public async Task<List<Order>> GetGuestOrdersByTokenHashAsync(string guestTokenHash)
+        {
+            _logger.LogInformation($"Getting guest orders by token hash");
+            return await _context.Orders
+                .Where(o => o.IsGuest && o.GuestTokenHash == guestTokenHash && o.DeletedAt == null)
+                .ToListAsync();
         }
     }
 }

@@ -27,7 +27,8 @@ namespace Application.Services.OrderServices
         Task ExpireUnpaidOrderInBackground(int orderId);
         Task RestockOrderItemsInBackground(int orderId);
         void RemoveCacheAndRelated();
-        Task<Result<OrderAfterCreatedto>> CreateGuestOrderAsync(CreateGuestOrderDto orderDto);
+        Task<Result<OrderAfterCreatedto>> CreateGuestOrderAsync(CreateGuestOrderDto orderDto, string? guestToken = null);
+        Task<Result<int>> ClaimGuestOrdersAsync(string userId, string guestToken);
     }
 }
 

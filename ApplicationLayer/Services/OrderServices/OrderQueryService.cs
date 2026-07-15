@@ -1,6 +1,7 @@
 using Domain.Enums;
 using Application.DtoModels.OrderDtos;
 using Application.Interfaces;
+using Application.Services.GuestServices;
 
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
@@ -149,6 +150,45 @@ namespace Application.Services.OrderServices
             }
         }
 
+        public async Task<Result<OrderDto>> GetGuestOrderByNumberAsync(string orderNumber, string guestToken)
+        {
+            _logger.LogInformation("Getting guest order by number: {OrderNumber}", orderNumber);
+
+            if (string.IsNullOrWhiteSpace(guestToken))
+            {
+                return Result<OrderDto>.Fail("Guest token is required", 400);
+            }
+
+            try
+            {
+                var guestTokenHash = GuestTokenHelper.HashGuestToken(guestToken);
+
+                var order = await _unitOfWork.Repository<Domain.Models.Order>()
+                    .GetAll()
+                    .Where(o =>
+                        o.OrderNumber == orderNumber &&
+                        o.IsGuest &&
+                        o.GuestTokenHash == guestTokenHash &&
+                        o.DeletedAt == null)
+                    .Select(_mapper.OrderSelector)
+                    .FirstOrDefaultAsync();
+
+                if (order == null)
+                {
+                    _logger.LogWarning("Guest order with number {OrderNumber} not found or not authorized", orderNumber);
+                    return Result<OrderDto>.Fail("Order not found", 404);
+                }
+
+                return Result<OrderDto>.Ok(order, "Order retrieved successfully", 200);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting guest order by number {OrderNumber}", orderNumber);
+                _cacheHelper.NotifyAdminError($"Error getting guest order by number {orderNumber}: {ex.Message}", ex.StackTrace);
+                return Result<OrderDto>.Fail("Unexpected error while retrieving order", 500);
+            }
+        }
+
         public async Task<Result<int?>> GetOrderCountByCustomerAsync(string userId)
         {
             var cached = await _cacheHelper.GetOrderCountCacheAsync(userId);
@@ -287,6 +327,39 @@ namespace Application.Services.OrderServices
                 _logger.LogError(ex, "Error filtering orders");
                 _cacheHelper.NotifyAdminError($"Error filtering orders: {ex.Message}", ex.StackTrace);
                 return Result<List<OrderListDto>>.Fail("An error occurred while filtering orders", 500);
+            }
+        }
+
+        public async Task<Result<List<OrderListDto>>> GetGuestOrdersByTokenHashAsync(string guestToken, int page = 1, int pageSize = 10)
+        {
+            _logger.LogInformation("Getting guest orders by token");
+            
+            if (string.IsNullOrWhiteSpace(guestToken))
+            {
+                return Result<List<OrderListDto>>.Fail("Guest token is required", 400);
+            }
+            
+            try
+            {
+                var guestTokenHash = GuestTokenHelper.HashGuestToken(guestToken);
+                var orders = await _unitOfWork.Repository<Domain.Models.Order>()
+                    .GetAll()
+                    .Where(o => o.IsGuest && o.GuestTokenHash == guestTokenHash && o.DeletedAt == null)
+                    .OrderByDescending(o => o.CreatedAt)
+                    .ThenBy(o => o.ModifiedAt)
+                    .Select(_mapper.OrderListSelector)
+                    .AsSplitQuery()
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                
+                return Result<List<OrderListDto>>.Ok(orders, "Guest orders retrieved successfully", 200);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting guest orders");
+                _cacheHelper.NotifyAdminError($"Error getting guest orders: {ex.Message}", ex.StackTrace);
+                return Result<List<OrderListDto>>.Fail("An error occurred while getting guest orders", 500);
             }
         }
     }

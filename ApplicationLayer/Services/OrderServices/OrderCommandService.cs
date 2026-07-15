@@ -6,6 +6,7 @@ using Application.Services.AdminOperationServices;
 using Application.Services.CacheServices;
 using Application.Services.CollectionServices;
 using Application.Services.EmailServices;
+using Application.Services.GuestServices;
 using Application.Services.ProductServices;
 using Application.Services.ProductVariantServices;
 using Application.Services.SubCategoryServices;
@@ -898,7 +899,7 @@ namespace Application.Services.OrderServices
             }
         }
 
-        public async Task<Result<OrderAfterCreatedto>> CreateGuestOrderAsync(CreateGuestOrderDto orderDto)
+        public async Task<Result<OrderAfterCreatedto>> CreateGuestOrderAsync(CreateGuestOrderDto orderDto, string? guestToken = null)
         {
             _logger.LogInformation("Creating guest order");
 
@@ -982,6 +983,19 @@ namespace Application.Services.OrderServices
                 }
 
                 var orderNumber = await _orderRepository.GenerateOrderNumberAsync();
+                string? tokenToReturn = null;
+                string guestTokenHash;
+
+                if (!string.IsNullOrWhiteSpace(guestToken))
+                {
+                    guestTokenHash = GuestTokenHelper.HashGuestToken(guestToken);
+                }
+                else
+                {
+                    var newToken = GuestTokenHelper.GenerateGuestToken();
+                    guestTokenHash = GuestTokenHelper.HashGuestToken(newToken);
+                    tokenToReturn = newToken;
+                }
 
                 var order = new Domain.Models.Order
                 {
@@ -1003,6 +1017,8 @@ namespace Application.Services.OrderServices
                     City = orderDto.City,
                     Street = orderDto.Street,
                     Building = orderDto.Building,
+                    IsGuest = true,
+                    GuestTokenHash = guestTokenHash
                  
                 };
 
@@ -1043,7 +1059,8 @@ namespace Application.Services.OrderServices
                 var response = new OrderAfterCreatedto 
                 { 
                     OrderId = createdOrder.Id,
-                    OrderNumber = order.OrderNumber
+                    OrderNumber = order.OrderNumber,
+                    GuestToken = tokenToReturn
                 };
 
                 return Result<OrderAfterCreatedto>.Ok(response, "Guest order created successfully", 201);
@@ -1060,6 +1077,51 @@ namespace Application.Services.OrderServices
                 _logger.LogError(ex, "Exception while creating guest order");
                 _cacheHelper.NotifyAdminError($"Exception creating guest order: {ex.Message}", ex.StackTrace);
                 return Result<OrderAfterCreatedto>.Fail("An error occurred while creating the order", 500);
+            }
+        }
+
+        public async Task<Result<int>> ClaimGuestOrdersAsync(string userId, string guestToken)
+        {
+            _logger.LogInformation("Claiming guest orders");
+            
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(guestToken))
+            {
+                return Result<int>.Fail("Invalid user or token", default(int), 400);
+            }
+            
+            await using var transaction = await _unitOfWork.BeginTransactionAsync();
+            
+            try
+            {
+                var guestTokenHash = GuestTokenHelper.HashGuestToken(guestToken);
+                var guestOrders = await _orderRepository.GetGuestOrdersByTokenHashAsync(guestTokenHash);
+                
+                int claimedCount = 0;
+                foreach (var order in guestOrders)
+                {
+                    if (order.IsGuest && string.IsNullOrEmpty(order.CustomerId))
+                    {
+                        order.CustomerId = userId;
+                        order.IsGuest = false;
+                        order.GuestTokenHash = null;
+                        order.ModifiedAt = DateTime.UtcNow;
+                        claimedCount++;
+                    }
+                }
+                
+                await _unitOfWork.CommitAsync();
+                await transaction.CommitAsync();
+                
+                RemoveCacheAndRelated();
+                
+                return Result<int>.Ok(claimedCount, "Guest orders claimed successfully", 200);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Exception while claiming guest orders");
+                _cacheHelper.NotifyAdminError($"Exception claiming guest orders: {ex.Message}", ex.StackTrace);
+                return Result<int>.Fail("An error occurred while claiming guest orders", default(int), 500);
             }
         }
     }

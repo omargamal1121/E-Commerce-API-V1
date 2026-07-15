@@ -44,6 +44,7 @@ namespace Application.DtoModels.OrderDtos
     {
         public string OrderNumber { get; set; } = string.Empty;
 		public int OrderId { get; set; }
+        public string? GuestToken { get; set; }
 
 	}
 	public class CustomerDto

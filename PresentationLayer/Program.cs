@@ -117,8 +117,9 @@ namespace E_Commerce
 					);
 					options.Lockout.MaxFailedAccessAttempts = lockoutPolicy.GetValue<int>("MaxFailedAttempts", 5);
 					options.Lockout.AllowedForNewUsers = true;
-					options.User.RequireUniqueEmail = true;
-					options.SignIn.RequireConfirmedEmail = true;
+					options.User.RequireUniqueEmail = false;
+					options.SignIn.RequireConfirmedPhoneNumber= true;
+					
 				})
 				.AddEntityFrameworkStores<AppDbContext>()
 				.AddDefaultTokenProviders();

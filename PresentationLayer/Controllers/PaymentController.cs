@@ -137,6 +137,34 @@ namespace E_Commerce.Controllers
 		//	}
 		//}
 
+		/// <summary>
+		/// Update cash on delivery payment to paid (RESTful)
+		/// PUT /api/payment/cash-on-delivery/pay
+		/// </summary>
+		[HttpPut("cash-on-delivery/pay")]
+		[Authorize(Roles = "Admin")]
+		public async Task<ActionResult<ApiResponse<int>>> UpdateCashOnDeliveryPaymentToPaid([FromBody] UpdateCashOnDeliveryPaymentDto request)
+		{
+			try
+			{
+				if (!ModelState.IsValid)
+				{
+					var errors = GetModelErrors();
+					_logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
+					return BadRequest(ApiResponse<int>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
+				}
+
+				_logger.LogInformation($"Executing UpdateCashOnDeliveryPaymentToPaid for payment ID: {request.PaymentId}");
+				var result = await _paymentServices.UpdateCashOnDeliveryPaymentToPaid(request.PaymentId, request.TransactionId);
+				return HandleResult(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Error in UpdateCashOnDeliveryPaymentToPaid: {ex.Message}");
+				return StatusCode(500, ApiResponse<int>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while updating payment status"), 500));
+			}
+		}
+
 		#region Helper Methods
 
 	

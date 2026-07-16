@@ -22,6 +22,7 @@ namespace Application.Services.PaymentServices
     {
         Task<Result<PaymentResponseDto>> CreatePaymentMethod(string ordernumber, CreatePaymentOfCustomer paymentdto, string? userid);
         Task<Result<int>> UpdatePaymentAfterPaid(int orderid, string TransactionId, long orderidofpaymob, PaymentStatus status);
+        Task<Result<int>> UpdateCashOnDeliveryPaymentToPaid(int paymentId, string transactionId);
     }
 
     public class PaymentServices : IPaymentServices
@@ -131,6 +132,80 @@ namespace Application.Services.PaymentServices
                 
                 _backgroundJobClient.Enqueue(() =>
                     _errorNotificationService.SendErrorNotificationAsync("Error in UpdatePaymentAfterPaid", ex.Message));
+                
+                return Result<int>.Fail("Error while updating payment", 500, null);
+            }
+        }
+
+        public async Task<Result<int>> UpdateCashOnDeliveryPaymentToPaid(int paymentId, string transactionId)
+        {
+            _logger.LogInformation("Starting UpdateCashOnDeliveryPaymentToPaid for payment {PaymentId}", paymentId);
+
+            try
+            {
+                if (string.IsNullOrEmpty(transactionId))
+                {
+                    _logger.LogWarning("Transaction ID is null or empty for payment {PaymentId}", paymentId);
+                    return Result<int>.Fail("Transaction ID is required", 400, null);
+                }
+
+                await _unitOfWork.Payment.LockPaymentForUpdateAsync(paymentId);
+                var payment = await _unitOfWork.Repository<Payment>().GetByIdAsync(paymentId);
+
+                if (payment == null)
+                {
+                    _logger.LogWarning("Payment not found with ID {PaymentId}", paymentId);
+                    return Result<int>.Fail("Payment not found", 404, null);
+                }
+
+                if (payment.Status != PaymentStatus.CashonDelivery)
+                {
+                    _logger.LogWarning("Payment {PaymentId} is not a cash on delivery payment. Current status: {Status}", paymentId, payment.Status);
+                    return Result<int>.Fail("Payment is not a cash on delivery payment", 400, null);
+                }
+
+                if (payment.Status == PaymentStatus.Completed)
+                {
+                    _logger.LogInformation("Payment {PaymentId} is already completed", paymentId);
+                    return Result<int>.Ok(paymentId);
+                }
+
+                payment.Status = PaymentStatus.Completed;
+                payment.TransactionId = transactionId;
+                payment.ModifiedAt = DateTime.UtcNow;
+
+                _logger.LogInformation("Updating cash on delivery payment {PaymentId} to completed with transaction ID {TransactionId}",
+                    payment.Id, transactionId);
+
+                var updated = _unitOfWork.Repository<Payment>().Update(payment);
+                if (!updated)
+                {
+                    _logger.LogError("Payment update failed for Payment ID {PaymentId}", payment.Id);
+                    return Result<int>.Fail("Failed to update payment", 500, null);
+                }
+
+                var orderUpdateResult = await _orderservices.UpdateOrderAfterPaid(payment.OrderId, OrderStatus.Confirmed);
+                if (!orderUpdateResult.Success)
+                {
+                    _logger.LogError("Failed to update order status to Confirmed for payment {PaymentId}", paymentId);
+                    return Result<int>.Fail("Failed to update order status", 500, null);
+                }
+
+                _logger.LogInformation("Cash on delivery payment {PaymentId} updated successfully", payment.Id);
+                RemoveCacheAndRelated();
+                return Result<int>.Ok(payment.Id);
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                _logger.LogWarning(e, "Concurrency conflict while updating cash on delivery payment {PaymentId}", paymentId);
+                return Result<int>.Fail("Payment was modified by another process.", 409, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating cash on delivery payment {PaymentId}", paymentId);
+                
+                _backgroundJobClient.Enqueue(() =>
+                    _errorNotificationService.SendErrorNotificationAsync("Error in UpdateCashOnDeliveryPaymentToPaid", ex.Message));
                 
                 return Result<int>.Fail("Error while updating payment", 500, null);
             }

@@ -26,8 +26,9 @@ namespace E_Commerce.Registration.AccountServices
             services.AddScoped<IUserRoleMangementService, UserRoleMangementService>();
             services.AddScoped<IUserAccountManagementService, UserAccountManagementService>();
             services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+            services.AddScoped<IRefreshTokenCookieService, RefreshTokenCookieService>();
             services.AddScoped<IAccountEmailService, AccountEmailService>();
-            
+
             // Authentication & Registration
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IRegistrationService, RegistrationService>();

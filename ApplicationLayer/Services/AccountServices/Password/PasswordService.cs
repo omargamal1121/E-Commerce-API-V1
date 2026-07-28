@@ -58,7 +58,7 @@ namespace Application.Services.AccountServices.Password
                     return Result<bool>.Fail($"Errors: {errors}", 400);
                 }
 
-                _backgroundJobClient.Enqueue(() => _refreshTokenService.RemoveRefreshTokenAsync(userid));
+                _backgroundJobClient.Enqueue(() => _refreshTokenService.RemoveAllRefreshTokensAsync(userid));
                 _backgroundJobClient.Enqueue(() => _accountEmailService.SendEmailAfterChangePassAsync(user.UserName, user.Email));
 
                 _logger.LogInformation("Password changed successfully for user {UserId}", userid);
@@ -120,7 +120,7 @@ namespace Application.Services.AccountServices.Password
                 }
 
                 _backgroundJobClient.Enqueue(() => _accountEmailService.SendPasswordResetSuccessEmailAsync(email));
-                _backgroundJobClient.Enqueue(() => _refreshTokenService.RemoveRefreshTokenAsync(user.Id));
+                _backgroundJobClient.Enqueue(() => _refreshTokenService.RemoveAllRefreshTokensAsync(user.Id));
 
                 _logger.LogInformation("Password reset successful for user {Email}", email);
                 return Result<bool>.Ok(true, "Password has been reset successfully.", 200);

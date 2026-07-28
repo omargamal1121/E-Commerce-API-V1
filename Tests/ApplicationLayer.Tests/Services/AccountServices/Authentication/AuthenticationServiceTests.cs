@@ -51,7 +51,8 @@ namespace Application.Tests.Services.AccountServices.Authentication
             Mock<ILogger<AuthenticationService>> logger,
             Mock<UserManager<Customer>> userManager,
             Mock<IRefreshTokenService> refreshTokenService,
-            Mock<ITokenService> tokenService)
+            Mock<ITokenService> tokenService,
+            Mock<IRefreshTokenCookieService> refreshTokenCookieService = null)
         {
             var inMemorySettings = new Dictionary<string, string> {
                 {"Security:LockoutPolicy:MaxFailedAttempts", "7"},
@@ -63,16 +64,16 @@ namespace Application.Tests.Services.AccountServices.Authentication
                 .AddInMemoryCollection(inMemorySettings)
                 .Build();
 
+            var cookieServiceMock = refreshTokenCookieService ?? new Mock<IRefreshTokenCookieService>();
 
             return new AuthenticationService(
                 null,
-                httpContextAccessor.Object,
                 logger.Object,
                 userManager.Object,
                 refreshTokenService.Object,
                 tokenService.Object,
-            
-                configuration
+                configuration,
+                cookieServiceMock.Object
             );
         }
 
@@ -126,8 +127,8 @@ namespace Application.Tests.Services.AccountServices.Authentication
             var userManager = CreateUserManagerMock();
             var refresh = new Mock<IRefreshTokenService>();
             var token = new Mock<ITokenService>();
-       
             var http = new Mock<IHttpContextAccessor>();
+            var cookieService = new Mock<IRefreshTokenCookieService>();
 
             var user = new Customer { Id = "u2", Email = "e2@x.com", LockoutEnabled = true };
             userManager.Setup(x => x.FindByEmailAsync(user.Email)).ReturnsAsync(user);
@@ -135,8 +136,8 @@ namespace Application.Tests.Services.AccountServices.Authentication
             userManager.Setup(x => x.CheckPasswordAsync(user, It.IsAny<string>())).ReturnsAsync(false);
             userManager.Setup(x => x.AccessFailedAsync(user)).ReturnsAsync(IdentityResult.Success);
             userManager.Setup(x => x.GetAccessFailedCountAsync(user)).ReturnsAsync(1);
-          
-            var sut = CreateSut(http, logger, userManager, refresh, token);
+
+            var sut = CreateSut(http, logger, userManager, refresh, token, cookieService);
             var result = await sut.LoginAsync(user.Email, "bad");
 
             Assert.False(result.Success);
@@ -144,7 +145,7 @@ namespace Application.Tests.Services.AccountServices.Authentication
             userManager.Verify(x => x.AccessFailedAsync(user), Times.Once);
             userManager.Verify(x => x.GetAccessFailedCountAsync(user), Times.Once);
             token.Verify(x => x.GenerateTokenAsync(It.IsAny<Customer>()), Times.Never);
-            refresh.Verify(x => x.GenerateRefreshTokenAsync(It.IsAny<string>(),It.IsAny<string>()), Times.Never);
+            refresh.Verify(x => x.GenerateRefreshTokenAsync(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -156,6 +157,7 @@ namespace Application.Tests.Services.AccountServices.Authentication
             var token = new Mock<ITokenService>();
             var config = new Mock<IConfiguration>();
             var http = new Mock<IHttpContextAccessor>();
+            var cookieService = new Mock<IRefreshTokenCookieService>();
 
             var user = new Customer { Id = "u3", Email = "e3@x.com", LockoutEnabled = true, DeletedAt = DateTime.UtcNow };
             userManager.Setup(x => x.FindByEmailAsync(user.Email)).ReturnsAsync(user);
@@ -163,13 +165,13 @@ namespace Application.Tests.Services.AccountServices.Authentication
             userManager.Setup(x => x.CheckPasswordAsync(user, It.IsAny<string>())).ReturnsAsync(true);
             userManager.Setup(x => x.ResetAccessFailedCountAsync(user)).ReturnsAsync(IdentityResult.Success);
 
-            var sut = CreateSut(http, logger, userManager, refresh, token);
+            var sut = CreateSut(http, logger, userManager, refresh, token, cookieService);
             var result = await sut.LoginAsync(user.Email, "pwd");
 
             Assert.False(result.Success);
             Assert.Equal(400, result.StatusCode);
             token.Verify(x => x.GenerateTokenAsync(It.IsAny<Customer>()), Times.Never);
-            refresh.Verify(x => x.GenerateRefreshTokenAsync(It.IsAny<string>(),It.IsAny<string>()), Times.Never);
+            refresh.Verify(x => x.GenerateRefreshTokenAsync(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -181,6 +183,7 @@ namespace Application.Tests.Services.AccountServices.Authentication
             var token = new Mock<ITokenService>();
             var config = new Mock<IConfiguration>();
             var http = new Mock<IHttpContextAccessor>();
+            var cookieService = new Mock<IRefreshTokenCookieService>();
 
             var user = new Customer { Id = "u4", Email = "e4@x.com", LockoutEnabled = true };
             userManager.Setup(x => x.FindByEmailAsync(user.Email)).ReturnsAsync(user);
@@ -190,12 +193,12 @@ namespace Application.Tests.Services.AccountServices.Authentication
 
             token.Setup(x => x.GenerateTokenAsync(user)).ReturnsAsync(Result<string>.Fail("err"));
 
-            var sut = CreateSut(http, logger, userManager, refresh, token);
+            var sut = CreateSut(http, logger, userManager, refresh, token, cookieService);
             var result = await sut.LoginAsync(user.Email, "pwd");
 
             Assert.False(result.Success);
             Assert.Equal(500, result.StatusCode);
-            refresh.Verify(x => x.GenerateRefreshTokenAsync(It.IsAny<string>(),It.IsAny<string>()), Times.Never);
+            refresh.Verify(x => x.GenerateRefreshTokenAsync(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -207,9 +210,7 @@ namespace Application.Tests.Services.AccountServices.Authentication
             var token = new Mock<ITokenService>();
             var config = new Mock<IConfiguration>();
             var http = new Mock<IHttpContextAccessor>();
-
-            var context = new DefaultHttpContext();
-            http.Setup(x => x.HttpContext).Returns(context);
+            var cookieService = new Mock<IRefreshTokenCookieService>();
 
             var user = new Customer { Id = "u5", Email = "e5@x.com", LockoutEnabled = false };
             userManager.Setup(x => x.FindByEmailAsync(user.Email)).ReturnsAsync(user);
@@ -220,18 +221,20 @@ namespace Application.Tests.Services.AccountServices.Authentication
             userManager.Setup(x => x.GetRolesAsync(user)).ReturnsAsync(new List<string> { "User", "Admin" });
 
             token.Setup(x => x.GenerateTokenAsync(user)).ReturnsAsync(Result<string>.Ok("tok"));
-            refresh.Setup(x => x.GenerateRefreshTokenAsync(user.Id,user.SecurityStamp)).ReturnsAsync(Result<string>.Ok("rt"));
+            refresh.Setup(x => x.GenerateRefreshTokenAsync(user.Id)).ReturnsAsync(Result<string>.Ok("rt"));
 
-            var sut = CreateSut(http, logger, userManager, refresh, token);
+            var sut = CreateSut(http, logger, userManager, refresh, token, cookieService);
             var result = await sut.LoginAsync(user.Email, "pwd");
 
             Assert.True(result.Success);
             Assert.Equal(200, result.StatusCode);
             Assert.NotNull(result.Data);
             Assert.Equal("tok", result.Data.Token);
+            Assert.Equal("rt", result.Data.RefreshToken);
             Assert.Equal(2, result.Data.Roles.Count);
             userManager.Verify(x => x.UpdateAsync(It.Is<Customer>(c => c.LockoutEnabled)), Times.Once);
-            refresh.Verify(x => x.GenerateRefreshTokenAsync(user.Id,user.SecurityStamp), Times.Once);
+            refresh.Verify(x => x.GenerateRefreshTokenAsync(user.Id), Times.Once);
+            cookieService.Verify(x => x.SetRefreshToken("rt"), Times.Once);
         }
 
         [Fact]
@@ -243,13 +246,11 @@ namespace Application.Tests.Services.AccountServices.Authentication
             var token = new Mock<ITokenService>();
             var config = new Mock<IConfiguration>();
             var http = new Mock<IHttpContextAccessor>();
-
-            var context = new DefaultHttpContext();
-            http.Setup(x => x.HttpContext).Returns(context);
+            var cookieService = new Mock<IRefreshTokenCookieService>();
 
             userManager.Setup(x => x.FindByIdAsync("missing")).ReturnsAsync((Customer)null);
 
-            var sut = CreateSut(http, logger, userManager, refresh, token);
+            var sut = CreateSut(http, logger, userManager, refresh, token, cookieService);
             var result = await sut.LogoutAsync("missing");
 
             Assert.False(result.Success);
@@ -266,24 +267,23 @@ namespace Application.Tests.Services.AccountServices.Authentication
             var token = new Mock<ITokenService>();
             var config = new Mock<IConfiguration>();
             var http = new Mock<IHttpContextAccessor>();
-
-            var context = new DefaultHttpContext();
-            http.Setup(x => x.HttpContext).Returns(context);
+            var cookieService = new Mock<IRefreshTokenCookieService>();
 
             var customer = new Customer { Id = "u6" };
             userManager.Setup(x => x.FindByIdAsync(customer.Id)).ReturnsAsync(customer);
             userManager.Setup(x => x.UpdateSecurityStampAsync(customer)).ReturnsAsync(IdentityResult.Success);
 
-            var sut = CreateSut(http, logger, userManager, refresh, token);
+            var sut = CreateSut(http, logger, userManager, refresh, token, cookieService);
             var result = await sut.LogoutAsync(customer.Id);
 
             Assert.True(result.Success);
             Assert.Equal(200, result.StatusCode);
             userManager.Verify(x => x.UpdateSecurityStampAsync(customer), Times.Once);
+            cookieService.Verify(x => x.RemoveRefreshToken(), Times.Once);
         }
 
         [Fact]
-        public async Task RefreshTokenAsync_NoCookie_Returns401()
+        public async Task RefreshTokenAsync_NoToken_Returns401()
         {
             var logger = new Mock<ILogger<AuthenticationService>>();
             var userManager = CreateUserManagerMock();
@@ -291,16 +291,14 @@ namespace Application.Tests.Services.AccountServices.Authentication
             var token = new Mock<ITokenService>();
             var config = new Mock<IConfiguration>();
             var http = new Mock<IHttpContextAccessor>();
+            var cookieService = new Mock<IRefreshTokenCookieService>();
 
-            var context = new DefaultHttpContext();
-            http.Setup(x => x.HttpContext).Returns(context);
-
-            var sut = CreateSut(http, logger, userManager, refresh, token);
-            var result = await sut.RefreshTokenAsync();
+            var sut = CreateSut(http, logger, userManager, refresh, token, cookieService);
+            var result = await sut.RefreshTokenAsync(null);
 
             Assert.False(result.Success);
             Assert.Equal(401, result.StatusCode);
-            refresh.Verify(x => x.RefreshTokenAsync(It.IsAny<string>()), Times.Never);
+            refresh.Verify(x => x.RefreshTokenWithUserAsync(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -312,20 +310,18 @@ namespace Application.Tests.Services.AccountServices.Authentication
             var token = new Mock<ITokenService>();
             var config = new Mock<IConfiguration>();
             var http = new Mock<IHttpContextAccessor>();
+            var cookieService = new Mock<IRefreshTokenCookieService>();
 
-            var context = new DefaultHttpContext();
-            context.Request.Headers["Cookie"] = "Refresh=badtoken";
-            http.Setup(x => x.HttpContext).Returns(context);
-
-            refresh.Setup(x => x.RefreshTokenAsync("badtoken")).ReturnsAsync(Result<RefreshTokenResponse>.Fail("bad"));
+            refresh.Setup(x => x.RefreshTokenWithUserAsync("badtoken")).ReturnsAsync(Result<(string, string)>.Fail("bad"));
             refresh.Setup(x => x.RemoveRefreshTokenAsync("badtoken")).ReturnsAsync(Result<bool>.Ok(true));
 
-            var sut = CreateSut(http, logger, userManager, refresh, token);
-            var result = await sut.RefreshTokenAsync();
+            var sut = CreateSut(http, logger, userManager, refresh, token, cookieService);
+            var result = await sut.RefreshTokenAsync("badtoken");
 
             Assert.False(result.Success);
             Assert.Equal(401, result.StatusCode);
             refresh.Verify(x => x.RemoveRefreshTokenAsync("badtoken"), Times.Once);
+            cookieService.Verify(x => x.RemoveRefreshToken(), Times.Once);
         }
 
         [Fact]
@@ -337,19 +333,22 @@ namespace Application.Tests.Services.AccountServices.Authentication
             var token = new Mock<ITokenService>();
             var config = new Mock<IConfiguration>();
             var http = new Mock<IHttpContextAccessor>();
+            var cookieService = new Mock<IRefreshTokenCookieService>();
 
-            var context = new DefaultHttpContext();
-            context.Request.Headers["Cookie"] = "Refresh=oktoken";
-            http.Setup(x => x.HttpContext).Returns(context);
+            var user = new Customer { Id = "u7", Email = "e7@x.com" };
+            refresh.Setup(x => x.RefreshTokenWithUserAsync("oktoken")).ReturnsAsync(Result<(string, string)>.Ok(("u7", "newrefreshtoken")));
+            userManager.Setup(x => x.FindByIdAsync("u7")).ReturnsAsync(user);
+            token.Setup(x => x.GenerateTokenAsync(user)).ReturnsAsync(Result<string>.Ok("newtoken"));
+            userManager.Setup(x => x.GetRolesAsync(user)).ReturnsAsync(new List<string> { "User" });
 
-            refresh.Setup(x => x.RefreshTokenAsync("oktoken")).ReturnsAsync(Result<RefreshTokenResponse>.Ok(new RefreshTokenResponse { RefreshToken = "oktoken", Token = "newtoken" }));
-
-            var sut = CreateSut(http, logger, userManager, refresh, token);
-            var result = await sut.RefreshTokenAsync();
+            var sut = CreateSut(http, logger, userManager, refresh, token, cookieService);
+            var result = await sut.RefreshTokenAsync("oktoken");
 
             Assert.True(result.Success);
             Assert.Equal(200, result.StatusCode);
             Assert.Equal("newtoken", result.Data.Token);
+            Assert.Equal("newrefreshtoken", result.Data.RefreshToken);
+            cookieService.Verify(x => x.SetRefreshToken("newrefreshtoken"), Times.Once);
         }
 
         [Fact]
@@ -361,10 +360,11 @@ namespace Application.Tests.Services.AccountServices.Authentication
             var token = new Mock<ITokenService>();
             var config = new Mock<IConfiguration>();
             var http = new Mock<IHttpContextAccessor>();
+            var cookieService = new Mock<IRefreshTokenCookieService>();
 
             refresh.Setup(x => x.RemoveRefreshTokenAsync("boom")).ThrowsAsync(new Exception("boom"));
 
-            var sut = CreateSut(http, logger, userManager, refresh, token);
+            var sut = CreateSut(http, logger, userManager, refresh, token, cookieService);
             await sut.RemoveRefreshTokenAsync("boom");
 
             refresh.Verify(x => x.RemoveRefreshTokenAsync("boom"), Times.Once);

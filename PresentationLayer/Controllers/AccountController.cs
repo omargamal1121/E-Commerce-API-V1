@@ -156,13 +156,13 @@ namespace E_Commerce.Controllers
 		/// Refreshes the JWT token using a refresh token
 		/// </summary>
 		[EnableRateLimiting("refresh-token")]
-		[HttpGet("refresh-token")]
+		[HttpPost("refresh-token")]
 		[ActionName(nameof(RefreshTokenAsync))]
 		[ProducesResponseType(typeof(ApiResponse<TokensDto>), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ApiResponse<TokensDto>), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(ApiResponse<TokensDto>), StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(typeof(ApiResponse<TokensDto>), StatusCodes.Status500InternalServerError)]
-		public async Task<ActionResult<ApiResponse<TokensDto>>> RefreshTokenAsync()
+		public async Task<ActionResult<ApiResponse<TokensDto>>> RefreshTokenAsync([FromBody] RefreshTokenRequestDto request)
 		{
 			try
 			{
@@ -174,7 +174,7 @@ namespace E_Commerce.Controllers
 					return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
 				}
 
-				var result = await _authenticationService.RefreshTokenAsync();
+				var result = await _authenticationService.RefreshTokenAsync(request.RefreshToken);
 				return HandleResult<TokensDto>(result, nameof(RefreshTokenAsync));
 			}
 			catch (Exception ex)

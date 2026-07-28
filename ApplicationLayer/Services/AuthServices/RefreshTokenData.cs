@@ -4,6 +4,7 @@ namespace Application.Services.AuthServices
 	public class RefreshTokenData
     {
         public string UserId { get; set; } = string.Empty;
-        public string SecurityStamp { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; }
+        public DateTime ExpiresAt { get; set; }
     }
 }

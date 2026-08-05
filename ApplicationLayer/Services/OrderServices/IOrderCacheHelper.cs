@@ -26,8 +26,8 @@ namespace Application.Services.OrderServices
         Task<decimal?> GetOrderRevenueCacheAsync(string userId);
         
         // Order filter cache methods
-        void SetOrderFilterCacheAsync(string? userId, bool? deleted, int page, int pageSize, OrderStatus? status, List<OrderListDto> orders,bool IsAdmin=false, TimeSpan? expiration = null);
-        Task<List<OrderListDto>?> GetOrderFilterCacheAsync(string? userId, bool? deleted, int page, int pageSize,bool IsAdmin=false, OrderStatus? status=null);
+        void SetOrderFilterCacheAsync(string? userId, bool? deleted, int page, int pageSize, OrderStatus? status, List<OrderListDto> orders, bool IsAdmin = false, TimeSpan? expiration = null, DateTime? startDate = null, DateTime? endDate = null);
+        Task<List<OrderListDto>?> GetOrderFilterCacheAsync(string? userId, bool? deleted, int page, int pageSize, bool IsAdmin = false, OrderStatus? status = null, DateTime? startDate = null, DateTime? endDate = null);
     }
 }
 

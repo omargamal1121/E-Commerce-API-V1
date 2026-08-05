@@ -271,13 +271,15 @@ namespace Application.Services.OrderServices
             int page = 1,
             int pageSize = 10,
             OrderStatus? status = null,
-            bool IsAdmin=false)
+            bool IsAdmin = false,
+            DateTime? startDate = null,
+            DateTime? endDate = null)
         {
             _logger.LogInformation(
-                "Filtering orders - UserId: {UserId}, Deleted: {Deleted}, Page: {Page}, PageSize: {PageSize}, Status: {Status}, IsAdmin: {IsAdmin}",
-                userId, deleted, page, pageSize, status,IsAdmin);
+                "Filtering orders - UserId: {UserId}, Deleted: {Deleted}, Page: {Page}, PageSize: {PageSize}, Status: {Status}, IsAdmin: {IsAdmin}, StartDate: {StartDate}, EndDate: {EndDate}",
+                userId, deleted, page, pageSize, status, IsAdmin, startDate, endDate);
 
-            var cached = await _cacheHelper.GetOrderFilterCacheAsync(userId, deleted, page, pageSize, IsAdmin,status);
+            var cached = await _cacheHelper.GetOrderFilterCacheAsync(userId, deleted, page, pageSize, IsAdmin, status, startDate, endDate);
             if (cached != null)
             {
                 _logger.LogInformation("Cache hit for filtered orders");
@@ -289,13 +291,13 @@ namespace Application.Services.OrderServices
                 var query = _unitOfWork.Repository<Domain.Models.Order>()
                     .GetAll();
 
-                if(!IsAdmin&& string.IsNullOrEmpty(userId))
-                      return Result<List<OrderListDto>>.Ok(new List<OrderListDto>(), "No orders found matching the criteria", 200);
+                if (!IsAdmin && string.IsNullOrEmpty(userId))
+                    return Result<List<OrderListDto>>.Ok(new List<OrderListDto>(), "No orders found matching the criteria", 200);
 
                 if (!string.IsNullOrEmpty(userId))
                     query = query.Where(o => o.CustomerId == userId);
 
-                if (deleted.HasValue&&IsAdmin)
+                if (deleted.HasValue && IsAdmin)
                 {
                     if (deleted.Value)
                         query = query.Where(o => o.DeletedAt != null);
@@ -306,10 +308,27 @@ namespace Application.Services.OrderServices
                 if (status.HasValue)
                     query = query.Where(o => o.Status == status.Value);
 
+                if (startDate.HasValue && endDate.HasValue)
+                {
+                    query = query.Where(o => (o.ModifiedAt ?? o.CreatedAt) >= startDate.Value && (o.ModifiedAt ?? o.CreatedAt) <= endDate.Value);
+                }
+                else if (startDate.HasValue)
+                {
+                    // Filter for orders on the specific date (same day)
+                    var startOfDay = startDate.Value.Date;
+                    var endOfDay = startOfDay.AddDays(1).AddTicks(-1);
+                    query = query.Where(o => (o.ModifiedAt ?? o.CreatedAt) >= startOfDay && (o.ModifiedAt ?? o.CreatedAt) <= endOfDay);
+                }
+                else if (endDate.HasValue)
+                {
+                    query = query.Where(o => (o.ModifiedAt ?? o.CreatedAt) <= endDate.Value);
+                }
+
+                query = query.OrderByDescending(o => o.ModifiedAt ?? o.CreatedAt);
+
                 var orders = await query
-                    .OrderByDescending(o => o.CreatedAt).ThenBy(o=>o.ModifiedAt)
-					.Select(_mapper.OrderListSelector).AsSplitQuery()
-					.Skip((page - 1) * pageSize)
+                    .Select(_mapper.OrderListSelector).AsSplitQuery()
+                    .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
 
@@ -318,7 +337,7 @@ namespace Application.Services.OrderServices
                     return Result<List<OrderListDto>>.Ok(new List<OrderListDto>(), "No orders found matching the criteria", 200);
                 }
 
-                BackgroundJob.Enqueue(() => _cacheHelper.SetOrderFilterCacheAsync(userId, deleted, page, pageSize, status, orders, IsAdmin,TimeSpan.FromMinutes(30)));
+                BackgroundJob.Enqueue(() => _cacheHelper.SetOrderFilterCacheAsync(userId, deleted, page, pageSize, status, orders, IsAdmin, TimeSpan.FromMinutes(30), startDate, endDate));
 
                 return Result<List<OrderListDto>>.Ok(orders, "Filtered orders retrieved successfully", 200);
             }
@@ -345,8 +364,7 @@ namespace Application.Services.OrderServices
                 var orders = await _unitOfWork.Repository<Domain.Models.Order>()
                     .GetAll()
                     .Where(o => o.IsGuest && o.GuestTokenHash == guestTokenHash && o.DeletedAt == null)
-                    .OrderByDescending(o => o.CreatedAt)
-                    .ThenBy(o => o.ModifiedAt)
+                    .OrderByDescending(o => o.ModifiedAt ?? o.CreatedAt)
                     .Select(_mapper.OrderListSelector)
                     .AsSplitQuery()
                     .Skip((page - 1) * pageSize)

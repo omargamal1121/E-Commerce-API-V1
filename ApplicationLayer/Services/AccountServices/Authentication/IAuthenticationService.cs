@@ -9,6 +9,7 @@ namespace Application.Services.AccountServices.Authentication
         Task<Result<TokensDto>> LoginAsync(string email, string password);
         Task<Result<bool>> LogoutAsync(string userid);
         Task<Result<TokensDto>> RefreshTokenAsync(string refreshToken);
+        Task<Result<TokensDto>> StaffLoginAsync(string email, string password, string[] allowedRoles);
     }
 } 
 

@@ -8,7 +8,7 @@ namespace Application.Services.AdminOperationServices
 	{
 		Task<Result< AdminOperationsLog>> AddAdminOpreationAsync(string description, Opreations opreation, string userid, int itemid);
 		Task<Result<AdminOperationsLog>> AddAdminOpreationAsync(string description, Opreations opreation, string userid, List<int> itemids);
-		Task<Result<List<OpreationDto>>> GetAllOpreationsAsync(int page = 1, int pagesize = 10, string? userid = null, string? name = null, Opreations? opreation = null);
+		Task<Result<List<OpreationDto>>> GetAllOpreationsAsync(int page = 1, int pagesize = 10, string? userid = null, string? name = null, Opreations? opreation = null, DateTime? startDate = null, DateTime? endDate = null);
 
 
 	}

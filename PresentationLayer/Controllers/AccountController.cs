@@ -95,6 +95,40 @@ namespace E_Commerce.Controllers
 		}
 
 		/// <summary>
+		/// Authenticates staff users (Admin, SuperAdmin, Delivery) and returns JWT tokens
+		/// </summary>
+		[EnableRateLimiting("login")]
+		[HttpPost("staff/login")]
+		[ActionName(nameof(StaffLoginAsync))]
+		[ProducesResponseType(typeof(ApiResponse<TokensDto>), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(ApiResponse<TokensDto>), StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(ApiResponse<TokensDto>), StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(typeof(ApiResponse<TokensDto>), StatusCodes.Status500InternalServerError)]
+		public async Task<ActionResult<ApiResponse<TokensDto>>> StaffLoginAsync([FromBody] StaffLoginDto login)
+		{
+			try
+			{
+				if (!ModelState.IsValid)
+				{
+					var errors = GetModelErrors();
+					_logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
+					return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
+				}
+
+				_logger.LogInformation($"In {nameof(StaffLoginAsync)} Method ");
+				var allowedRoles = new[] { "Admin", "SuperAdmin", "Delivery" };
+				var result = await _authenticationService.StaffLoginAsync(login.Email, login.Password, allowedRoles);
+				return HandleResult<TokensDto>(result, nameof(StaffLoginAsync));
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, $"Error in {nameof(StaffLoginAsync)}");
+					_backgroundJobClient.Enqueue(()=> _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
+				return StatusCode(500, ApiResponse<TokensDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An unexpected error occurred during login."), 500));
+			}
+		}
+
+		/// <summary>
 		/// Registers a new user account
 		/// </summary>
 		[EnableRateLimiting("register")]

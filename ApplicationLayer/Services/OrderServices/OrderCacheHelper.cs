@@ -25,8 +25,8 @@ namespace Application.Services.OrderServices
         private static string GetOrderRevenueKey(string userId)
             => $"order:revenue:customer:{userId}";
 
-        private static string GetOrderFilterKey(string? userId, bool? deleted, int page, int pageSize, OrderStatus? status,bool IsaAdmin=false)
-            => $"order:filter:user:{userId ?? "all"}_deleted:{deleted?.ToString() ?? "all"}_page:{page}_size:{pageSize}_status:{status?.ToString() ?? "all"}_IsAdmin:{IsaAdmin}";
+        private static string GetOrderFilterKey(string? userId, bool? deleted, int page, int pageSize, OrderStatus? status, bool IsaAdmin = false, DateTime? startDate = null, DateTime? endDate = null)
+            => $"order:filter:user:{userId ?? "all"}_deleted:{deleted?.ToString() ?? "all"}_page:{page}_size:{pageSize}_status:{status?.ToString() ?? "all"}_IsAdmin:{IsaAdmin}_startDate:{startDate?.ToString("o") ?? "all"}_endDate:{endDate?.ToString("o") ?? "all"}";
 
         public OrderCacheHelper(IBackgroundJobClient jobClient, ICacheManager cacheManager)
         {
@@ -102,16 +102,16 @@ namespace Application.Services.OrderServices
             return await _cacheManager.GetAsync<decimal?>(cacheKey);
         }
 
-        public  void SetOrderFilterCacheAsync(string? userId, bool? deleted, int page, int pageSize, OrderStatus? status, List<OrderListDto> orders, bool IsAdmin=false,TimeSpan? expiration = null)
+        public void SetOrderFilterCacheAsync(string? userId, bool? deleted, int page, int pageSize, OrderStatus? status, List<OrderListDto> orders, bool IsAdmin = false, TimeSpan? expiration = null, DateTime? startDate = null, DateTime? endDate = null)
         {
-            var cacheKey = GetOrderFilterKey(userId, deleted, page, pageSize, status,IsAdmin);
+            var cacheKey = GetOrderFilterKey(userId, deleted, page, pageSize, status, IsAdmin, startDate, endDate);
             var tags = new[] { CACHE_ORDER, $"order:user:{userId ?? "all"}" };
             _jobClient.Enqueue(() => _cacheManager.SetAsync(cacheKey, orders, expiration ?? TimeSpan.FromMinutes(30), tags));
         }
 
-        public async Task<List<OrderListDto>?> GetOrderFilterCacheAsync(string? userId, bool? deleted, int page, int pageSize,bool IsAdmin=false, OrderStatus? status=null)
+        public async Task<List<OrderListDto>?> GetOrderFilterCacheAsync(string? userId, bool? deleted, int page, int pageSize, bool IsAdmin = false, OrderStatus? status = null, DateTime? startDate = null, DateTime? endDate = null)
         {
-            var cacheKey = GetOrderFilterKey(userId, deleted, page, pageSize, status,IsAdmin);
+            var cacheKey = GetOrderFilterKey(userId, deleted, page, pageSize, status, IsAdmin, startDate, endDate);
             return await _cacheManager.GetAsync<List<OrderListDto>>(cacheKey);
         }
     }

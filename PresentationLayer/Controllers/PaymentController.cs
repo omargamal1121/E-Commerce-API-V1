@@ -142,7 +142,7 @@ namespace E_Commerce.Controllers
 		/// PUT /api/payment/cash-on-delivery/pay
 		/// </summary>
 		[HttpPut("cash-on-delivery/pay")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,SuperAdmin")]
 		public async Task<ActionResult<ApiResponse<int>>> UpdateCashOnDeliveryPaymentToPaid([FromBody] UpdateCashOnDeliveryPaymentDto request)
 		{
 			try

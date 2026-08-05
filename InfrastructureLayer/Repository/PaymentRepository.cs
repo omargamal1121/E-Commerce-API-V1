@@ -16,7 +16,12 @@ namespace Infrastructure.Repository
 			_logger = logger;
         }
 
-        public async Task LockPaymentForUpdateAsync(int id)
+		public async Task<Payment?> GetCODPayment(int id)
+		{
+		 return await	_context.Payments.Where(p => p.Id == id && p.PaymentMethod.Method == Domain.Enums.PaymentMethodEnums.CashOnDelivery).FirstOrDefaultAsync() ;
+		}
+
+		public async Task LockPaymentForUpdateAsync(int id)
 		{
 			_logger.LogInformation($"Locking payment with ID: {id} for update.");
 			var payment = await _context.Database.ExecuteSqlRawAsync(

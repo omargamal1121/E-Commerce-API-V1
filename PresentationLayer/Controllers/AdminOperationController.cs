@@ -24,10 +24,10 @@ namespace E_Commerce.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<ResponseDto>> GetAllOperation(int page = 1, int pagesize = 10, string? userid = null, string? name = null, Opreations? opreation = null)
+		public async Task<ActionResult<ResponseDto>> GetAllOperation(int page = 1, int pagesize = 10, string? userid = null, string? name = null, Opreations? opreation = null, DateTime? startDate = null, DateTime? endDate = null)
 		{
 			_Logger.LogInformation($"Execute {nameof(GetAllOperation)}");
-			var result = await _adminOpreationServices.GetAllOpreationsAsync(page,pagesize,userid,name,opreation);
+			var result = await _adminOpreationServices.GetAllOpreationsAsync(page,pagesize,userid,name,opreation,startDate,endDate);
 			if (!result.Success)
 			{
 				_Logger.LogError(result.Message);

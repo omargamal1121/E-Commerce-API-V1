@@ -26,9 +26,10 @@ namespace E_Commerce.Controllers
 
 		/// <summary>
 		/// Get all orders with filtering and pagination (RESTful)
-		/// GET /api/order?userId={userId}&deleted={deleted}&page={page}&pageSize={pageSize}&status={status}
+		/// GET /api/order?userId={userId}&deleted={deleted}&page={page}&pageSize={pageSize}&status={status}&startDate={startDate}&endDate={endDate}
 		/// - Admins can filter by userId and see all orders
 		/// - Customers automatically filter to their own orders
+		/// - Date filtering uses ModifiedAt if available, otherwise CreatedAt
 		/// </summary>
 		[HttpGet]
 		[Authorize(Roles = "User,Admin,SuperAdmin,DeliveryCompany")]
@@ -37,7 +38,9 @@ namespace E_Commerce.Controllers
 			[FromQuery] bool? deleted = null,
 			[FromQuery] int page = 1,
 			[FromQuery] int pageSize = 10,
-			[FromQuery] OrderStatus? status = null)
+			[FromQuery] OrderStatus? status = null,
+			[FromQuery] DateTime? startDate = null,
+			[FromQuery] DateTime? endDate = null)
 		{
 			try
 			{
@@ -60,8 +63,8 @@ namespace E_Commerce.Controllers
                 if (!role)
 					 effectiveUserId = GetUserId();
 
-				_logger.LogInformation($"Executing GetOrders: role: {role}, userId: {effectiveUserId}, deleted: {deleted}, page: {page}, size: {pageSize}, status: {status}");
-				var result = await _orderServices.FilterOrdersAsync(effectiveUserId, deleted, page, pageSize, status,role);
+				_logger.LogInformation($"Executing GetOrders: role: {role}, userId: {effectiveUserId}, deleted: {deleted}, page: {page}, size: {pageSize}, status: {status}, startDate: {startDate}, endDate: {endDate}");
+				var result = await _orderServices.FilterOrdersAsync(effectiveUserId, deleted, page, pageSize, status, role, startDate, endDate);
 				return HandleResult(result);
 			}
 			catch (Exception ex)
@@ -170,7 +173,7 @@ namespace E_Commerce.Controllers
 				var userId = GetUserId();
 				if (!string.IsNullOrWhiteSpace(userId))
 				{
-					var result = await _orderServices.FilterOrdersAsync(userId, null, page, pageSize, null, false);
+					var result = await _orderServices.FilterOrdersAsync(userId, null, page, pageSize, null, false, null, null);
 					return HandleResult(result);
 				}
 				else

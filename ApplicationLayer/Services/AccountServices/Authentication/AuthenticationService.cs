@@ -87,6 +87,58 @@ namespace Application.Services.AccountServices.Authentication
 			}
 		}
 
+		public async Task<Result<TokensDto>> StaffLoginAsync(string email, string password, string[] allowedRoles)
+		{
+			try
+			{
+				var user = await _userManager.FindByEmailAsync(email);
+				if (user == null)
+				{
+					_logger.LogWarning("Staff login failed: Email not found for {Email}", email);
+					return Result<TokensDto>.Fail("Invalid email or password.", 400);
+				}
+				if (user.DeletedAt != null)
+				{
+					_logger.LogInformation("Staff login failed: Account deleted for {Email}", email);
+					return Result<TokensDto>.Fail("Invalid email or password.", 400);
+				}
+
+				if (await _userManager.IsLockedOutAsync(user))
+					return Result<TokensDto>.Fail("Your account is currently locked. Please try again later.", 403);
+
+				if (!await _userManager.CheckPasswordAsync(user, password))
+					return Result<TokensDto>.Fail("Invalid email or password.", 400);
+
+				var userRoles = (await _userManager.GetRolesAsync(user)).ToList();
+				var hasAllowedRole = userRoles.Any(role => allowedRoles.Contains(role));
+
+				if (!hasAllowedRole)
+				{
+					_logger.LogWarning("Staff login failed: User {Email} does not have any of the required roles: {Roles}", email, string.Join(", ", allowedRoles));
+					return Result<TokensDto>.Fail("You do not have permission to access this resource.", 403);
+				}
+
+				var tokensResult = await IssueTokensAsync(user);
+				if (!tokensResult.Success || tokensResult.Data == null)
+				{
+					_logger.LogError("Failed to issue tokens: {Message}", tokensResult.Message);
+					return Result<TokensDto>.Fail("An error occurred during login.", 500);
+				}
+
+				if (!string.IsNullOrEmpty(tokensResult.Data.RefreshToken))
+				{
+					_refreshTokenCookieService.SetRefreshToken(tokensResult.Data.RefreshToken);
+				}
+
+				return Result<TokensDto>.Ok(new TokensDto { Token = tokensResult.Data.AccessToken, RefreshToken = tokensResult.Data.RefreshToken, Roles = userRoles }, "Login successfully", 200);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error occurred in StaffLoginAsync.");
+				return Result<TokensDto>.Fail("An error occurred during login.", 500);
+			}
+		}
+
 		public async Task<Result<bool>> LogoutAsync(string userId)
 		{
 			_logger.LogInformation("Executing {Method}", nameof(LogoutAsync));

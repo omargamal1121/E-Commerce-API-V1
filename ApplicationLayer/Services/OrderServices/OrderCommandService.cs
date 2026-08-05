@@ -441,7 +441,7 @@ namespace Application.Services.OrderServices
             return current switch
             {
 				OrderStatus.PendingPayment => target is OrderStatus.Confirmed or OrderStatus.PaymentExpired or OrderStatus.CancelledByUser or OrderStatus.CancelledByAdmin,
-				OrderStatus.Confirmed => target is OrderStatus.Processing or OrderStatus.CancelledByAdmin,
+				OrderStatus.Confirmed => target is OrderStatus.Processing or OrderStatus.CancelledByAdmin or OrderStatus.Confirmed,
 				OrderStatus.Processing => target is OrderStatus.Shipped or OrderStatus.CancelledByAdmin, 
 				OrderStatus.Shipped => target is OrderStatus.Delivered,
 				OrderStatus.Delivered => target is OrderStatus.Complete or OrderStatus.Returned or OrderStatus.Refunded,

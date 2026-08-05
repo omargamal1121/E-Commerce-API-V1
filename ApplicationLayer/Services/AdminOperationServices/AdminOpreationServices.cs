@@ -54,7 +54,7 @@ namespace Application.Services.AdminOperationServices
 			}
 			return Result<AdminOperationsLog>.Ok(created);
 		}
-		public async Task<Result<List<OpreationDto>>> GetAllOpreationsAsync(int page=1,int pagesize=10,string? userid=null,string?name=null,Opreations? opreation=null)
+		public async Task<Result<List<OpreationDto>>> GetAllOpreationsAsync(int page=1,int pagesize=10,string? userid=null,string?name=null,Opreations? opreation=null, DateTime? startDate = null, DateTime? endDate = null)
 		{
 			_logger.LogInformation($"Execute {nameof(GetAllOpreationsAsync)}");
 			var adminopreations =  _unitOfWork.Repository<AdminOperationsLog>().GetAll();
@@ -64,20 +64,33 @@ namespace Application.Services.AdminOperationServices
 				adminopreations = adminopreations.Where(a => a.Admin.Name.Contains(name));
 			if(opreation != null)
 				adminopreations = adminopreations.Where(a => a.OperationType == opreation);
+			if(startDate.HasValue)
+				adminopreations = adminopreations.Where(a => a.Timestamp >= startDate.Value);
+			if(endDate.HasValue)
+				adminopreations = adminopreations.Where(a => a.Timestamp <= endDate.Value);
+			
 			if (adminopreations == null || !adminopreations.Any())
 				return Result<List<OpreationDto>>.Fail("No admin operations found",404);
+			
 			if(page <= 0) page = 1;
 			if(pagesize <= 0) pagesize = 10;
-			var adminopreationDtos = await adminopreations.Skip((page-1)*pagesize).Take(pagesize).Select(o => new OpreationDto
-			{
-				Description = o.Description,
-				Id = o.AdminId,
-				ItemId = o.ItemId,
-				Name = o.Admin.Name,
-				OperationType = o.OperationType.ToString(),
-				Timestamp = o.Timestamp,
-				
-			}).OrderBy(o=>o.Timestamp).Distinct().ToListAsync();
+
+			var adminopreationDtos = await adminopreations
+				.OrderByDescending(o => o.Timestamp)
+				.Skip((page-1)*pagesize)
+				.Take(pagesize)
+				.Select(o => new OpreationDto
+				{
+					Description = o.Description,
+					Id = o.AdminId,
+					ItemId = o.ItemId,
+					Name = o.Admin.Name,
+					OperationType = o.OperationType.ToString(),
+					Timestamp = o.Timestamp,
+				})
+				.Distinct()
+				.ToListAsync();
+			
 			return Result<List<OpreationDto>>.Ok(adminopreationDtos);
 		}
 			

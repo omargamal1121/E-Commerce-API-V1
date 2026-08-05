@@ -7,7 +7,6 @@ namespace Application.DtoModels.PaymentDtos
         [Required]
         public int PaymentId { get; set; }
 
-        [Required]
         [StringLength(100, MinimumLength = 3)]
         public string? TransactionId { get; set; }
     }

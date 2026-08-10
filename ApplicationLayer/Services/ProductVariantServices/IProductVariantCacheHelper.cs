@@ -7,7 +7,7 @@ namespace Application.Services.ProductVariantServices
         string GetVariantCacheKey(int id);
         string GetProductVariantsCacheKey(int productId);
         string GetProductCacheTag(int productId);
-        void RemoveProductCachesAsync();
+        Task RemoveProductCachesAsync();
         void CacheVariantAsync(int id, ProductVariantDto variant);
         void CacheProductVariantsAsync(int productId, List<ProductVariantDto> variants);
         void CacheSearchResultsAsync(int productId, string cacheKey, List<ProductVariantDto> variants);

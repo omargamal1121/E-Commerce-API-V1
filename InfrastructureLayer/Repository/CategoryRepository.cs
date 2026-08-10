@@ -14,6 +14,7 @@ public class CategoryRepository : MainRepository<Category>, ICategoryRepository
 
 	public CategoryRepository(AppDbContext context, ILogger<CategoryRepository> logger) : base(context, logger)
 	{
+		
 		_categories = context.Categories;
 		_logger = logger;
 	}

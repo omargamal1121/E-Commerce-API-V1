@@ -26,7 +26,7 @@ namespace Application.Services.OrderServices
         Task<Result<bool>> CancelOrderByAdminAsync(int orderId, string adminId);
         Task ExpireUnpaidOrderInBackground(int orderId);
         Task RestockOrderItemsInBackground(int orderId);
-        void RemoveCacheAndRelated();
+        Task RemoveCacheAndRelated();
         Task<Result<OrderAfterCreatedto>> CreateGuestOrderAsync(CreateGuestOrderDto orderDto, string? guestToken = null);
         Task<Result<int>> ClaimGuestOrdersAsync(string userId, string guestToken);
     }

@@ -3,6 +3,8 @@ using Application.DtoModels.CustomerAddressDtos;
 using Application.Interfaces;
 using Domain.Models;
 using Infrastructure.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.AccountServices.UserMangment
 {
@@ -10,15 +12,24 @@ namespace Application.Services.AccountServices.UserMangment
     public class UserMangerMapping: IUserMangerMapping
     {
         private readonly IUnitOfWork _unitOfWork;
-		public UserMangerMapping(IUnitOfWork unitOfWork)
+        private readonly UserManager<Customer> _userManager;
+
+		public UserMangerMapping(IUnitOfWork unitOfWork, UserManager<Customer> userManager)
 		{
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
        
-		public List<Userdto> ToUserDto(IQueryable<Customer> query)
+		public async Task<List<Userdto>> ToUserDto(IQueryable<Customer> query)
         {
-            var userDtos = query
-                .Select(u => new Userdto
+            var users = await query.ToListAsync();
+
+            var userDtos = new List<Userdto>();
+
+            foreach (var u in users)
+            {
+                var roles = await _userManager.GetRolesAsync(u);
+                userDtos.Add(new Userdto
                 {
                     Id = u.Id,
                     Name = u.Name,
@@ -28,17 +39,17 @@ namespace Application.Services.AccountServices.UserMangment
                     PhoneNumber = u.PhoneNumber,
                     IsActive = !u.LockoutEnd.HasValue || u.LockoutEnd <= DateTime.Now,
                     IsDeleted = u.DeletedAt != null,
-                    CreateAt= u.CreateAt,
+                    CreateAt = u.CreateAt,
                     LastVisit = u.LastVisit.HasValue ? u.LastVisit.Value : (DateTime?)null,
-
-
-                })
-                .ToList();
+                    Roles = roles.ToList()
+                });
+            }
 
             return userDtos;
         }
-		public UserwithAddressdto ToUserDto(Customer  customer)
+		public async Task<UserwithAddressdto> ToUserDto(Customer  customer)
         {
+            var roles = await _userManager.GetRolesAsync(customer);
             var userDto = new UserwithAddressdto
             {
                 Email = customer.Email,
@@ -51,7 +62,7 @@ namespace Application.Services.AccountServices.UserMangment
                 IsActive = customer.LockoutEnd.HasValue || customer.LockoutEnd <= DateTime.Now,
                 IsDeleted = customer.DeletedAt != null,
                 LastVisit = customer.LastVisit.HasValue ? customer.LastVisit.Value : (DateTime?)null,
-
+                Roles = roles.ToList(),
 
                 customerAddresses = customer.Addresses.Select(addr => new CustomerAddressDto
                 {

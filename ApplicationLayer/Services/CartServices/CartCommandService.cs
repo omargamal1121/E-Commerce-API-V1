@@ -187,7 +187,7 @@ namespace Application.Services.CartServices
 				await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
-                await _cacheHelper.RemoveCartCacheAsync(userId);
+                _= _cacheHelper.RemoveCartCacheAsync(userId);
 
                 _logger.LogInformation($"Item added to cart for user: {userId}, product: {itemDto.ProductId}");
                 return Result<bool>.Ok(true, "Item added to cart successfully", 200);
@@ -436,7 +436,7 @@ namespace Application.Services.CartServices
 
 				await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-                await _cacheHelper.RemoveCartCacheAsync(userId);
+                _= _cacheHelper.RemoveCartCacheAsync(userId);
 
                 return Result<bool>.Ok(true, "Cart cleared successfully", 200);
             }
@@ -506,7 +506,7 @@ namespace Application.Services.CartServices
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
-                await _cacheHelper.RemoveCartCacheAsync(userId);
+                _= _cacheHelper.RemoveCartCacheAsync(userId);
 
                 return Result<bool>.Ok(true, "Checkout successful", 200);
             }
@@ -563,7 +563,7 @@ namespace Application.Services.CartServices
             var affectedUserIds = cartItems.Where(ci => ci.Cart != null).Select(ci => ci.Cart.UserId).Distinct();
             foreach (var affectedUserId in affectedUserIds)
             {
-                await _cacheHelper.RemoveCartCacheAsync(affectedUserId);
+                _ =_cacheHelper.RemoveCartCacheAsync(affectedUserId);
             }
         }
 
@@ -605,7 +605,7 @@ namespace Application.Services.CartServices
 			var affectedUserIds = cartItems.Where(ci => ci.Cart != null).Select(ci => ci.Cart.UserId).Distinct();
 			foreach (var affectedUserId in affectedUserIds)
 			{
-				await _cacheHelper.RemoveCartCacheAsync(affectedUserId);
+				_= _cacheHelper.RemoveCartCacheAsync(affectedUserId);
 			}
 		}
 
@@ -631,7 +631,7 @@ namespace Application.Services.CartServices
                 return;
             cart.CheckoutDate = null;
             await _unitOfWork.CommitAsync();
-            await _cacheHelper.RemoveCartCacheAsync(cart.UserId);
+            _= _cacheHelper.RemoveCartCacheAsync(cart.UserId);
 		}
 
 		private async Task<Cart?> CreateNewCartAsync(string userId)

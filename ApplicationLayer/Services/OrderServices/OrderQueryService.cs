@@ -237,7 +237,7 @@ namespace Application.Services.OrderServices
             }
         }
 
-        public async Task<Result<decimal>> GetTotalRevenueByDateRangeAsync(DateTime startDate, DateTime endDate)
+        public async Task<Result<decimal>> GetTotalRevenueByDateRangeAsync(DateTime? startDate = null, DateTime? endDate = null)
         {
             try
             {

@@ -12,6 +12,7 @@ using Application.Services.AccountServices.Password;
 using Application.Services.AccountServices.Profile;
 using Application.Services.AccountServices.Registration;
 using Application.Services.AccountServices.UserMangment;
+using Microsoft.AspNetCore.Identity;
 
 namespace E_Commerce.Registration.AccountServices
 {

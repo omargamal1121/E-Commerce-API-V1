@@ -24,17 +24,17 @@ namespace Application.Services.CategoryServices
 			_cacheManager = cacheManager;
 		}
 
-		public void ClearCategoryListCache()
+		public async Task ClearCategoryListCache()
 		{
-			_jobClient.Enqueue(() => _cacheManager.RemoveByTagsAsync(new string[] { CACHELIST }));
+			await _cacheManager.RemoveByTagsAsync(new string[] { CACHELIST });
 		}
-		public void ClearCategoryCache()
+		public async Task ClearCategoryCache()
 		{
-			_jobClient.Enqueue(() => _cacheManager.RemoveByTagsAsync(_categoryTags));
+			await _cacheManager.RemoveByTagsAsync(_categoryTags);
 		}
-		public void ClearCategoryDataCache()
+		public async Task ClearCategoryDataCache()
 		{
-			_jobClient.Enqueue(() => _cacheManager.RemoveByTagAsync(CACHEWITHDATA));
+			await _cacheManager.RemoveByTagAsync(CACHEWITHDATA);
 		}
 
 		public void NotifyAdminError(string message, string? stackTrace = null)

@@ -9,7 +9,7 @@ namespace E_Commerce.Registration.EmailServices
         public static IServiceCollection AddEmailServices(this IServiceCollection services)
         {
             // Email Services
-            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IEmailSender, BrevoEmailSender>();
             
             return services;
         }

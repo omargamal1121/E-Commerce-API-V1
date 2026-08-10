@@ -67,11 +67,11 @@ namespace Application.Services.ProductServices
 			_discountCacheHelper = discountCacheHelper;
 		}
 
-		private void RemoveCacheAndRelatedCaches()
+		private async Task RemoveCacheAndRelatedCaches()
 		{
-			_collectionCacheHelper.ClearCollectionDataCache();
-			_SubCategoryCacheHelper.ClearSubCategoryDataCache();
-			_productCacheManger.ClearProductCache();
+			await _collectionCacheHelper.ClearCollectionDataCache();
+			await _SubCategoryCacheHelper.ClearSubCategoryDataCache();
+			await _productCacheManger.ClearProductCache();
 		
 		
 		}
@@ -167,7 +167,7 @@ namespace Application.Services.ProductServices
                 }
 
 				// Clear cache
-				RemoveCacheAndRelatedCaches();
+				await RemoveCacheAndRelatedCaches();
 				var updatedProducts = _unitOfWork.Product
 					.GetAll()
 					.Where(p => dto.ProductsId.Contains(p.Id));
@@ -270,7 +270,7 @@ namespace Application.Services.ProductServices
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 				
-				RemoveCacheAndRelatedCaches();
+				await RemoveCacheAndRelatedCaches();
 				
 				
 				var updatedProducts = _unitOfWork.Product
@@ -521,7 +521,7 @@ namespace Application.Services.ProductServices
 					_logger.LogInformation($"[UpdateProductDiscountAsync] Discount {discountId} is not active. Skipping cart and order price updates for product: {productId}");
 				}
 				
-				RemoveCacheAndRelatedCaches();
+				await RemoveCacheAndRelatedCaches();
 				
 				var message = "Discount updated successfully";
 				if (!isDiscountActive)
@@ -586,8 +586,7 @@ namespace Application.Services.ProductServices
 				_backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterRemoveDiscountAsync(new List<int> { productId }) );
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-				RemoveCacheAndRelatedCaches();
-				_SubCategoryCacheHelper.ClearSubCategoryDataCache();
+				await RemoveCacheAndRelatedCaches();
 				
 				_logger.LogInformation($"[RemoveDiscountFromProductAsync] Discount removed successfully for productId={productId}");
 				return Result<bool>.Ok(true, "Discount removed successfully", 200);

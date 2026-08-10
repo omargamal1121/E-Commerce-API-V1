@@ -10,7 +10,7 @@ namespace Application.Services.OrderServices
         Task<Result<OrderDto>> GetGuestOrderByNumberAsync(string orderNumber, string guestToken);
         Task<Result<int?>> GetOrderCountByCustomerAsync(string userId);
         Task<Result<decimal>> GetTotalRevenueByCustomerAsync(string userId);
-        Task<Result<decimal>> GetTotalRevenueByDateRangeAsync(DateTime startDate, DateTime endDate);
+        Task<Result<decimal>> GetTotalRevenueByDateRangeAsync(DateTime? startDate = null, DateTime? endDate = null);
         Task<Result<int?>> GetTotalOrderCountAsync(OrderStatus? status);
         Task<Result<List<OrderListDto>>> FilterOrdersAsync(string? userId = null, bool? deleted = null, int page = 1, int pageSize = 10, OrderStatus? status = null, bool IsAdmin = false, DateTime? startDate = null, DateTime? endDate = null);
         Task<Result<List<OrderListDto>>> GetGuestOrdersByTokenHashAsync(string guestToken, int page = 1, int pageSize = 10);

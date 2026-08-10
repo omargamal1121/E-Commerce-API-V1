@@ -147,7 +147,7 @@ namespace Application.Services.CollectionServices
                 }
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-                _cacheHelper.ClearCollectionCache();
+             _=    _=   _cacheHelper.ClearCollectionCache();
                 var collectionDtoResult = _mapper.ToCollectionSummaryDto(createdCollection);
                 return Result<CollectionSummaryDto>.Ok(collectionDtoResult, "Collection created successfully", 201);
             }
@@ -184,7 +184,7 @@ namespace Application.Services.CollectionServices
 				}
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-                _cacheHelper.ClearCollectionCache();
+                 _=   _cacheHelper.ClearCollectionCache();
                 return Result<bool>.Ok(true, "Collection restored successfully", 200);
 			}
             catch(Exception e) {
@@ -264,7 +264,7 @@ namespace Application.Services.CollectionServices
                 }
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-                _cacheHelper.ClearCollectionCache();
+                 _=   _cacheHelper.ClearCollectionCache();
                 var collectionDtoResult = _mapper.ToCollectionSummaryDto(collection);
                 return Result<CollectionSummaryDto>.Ok(collectionDtoResult, "Collection updated successfully", 200, warnings);
             }
@@ -315,7 +315,7 @@ namespace Application.Services.CollectionServices
                 }
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-                _cacheHelper.ClearCollectionCache();
+                 _=   _cacheHelper.ClearCollectionCache();
                 return Result<bool>.Ok(true, "Collection deleted successfully", 200);
             }
             catch (Exception ex)
@@ -379,7 +379,7 @@ namespace Application.Services.CollectionServices
                 }
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-                _cacheHelper.ClearCollectionCache();
+                 _=   _cacheHelper.ClearCollectionCache();
 
                 return Result<bool>.Ok(true, "Collection activated successfully", 200);
             }
@@ -424,7 +424,7 @@ namespace Application.Services.CollectionServices
                 }
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-                _cacheHelper.ClearCollectionCache();
+                 _=   _cacheHelper.ClearCollectionCache();
 
                 return Result<bool>.Ok(true, "Collection deactivated successfully", 200);
             }
@@ -476,7 +476,7 @@ namespace Application.Services.CollectionServices
                 await transaction.CommitAsync();
 
                 // Clear related cache
-                _cacheHelper.ClearCollectionCache();
+                 _=   _cacheHelper.ClearCollectionCache();
 
                 return Result<bool>.Ok(true, "Collection display order updated successfully", 200);
             }
@@ -562,7 +562,7 @@ namespace Application.Services.CollectionServices
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
-                _cacheHelper.ClearCollectionCache();
+                 _=   _cacheHelper.ClearCollectionCache();
 
                 var successMessage = "Products added to collection successfully";
 
@@ -645,7 +645,7 @@ namespace Application.Services.CollectionServices
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
-                _cacheHelper.ClearCollectionCache();
+                 _=   _cacheHelper.ClearCollectionCache();
 
                 return Result<bool>.Ok(true, "Products removed from collection successfully", 200);
             }

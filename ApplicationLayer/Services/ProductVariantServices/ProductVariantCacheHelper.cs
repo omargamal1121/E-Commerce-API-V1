@@ -29,9 +29,9 @@ namespace Application.Services.ProductVariantServices
         
         public string GetProductCacheTag(int productId) => $"product:{productId}";
 
-        public void RemoveProductCachesAsync()
+        public async Task RemoveProductCachesAsync()
         {
-            _backgroundJobClient.Enqueue(() => _cacheManager.RemoveByTagsAsync(PRODUCT_CACHE_TAGS));
+            await _cacheManager.RemoveByTagsAsync(PRODUCT_CACHE_TAGS);
         }
 
         public  void CacheVariantAsync(int id, ProductVariantDto variant)

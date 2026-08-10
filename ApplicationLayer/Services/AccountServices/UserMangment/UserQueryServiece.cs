@@ -28,10 +28,10 @@ namespace Application.Services.AccountServices.UserMangment
 			var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
 			if (user == null)
 				return Result<UserwithAddressdto>.Fail("No User With this id",404);
-			var userDto = _userMangerMapping.ToUserDto(user);
+			var userDto = await _userMangerMapping.ToUserDto(user);
 			return Result<UserwithAddressdto>.Ok(userDto);
         }
-		public Result< List<Userdto>> FilterUsers(
+		public async Task<Result<List<Userdto>>> FilterUsers(
 			string? name = null, 
 			string? email=null,
 			string? role=null,
@@ -63,13 +63,12 @@ namespace Application.Services.AccountServices.UserMangment
             }
             if (role != null)
             {
-     
-                var usersInRole = _userManager.GetUsersInRoleAsync(role).GetAwaiter().GetResult();
+                var usersInRole = await _userManager.GetUsersInRoleAsync(role);
                 var ids = usersInRole.Select(u => u.Id).ToHashSet();
                 query = query.Where(u => ids.Contains(u.Id));
             }
 			query= query.Skip((page-1)*pageSize).Take(pageSize);
-			var users = _userMangerMapping.ToUserDto(query);
+			var users = await _userMangerMapping.ToUserDto(query);
 			
             return Result<List<Userdto>>.Ok(users);
 

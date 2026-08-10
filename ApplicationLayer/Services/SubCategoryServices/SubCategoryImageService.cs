@@ -93,8 +93,8 @@ namespace Application.Services.SubCategoryServices
 
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-				_subCategoryCacheHelper.ClearSubCategoryCache();
-				_categoryCacheHelper.ClearCategoryDataCache();
+				await _subCategoryCacheHelper.ClearSubCategoryCache();
+				await _categoryCacheHelper.ClearCategoryDataCache();
 				var mapped = new ImageDto
 				{
 					Id = mainImageResult.Data.Id,
@@ -183,8 +183,8 @@ namespace Application.Services.SubCategoryServices
 
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-				_subCategoryCacheHelper.ClearSubCategoryCache();
-				_categoryCacheHelper.ClearCategoryDataCache();
+				await _subCategoryCacheHelper.ClearSubCategoryCache();
+				await _categoryCacheHelper.ClearCategoryDataCache();
 
 				var imagesdto= imageResult.Data.Select(img => new ImageDto
                 {
@@ -277,8 +277,8 @@ namespace Application.Services.SubCategoryServices
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
-				_subCategoryCacheHelper.ClearSubCategoryCache();
-				_categoryCacheHelper.ClearCategoryDataCache();
+				await _subCategoryCacheHelper.ClearSubCategoryCache();
+				await _categoryCacheHelper.ClearCategoryDataCache();
 
 
 

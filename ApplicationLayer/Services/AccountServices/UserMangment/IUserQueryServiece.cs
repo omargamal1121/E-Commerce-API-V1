@@ -7,7 +7,7 @@ namespace Application.Services.AccountServices.UserMangment
 	public interface IUserQueryServiece
 	{
 		Task< Result<UserwithAddressdto>> GetUserByIdAsnyc(string id);
-		public Result<List<Userdto>> FilterUsers(
+		public Task<Result<List<Userdto>>> FilterUsers(
 		string? name = null,
 		string? email = null,
 		string? role = null,

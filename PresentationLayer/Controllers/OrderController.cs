@@ -381,14 +381,14 @@ namespace E_Commerce.Controllers
 		}
 		[HttpGet("revenue")]
 		[Authorize(Roles = "Admin,SuperAdmin")]
-		public async Task<ActionResult<ApiResponse<decimal>>> GetRevenue(DateTime start, DateTime end)
+		public async Task<ActionResult<ApiResponse<decimal>>> GetRevenue([FromQuery] DateTime? start = null, [FromQuery] DateTime? end = null)
 		{
 			try
 			{
 				_logger.LogInformation("Executing GetRevenue");
 			
 
-				var result = await _orderServices.GetTotalRevenueByDateRangeAsync(start,end);
+				var result = await _orderServices.GetTotalRevenueByDateRangeAsync(start, end);
 				return HandleResult(result);
 			}
 			catch (Exception ex)

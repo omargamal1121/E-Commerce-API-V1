@@ -121,7 +121,7 @@ namespace Application.Services.CategoryServices
 
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-				_categoryCacheHelper.ClearCategoryCache();
+				_= _categoryCacheHelper.ClearCategoryCache();
 
 				_logger.LogInformation($"[ActivateCategory] Category {id} activated successfully.");
 				return Result<bool>.Ok(true, "Category activated successfully", 200);
@@ -199,7 +199,7 @@ namespace Application.Services.CategoryServices
 					NotifyAdminOfError($"Failed to log admin operation for category '{model.Name}' (ID: {category.Id})");
 					return Result<CategoryDto>.Fail("Try Again later", 500);
 				}
-				_categoryCacheHelper.ClearCategoryCache();
+				_= _categoryCacheHelper.ClearCategoryCache();;
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 				var categoryaftercreate = await _unitOfWork.Category.GetByIdAsync(category.Id);
@@ -277,7 +277,7 @@ namespace Application.Services.CategoryServices
 
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-				_categoryCacheHelper.ClearCategoryCache();
+				_= _categoryCacheHelper.ClearCategoryCache();;
 
 				_logger.LogInformation($"[DeactivateCategory] Category {id} deactivated successfully.");
 				return Result<bool>.Ok(true, "Category deactivated successfully.", 200);
@@ -352,7 +352,7 @@ namespace Application.Services.CategoryServices
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
-						_categoryCacheHelper.ClearCategoryCache();
+						_= _categoryCacheHelper.ClearCategoryCache();;
 
 				return Result<bool>.Ok(true, $"Category with ID {id} deleted successfully", 200);
 			}
@@ -411,7 +411,7 @@ namespace Application.Services.CategoryServices
 
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-				_categoryCacheHelper.ClearCategoryCache();
+				_= _categoryCacheHelper.ClearCategoryCache();;
 
 
 				var restoredCategory = await GetCategoryByIdWithImagesAsync(id);
@@ -575,7 +575,7 @@ namespace Application.Services.CategoryServices
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
-				_categoryCacheHelper.ClearCategoryCache();
+				_= _categoryCacheHelper.ClearCategoryCache();;
 
 				var dto = _categoryMapper.ToCategoryDto(existingCategory);
 				return Result<CategoryDto>.Ok(dto, "Updated", 200);

@@ -2,9 +2,9 @@ namespace Application.Services.CollectionServices
 {
     public interface ICollectionCacheHelper
     {
-        void ClearCollectionCache();
-        public void ClearCollectionListCache();
-        public void ClearCollectionDataCache();
+        Task ClearCollectionCache();
+        public Task ClearCollectionListCache();
+        public Task ClearCollectionDataCache();
         void NotifyAdminError(string message, string? stackTrace = null);
         void SetCollectionListCacheAsync<T>(List<T> data, string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false, TimeSpan? expiration = null);
         Task<List<T>?> GetCollectionListCacheAsync<T>(string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false);

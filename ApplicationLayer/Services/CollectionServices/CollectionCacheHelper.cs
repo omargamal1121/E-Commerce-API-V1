@@ -25,19 +25,19 @@ namespace Application.Services.CollectionServices
             _cacheManager = cacheManager;
         }
 
-        public void ClearCollectionListCache()
+        public async Task ClearCollectionListCache()
         {
-            _jobClient.Enqueue(() => _cacheManager.RemoveByTagsAsync(new string[] { CACHELIST }));
+            await _cacheManager.RemoveByTagsAsync(new string[] { CACHELIST });
         }
 
-        public void ClearCollectionCache()
+        public async Task ClearCollectionCache()
         {
-            _jobClient.Enqueue(() => _cacheManager.RemoveByTagsAsync(_collectionTags));
+            await _cacheManager.RemoveByTagsAsync(_collectionTags);
         }
 
-        public void ClearCollectionDataCache()
+        public async Task ClearCollectionDataCache()
         {
-            _jobClient.Enqueue(() => _cacheManager.RemoveByTagAsync(CACHEWITHDATA));
+            await _cacheManager.RemoveByTagAsync(CACHEWITHDATA);
         }
 
         public void NotifyAdminError(string message, string? stackTrace = null)

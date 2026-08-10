@@ -308,7 +308,7 @@ namespace Application.Services.OrderServices
                 #endregion
 
                 #region Prepare Response
-                RemoveCacheAndRelated();
+                await RemoveCacheAndRelated();
 
                 var response = new OrderAfterCreatedto 
                 { 
@@ -427,13 +427,13 @@ namespace Application.Services.OrderServices
 			}
 		}
 
-        public void RemoveCacheAndRelated()
+        public async Task RemoveCacheAndRelated()
         {
-            _cacheHelper.ClearOrderCache();
-			_productVariantCacheHelper.RemoveProductCachesAsync();
-            _productCacheManger.ClearProductCache();
-            _collectionCacheHelper.ClearCollectionCache();
-            _subCategoryCacheHelper.ClearSubCategoryCache();
+            await _cacheHelper.ClearOrderCache();
+			await _productVariantCacheHelper.RemoveProductCachesAsync();
+            await _productCacheManger.ClearProductCache();
+            await _collectionCacheHelper.ClearCollectionCache();
+            await _subCategoryCacheHelper.ClearSubCategoryCache();
 
 		}
 		private bool IsValidTransition(OrderStatus current, OrderStatus target)
@@ -531,7 +531,7 @@ namespace Application.Services.OrderServices
             
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-				RemoveCacheAndRelated();
+				await RemoveCacheAndRelated();
 
 				return Result<bool>.Ok(true, successMessage, 200);
             }
@@ -662,7 +662,7 @@ namespace Application.Services.OrderServices
                 }
                 #endregion
 
-                RemoveCacheAndRelated();
+                await RemoveCacheAndRelated();
                 return Result<bool>.Ok(true, "Order cancelled successfully", 200);
             }
             catch (DbUpdateConcurrencyException e)
@@ -732,7 +732,7 @@ namespace Application.Services.OrderServices
                 }
                 #endregion
 
-                RemoveCacheAndRelated();
+                await RemoveCacheAndRelated();
                 return Result<bool>.Ok(true, "Order cancelled by admin", 200);
             }
             catch (DbUpdateConcurrencyException e)
@@ -787,7 +787,7 @@ namespace Application.Services.OrderServices
                 await transaction.CommitAsync();
 
                 _backgroundJobClient.Enqueue(() => RestockOrderItemsInBackground(orderId));
-                RemoveCacheAndRelated();
+                await RemoveCacheAndRelated();
                 _logger.LogInformation("Order {OrderId} auto-expired and restock scheduled", orderId);
             }
             catch (DbUpdateConcurrencyException e)
@@ -881,7 +881,7 @@ namespace Application.Services.OrderServices
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
-                RemoveCacheAndRelated();
+                await RemoveCacheAndRelated();
                 _logger.LogInformation("Restocked inventory successfully for order {OrderId}", orderId);
             }
             catch (DbUpdateConcurrencyException e)
@@ -1054,7 +1054,7 @@ namespace Application.Services.OrderServices
                     TimeSpan.FromMinutes(5)
                 );
 
-                RemoveCacheAndRelated();
+                await RemoveCacheAndRelated();
 
                 var response = new OrderAfterCreatedto 
                 { 
@@ -1112,7 +1112,7 @@ namespace Application.Services.OrderServices
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
                 
-                RemoveCacheAndRelated();
+                await RemoveCacheAndRelated();
                 
                 return Result<int>.Ok(claimedCount, "Guest orders claimed successfully", 200);
             }

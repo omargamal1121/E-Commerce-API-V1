@@ -2,9 +2,9 @@ namespace Application.Services.CategoryServices
 {
 	public interface ICategoryCacheHelper
 	{
-		void ClearCategoryCache();
-		public void ClearCategoryListCache();
-		public void ClearCategoryDataCache();
+		Task ClearCategoryCache();
+		public Task ClearCategoryListCache();
+		public Task ClearCategoryDataCache();
 		void NotifyAdminError(string message, string? stackTrace = null);
 		void SetCategoryListCacheAsync<T>(List<T> data, string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false, TimeSpan? expiration = null);
 		Task<List<T>?> GetCategoryListCacheAsync<T>(string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false);

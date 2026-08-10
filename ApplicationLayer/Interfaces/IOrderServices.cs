@@ -34,7 +34,7 @@ namespace Application.Interfaces
 		Task<Result<bool>> ExpirePaymentAsync(int orderId, string adminId, bool IsSysyem = false,
             bool IsAdmin = false, string? notes = null);
 		Task<Result<bool>> CompleteOrderAsync(int orderId, string adminId, string? notes = null);
-		Task<Result<decimal>> GetTotalRevenueByDateRangeAsync(DateTime startDate, DateTime endDate);
+		Task<Result<decimal>> GetTotalRevenueByDateRangeAsync(DateTime? startDate = null, DateTime? endDate = null);
 		public Task<Result<bool>> CancelOrderByCustomerAsync(int orderId, string userId);
 		public  Task<Result<bool>> CancelOrderByAdminAsync(int orderId, string adminId);
 
@@ -43,7 +43,7 @@ namespace Application.Interfaces
 		Task<Result<int?>> GetOrderCountByCustomerAsync(string userId);
 		Task<Result<decimal>> GetTotalRevenueByCustomerAsync(string userId);
 		Task RestockOrderItemsInBackground(int orderId);
-		void RemoveCacheAndRelated();
+		Task RemoveCacheAndRelated();
 		Task<Result<OrderAfterCreatedto>> CreateGuestOrderAsync(CreateGuestOrderDto orderDto, string? guestToken = null);
 		Task<Result<int>> ClaimGuestOrdersAsync(string userId, string guestToken);
 		Task<Result<List<OrderListDto>>> GetGuestOrdersByTokenHashAsync(string guestToken, int page = 1, int pageSize = 10);

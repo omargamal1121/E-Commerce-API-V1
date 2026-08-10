@@ -4,6 +4,10 @@ using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Mail;
 
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
+
 namespace Application.Services.EmailServices
 
 {
@@ -28,44 +32,24 @@ namespace Application.Services.EmailServices
 		public async Task SendEmailAsync(string email, string subject, string htmlMessage)
 		{
 			Email from = setdata();
-			MailMessage mailMessage = new MailMessage{
-				From = new MailAddress(from.Address),
-				Subject = subject,
-				Body = $"<html><body> {htmlMessage}</body></html>",
-				IsBodyHtml = true,
 
-			};
-			mailMessage.To.Add(email);
+			var message = new MimeMessage();
+			message.From.Add(MailboxAddress.Parse(from.Address));
+			message.To.Add(MailboxAddress.Parse(email));
+			message.Subject = subject;
+			message.Body = new TextPart("html") { Text = htmlMessage };
+
+			using var client = new MailKit.Net.Smtp.SmtpClient();
 			try
 			{
-				using (SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587))
-				{
-					smtpClient.UseDefaultCredentials = false;
-
-					smtpClient.EnableSsl = true;
-					smtpClient.Credentials = new NetworkCredential(from.Address, from.Password);
-					await smtpClient.SendMailAsync(mailMessage);
-				}
-
+				await client.ConnectAsync(from.Host, from.Port, SecureSocketOptions.StartTls);
+				await client.AuthenticateAsync(from.Address, from.Password);
+				await client.SendAsync(message);
 			}
-			catch (SmtpException ex)
+			finally
 			{
-				new InvalidOperationException(string.Format(
-					"SMTP failed. Email={Email}, Host={Host}, Port={Port}",
-					from.Address,
-					from.Host,
-					from.Port, ex));
-
-				throw;
+				await client.DisconnectAsync(true);
 			}
-			catch (Exception ex)
-			{
-
-				throw new InvalidOperationException("Failed to send email.", ex);
-			}
-		
-			
-
 		}
 	}
 	

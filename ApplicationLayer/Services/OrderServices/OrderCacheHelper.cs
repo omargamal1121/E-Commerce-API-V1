@@ -34,15 +34,15 @@ namespace Application.Services.OrderServices
             _cacheManager = cacheManager;
         }
 
-        public void ClearOrderCache()
+        public async Task ClearOrderCache()
         {
-            _jobClient.Enqueue(() => _cacheManager.RemoveByTagsAsync(_orderTags));
+            await _cacheManager.RemoveByTagsAsync(_orderTags);
         }
 
-        public void ClearUserOrderCache(string userId)
+        public async Task ClearUserOrderCache(string userId)
         {
             var userTag = $"order:user:{userId ?? "all"}";
-            _jobClient.Enqueue(() => _cacheManager.RemoveByTagAsync(userTag));
+            await _cacheManager.RemoveByTagAsync(userTag);
         }
 
         public void NotifyAdminError(string message, string? stackTrace = null)

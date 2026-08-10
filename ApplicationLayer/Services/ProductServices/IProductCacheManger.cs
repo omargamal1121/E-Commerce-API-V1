@@ -4,7 +4,7 @@ namespace Application.Services.ProductServices
 {
 	public interface IProductCacheManger
 	{
-		void ClearProductCache();
+		Task ClearProductCache();
 		public  Task<List<T>?> GetProductListBySubcategoryidCacheAsync<T>(int subcateogryid, bool? isActive, bool? isDeleted, int page = 1, int pageSize = 10, bool IsAdmin = false);
 		public void SetProductListBySubCategoryidCacheAsync<T>(List<T> data, int subcateogryid, bool? isActive, bool? isDeleted, int page = 1, int pageSize = 10, bool IsAdmin = false, TimeSpan? expiration = null);
 

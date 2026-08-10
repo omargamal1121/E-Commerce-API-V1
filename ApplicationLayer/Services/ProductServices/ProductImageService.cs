@@ -68,11 +68,11 @@ namespace Application.Services.ProductServices
 			_productCatalogService = productCatalogService;
 			_collectionCacheHelper = collectionCacheHelper;
 		}
-		private void RemoveProductCaches()
+		private async Task RemoveCacheAndRelatedCaches()
 		{
-			_collectionCacheHelper.ClearCollectionDataCache();
-			_subCategoryCacheHelper.ClearSubCategoryDataCache();
-			_productCacheManger.ClearProductCache();
+			await _collectionCacheHelper.ClearCollectionDataCache();
+			await _subCategoryCacheHelper.ClearSubCategoryDataCache();
+			await _productCacheManger.ClearProductCache();
 
 		}
 
@@ -168,7 +168,7 @@ namespace Application.Services.ProductServices
 
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-				RemoveProductCaches();
+				RemoveCacheAndRelatedCaches();
 
 
 
@@ -261,7 +261,7 @@ namespace Application.Services.ProductServices
 
 				
 
-				RemoveProductCaches();
+				RemoveCacheAndRelatedCaches();
 
 				_logger.LogInformation($"Image {imageId} removed from product {productId}");
 
@@ -328,7 +328,7 @@ namespace Application.Services.ProductServices
 					Url = saveResult.Data.Url,
 					IsMain = saveResult.Data.IsMain
 				};
-				RemoveProductCaches();
+				RemoveCacheAndRelatedCaches();
 				return Result<ImageDto>.Ok(imageDto, "Main image updated", 200);
 			}
 			catch (Exception ex)

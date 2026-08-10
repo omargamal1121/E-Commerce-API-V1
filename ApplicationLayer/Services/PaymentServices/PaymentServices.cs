@@ -97,10 +97,22 @@ namespace Application.Services.PaymentServices
 
                 await _unitOfWork.Payment.LockPaymentForUpdateAsync(latestPayment.Id);
                 var payment= await _unitOfWork.Repository<Payment>().GetByIdAsync(latestPayment.Id);
-                if (payment is null|| payment.Status == status)
+                if (payment is null)
                 {
-                    _logger.LogInformation("Payment {PaymentId} already has status {Status}, no update needed", latestPayment.Id, status);
-                    return Result<int>.Ok(latestPayment.Id);
+                    _logger.LogWarning("Payment {PaymentId} not found after lock", latestPayment.Id);
+                    return Result<int>.Fail("Payment not found", 404, null);
+                }
+
+                if (payment.Status == status)
+                {
+                    _logger.LogWarning("Payment {PaymentId} already has status {Status}, duplicate payment attempt", latestPayment.Id, status);
+                    return Result<int>.Fail("Payment is already in this status", 400, null);
+                }
+
+                if (payment.Status == PaymentStatus.Completed)
+                {
+                    _logger.LogWarning("Payment {PaymentId} is already completed, cannot update to {Status}", latestPayment.Id, status);
+                    return Result<int>.Fail("Payment is already completed", 400, null);
                 }
 
 				payment.Status = status;
@@ -118,7 +130,7 @@ namespace Application.Services.PaymentServices
                 }
 				
                 _logger.LogInformation("Payment {PaymentId} updated successfully", payment.Id);
-				RemoveCacheAndRelated();
+				_ = RemoveCacheAndRelated();
 				return Result<int>.Ok(payment.Id);
             }
             catch (DbUpdateConcurrencyException e)
@@ -195,7 +207,7 @@ namespace Application.Services.PaymentServices
 
 
 				_logger.LogInformation("Cash on delivery payment {PaymentId} updated successfully", payment.Id);
-                RemoveCacheAndRelated();
+                _ = RemoveCacheAndRelated();
                 return Result<int>.Ok(payment.Id);
             }
             catch (DbUpdateConcurrencyException e)
@@ -582,8 +594,8 @@ namespace Application.Services.PaymentServices
 
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-                RemoveCacheAndRelated();
-				_logger.LogInformation("Payment {PaymentId} updated to {Status}", paymentId, newStatus);
+                _ = RemoveCacheAndRelated();
+                _logger.LogInformation("Payment {PaymentId} updated to {Status}", paymentId, newStatus);
             }
             catch (DbUpdateConcurrencyException e)
             {
@@ -601,13 +613,13 @@ namespace Application.Services.PaymentServices
                     TimeSpan.FromMinutes(5));
             }
         }
-		private void RemoveCacheAndRelated()
+		private async Task RemoveCacheAndRelated()
 		{
-			_orderCacheHelper.ClearOrderCache();
-			_productVariantCacheHelper.RemoveProductCachesAsync();
-			_productCacheManger.ClearProductCache();
-			_collectionCacheHelper.ClearCollectionCache();
-			_subCategoryCacheHelper.ClearSubCategoryCache();
+			await _orderCacheHelper.ClearOrderCache();
+			await _productVariantCacheHelper.RemoveProductCachesAsync();
+			await _productCacheManger.ClearProductCache();
+			await _collectionCacheHelper.ClearCollectionCache();
+			await _subCategoryCacheHelper.ClearSubCategoryCache();
 
 		}
 	}

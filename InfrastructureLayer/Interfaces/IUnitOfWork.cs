@@ -23,4 +23,5 @@ namespace Infrastructure.Interfaces
 		IRepository<T> Repository<T>() where T : BaseEntity;
 		public Task<int> CommitAsync();
 	}
+
 }

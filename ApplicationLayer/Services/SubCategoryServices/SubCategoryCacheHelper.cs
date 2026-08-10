@@ -30,19 +30,19 @@ namespace Application.Services.SubCategoryServices
             _backgroundJobClient = backgroundJobClient;
         }
 
-		public void ClearSubCategoryDataCache()
+		public async Task ClearSubCategoryDataCache()
 		{
-			_backgroundJobClient.Enqueue(() => _cacheManager.RemoveByTagAsync(CACHEWITHDATA));
+			await _cacheManager.RemoveByTagAsync(CACHEWITHDATA);
 		}
-		public void ClearSubCategoryListCache()
+		public async Task ClearSubCategoryListCache()
         {
-            _backgroundJobClient.Enqueue(() => _cacheManager.RemoveByTagAsync(CACHELIST));
+            await _cacheManager.RemoveByTagAsync(CACHELIST);
 		}
 
 
-		public void ClearSubCategoryCache()
+		public async Task ClearSubCategoryCache()
         {
-            _backgroundJobClient.Enqueue(() => _cacheManager.RemoveByTagsAsync(_subCategoryTags)); 
+            await _cacheManager.RemoveByTagsAsync(_subCategoryTags); 
         }
 
         public void NotifyAdminError(string errorMessage, string? stackTrace = null) 

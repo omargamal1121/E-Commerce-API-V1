@@ -108,8 +108,8 @@ namespace Application.Services.SubCategoryServices
 					await transaction.RollbackAsync();
 					return Result<SubCategoryDto>.Fail("Try Again later", 500);
 				}
-				_subCategoryCacheHelper.ClearSubCategoryCache();
-				_categoryCacheHelper.ClearCategoryDataCache();
+				await _subCategoryCacheHelper.ClearSubCategoryCache();
+				await _categoryCacheHelper.ClearCategoryDataCache();
 
 			
 				var subcategorydto = _subCategoryMapper.ToSubCategoryDto(creationResult);
@@ -189,8 +189,8 @@ namespace Application.Services.SubCategoryServices
 
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-				_subCategoryCacheHelper.ClearSubCategoryCache();
-				_categoryCacheHelper.ClearCategoryDataCache();
+				await _subCategoryCacheHelper.ClearSubCategoryCache();
+				await _categoryCacheHelper.ClearCategoryDataCache();
 
 				return Result<bool>.Ok(true, $"SubCategory with ID {id} deleted successfully", 200);
 			}
@@ -244,8 +244,8 @@ namespace Application.Services.SubCategoryServices
 				}
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-				_subCategoryCacheHelper.ClearSubCategoryCache();
-				_categoryCacheHelper.ClearCategoryDataCache();
+				await _subCategoryCacheHelper.ClearSubCategoryCache();
+				await _categoryCacheHelper.ClearCategoryDataCache();
 				return Result<bool>.Ok(true, "SubCategory activated successfully", 200);
 			}
 			catch (Exception ex)
@@ -304,8 +304,8 @@ namespace Application.Services.SubCategoryServices
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
-				_subCategoryCacheHelper.ClearSubCategoryCache();
-				_categoryCacheHelper.ClearCategoryDataCache();
+				await _subCategoryCacheHelper.ClearSubCategoryCache();
+				await _categoryCacheHelper.ClearCategoryDataCache();
 
 
 				_backgroundJobClient.Enqueue(() => _categoryCommandService.DeactivateCategoryIfNoActiveSubcategories(subcategoryInfo.CategoryId, userId));
@@ -375,8 +375,8 @@ namespace Application.Services.SubCategoryServices
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
-				_subCategoryCacheHelper.ClearSubCategoryCache();
-				_categoryCacheHelper.ClearCategoryDataCache();
+				await _subCategoryCacheHelper.ClearSubCategoryCache();
+				await _categoryCacheHelper.ClearCategoryDataCache();
 
 				_backgroundJobClient.Enqueue(() => _categoryCommandService.DeactivateCategoryIfNoActiveSubcategories(checkonsubcategory.CategoryId, userId));
 			}
@@ -426,8 +426,8 @@ namespace Application.Services.SubCategoryServices
 
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-				_subCategoryCacheHelper.ClearSubCategoryCache();
-				_categoryCacheHelper.ClearCategoryDataCache();
+				await _subCategoryCacheHelper.ClearSubCategoryCache();
+				await _categoryCacheHelper.ClearCategoryDataCache();
 
 				var dto = _subCategoryMapper.MapToSubCategoryDtoWithData(subCategory);
 				return Result<SubCategoryDto>.Ok(dto, "SubCategory restored successfully", 200);
@@ -566,8 +566,8 @@ namespace Application.Services.SubCategoryServices
 				}
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-				_subCategoryCacheHelper.ClearSubCategoryCache();
-				_categoryCacheHelper.ClearCategoryDataCache();
+				await _subCategoryCacheHelper.ClearSubCategoryCache();
+				await _categoryCacheHelper.ClearCategoryDataCache();
 				_logger.LogInformation($"Successfully updated SubCategory {subCategoryId}");
 				var dto = _subCategoryMapper.MapToSubCategoryDtoWithData(existingSubCategory);
 				return Result<SubCategoryDto>.Ok(dto, "Updated", 200, warnings: warnings);
@@ -635,8 +635,8 @@ namespace Application.Services.SubCategoryServices
                     return Result<bool>.Fail("Try Again later", 500);
                 }
 
-                _subCategoryCacheHelper.ClearSubCategoryCache();
-				_categoryCacheHelper.ClearCategoryDataCache();
+                await _subCategoryCacheHelper.ClearSubCategoryCache();
+				await _categoryCacheHelper.ClearCategoryDataCache();
 				await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 

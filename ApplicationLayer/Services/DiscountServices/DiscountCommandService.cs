@@ -84,6 +84,7 @@ namespace Application.Services.DiscountServices
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
+
                 _discountBackgroundJopMethod.ScheduleDiscountCheck(discount.Id, discount.StartDate, discount.EndDate);
 
                 var discountDto = new DiscountDto
@@ -97,7 +98,7 @@ namespace Application.Services.DiscountServices
                     IsActive = discount.IsActive,
                     CreatedAt = discount.CreatedAt
                 };
-                _cacheHelper.ClearProductCache();
+              _=   _=_cacheHelper.ClearProductCache();
                 return Result<DiscountDto>.Ok(discountDto, "Discount created successfully", 201);
             }
             catch (Exception ex)
@@ -175,7 +176,7 @@ namespace Application.Services.DiscountServices
 
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-                _cacheHelper.ClearProductCache();
+              _=   _=_cacheHelper.ClearProductCache();
 
                 _discountBackgroundJopMethod.ScheduleDiscountCheck(discount.Id, discount.StartDate, discount.EndDate);
 
@@ -234,7 +235,7 @@ namespace Application.Services.DiscountServices
                 var productsids = await _unitOfWork.Product.GetAll().Where(p => p.DiscountId == id && p.DeletedAt == null).Select(p => p.Id).ToListAsync();
 
                 _backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterRemoveDiscountAsync(productsids));
-                _cacheHelper.ClearProductCache();
+                _= _=_cacheHelper.ClearProductCache();
 
                 return Result<bool>.Ok(true, "Discount deleted", 200);
             }
@@ -274,7 +275,7 @@ namespace Application.Services.DiscountServices
 
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-                _cacheHelper.ClearProductCache();
+                 _= _=_cacheHelper.ClearProductCache();
 
                 var discountDto = new DiscountDto
                 {
@@ -340,7 +341,7 @@ namespace Application.Services.DiscountServices
                 _backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterAddDiscountAsync(productsids, discount.DiscountPercent));
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-                _cacheHelper.ClearProductCache();
+                 _=_cacheHelper.ClearProductCache();
                 return Result<bool>.Ok(true, "Discount activated successfully", 200);
             }
             catch (Exception ex)
@@ -386,7 +387,7 @@ namespace Application.Services.DiscountServices
                 _backgroundJobClient.Enqueue(() => _cartServices.UpdateCartItemsForProductsAfterRemoveDiscountAsync(productsids));
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
-                _cacheHelper.ClearProductCache();
+                 _=_cacheHelper.ClearProductCache();
 
                 return Result<bool>.Ok(true, "Discount deactivated successfully", 200);
             }

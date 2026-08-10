@@ -82,12 +82,11 @@ namespace Application.Services.AccountServices.Password
                 {
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                     var encodedToken = System.Net.WebUtility.UrlEncode(token);
-
-                    _backgroundJobClient.Enqueue(() =>
-                        _accountEmailService.SendPasswordResetEmailAsync(user.Email, user.UserName, encodedToken));
+                   
+                    
+                   await  _accountEmailService.SendPasswordResetEmailAsync(user.Email, user.UserName??"", encodedToken);
                 }
 
-                // Always return success (don't reveal user existence)
                 return Result<bool>.Ok(true, "If the email exists, a reset link has been sent.", 200);
             }
             catch (Exception ex)

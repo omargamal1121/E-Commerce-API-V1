@@ -35,19 +35,18 @@ namespace Application.Services.ProductServices
             _cacheManager = cacheManager;
         }
 
-        public void ClearProductCache()
+        public async Task ClearProductCache()
         {
-            _jobClient.Enqueue(() => _cacheManager.RemoveByTagsAsync(_ProductTags));
-            
+            await _cacheManager.RemoveByTagsAsync(_ProductTags);
         }
     
-        public void ClearProductListCache()
+        public async Task ClearProductListCache()
         {
-            _jobClient.Enqueue(() => _cacheManager.RemoveByTagAsync(_ProductListKey));
+            await _cacheManager.RemoveByTagAsync(_ProductListKey);
         }
-        public void ClearProductDataCache()
+        public async Task ClearProductDataCache()
         {
-            _jobClient.Enqueue(() => _cacheManager.RemoveByTagAsync(_Productwithdata));
+            await _cacheManager.RemoveByTagAsync(_Productwithdata);
         }
 
         public void NotifyAdminError(string message, string? stackTrace = null)

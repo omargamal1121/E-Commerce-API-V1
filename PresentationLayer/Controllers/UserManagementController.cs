@@ -43,7 +43,7 @@ namespace E_Commerce.Controllers
         [HttpGet("users")]
         [ActionName(nameof(GetUsersAsync))]
         [ProducesResponseType(typeof(ApiResponse<List<Userdto>>), StatusCodes.Status200OK)]
-        public ActionResult<ApiResponse<List<Userdto>>> GetUsersAsync(
+        public async  Task< ActionResult<ApiResponse<List<Userdto>>>> GetUsersAsync(
             [FromQuery] string? name = null,
             [FromQuery] string? email = null,
             [FromQuery] string? role = null,
@@ -57,7 +57,7 @@ namespace E_Commerce.Controllers
 
             try
             {
-                var result = _userQueryServiece.FilterUsers(name, email, role, phonenumber, isActive, isDeleted, page, pageSize);
+                var result = await _userQueryServiece.FilterUsers(name, email, role, phonenumber, isActive, isDeleted, page, pageSize);
                 return HandleResult<List<Userdto>>(result, nameof(GetUsersAsync));
             }
             catch (Exception ex)

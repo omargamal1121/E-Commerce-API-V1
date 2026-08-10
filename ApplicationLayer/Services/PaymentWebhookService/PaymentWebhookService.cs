@@ -213,7 +213,7 @@ namespace Application.Services.PaymentWebhookService
 
 				await dbTransaction.CommitAsync();
 
-				_backgroundJobClient.Enqueue<IOrderServices>(x => x.RemoveCacheAndRelated());
+				await _orderServices.RemoveCacheAndRelated();
 
 				return (true, localOrderId);
 			}

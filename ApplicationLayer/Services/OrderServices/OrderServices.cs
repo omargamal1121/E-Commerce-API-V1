@@ -83,7 +83,7 @@ namespace Application.Services.OrderServices
         public Task<Result<decimal>> GetTotalRevenueByCustomerAsync(string userId)
             => _orderQueryService.GetTotalRevenueByCustomerAsync(userId);
 
-        public Task<Result<decimal>> GetTotalRevenueByDateRangeAsync(DateTime startDate, DateTime endDate)
+        public Task<Result<decimal>> GetTotalRevenueByDateRangeAsync(DateTime? startDate, DateTime ?endDate)
             => _orderQueryService.GetTotalRevenueByDateRangeAsync(startDate, endDate);
 
         public Task<Result<int?>> GetTotalOrderCountAsync(OrderStatus? status)
@@ -97,9 +97,9 @@ namespace Application.Services.OrderServices
 			return await    _orderCommandService.CountOrdersAsync(status, isDelete, isAdmin);
 		}
 
-		public void RemoveCacheAndRelated()
+		public async Task RemoveCacheAndRelated()
 		{
-			_orderCommandService.RemoveCacheAndRelated();
+			await _orderCommandService.RemoveCacheAndRelated();
 		}
 
 		public Task<Result<OrderAfterCreatedto>> CreateGuestOrderAsync(CreateGuestOrderDto orderDto, string? guestToken = null)

@@ -4,7 +4,7 @@ namespace Application.Services.DiscountServices
 {
     public interface IDiscountCacheHelper
     {
-        void ClearProductCache();
+        Task ClearProductCache();
         public void SetCache(List<DiscountDto> discountDto,
           
           bool? isActive = null,

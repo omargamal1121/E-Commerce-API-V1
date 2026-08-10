@@ -171,22 +171,30 @@ namespace Infrastructure.Repository
 				.SumAsync(o => o.Total);
 		}
 
-		public async Task<decimal> GetTotalRevenueByDateRangeAsync(DateTime startDate, DateTime endDate)
+		public async Task<decimal> GetTotalRevenueByDateRangeAsync(DateTime? startDate = null, DateTime? endDate = null)
         {
-            return await _context.Orders
+            var query = _context.Orders
+				.Where(o => o.DeletedAt == null);
+
+			if (startDate.HasValue)
+			{
+				query = query.Where(o => o.CreatedAt >= startDate.Value);
+			}
+
+			if (endDate.HasValue)
+			{
+				query = query.Where(o => o.CreatedAt <= endDate.Value);
+			}
+
+			return await query
 				.Where(o =>
-				o.DeletedAt == null &&
-				o.CreatedAt >= startDate &&
-				o.CreatedAt <= endDate &&
-				(
 					o.Status == OrderStatus.Complete ||
 					o.Status == OrderStatus.Delivered ||
 					o.Status == OrderStatus.Confirmed ||
 					o.Status == OrderStatus.Processing ||
 					o.Status == OrderStatus.Shipped
 				)
-			)
-			.SumAsync(o => o.Total);
+				.SumAsync(o => o.Total);
         }
 
         public async Task<int> GetTotalOrderCountAsync(OrderStatus? status = null)

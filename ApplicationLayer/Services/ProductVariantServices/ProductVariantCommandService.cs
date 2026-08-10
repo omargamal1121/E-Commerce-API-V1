@@ -261,12 +261,12 @@ namespace Application.Services.ProductVariantServices
             }
         }
 
-		private void RemoveCacheAndRelatedCaches()
+		private async Task RemoveCacheAndRelatedCaches()
 		{
-			_cacheHelper.RemoveProductCachesAsync();
-			_collectionCacheHelper.ClearCollectionDataCache();
-			_subCategoryCacheHelper.ClearSubCategoryDataCache();
-			_productCacheManger.ClearProductCache();
+			await _cacheHelper.RemoveProductCachesAsync();
+			await _collectionCacheHelper.ClearCollectionDataCache();
+			await _subCategoryCacheHelper.ClearSubCategoryDataCache();
+			await _productCacheManger.ClearProductCache();
 		}
 
 		public async Task<Result<List<ProductVariantDto>>> AddVariantsAsync(
@@ -677,7 +677,7 @@ namespace Application.Services.ProductVariantServices
                 await transaction.CommitAsync();
 
                 // Update cache and check product status
-                   RemoveCacheAndRelatedCaches();
+                await RemoveCacheAndRelatedCaches();
                 _backgroundJobClient.Enqueue(()=> CheckAndDeactivateProductIfAllVariantsInactiveOrZeroAsync(varaintinfo.productid));
 
                 _backgroundJobClient.Enqueue(() =>
@@ -731,7 +731,7 @@ namespace Application.Services.ProductVariantServices
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
-               RemoveCacheAndRelatedCaches();
+               await RemoveCacheAndRelatedCaches();
 				_backgroundJobClient.Enqueue(() => _productCatalogService.UpdateProductQuantity(variant.ProductId));
 
                 return Result<bool>.Ok(true, "Quantity added successfully", 200);
@@ -786,7 +786,7 @@ namespace Application.Services.ProductVariantServices
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
-				RemoveCacheAndRelatedCaches();
+				await RemoveCacheAndRelatedCaches();
 
 				return Result<bool>.Ok(true, "Quantity removed successfully", 200);
             }
@@ -852,10 +852,7 @@ namespace Application.Services.ProductVariantServices
 
                 _logger.LogInformation($"Committing transaction for restoring variant {id}");
                 await _unitOfWork.CommitAsync();
-
-
-                RemoveCacheAndRelatedCaches();
-
+                await RemoveCacheAndRelatedCaches();
                 _logger.LogInformation($"Committing transaction for restoring variant {id}");
                 await transaction.CommitAsync();
                 _logger.LogInformation($"Successfully completed all operations for restoring variant {id}");

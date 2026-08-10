@@ -45,12 +45,12 @@ namespace Application.Services.DiscountServices
             _productCacheManger = productCacheManger;
         }
 
-        public void ClearProductCache()
+        public async Task ClearProductCache()
         {
             _backgroundJobClient.Enqueue(()=>  _cacheManager.RemoveByTagsAsync(_discountTags));
-            _productCacheManger.ClearProductCache();
-            _collectionCacheHelper.ClearCollectionCache();
-            _subCategoryCacheHelper.ClearSubCategoryCache();
+            await _productCacheManger.ClearProductCache();
+            await _collectionCacheHelper.ClearCollectionCache();
+            await _subCategoryCacheHelper.ClearSubCategoryCache();
         }
         private string GetKey(int? id=null,bool? isActive=null,bool? isDeleted=null,string?Searchkey=null,int?page=null,int?PageSize=null,bool? IsAdmin=false)
         {

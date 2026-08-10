@@ -101,12 +101,12 @@ namespace Application.Services.ProductServices
 		{
 			_backgroundJobClient.Enqueue(() =>  _subCategoryServices.DeactivateSubCategoryIfAllProductsAreInactiveAsync(subcategoryid, userid));
 		}
-		private void RemoveCacheAndRelatedCaches()
+		private async Task RemoveCacheAndRelatedCaches()
 		{
-			_collectionCacheHelper.ClearCollectionDataCache();
-			_subCategoryCacheHelper.ClearSubCategoryDataCache();
-			_categoryCacheHelper.ClearCategoryDataCache();
-			_productCacheManger.ClearProductCache();
+			await _collectionCacheHelper.ClearCollectionDataCache();
+			await _subCategoryCacheHelper.ClearSubCategoryDataCache();
+			await _categoryCacheHelper.ClearCategoryDataCache();
+			await _productCacheManger.ClearProductCache();
 		}
 
 		public async Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive, bool? deletedOnly, bool IsAdmin = false)
@@ -276,7 +276,7 @@ namespace Application.Services.ProductServices
 				}
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-				RemoveCacheAndRelatedCaches();
+				await RemoveCacheAndRelatedCaches();
 
 
 				var productdto = _productMapper.Maptoproductdto(product);
@@ -366,8 +366,8 @@ namespace Application.Services.ProductServices
 						if (oldCatInfo != null && !oldCatInfo.HasOtherProducts)
 						{
 							await _subCategoryServices.DeactivateSubCategoryAsync(oldSubCategoryId, userId);
-							_subCategoryCacheHelper.ClearSubCategoryDataCache();
-							_categoryCacheHelper.ClearCategoryDataCache();
+							await _subCategoryCacheHelper.ClearSubCategoryDataCache();
+							await _categoryCacheHelper.ClearCategoryDataCache();
 						}
 					}
 				}
@@ -405,7 +405,7 @@ namespace Application.Services.ProductServices
 					_logger.LogError("UpdateProductAsync: Failed to log admin operation for product {Id}", id);
 					return Result<ProductDto>.Fail("Failed to log admin operation. Product update rolled back.", 500);
 				}
-				RemoveCacheAndRelatedCaches();
+				await RemoveCacheAndRelatedCaches();
 				
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
@@ -461,20 +461,15 @@ namespace Application.Services.ProductServices
 					userId,
 					id
 				);
-
-				if(isadded==null||!isadded.Success)
+				if(isadded==null || !isadded.Success)
 				{
 					await transacrion.RollbackAsync();
-					return Result<bool>.Fail("Failed to delete product", 500);
+					return Result<bool>.Fail("Failed to log admin operation", 500);
 				}
-				 await _unitOfWork.CommitAsync();
-				await transacrion.CommitAsync();
-				RemoveCacheAndRelatedCaches();;
+				await RemoveCacheAndRelatedCaches();
 				DeactiveCollectionMethod(id);
-
 				DeActiveSubcategory(product.SubCategoryId, userId);
 				RemoveCartItem(userId, null, product.Id);
-
 				return Result<bool>.Ok(true, "Product deleted", 200);
 			}
 			catch (DbUpdateConcurrencyException e)
@@ -517,7 +512,7 @@ namespace Application.Services.ProductServices
 					return Result<bool>.Fail("Error restoring product", 500);
 
 				}
-				RemoveCacheAndRelatedCaches();
+				await RemoveCacheAndRelatedCaches();
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 			
@@ -628,7 +623,7 @@ namespace Application.Services.ProductServices
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
-				RemoveCacheAndRelatedCaches();
+				await RemoveCacheAndRelatedCaches();
 		
 
 				return Result<bool>.Ok(true, "Product activated successfully", 200);
@@ -698,7 +693,7 @@ namespace Application.Services.ProductServices
 				await transaction.CommitAsync();
 
 
-				RemoveCacheAndRelatedCaches();
+				await RemoveCacheAndRelatedCaches();
 				DeactiveCollectionMethod(productId);
 				DeActiveSubcategory(productInfo.SubCategoryId, userId);
 				RemoveCartItem(userId, null, productId);
@@ -728,7 +723,7 @@ namespace Application.Services.ProductServices
 				await _unitOfWork.Product.UpdateProductQuntity(productid);
 				await _unitOfWork.CommitAsync();
 
-				RemoveCacheAndRelatedCaches();
+				await RemoveCacheAndRelatedCaches();
 
 			}
 			catch (Exception ex)

@@ -122,6 +122,7 @@ namespace E_Commerce.Controllers
 
 		[HttpGet()]
 		[ActionName(nameof(FilterAsync))]
+		[AllowAnonymous]
 		[ResponseCache(Duration = 60, VaryByQueryKeys = new string[] { "search", "isActive", "includeDeleted", "page", "pageSize" })]
 		public async Task<ActionResult<ApiResponse<List<DiscountDto>>>> FilterAsync(
 			[FromQuery] string? search,

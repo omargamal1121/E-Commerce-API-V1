@@ -278,8 +278,8 @@ namespace Application.Services.ProductServices
                 if (searchCriteria.Gender.HasValue)
                     query = query.Where(p => p.Gender == searchCriteria.Gender.Value);
 
-                if (searchCriteria.FitType.HasValue)
-                    query = query.Where(p => p.fitType == (FitType)searchCriteria.FitType.Value);
+                if (!string.IsNullOrEmpty(searchCriteria.FitType))
+                    query = query.Where(p => p.fitType == searchCriteria.FitType);
 
                 if (searchCriteria.InStock.HasValue)
                 {
@@ -531,7 +531,7 @@ namespace Application.Services.ProductServices
                         {
                             VariantId = v.Id,
                             Color = v.Color,
-                            Size = v.Size.HasValue ? v.Size.ToString() : null,
+                            Size = !string.IsNullOrEmpty( v.Size) ? v.Size.ToString() : null,
                             Waist = v.Waist,
                             Length = v.Length,
                             TotalSold = g.TotalSold,

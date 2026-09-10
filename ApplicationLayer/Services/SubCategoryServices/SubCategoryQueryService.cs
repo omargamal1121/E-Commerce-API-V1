@@ -84,9 +84,7 @@ namespace Application.Services.SubCategoryServices
 
 			if (!string.IsNullOrWhiteSpace(search))
 			{
-				query = query.Where(sc =>
-					EF.Functions.Like(sc.Name, $"%{search}") ||
-					EF.Functions.Like(sc.Description, $"%{search}"));
+				query = query.Where(q=>q.Name.Contains(search));
 			}
 
 			query = BasicFilter(query, isActive, isDeleted,IsAdmin);

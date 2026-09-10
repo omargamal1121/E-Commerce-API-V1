@@ -144,7 +144,7 @@ namespace E_Commerce.Controllers
 			if (!ModelState.IsValid)
 			{
 				var errors =GetModelErrors();
-				_logger.LogError($"Validation Errors: {errors}");
+				_logger.LogError($"Validation Errors: {errors.FirstOrDefault()}");
 				return BadRequest(ApiResponse<ProductDto>.CreateErrorResponse("Check on data", new ErrorResponse("Invalid data", errors)));
 			}
 			var userId = GetUserId();
@@ -159,7 +159,7 @@ namespace E_Commerce.Controllers
 			if (!ModelState.IsValid)
 			{
 				var errors = GetModelErrors();
-				_logger.LogError($"Validation Errors: {errors}");
+				_logger.LogError($"Validation Errors: {errors.FirstOrDefault()}");
 				return BadRequest(ApiResponse<ProductDto>.CreateErrorResponse("Invalid request", new ErrorResponse("Invalid data", errors)));
 			}
 			var userId = GetUserId();

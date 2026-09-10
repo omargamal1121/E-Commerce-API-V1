@@ -11,13 +11,19 @@ namespace Application.DtoModels.ProductDtos
 		[StringLength(20, MinimumLength = 2, ErrorMessage = "Color must be between 2 and 20 characters.")]
 		public string Color { get; set; } = string.Empty;
 
-		public VariantSize? Size { get; set; }
+
+		public string? Size { get; set; }
 
 		[Range(0, 100, ErrorMessage = "Waist must be between 0 and 100.")]
 		public int? Waist { get; set; }
 
 		[Range(0, 200, ErrorMessage = "Length must be between 0 and 200.")]
 		public int? Length { get; set; }
+
+		[Range(0, 200, ErrorMessage = "Chest must be between 0 and 200.")]
+		public int? Chest { get; set; }
+
+		public int? Hip { get; set; }
 
 		[Required(ErrorMessage = "Quantity is required.")]
 		[Range(0, int.MaxValue, ErrorMessage = "Quantity must be non-negative.")]

@@ -98,7 +98,7 @@ namespace Application.Services.DiscountServices
                     IsActive = discount.IsActive,
                     CreatedAt = discount.CreatedAt
                 };
-              _=   _=_cacheHelper.ClearProductCache();
+                 _=_cacheHelper.ClearProductCache();
                 return Result<DiscountDto>.Ok(discountDto, "Discount created successfully", 201);
             }
             catch (Exception ex)

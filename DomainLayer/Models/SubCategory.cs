@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
@@ -9,12 +9,7 @@ namespace Domain.Models
 		public string Name { get; set; } = string.Empty;
 
 		[Required(ErrorMessage = "Description is required.")]
-		[StringLength(
-			50,
-			MinimumLength = 10,
-			ErrorMessage = "Description must be between 10 and 50 characters."
-		)]
-		[RegularExpression(@"^[\w\s.,\-()'\""]{0,500}$", ErrorMessage = "Description can contain up to 500 characters: letters, numbers, spaces, and .,-()'\"")]
+		[RegularExpression(@"^[\w\s.,\-()'\""]*$", ErrorMessage = "Description can contain letters, numbers, spaces, and .,-()'\"")]
 		public string Description { get; set; } = string.Empty;
 
 		public int CategoryId { get; set; }

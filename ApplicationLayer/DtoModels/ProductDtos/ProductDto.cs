@@ -26,7 +26,7 @@ namespace Application.DtoModels.ProductDtos
 		public decimal Price { get; set; }
 		public decimal? FinalPrice { get; set; }
 		public Gender Gender { get; set; }
-		public FitType  fitType { get; set; }
+		public string? fitType { get; set; }
 		public decimal? DiscountPrecentage { get; set; }
 		public string? DiscountName { get; set; }
 

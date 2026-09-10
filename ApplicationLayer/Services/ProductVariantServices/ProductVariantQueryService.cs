@@ -135,7 +135,7 @@ namespace Application.Services.ProductVariantServices
             }
         }
 
-        public async Task<Result<List<ProductVariantDto>>> GetVariantsBySearchAsync(int productId, string? color = null, int? Length = null, int? wist = null, VariantSize? size = null, bool? isActive = null, bool? deletedOnly = null)
+        public async Task<Result<List<ProductVariantDto>>> GetVariantsBySearchAsync(int productId, string? color = null, int? Length = null, int? wist = null, string? size = null, bool? isActive = null, bool? deletedOnly = null)
         {
             _logger.LogInformation($"Searching variants for product {productId} with filters: color={color}, length={Length}, waist={wist}, size={size}, isActive={isActive}, deletedOnly={deletedOnly}");
             
@@ -165,8 +165,8 @@ namespace Application.Services.ProductVariantServices
         
                 if (!string.IsNullOrEmpty(color))
                     query = query.Where(v => v.Color == color);
-                if (size.HasValue)
-                    query = query.Where(v => v.Size == size.Value);
+                if (!string.IsNullOrEmpty(size))
+                    query = query.Where(v => v.Size == size);
                 if (Length.HasValue)
                     query = query.Where(v => v.Length == Length.Value);
                 if (wist.HasValue)

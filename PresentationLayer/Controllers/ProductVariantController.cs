@@ -154,7 +154,7 @@ namespace E_Commerce.Controllers
         // GET api/products/{productId}/variants/search
         [HttpGet()]
         [AllowAnonymous]
-        public async Task<ActionResult<ApiResponse<List<ProductVariantDto>>>> SearchVariants(int productId, [FromQuery] string? color = null, [FromQuery] int? length = null, [FromQuery] int? waist = null, [FromQuery] VariantSize? size = null, [FromQuery] bool? isActive = null, [FromQuery] bool? deletedOnly = null)
+        public async Task<ActionResult<ApiResponse<List<ProductVariantDto>>>> SearchVariants(int productId, [FromQuery] string? color = null, [FromQuery] int? length = null, [FromQuery] int? waist = null, [FromQuery] string? size = null, [FromQuery] bool? isActive = null, [FromQuery] bool? deletedOnly = null)
         {
             bool isAdmin = HasManagementRole();
             

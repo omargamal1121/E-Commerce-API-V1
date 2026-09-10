@@ -17,7 +17,7 @@ namespace Application.Services.ProductVariantServices
         Task<Result<ProductVariantDto>> UpdateVariantAsync(int id, UpdateProductVariantDto dto, string userId);
         Task<Result<bool>> DeleteVariantAsync(int id, string userId);
 
-        public Task<Result<List<ProductVariantDto>>> GetVariantsBySearchAsync(int productId, string? color = null, int? Length = null, int? wist = null, VariantSize? size = null, bool? isActive = null, bool? deletedOnly = null);
+        public Task<Result<List<ProductVariantDto>>> GetVariantsBySearchAsync(int productId, string? color = null, int? Length = null, int? wist = null, string? size = null, bool? isActive = null, bool? deletedOnly = null);
         Task<Result<bool>> ActivateVariantAsync(int id, string userId);
         Task<Result<bool>> DeactivateVariantAsync(int id, string userId);
         Task<Result<bool>> AddVariantQuantityAsync(int id, int addQuantity, string userId);

@@ -192,8 +192,8 @@ namespace Application.Services.ProductVariantServices
             if (dto.Quantity < 0)
                 return Result<ProductVariantDto>.Fail("Quantity cannot be negative", 400);
 
-            _logger.LogInformation($"Checking if variant with color={dto.Color}, size={dto.Size}, waist={dto.Waist}, length={dto.Length} already exists for product {productId}");
-            var existingVariant = await _unitOfWork.ProductVariant.IsExsistBySizeandColor(productId, dto.Color, dto.Size, dto.Waist, dto.Length);
+            _logger.LogInformation($"Checking if variant with color={dto.Color}, size={dto.Size}, waist={dto.Waist}, length={dto.Length}, chest={dto.Chest} already exists for product {productId}");
+            var existingVariant = await _unitOfWork.ProductVariant.IsExsistBySizeandColor(productId, dto.Color, dto.Size, dto.Waist, dto.Length, dto.Chest);
 
             if (existingVariant)
             {
@@ -296,7 +296,7 @@ namespace Application.Services.ProductVariantServices
 					dto.Color, dto.Size, dto.Waist, dto.Length, productId);
 
 				var exists = await _unitOfWork.ProductVariant.IsExsistBySizeandColor(
-					productId, dto.Color, dto.Size, dto.Waist, dto.Length);
+				productId, dto.Color, dto.Size, dto.Waist, dto.Length, dto.Chest);
 
 				if (exists)
 				{
@@ -385,8 +385,8 @@ namespace Application.Services.ProductVariantServices
                 if (variant == null)
                     return Result<ProductVariantDto>.Fail("Variant not found", 404);
 
-                _logger.LogInformation($"Checking if variant with color={dto.Color}, size={dto.Size}, waist={dto.Waist}, length={dto.Length} already exists for product {variant.ProductId}");
-                var isexsist = await _unitOfWork.ProductVariant.IsExsistBySizeandColor(variant.ProductId, dto.Color, dto.Size, dto.Waist, dto.Length);
+                _logger.LogInformation($"Checking if variant with color={dto.Color}, size={dto.Size}, waist={dto.Waist}, length={dto.Length}, chest={dto.Chest} already exists for product {variant.ProductId}");
+                var isexsist = await _unitOfWork.ProductVariant.IsExsistBySizeandColor(variant.ProductId, dto.Color, dto.Size, dto.Waist, dto.Length, dto.Chest);
                 if (isexsist)
                 {
                     _logger.LogWarning($"Attempt to update variant {id} with duplicate attributes for product {variant.ProductId}");
@@ -419,6 +419,12 @@ namespace Application.Services.ProductVariantServices
                     _logger.LogInformation($"Updating variant {id} length from {variant.Length} to {dto.Length}");
                     updates += $"from {variant.Length} to {dto.Length}";
                     variant.Length = dto.Length;
+                }
+                if (dto.Chest.HasValue && dto.Chest != variant.Chest)
+                {
+                    _logger.LogInformation($"Updating variant {id} chest from {variant.Chest} to {dto.Chest}");
+                    updates += $"from {variant.Chest} to {dto.Chest}";
+                    variant.Chest = dto.Chest;
                 }
 
                 // Log admin operation

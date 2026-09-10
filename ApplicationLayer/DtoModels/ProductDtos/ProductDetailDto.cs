@@ -18,7 +18,7 @@ namespace Application.DtoModels.ProductDtos
 		public decimal Price { get; set; }
 		public Gender Gender { get; set; }
 		public bool IsActive { get; set; }
-		public  FitType fitType { get; set; }
+		public string? fitType { get; set; }
 		public string SubCategoryName { get; set; }
 	
 		public IEnumerable<ImageDto>? Images { get; set; }

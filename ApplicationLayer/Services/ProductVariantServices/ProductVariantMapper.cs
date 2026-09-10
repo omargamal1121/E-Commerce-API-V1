@@ -18,6 +18,8 @@ namespace Application.Services.ProductVariantServices
                 Size = variant.Size,
                 Waist = variant.Waist,
                 Length = variant.Length,
+                Chest = variant.Chest,
+                Hip = variant.Hip,
                 Quantity = variant.Quantity,
                 ProductId = variant.ProductId,
                 IsActive = variant.IsActive,
@@ -54,6 +56,8 @@ namespace Application.Services.ProductVariantServices
                 Size = dto.Size,
                 Waist = dto.Waist,
                 Length = dto.Length,
+                Chest = dto.Chest,
+                Hip = dto.Hip,
                 Quantity = dto.Quantity,
                 IsActive = true
             };
@@ -69,7 +73,9 @@ namespace Application.Services.ProductVariantServices
                 Color = dto.Color?.Trim(),
                 Size = dto.Size,
                 Waist = dto.Waist,
-                Length = dto.Length
+                Length = dto.Length,
+                Chest = dto.Chest,
+                Hip = dto.Hip
             };
         }
 
@@ -85,6 +91,8 @@ namespace Application.Services.ProductVariantServices
                 Size = v.Size,
                 Waist = v.Waist,
                 Length = v.Length,
+                Chest = v.Chest,
+                Hip = v.Hip,
                 Quantity = v.Quantity,
                 ProductId = v.ProductId,
                 IsActive = v.IsActive,

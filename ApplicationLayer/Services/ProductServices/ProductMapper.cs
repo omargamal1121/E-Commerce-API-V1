@@ -151,6 +151,8 @@ namespace Application.Services.ProductServices
 							Size = v.Size,
 							Waist = v.Waist,
 							Length = v.Length,
+							Chest = v.Chest,
+							Hip = v.Hip,
 							Quantity = v.Quantity,
 							ProductId = v.ProductId
 						})

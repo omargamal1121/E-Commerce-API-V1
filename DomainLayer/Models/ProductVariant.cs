@@ -12,9 +12,11 @@ namespace Domain.Models
         [Timestamp]
         [Column(TypeName = "binary(8)")]
         public byte[]? RowVersion { get; set; }
-        public VariantSize? Size { get; set; }
+        public string? Size { get; set; }
         public int? Waist { get; set; }
         public int? Length { get; set; }
+        public int? Chest { get; set; }
+        public int? Hip { get; set; }
 
         [Required]
         public int Quantity { get; set; }

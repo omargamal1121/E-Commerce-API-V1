@@ -381,10 +381,10 @@ namespace Application.Services.ProductServices
 					updates.Add($"change Gender from: {product.Gender} to {dto.Gender.Value}");
 					product.Gender = dto.Gender.Value;
 				}
-				if (dto.fitType.HasValue)
+				if (!string.IsNullOrEmpty( dto.fitType))
 				{
-					updates.Add($"change fitType from: {product.fitType} to {dto.fitType.Value}");
-					product.fitType = dto.fitType.Value;
+					updates.Add($"change fitType from: {product.fitType} to {dto.fitType}");
+					product.fitType = dto.fitType;
 				}
 				if (updates.Count == 0)
 				{

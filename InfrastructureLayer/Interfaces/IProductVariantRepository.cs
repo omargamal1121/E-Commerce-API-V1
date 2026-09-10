@@ -13,7 +13,7 @@ namespace Infrastructure.Interfaces
 		public Task<ProductVariant?> GetVariantById(int id);
 		public  Task<bool> IsExsistAndActive(int id);
 		public Task<List<ProductVariant>> GetVariantsByProductId(int productId);
-		public Task<bool> IsExsistBySizeandColor(int productid, string? color, VariantSize? size, int? wist, int? length);
+		public Task<bool> IsExsistBySizeandColor(int productid, string? color, string? size, int? wist, int? length, int? chest);
 
 		public Task<bool> ActiveVaraintAsync(int id);
 		public Task<bool> DeactiveVaraintAsync(int id);

@@ -27,7 +27,7 @@ namespace Application.Services.ProductVariantServices
         public async Task<Result<ProductVariantDto>> GetVariantByIdAsync(int id)
             => await _queryService.GetVariantByIdAsync(id);
 
-        public async Task<Result<List<ProductVariantDto>>> GetVariantsBySearchAsync(int productId, string? color = null, int? Length = null, int? wist = null, VariantSize? size = null, bool? isActive = null, bool? deletedOnly = null)
+        public async Task<Result<List<ProductVariantDto>>> GetVariantsBySearchAsync(int productId, string? color = null, int? Length = null, int? wist = null, string? size = null, bool? isActive = null, bool? deletedOnly = null)
             => await _queryService.GetVariantsBySearchAsync(productId, color, Length, wist, size, isActive, deletedOnly);
         #endregion
 

@@ -519,16 +519,11 @@ namespace Application.Services.SubCategoryServices
 				{
 					var trimmedDescription = subCategory.Description.Trim();
 
-					var descRegex = new System.Text.RegularExpressions.Regex(@"^[\w\s.,\-()'\""]{0,500}$");
+					var descRegex = new System.Text.RegularExpressions.Regex(@"^[\w\s.,\-()'\""]*$");
 					if (!descRegex.IsMatch(trimmedDescription))
 					{
 						warnings.Add($"Description '{trimmedDescription}' does not match the required format. Description will not be changed.");
 						_logger.LogWarning($"Description update skipped - invalid format '{trimmedDescription}'");
-					}
-					else if (trimmedDescription.Length < 10 || trimmedDescription.Length > 50)
-					{
-						warnings.Add($"Description '{trimmedDescription}' must be between 10 and 50 characters. Description will not be changed.");
-						_logger.LogWarning($"Description update skipped - invalid length '{trimmedDescription}'");
 					}
 					else
 					{

@@ -1055,6 +1055,9 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsFreeSize")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<int?>("Length")
                         .HasColumnType("int");
 
@@ -1074,6 +1077,9 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Property<string>("Size")
                         .HasColumnType("varchar(255)");
+
+                    b.Property<int?>("SleeveLength")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Waist")
                         .HasColumnType("int");

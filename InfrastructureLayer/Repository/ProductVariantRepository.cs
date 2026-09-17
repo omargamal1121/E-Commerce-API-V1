@@ -56,7 +56,9 @@ namespace Infrastructure.Repository
 		string? size,
 		int? waist,
 		int? length,
-		int? chest)
+		int? chest,
+		int? sleeveLength = null,
+		bool? isFreeSize = null)
 		{
 			var query = _entity.AsNoTracking().Where(v => v.ProductId == productId);
 
@@ -74,6 +76,12 @@ namespace Infrastructure.Repository
 
 			if (chest.HasValue)
 				query = query.Where(v => v.Chest == chest.Value);
+
+			if (sleeveLength.HasValue)
+				query = query.Where(v => v.SleeveLength == sleeveLength.Value);
+
+			if (isFreeSize.HasValue)
+				query = query.Where(v => v.IsFreeSize == isFreeSize.Value);
 
 			return await query.AnyAsync();
 		}

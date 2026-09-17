@@ -192,8 +192,8 @@ namespace Application.Services.ProductVariantServices
             if (dto.Quantity < 0)
                 return Result<ProductVariantDto>.Fail("Quantity cannot be negative", 400);
 
-            _logger.LogInformation($"Checking if variant with color={dto.Color}, size={dto.Size}, waist={dto.Waist}, length={dto.Length}, chest={dto.Chest} already exists for product {productId}");
-            var existingVariant = await _unitOfWork.ProductVariant.IsExsistBySizeandColor(productId, dto.Color, dto.Size, dto.Waist, dto.Length, dto.Chest);
+            _logger.LogInformation($"Checking if variant with color={dto.Color}, size={dto.Size}, waist={dto.Waist}, length={dto.Length}, chest={dto.Chest}, sleeveLength={dto.SleeveLength}, isFreeSize={dto.IsFreeSize} already exists for product {productId}");
+            var existingVariant = await _unitOfWork.ProductVariant.IsExsistBySizeandColor(productId, dto.Color, dto.Size, dto.Waist, dto.Length, dto.Chest, dto.SleeveLength, dto.IsFreeSize);
 
             if (existingVariant)
             {

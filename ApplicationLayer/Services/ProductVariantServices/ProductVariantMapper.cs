@@ -20,6 +20,8 @@ namespace Application.Services.ProductVariantServices
                 Length = variant.Length,
                 Chest = variant.Chest,
                 Hip = variant.Hip,
+                SleeveLength = variant.SleeveLength,
+                IsFreeSize = variant.IsFreeSize,
                 Quantity = variant.Quantity,
                 ProductId = variant.ProductId,
                 IsActive = variant.IsActive,
@@ -58,6 +60,8 @@ namespace Application.Services.ProductVariantServices
                 Length = dto.Length,
                 Chest = dto.Chest,
                 Hip = dto.Hip,
+                SleeveLength = dto.SleeveLength,
+                IsFreeSize = dto.IsFreeSize,
                 Quantity = dto.Quantity,
                 IsActive = true
             };
@@ -75,7 +79,9 @@ namespace Application.Services.ProductVariantServices
                 Waist = dto.Waist,
                 Length = dto.Length,
                 Chest = dto.Chest,
-                Hip = dto.Hip
+                Hip = dto.Hip,
+                SleeveLength = dto.SleeveLength,
+                IsFreeSize = dto.IsFreeSize ?? false
             };
         }
 
@@ -93,6 +99,8 @@ namespace Application.Services.ProductVariantServices
                 Length = v.Length,
                 Chest = v.Chest,
                 Hip = v.Hip,
+                SleeveLength = v.SleeveLength,
+                IsFreeSize = v.IsFreeSize,
                 Quantity = v.Quantity,
                 ProductId = v.ProductId,
                 IsActive = v.IsActive,

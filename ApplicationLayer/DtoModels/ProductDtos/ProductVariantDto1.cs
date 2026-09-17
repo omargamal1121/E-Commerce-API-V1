@@ -12,6 +12,8 @@ namespace Application.DtoModels.ProductDtos
 		public int? Length { get; set; }
 		public int? Chest { get; set; }
 		public int? Hip { get; set; }
+		public int? SleeveLength { get; set; }
+		public bool IsFreeSize { get; set; }
 		public int Quantity { get; set; }
 		public int ProductId { get; set; }
 		public bool IsActive { get; set; }

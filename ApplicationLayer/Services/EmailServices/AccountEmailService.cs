@@ -32,11 +32,14 @@ namespace Application.Services.EmailServices
 		{
 			try
 			{
+				// Read frontend base URL from config (fallback to FrontEndUrl if ClientAppBaseUrl not set)
+				var clientBaseUrl = _configuration["ClientAppBaseUrl"] ?? _configuration["FrontEndUrl"] ?? frontendUrl;
+
 				// Encode the token for URL safety
 				var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
-				// Build the confirmation link
-				var confirmationLink = $"{frontendUrl}/api/Account/confirm-email?userId={userId}&token={encodedToken}";
+				// Build the confirmation link pointing to frontend SPA page
+				var confirmationLink = $"{clientBaseUrl}/confirm-email?userId={userId}&token={encodedToken}";
 
 				string subject = "Email Confirmation - Welcome to Our Service";
 				string message = CreateEmailTemplate(

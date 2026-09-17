@@ -17,6 +17,8 @@ namespace Domain.Models
         public int? Length { get; set; }
         public int? Chest { get; set; }
         public int? Hip { get; set; }
+        public int? SleeveLength { get; set; }
+        public bool IsFreeSize { get; set; } = false;
 
         [Required]
         public int Quantity { get; set; }

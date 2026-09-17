@@ -25,6 +25,11 @@ namespace Application.DtoModels.ProductDtos
 
 		public int? Hip { get; set; }
 
+		[Range(0, 200, ErrorMessage = "Sleeve Length must be between 0 and 200.")]
+		public int? SleeveLength { get; set; }
+
+		public bool IsFreeSize { get; set; } = false;
+
 		[Required(ErrorMessage = "Quantity is required.")]
 		[Range(0, int.MaxValue, ErrorMessage = "Quantity must be non-negative.")]
 		public int Quantity { get; set; }

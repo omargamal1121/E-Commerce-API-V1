@@ -7,9 +7,8 @@ namespace Application.DtoModels.ProductDtos
 {
 	public class CreateProductVariantDto
 	{
-		[Required(ErrorMessage = "Color is required.")]
 		[StringLength(20, MinimumLength = 2, ErrorMessage = "Color must be between 2 and 20 characters.")]
-		public string Color { get; set; } = string.Empty;
+		public string? Color { get; set; }
 
 
 		public string? Size { get; set; }

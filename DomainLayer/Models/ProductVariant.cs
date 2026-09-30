@@ -6,8 +6,7 @@ namespace Domain.Models
 {
     public class ProductVariant : BaseEntity
     {
-        [Required]
-        public string Color { get; set; }
+        public string? Color { get; set; }
 
         [Timestamp]
         [Column(TypeName = "binary(8)")]

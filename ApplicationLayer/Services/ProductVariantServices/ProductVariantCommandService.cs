@@ -186,8 +186,8 @@ namespace Application.Services.ProductVariantServices
             if (!product)
                 return Result<ProductVariantDto>.Fail("Product not found", 404);
 
-            if (string.IsNullOrEmpty(dto.Color) || dto.Size == null)
-                return Result<ProductVariantDto>.Fail("Color and Size are required", 400);
+            if (dto.Size == null && !dto.Waist.HasValue && !dto.Length.HasValue && !dto.Chest.HasValue && !dto.IsFreeSize && string.IsNullOrEmpty(dto.Color))
+                return Result<ProductVariantDto>.Fail("Variant specifications (Color, Size, or Measurements) are required", 400);
 
             if (dto.Quantity < 0)
                 return Result<ProductVariantDto>.Fail("Quantity cannot be negative", 400);
@@ -198,7 +198,7 @@ namespace Application.Services.ProductVariantServices
             if (existingVariant)
             {
                 _logger.LogWarning($"Attempt to add duplicate variant for product {productId} with color={dto.Color}, size={dto.Size}");
-                return Result<ProductVariantDto>.Fail("Variant with this color , size , waist and length already exists", 400);
+                return Result<ProductVariantDto>.Fail("Variant with these specifications already exists", 400);
             }
 
             using var transaction = await _unitOfWork.BeginTransactionAsync();
@@ -283,7 +283,7 @@ namespace Application.Services.ProductVariantServices
 
 			// ? Validate input
 			if (dtos == null || !dtos.Any())
-				return Result<List<ProductVariantDto>>.Fail("Color and Size are required", 400);
+				return Result<List<ProductVariantDto>>.Fail("At least one variant is required", 400);
 
 			using var transaction = await _unitOfWork.BeginTransactionAsync();
 			var newVariants = new List<ProductVariant>();
@@ -296,7 +296,7 @@ namespace Application.Services.ProductVariantServices
 					dto.Color, dto.Size, dto.Waist, dto.Length, productId);
 
 				var exists = await _unitOfWork.ProductVariant.IsExsistBySizeandColor(
-				productId, dto.Color, dto.Size, dto.Waist, dto.Length, dto.Chest);
+				productId, dto.Color, dto.Size, dto.Waist, dto.Length, dto.Chest, dto.SleeveLength, dto.IsFreeSize);
 
 				if (exists)
 				{
@@ -386,17 +386,28 @@ namespace Application.Services.ProductVariantServices
                     return Result<ProductVariantDto>.Fail("Variant not found", 404);
 
                 _logger.LogInformation($"Checking if variant with color={dto.Color}, size={dto.Size}, waist={dto.Waist}, length={dto.Length}, chest={dto.Chest} already exists for product {variant.ProductId}");
-                var isexsist = await _unitOfWork.ProductVariant.IsExsistBySizeandColor(variant.ProductId, dto.Color, dto.Size, dto.Waist, dto.Length, dto.Chest);
-                if (isexsist)
+                var targetColor = dto.Color ?? variant.Color;
+                var targetSize = dto.Size ?? variant.Size;
+                var targetWaist = dto.Waist ?? variant.Waist;
+                var targetLength = dto.Length ?? variant.Length;
+                var targetChest = dto.Chest ?? variant.Chest;
+                var targetSleeveLength = dto.SleeveLength ?? variant.SleeveLength;
+                var targetIsFreeSize = dto.IsFreeSize ?? variant.IsFreeSize;
+
+                if (targetColor != variant.Color || targetSize != variant.Size || targetWaist != variant.Waist || targetLength != variant.Length || targetChest != variant.Chest || targetSleeveLength != variant.SleeveLength || targetIsFreeSize != variant.IsFreeSize)
                 {
-                    _logger.LogWarning($"Attempt to update variant {id} with duplicate attributes for product {variant.ProductId}");
-                    return Result<ProductVariantDto>.Fail("Thier's Varinat with this data ");
+                    var isexsist = await _unitOfWork.ProductVariant.IsExsistBySizeandColor(variant.ProductId, targetColor, targetSize, targetWaist, targetLength, targetChest, targetSleeveLength, targetIsFreeSize);
+                    if (isexsist)
+                    {
+                        _logger.LogWarning($"Attempt to update variant {id} with duplicate attributes for product {variant.ProductId}");
+                        return Result<ProductVariantDto>.Fail("A variant with these specifications already exists");
+                    }
                 }
 
                 _logger.LogInformation($"Starting to update variant {id} properties");
                 string updates = string.Empty;
 
-                if (!string.IsNullOrEmpty(dto.Color) && dto.Color != variant.Color)
+                if (dto.Color != variant.Color)
                 {
                     _logger.LogInformation($"Updating variant {id} color from {variant.Color} to {dto.Color}");
                     updates += $"from {variant.Color} to {dto.Color}";

@@ -60,12 +60,16 @@ namespace Infrastructure.Repository
 		int? sleeveLength = null,
 		bool? isFreeSize = null)
 		{
-			var query = _entity.AsNoTracking().Where(v => v.ProductId == productId);
+			var query = _entity.AsNoTracking().Where(v => v.ProductId == productId && v.DeletedAt == null);
 
-			if (!string.IsNullOrEmpty(color))
+			if (string.IsNullOrEmpty(color))
+				query = query.Where(v => v.Color == null || v.Color == "");
+			else
 				query = query.Where(v => v.Color == color);
 
-			if (!string.IsNullOrEmpty( size))
+			if (string.IsNullOrEmpty(size))
+				query = query.Where(v => v.Size == null || v.Size == "");
+			else
 				query = query.Where(v => v.Size == size);
 
 			if (waist.HasValue)

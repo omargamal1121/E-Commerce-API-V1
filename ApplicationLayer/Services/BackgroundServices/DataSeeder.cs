@@ -9,6 +9,7 @@ using Domain.Models;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -21,6 +22,7 @@ namespace Application.Services.BackgroundServices
             var logger = serviceProvider.GetRequiredService<ILoggerFactory>()
                                         .CreateLogger("DataSeeder");
             var emailService = serviceProvider.GetRequiredService<IErrorNotificationService>();
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
             try
             {
@@ -32,9 +34,11 @@ namespace Application.Services.BackgroundServices
                 var paymentprovider = serviceProvider.GetRequiredService<IPaymentProvidersServices>();
                 var uow = serviceProvider.GetRequiredService<IUnitOfWork>();
 
-                string adminEmail = "Omargamal1132004@gmail.com";
-                string adminEmail2 = "Og4381146@gmail.com";
-                string adminPassword = "Admin@123";
+                string adminEmail = configuration["DataSeeder:AdminEmail"] ?? throw new InvalidOperationException("DataSeeder:AdminEmail configuration is missing");
+                string adminPassword = configuration["DataSeeder:AdminPassword"] ?? throw new InvalidOperationException("DataSeeder:AdminPassword configuration is missing");
+                string adminName = configuration["DataSeeder:AdminName"] ?? throw new InvalidOperationException("DataSeeder:AdminName configuration is missing");
+                int adminAge = int.TryParse(configuration["DataSeeder:AdminAge"], out var age) ? age : throw new InvalidOperationException("DataSeeder:AdminAge configuration is missing or invalid");
+                string adminPhoneNumber = configuration["DataSeeder:AdminPhoneNumber"] ?? throw new InvalidOperationException("DataSeeder:AdminPhoneNumber configuration is missing");
 
            
                 await EnsureRoleExistsAsync(roleManager, "Admin", logger);
@@ -43,8 +47,7 @@ namespace Application.Services.BackgroundServices
                 await EnsureRoleExistsAsync(roleManager, "DeliveryCompany", logger);
 
      
-                await EnsureAdminUserAsync(userManager, adminEmail, adminPassword, logger);
-                await EnsureAdminUserAsync(userManager, adminEmail2, adminPassword, logger);
+                await EnsureAdminUserAsync(userManager, adminEmail, adminPassword, adminName, adminAge, adminPhoneNumber, logger);
 
                 var adminUser = await userManager.FindByEmailAsync(adminEmail);
                 if (adminUser != null)
@@ -59,12 +62,12 @@ namespace Application.Services.BackgroundServices
                         var provider = await paymentprovider.AddIfNotExistsAsync(
                             new CreatePaymentProviderDto
                             {
-                                ApiEndpoint = "https://accept.paymob.com",
-                                Hmac = "8D3993CBFCA0EEECBFBB833EEF7C5D7B",
-                                IframeId = "945070",
+                                ApiEndpoint = configuration["DataSeeder:PaymobApiEndpoint"] ?? throw new InvalidOperationException("DataSeeder:PaymobApiEndpoint configuration is missing"),
+                                Hmac = configuration["DataSeeder:PaymobHmac"] ?? throw new InvalidOperationException("DataSeeder:PaymobHmac configuration is missing"),
+                                IframeId = configuration["DataSeeder:PaymobIframeId"] ?? throw new InvalidOperationException("DataSeeder:PaymobIframeId configuration is missing"),
                                 Name = "Paymob",
                                 PaymentProvider = PaymentProviderEnums.Paymob,
-                                PublicKey = "ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2TVRBMk5EZ3pPU3dpYm1GdFpTSTZJbWx1YVhScFlXd2lmUS5RRVVrRWpjZXVUMDloeUhsQlNQY0JNUUdTZncwQzVndFhvR3BOZTVOdGRZX3k2VjJ2Smd6RER1WG0wN2Fzckh4NUlPTWlBQnB3bDNPRWJXREdWMWVTdw=="
+                                PublicKey = configuration["DataSeeder:PaymobPublicKey"] ?? throw new InvalidOperationException("DataSeeder:PaymobPublicKey configuration is missing")
                             },
                             userId);
 
@@ -74,14 +77,17 @@ namespace Application.Services.BackgroundServices
                         {
                             logger.LogInformation("Payment provider 'Paymob' ensured.");
 
+                            var visaIntegrationId = configuration["DataSeeder:PaymobVisaIntegrationId"] ?? throw new InvalidOperationException("DataSeeder:PaymobVisaIntegrationId configuration is missing");
+                            var walletIntegrationId = configuration["DataSeeder:PaymobWalletIntegrationId"] ?? throw new InvalidOperationException("DataSeeder:PaymobWalletIntegrationId configuration is missing");
+
                             await AddPaymentMethodIfNotExists(paymentmethod, userId, provider.Data.Id,
-                                "Visa", PaymentMethodEnums.Visa, "5221967", logger);
+                                "Visa", PaymentMethodEnums.Visa, visaIntegrationId, logger);
 
                             await AddPaymentMethodIfNotExists(paymentmethod, userId, provider.Data.Id,
                                 "Cash On Delivery", PaymentMethodEnums.CashOnDelivery, "", logger);
 
                             await AddPaymentMethodIfNotExists(paymentmethod, userId, provider.Data.Id,
-                                "Wallet", PaymentMethodEnums.Wallet, "5236287", logger);
+                                "Wallet", PaymentMethodEnums.Wallet, walletIntegrationId, logger);
 
                             await uow.CommitAsync();
                         }
@@ -103,9 +109,8 @@ namespace Application.Services.BackgroundServices
                 logger.LogError(ex, "Error occurred during data seeding.");
 
                 await emailService.SendErrorNotificationAsync(
-                    "admin@yourapp.com"+
-                    "Data Seeder Error"+
-                    $"An error occurred during seeding: {ex.Message}\n\n{ex.StackTrace}"
+                    $"An error occurred during data seeding: {ex.Message}",
+                    ex.StackTrace
                 );
             }
         }
@@ -128,6 +133,9 @@ namespace Application.Services.BackgroundServices
         private static async Task EnsureAdminUserAsync(UserManager<Customer> userManager,
                                                        string email,
                                                        string password,
+                                                       string name,
+                                                       int age,
+                                                       string phoneNumber,
                                                        ILogger logger)
         {
             var user = await userManager.FindByEmailAsync(email);
@@ -140,9 +148,9 @@ namespace Application.Services.BackgroundServices
                     UserName = email,
                     Email = email,
                     EmailConfirmed = true,
-                    Name = "Omar gamal",
-                    Age = 21,
-                    PhoneNumber = "01226493558",
+                    Name = name,
+                    Age = age,
+                    PhoneNumber = phoneNumber,
                  
                 };
 

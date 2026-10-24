@@ -45,7 +45,7 @@ namespace Application.Services.CategoryServices
 		public  void SetCategoryListCacheAsync<T>(List<T> data, string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false, TimeSpan? expiration = null)
 		{
 			var cacheKey = GetCategoryListKey(search, isActive, isDeleted, page, pageSize, IsAdmin);
-			_jobClient.Enqueue(()=> _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { CACHELIST }));
+			_ = _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { CACHELIST });
 		}
 
 		public async Task<List<T>?> GetCategoryListCacheAsync<T>(string? search, bool? isActive, bool? isDeleted, int page, int pageSize, bool IsAdmin = false)
@@ -57,7 +57,7 @@ namespace Application.Services.CategoryServices
 		public void SetCategoryByIdCacheAsync<T>(int id, bool? isActive, bool? isDeleted, T data,bool IsAdmin=false, TimeSpan? expiration = null)
 		{
 			var cacheKey = GetCategoryByIdKey(id, isActive, isDeleted,IsAdmin);
-			_jobClient.Enqueue(()=> _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[]{ CACHEWITHDATA }));
+			_ = _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[]{ CACHEWITHDATA });
 		}
 
 		public async Task<T?> GetCategoryByIdCacheAsync<T>(int id, bool? isActive, bool? isDeleted, bool IsAdmin = false)

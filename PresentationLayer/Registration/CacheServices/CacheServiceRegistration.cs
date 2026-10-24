@@ -8,8 +8,7 @@ namespace E_Commerce.Registration.CacheServices
     {
         public static IServiceCollection AddCacheServices(this IServiceCollection services)
         {
-            // Cache Services
-            services.AddSingleton<ICacheManager, CacheManager>();
+            // Cache Services (ICacheManager is registered conditionally in Program.cs based on Cache:Provider)
             services.AddTransient<IErrorNotificationService, ErrorNotificationService>();
             
             return services;

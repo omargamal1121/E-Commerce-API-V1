@@ -40,9 +40,9 @@ namespace ECommerce.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    Name = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DisplayOrder = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -201,7 +201,7 @@ namespace ECommerce.Infrastructure.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -258,14 +258,15 @@ namespace ECommerce.Infrastructure.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     SubCategoryId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     DiscountId = table.Column<int>(type: "int", nullable: true),
                     RowVersion = table.Column<byte[]>(type: "binary(8)", rowVersion: true, nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    fitType = table.Column<int>(type: "int", nullable: false),
+                    fitType = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Gender = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -275,8 +276,6 @@ namespace ECommerce.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
-                    table.CheckConstraint("CK_Product_Price_Positive", "'Price' > 0");
-                    table.CheckConstraint("CK_Product_Quantity_NonNegative", "'Quantity' >= 0");
                     table.ForeignKey(
                         name: "FK_Products_Discount_DiscountId",
                         column: x => x.DiscountId,
@@ -421,12 +420,17 @@ namespace ECommerce.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Color = table.Column<string>(type: "varchar(255)", nullable: false)
+                    Color = table.Column<string>(type: "varchar(255)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RowVersion = table.Column<byte[]>(type: "binary(8)", rowVersion: true, nullable: true),
-                    Size = table.Column<int>(type: "int", nullable: true),
+                    Size = table.Column<string>(type: "varchar(255)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Waist = table.Column<int>(type: "int", nullable: true),
                     Length = table.Column<int>(type: "int", nullable: true),
+                    Chest = table.Column<int>(type: "int", nullable: true),
+                    Hip = table.Column<int>(type: "int", nullable: true),
+                    SleeveLength = table.Column<int>(type: "int", nullable: true),
+                    IsFreeSize = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -437,7 +441,6 @@ namespace ECommerce.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductVariants", x => x.Id);
-                    table.CheckConstraint("CK_ProductVariant_Quantity_NonNegative", "'Quantity'>= 0");
                     table.ForeignKey(
                         name: "FK_ProductVariants_Products_ProductId",
                         column: x => x.ProductId,
@@ -835,9 +838,9 @@ namespace ECommerce.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CustomerId = table.Column<string>(type: "varchar(255)", nullable: false)
+                    CustomerId = table.Column<string>(type: "varchar(255)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CustomerAddressId = table.Column<int>(type: "int", nullable: false),
+                    CustomerAddressId = table.Column<int>(type: "int", nullable: true),
                     OrderNumber = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Status = table.Column<int>(type: "int", nullable: false),
@@ -853,6 +856,23 @@ namespace ECommerce.Infrastructure.Migrations
                     CancelledAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     RestockedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     RowVersion = table.Column<byte[]>(type: "binary(8)", rowVersion: true, nullable: true),
+                    CustomerName = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Email = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Governorate = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    City = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Street = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Building = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IsGuest = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    GuestTokenHash = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     ModifiedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
@@ -870,8 +890,7 @@ namespace ECommerce.Infrastructure.Migrations
                         name: "FK_Orders_CustomerAddresses_CustomerAddressId",
                         column: x => x.CustomerAddressId,
                         principalTable: "CustomerAddresses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -950,7 +969,7 @@ namespace ECommerce.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     RowVersion = table.Column<byte[]>(type: "binary(8)", rowVersion: true, nullable: true),
-                    CustomerId = table.Column<string>(type: "varchar(255)", nullable: false)
+                    CustomerId = table.Column<string>(type: "varchar(255)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PaymentMethodId = table.Column<int>(type: "int", nullable: false),
                     PaymentProviderId = table.Column<int>(type: "int", nullable: false),
@@ -973,7 +992,7 @@ namespace ECommerce.Infrastructure.Migrations
                         column: x => x.CustomerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Payments_Orders_OrderId",
                         column: x => x.OrderId,
@@ -1194,10 +1213,9 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CartItems_CartId_ProductId_ProductVariantId",
+                name: "IX_CartItems_CartId",
                 table: "CartItems",
-                columns: new[] { "CartId", "ProductId", "ProductVariantId" },
-                unique: true);
+                column: "CartId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CartItems_ProductId",
@@ -1286,11 +1304,6 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_Status",
-                table: "Orders",
-                column: "Status");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PaymentMethods_PaymentProviderId",
                 table: "PaymentMethods",
                 column: "PaymentProviderId");
@@ -1324,6 +1337,12 @@ namespace ECommerce.Infrastructure.Migrations
                 name: "IX_PaymentWebhooks_PaymentId",
                 table: "PaymentWebhooks",
                 column: "PaymentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentWebhooks_WebhookUniqueKey",
+                table: "PaymentWebhooks",
+                column: "WebhookUniqueKey",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductCollections_CollectionId",

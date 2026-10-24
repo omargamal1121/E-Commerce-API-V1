@@ -57,7 +57,7 @@ namespace Application.Services.ProductServices
         public void SetProductListCacheAsync<T>(List<T> data, string? search, bool? isActive, bool? isDeleted, int pageSize = 10, int page = 1, string? tag = null, bool IsAdmin = false, TimeSpan? expiration = null)
         {
             var cacheKey = GetProductListKey(search, isActive, isDeleted, pageSize, page, tag, IsAdmin);
-            _jobClient.Enqueue(() => _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { _ProductListKey }));
+            _ = _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { _ProductListKey });
         }
 
         public async Task<List<T>?> GetProductListCacheAsync<T>(string? search, bool? isActive, bool? isDeleted, int pageSize = 10, int page = 1, string? tag = null, bool IsAdmin = false)
@@ -68,7 +68,7 @@ namespace Application.Services.ProductServices
         public void SetProductListBySubCategoryidCacheAsync<T>(List<T> data, int subcateogryid, bool? isActive, bool? isDeleted, int page = 1, int pageSize = 10, bool IsAdmin = false, TimeSpan? expiration = null)
         {
             var cacheKey = GetProductBySubCategoryIdKey(subcateogryid, isActive, isDeleted, page, pageSize, IsAdmin);
-            _jobClient.Enqueue(() => _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string [] { _ProductListKey}));
+            _ = _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string [] { _ProductListKey});
         }
 
         public async Task<List<T>?> GetProductListBySubcategoryidCacheAsync<T>(int subcateogryid, bool? isActive, bool? isDeleted, int page = 1, int pageSize = 10, bool IsAdmin = false)
@@ -80,7 +80,7 @@ namespace Application.Services.ProductServices
         public void SetProductByIdCacheAsync(int id, bool? isActive, bool? isDeleted, ProductDetailDto data, bool IsAdmin = false, TimeSpan? expiration = null)
         {
             var cacheKey = GetProductByIdKey(id, isActive, isDeleted, IsAdmin).ToString();
-            _jobClient.Enqueue(() => _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30),new string[] { _Productwithdata}));
+            _ = _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { _Productwithdata});
         }
 
         public async Task<T?> GetProductByIdCacheAsync<T>(int id, bool? isActive, bool? isDeleted, bool IsAdmin = false)
@@ -92,7 +92,7 @@ namespace Application.Services.ProductServices
         public void SetProductSalesCacheAsync(int productId, ProductSalesDto data, TimeSpan? expiration = null)
         {
             var cacheKey = GetProductSalesKey(productId);
-            _jobClient.Enqueue(() => _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { _ProductListKey }));
+            _ = _cacheManager.SetAsync(cacheKey, data, expiration ?? TimeSpan.FromMinutes(30), new string[] { _ProductListKey });
         }
 
         public async Task<ProductSalesDto?> GetProductSalesCacheAsync(int productId)

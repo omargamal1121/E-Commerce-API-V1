@@ -2,43 +2,40 @@ using Application.DtoModels;
 using Application.DtoModels.TokenDtos;
 using Application.Interfaces;
 using Application.Services;
+using Application.Services.CacheServices;
 using Application.Services.EmailServices;
 using Domain.Models;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using StackExchange.Redis;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
 namespace Application.Services.AuthServices
 {
-
     public class RefreshTokenService : IRefreshTokenService
     {
-        private readonly IConnectionMultiplexer _redis;
         private readonly ILogger<RefreshTokenService> _logger;
         private readonly IConfiguration _config;
         private readonly UserManager<Customer> _userManager;
         private readonly IBackgroundJobClient _backgroundJobClient;
-        private readonly IDatabase _database;
+        private readonly ICacheManager _cacheManager;
 
         private readonly TimeSpan _refreshTokenExpiry;
 
         public RefreshTokenService(
+            ICacheManager cacheManager,
             IBackgroundJobClient backgroundJobClient,
             ILogger<RefreshTokenService> logger,
-            IConnectionMultiplexer redis,
             IConfiguration config,
             UserManager<Customer> userManager)
         {
             _backgroundJobClient = backgroundJobClient;
             _logger = logger;
             _userManager = userManager;
-            _redis = redis;
-            _database = _redis.GetDatabase();
+            _cacheManager = cacheManager;
             _config = config;
 
             // Single source of truth for refresh token expiration
@@ -46,9 +43,11 @@ namespace Application.Services.AuthServices
             _refreshTokenExpiry = TimeSpan.FromHours(expiryHours);
         }
 
-        private static string GenerateRedisKey(string tokenHash) => $"RefreshToken:{tokenHash}";
+        private static string GenerateTokenKey(string tokenHash) => $"RefreshToken:{tokenHash}";
 
         private static string GenerateUserTokenSetKey(string userId) => $"UserRefreshTokens:{userId}";
+
+        private static string GenerateUserTag(string userId) => $"user_tokens:{userId}";
 
         private static string HashToken(string token)
         {
@@ -58,37 +57,51 @@ namespace Application.Services.AuthServices
             return Convert.ToBase64String(hash);
         }
 
+        private async Task<RefreshTokenData?> GetTokenDataAsync(string tokenHash)
+        {
+            string key = GenerateTokenKey(tokenHash);
+
+            try
+            {
+                var data = await _cacheManager.GetAsync<RefreshTokenData>(key);
+                if (data is not null)
+                {
+                    return data;
+                }
+
+                // Fallback in case token was cached as raw string
+                var rawString = await _cacheManager.GetAsync<string>(key);
+                if (!string.IsNullOrEmpty(rawString))
+                {
+                    return JsonSerializer.Deserialize<RefreshTokenData>(rawString);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving refresh token data for hash: {Hash}", tokenHash);
+            }
+
+            return null;
+        }
+
         public async Task<Result<RefreshTokenResponse>> RefreshTokenAsync(string refreshToken)
         {
             _logger.LogInformation("RefreshTokenAsync started");
 
-        
             string tokenHash = HashToken(refreshToken);
+            var data = await GetTokenDataAsync(tokenHash);
 
-            
-            string? value = await _database.StringGetAsync(GenerateRedisKey(tokenHash));
-
-            if (string.IsNullOrEmpty(value))
+            if (data == null)
             {
-                _logger.LogWarning("Refresh token not found in Redis");
+                _logger.LogWarning("Refresh token not found or expired");
                 return Result<RefreshTokenResponse>.Fail("Invalid or expired refresh token");
             }
 
-            
-            RefreshTokenData? data;
-            try
+            if (data.ExpiresAt <= DateTime.UtcNow)
             {
-                data = JsonSerializer.Deserialize<RefreshTokenData>(value);
-                if (data == null)
-                {
-                    _logger.LogError("Failed to deserialize refresh token data");
-                    return Result<RefreshTokenResponse>.Fail("Invalid token data");
-                }
-            }
-            catch (JsonException ex)
-            {
-                _logger.LogError(ex, "Error deserializing refresh token data");
-                return Result<RefreshTokenResponse>.Fail("Invalid token format");
+                await RemoveRefreshTokenAsync(refreshToken);
+                _logger.LogWarning("Refresh token expired for User ID: {UserId}", data.UserId);
+                return Result<RefreshTokenResponse>.Fail("Invalid or expired refresh token");
             }
 
             var rotationResult = await RotateRefreshTokenAsync(refreshToken, data.UserId);
@@ -114,36 +127,22 @@ namespace Application.Services.AuthServices
         {
             _logger.LogInformation("RefreshTokenWithUserAsync started");
 
-            // Hash the incoming token for lookup
             string tokenHash = HashToken(refreshToken);
+            var data = await GetTokenDataAsync(tokenHash);
 
-            // Check if token exists in Redis
-            string? value = await _database.StringGetAsync(GenerateRedisKey(tokenHash));
-
-            if (string.IsNullOrEmpty(value))
+            if (data == null)
             {
-                _logger.LogWarning("Refresh token not found in Redis");
+                _logger.LogWarning("Refresh token not found or expired");
                 return Result<(string, string)>.Fail("Invalid or expired refresh token");
             }
 
-            // Deserialize with null check
-            RefreshTokenData? data;
-            try
+            if (data.ExpiresAt <= DateTime.UtcNow)
             {
-                data = JsonSerializer.Deserialize<RefreshTokenData>(value);
-                if (data == null)
-                {
-                    _logger.LogError("Failed to deserialize refresh token data");
-                    return Result<(string, string)>.Fail("Invalid token data");
-                }
-            }
-            catch (JsonException ex)
-            {
-                _logger.LogError(ex, "Error deserializing refresh token data");
-                return Result<(string, string)>.Fail("Invalid token format");
+                await RemoveRefreshTokenAsync(refreshToken);
+                _logger.LogWarning("Refresh token expired for User ID: {UserId}", data.UserId);
+                return Result<(string, string)>.Fail("Invalid or expired refresh token");
             }
 
-            // Rotate refresh token: generate new, store new, then delete old
             var rotationResult = await RotateRefreshTokenAsync(refreshToken, data.UserId);
             if (!rotationResult.Success || string.IsNullOrEmpty(rotationResult.Data))
             {
@@ -151,7 +150,6 @@ namespace Application.Services.AuthServices
                 return Result<(string, string)>.Fail("Unable to rotate refresh token");
             }
 
-            // Return both the user ID and the new refresh token
             return Result<(string, string)>.Ok((data.UserId, rotationResult.Data), "Token refreshed successfully");
         }
 
@@ -159,94 +157,81 @@ namespace Application.Services.AuthServices
         {
             _logger.LogInformation("Generating Refresh Token for User ID: {UserId}", userId);
 
-          
-            var tokenBytes = new byte[64];
-            using (var rng = RandomNumberGenerator.Create())
+            try
             {
-                rng.GetBytes(tokenBytes);
+                var tokenBytes = new byte[64];
+                using (var rng = RandomNumberGenerator.Create())
+                {
+                    rng.GetBytes(tokenBytes);
+                }
+
+                string token = Convert.ToBase64String(tokenBytes)
+                    .Replace("+", "-")
+                    .Replace("/", "_")
+                    .Replace("=", "");
+
+                var now = DateTime.UtcNow;
+
+                var tokenData = new RefreshTokenData
+                {
+                    UserId = userId,
+                    CreatedAt = now,
+                    ExpiresAt = now.Add(_refreshTokenExpiry)
+                };
+
+                string tokenHash = HashToken(token);
+                string tokenKey = GenerateTokenKey(tokenHash);
+                string userTag = GenerateUserTag(userId);
+
+                // Store token in cache with user tag for bulk invalidation
+                await _cacheManager.SetAsync(tokenKey, tokenData, _refreshTokenExpiry, new[] { userTag });
+
+                // Also maintain user active token list
+                string userSetKey = GenerateUserTokenSetKey(userId);
+                var tokens = await _cacheManager.GetAsync<List<string>>(userSetKey) ?? new List<string>();
+                if (!tokens.Contains(tokenHash))
+                {
+                    tokens.Add(tokenHash);
+                    await _cacheManager.SetAsync(userSetKey, tokens, _refreshTokenExpiry);
+                }
+
+                _logger.LogInformation("RefreshToken generated and stored for User ID: {UserId}", userId);
+                return Result<string>.Ok(token, "RefreshToken Generated");
             }
-
-            string token = Convert.ToBase64String(tokenBytes)
-                .Replace("+", "-")
-                .Replace("/", "_")
-                .Replace("=", "");
-
-            var now = DateTime.UtcNow;
-          
-            var tokenData = new RefreshTokenData
+            catch (Exception ex)
             {
-                UserId = userId,
-                CreatedAt = now,
-                ExpiresAt = now.Add(_refreshTokenExpiry)
-            };
-
-            var value = JsonSerializer.Serialize(tokenData);
-
-            
-            string tokenHash = HashToken(token);
-
-          
-            bool stored = await _database.StringSetAsync(
-                GenerateRedisKey(tokenHash),
-                value,
-                _refreshTokenExpiry,
-                When.Always
-            );
-
-            if (!stored)
-            {
-                _logger.LogError("Failed to store refresh token in Redis for User ID: {UserId}", userId);
-                return Result<string>.Fail("Could not store refresh token");
+                _logger.LogError(ex, "Failed to generate refresh token for User ID: {UserId}", userId);
+                return Result<string>.Fail("Could not generate refresh token");
             }
-
-         
-            await _database.SetAddAsync(GenerateUserTokenSetKey(userId), tokenHash);
-
-            _logger.LogInformation("RefreshToken generated and stored for User ID: {UserId}", userId);
-            return Result<string>.Ok(token, "RefreshToken Generated");
         }
 
         public async Task<Result<bool>> RemoveRefreshTokenAsync(string token)
         {
             try
             {
-               
                 string tokenHash = HashToken(token);
-                string key = GenerateRedisKey(tokenHash);
-                
-               
-                string? value = await _database.StringGetAsync(key);
-                string userId = string.Empty;
-                
-                if (!string.IsNullOrEmpty(value))
-                {
-                    try
-                    {
-                        var data = JsonSerializer.Deserialize<RefreshTokenData>(value);
-                        if (data != null)
-                        {
-                            userId = data.UserId;
-                        }
-                    }
-                    catch (JsonException)
-                    {
-                        // If we can't deserialize, we'll still delete the token
-                    }
-                }
-                
-                bool deleted = await _database.KeyDeleteAsync(key);
+                string key = GenerateTokenKey(tokenHash);
 
-                if (!deleted)
-                {
-                    _logger.LogWarning("RefreshToken not found or already deleted: {Token}", token);
-                   
-                    return Result<bool>.Ok(true, "Token already removed or expired");
-                }
+                var data = await GetTokenDataAsync(tokenHash);
+                string userId = data?.UserId ?? string.Empty;
 
-           
+                await _cacheManager.RemoveAsync(key);
+
                 if (!string.IsNullOrEmpty(userId))
                 {
-                    await _database.SetRemoveAsync(GenerateUserTokenSetKey(userId), tokenHash);
+                    var userTokenSetKey = GenerateUserTokenSetKey(userId);
+                    var tokens = await _cacheManager.GetAsync<List<string>>(userTokenSetKey);
+                    if (tokens is not null && tokens.Remove(tokenHash))
+                    {
+                        if (tokens.Count > 0)
+                        {
+                            await _cacheManager.SetAsync(userTokenSetKey, tokens, _refreshTokenExpiry);
+                        }
+                        else
+                        {
+                            await _cacheManager.RemoveAsync(userTokenSetKey);
+                        }
+                    }
                 }
 
                 _logger.LogInformation("Successfully removed RefreshToken");
@@ -262,41 +247,31 @@ namespace Application.Services.AuthServices
             }
         }
 
-        
         public async Task<Result<string>> ValidateRefreshTokenAsync(string refreshToken)
         {
             string tokenHash = HashToken(refreshToken);
-            string? value = await _database.StringGetAsync(GenerateRedisKey(tokenHash));
+            var data = await GetTokenDataAsync(tokenHash);
 
-            if (string.IsNullOrEmpty(value))
+            if (data == null)
             {
-                _logger.LogWarning("Refresh token not found in Redis");
+                _logger.LogWarning("Refresh token not found or expired");
                 return Result<string>.Fail("Invalid or expired refresh token");
             }
 
-            try
+            if (data.ExpiresAt <= DateTime.UtcNow)
             {
-                var data = JsonSerializer.Deserialize<RefreshTokenData>(value);
-                if (data == null)
-                {
-                    _logger.LogError("Failed to deserialize refresh token data");
-                    return Result<string>.Fail("Invalid token data");
-                }
+                await RemoveRefreshTokenAsync(refreshToken);
+                _logger.LogWarning("Refresh token expired for User ID: {UserId}", data.UserId);
+                return Result<string>.Fail("Refresh token has expired");
+            }
 
-                return Result<string>.Ok(data.UserId);
-            }
-            catch (JsonException ex)
-            {
-                _logger.LogError(ex, "Error deserializing refresh token data");
-                return Result<string>.Fail("Invalid token format");
-            }
+            return Result<string>.Ok(data.UserId);
         }
 
         public async Task<Result<string>> RotateRefreshTokenAsync(string oldRefreshToken, string userId)
         {
             _logger.LogInformation("Rotating refresh token for User ID: {UserId}", userId);
 
-            
             var newRefreshResult = await GenerateRefreshTokenAsync(userId);
             if (!newRefreshResult.Success || string.IsNullOrEmpty(newRefreshResult.Data))
             {
@@ -304,46 +279,34 @@ namespace Application.Services.AuthServices
                 return Result<string>.Fail("Unable to generate new refresh token");
             }
 
-           
             await RemoveRefreshTokenAsync(oldRefreshToken);
 
             _logger.LogInformation("Refresh token rotated successfully for User ID: {UserId}", userId);
             return Result<string>.Ok(newRefreshResult.Data, "Refresh token rotated");
         }
 
-      
         public async Task<Result<bool>> RemoveAllRefreshTokensAsync(string userId)
         {
             try
             {
                 _logger.LogInformation("Removing all refresh tokens for User ID: {UserId}", userId);
 
-         
                 var userTokenSetKey = GenerateUserTokenSetKey(userId);
-                var tokenHashes = await _database.SetMembersAsync(GenerateUserTokenSetKey(userId));
+                var tokenHashes = await _cacheManager.GetAsync<List<string>>(userTokenSetKey);
 
-                if (tokenHashes.Length == 0)
+                if (tokenHashes is not null && tokenHashes.Count > 0)
                 {
-                    _logger.LogInformation("No refresh tokens found for User ID: {UserId}", userId);
-                    return Result<bool>.Ok(true, "No tokens to remove");
+                    foreach (var tokenHash in tokenHashes)
+                    {
+                        await _cacheManager.RemoveAsync(GenerateTokenKey(tokenHash));
+                    }
                 }
 
-                
-                var keysToDelete = new List<RedisKey>();
-                foreach (var tokenHash in tokenHashes)
-                {
-                    keysToDelete.Add(GenerateRedisKey(tokenHash));
-                }
+                // Invalidate by tag as well
+                await _cacheManager.RemoveByTagAsync(GenerateUserTag(userId));
+                await _cacheManager.RemoveAsync(userTokenSetKey);
 
-                if (keysToDelete.Count > 0)
-                {
-                    await _database.KeyDeleteAsync(keysToDelete.ToArray());
-                }
-
-               
-                await _database.KeyDeleteAsync(userTokenSetKey);
-
-                _logger.LogInformation("Successfully removed {Count} refresh tokens for User ID: {UserId}", tokenHashes.Length, userId);
+                _logger.LogInformation("Successfully removed refresh tokens for User ID: {UserId}", userId);
                 return Result<bool>.Ok(true, "All refresh tokens removed");
             }
             catch (Exception ex)

@@ -1040,7 +1040,6 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Color")
-                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<DateTime?>("CreatedAt")

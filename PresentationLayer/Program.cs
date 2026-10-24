@@ -9,6 +9,7 @@ using Application.Services.CacheServices;
 using Application.Services.CustomerAddressServices;
 using Application.Services.Externallogin;
 using Application.Services.HangFireAuth;
+using Application.Services.ImageServices;
 using CloudinaryDotNet;
 
 using E_Commerce.Middleware;
@@ -123,53 +124,54 @@ namespace E_Commerce
 				})
 				.AddEntityFrameworkStores<AppDbContext>()
 				.AddDefaultTokenProviders();
-			builder.Services.AddScoped<IImagesServices, Application.Services.ImageServices.ImagesServices>();
+			// ImageKit image storage (replaces Cloudinary). Registers IImageStorageService,
+			// IImageCompressor (ImageSharp), ImageKitClient, ImageKitSettings, and IImagesServices.
+			builder.Services.AddImageStorage(builder.Configuration);
 			builder.Services.AddScoped<IImageRepository, ImageRepository>();
 			builder.Services.AddResponseCaching();
-			builder.Services.Configure<CloudinarySettings>(
-			builder.Configuration.GetSection("CloudinarySettings"));
-			builder.Services.AddSingleton(sp =>
+			// Cloudinary registration removed — superseded by AddImageStorage()
+
+			var cacheProvider = builder.Configuration.GetValue<string>("Cache:Provider") ?? "Memory";
+
+			if (string.Equals(cacheProvider, "Redis", StringComparison.OrdinalIgnoreCase))
 			{
-				var config = builder.Configuration.GetSection("CloudinarySettings");
-				var cloudName = config.GetValue<string>("CloudName");
-				var apiKey = config.GetValue<string>("ApiKey");
-				var apiSecret = config.GetValue<string>("ApiSecret");
+				var redisUrl = builder.Configuration.GetSection("ConnectionStrings:Redis_EU").Value
+					?? throw new Exception("Redis connection string is missing");
 
-			
-				var account = new Account(cloudName, apiKey, apiSecret);
-				return new Cloudinary(account);
-			});
+				var config = new ConfigurationOptions
+				{
+					AbortOnConnectFail = false,
+					ConnectTimeout = 2000,
+					SyncTimeout = 1000,
+					AsyncTimeout = 1000
+				};
 
+				if (redisUrl.StartsWith("redis://", StringComparison.OrdinalIgnoreCase) ||
+					redisUrl.StartsWith("rediss://", StringComparison.OrdinalIgnoreCase))
+				{
+					// External Redis (e.g. Upstash) — parse URI for host, password, and TLS
+					var uri = new Uri(redisUrl);
+					config.EndPoints.Add($"{uri.Host}:{uri.Port}");
+					config.Password = uri.UserInfo.Split(':')[1];
+					config.Ssl = redisUrl.StartsWith("rediss://", StringComparison.OrdinalIgnoreCase);
+				}
+				else
+				{
+					// Local Redis (e.g. Docker) — plain host:port, no auth, no TLS
+					config.EndPoints.Add(redisUrl);
+				}
 
-			
-			var redisUrl = builder.Configuration.GetSection("ConnectionStrings:Redis").Value ?? throw new Exception("Redis connection string is missing");
+				builder.Services.AddSingleton<IConnectionMultiplexer>(
+					ConnectionMultiplexer.Connect(config)
+				);
 
-			var config = new ConfigurationOptions
-			{
-				AbortOnConnectFail = false
-			};
-
-			if (redisUrl.StartsWith("redis://", StringComparison.OrdinalIgnoreCase) ||
-				redisUrl.StartsWith("rediss://", StringComparison.OrdinalIgnoreCase))
-			{
-				// External Redis (e.g. Upstash) — parse URI for host, password, and TLS
-				var uri = new Uri(redisUrl);
-				config.EndPoints.Add($"{uri.Host}:{uri.Port}");
-				config.Password = uri.UserInfo.Split(':')[1];
-				config.Ssl = redisUrl.StartsWith("rediss://", StringComparison.OrdinalIgnoreCase);
+				builder.Services.AddSingleton<ICacheManager, CacheManager>();
 			}
 			else
 			{
-				// Local Redis (e.g. Docker) — plain host:port, no auth, no TLS
-				config.EndPoints.Add(redisUrl);
+				builder.Services.AddMemoryCache();
+				builder.Services.AddSingleton<ICacheManager, InMemoryCacheManager>();
 			}
-
-
-			builder.Services.AddSingleton<IConnectionMultiplexer>(
-				ConnectionMultiplexer.Connect(config)
-			);
-
-			builder.Services.AddSingleton<ICacheManager, CacheManager>();
 			builder.Services.AddDbContext<AppDbContext>(
 				(provider, options) =>
 				{

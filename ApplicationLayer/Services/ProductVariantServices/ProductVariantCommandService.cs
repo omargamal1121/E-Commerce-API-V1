@@ -147,6 +147,10 @@ namespace Application.Services.ProductVariantServices
 		#endregion
 
 		#region Product Lifecycle Management Methods
+		/// <summary>
+		/// Deactivates the product only if ALL non-deleted variants are explicitly inactive (IsActive == false).
+		/// Zero stock alone does NOT deactivate the product — only an admin can do that.
+		/// </summary>
 		public async Task CheckAndDeactivateProductIfAllVariantsInactiveOrZeroAsync(int productId)
         {
             try
@@ -154,7 +158,10 @@ namespace Application.Services.ProductVariantServices
 				var variants = await _unitOfWork.Repository<ProductVariant>().GetAll()
 			  .Where(v => v.ProductId == productId && v.DeletedAt == null)
 			  .ToListAsync();
-				if (variants.Count == 0 || variants.All(v => !v.IsActive || v.Quantity == 0))
+
+				// Only deactivate the product when ALL remaining variants have been explicitly deactivated.
+				// Zero stock is NOT a reason to deactivate — the admin must do that manually.
+				if (variants.Count == 0 || variants.All(v => !v.IsActive))
 				{
 					var product = await _unitOfWork.Product.GetByIdAsync(productId);
 					if (product != null && product.IsActive)
@@ -170,7 +177,6 @@ namespace Application.Services.ProductVariantServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-
              _backgroundJobClient.Enqueue(()=>  _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
             }
           
@@ -693,13 +699,15 @@ namespace Application.Services.ProductVariantServices
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
 
-                // Update cache and check product status
+                // Update cache
                 await RemoveCacheAndRelatedCaches();
-                _backgroundJobClient.Enqueue(()=> CheckAndDeactivateProductIfAllVariantsInactiveOrZeroAsync(varaintinfo.productid));
 
+                // Update the parent product's total quantity counter
                 _backgroundJobClient.Enqueue(() =>
-                _productCatalogService.UpdateProductQuantity(varaintinfo.productid));
+                    _productCatalogService.UpdateProductQuantity(varaintinfo.productid));
 
+                // NOTE: We do NOT auto-deactivate the product here.
+                // The product stays active until an admin explicitly deactivates it.
                 return Result<bool>.Ok(true, "Variant deactivated", 200);
             }
             catch (Exception ex)

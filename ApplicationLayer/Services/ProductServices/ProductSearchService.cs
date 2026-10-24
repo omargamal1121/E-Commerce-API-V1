@@ -98,7 +98,7 @@ namespace Application.Services.ProductServices
                 if (!products.Any())
                     return Result<List<ProductDto>>.Fail("No new arrivals found", 404);
 
-                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "NewArrivals", IsAdmin, null));
+                _productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "NewArrivals", IsAdmin, null);
                 return Result<List<ProductDto>>.Ok(products, $"Found {products.Count} new arrivals", 200);
             }
             catch (Exception ex)
@@ -345,7 +345,7 @@ namespace Application.Services.ProductServices
                 if (products is null || !products.Any())
                     return Result<List<ProductDto>>.Fail("No products found matching the search criteria", 404);
 
-                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync<ProductDto>(products, searchKey, isActive, deletedOnly, pageSize, page, "AdvancedSearch", IsAdmin, null));
+                _productCacheManger.SetProductListCacheAsync<ProductDto>(products, searchKey, isActive, deletedOnly, pageSize, page, "AdvancedSearch", IsAdmin, null);
 
                 return Result<List<ProductDto>>.Ok(products, $"Found {products.Count} products matching search criteria", 200);
             }
@@ -474,7 +474,7 @@ namespace Application.Services.ProductServices
                     return Result<List<BestSellingProductDto>>.Ok(fallbackProducts, "No wishlisted products found. Showing random products instead.", 200);
                 }
 
-                _backgroundJobClient.Enqueue(() => _productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "MostWishlisted", IsAdmin, null));
+                _productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "MostWishlisted", IsAdmin, null);
 
                 return Result<List<BestSellingProductDto>>.Ok(products, $"Found {products.Count} most wishlisted products", 200);
             }

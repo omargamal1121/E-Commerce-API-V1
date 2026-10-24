@@ -54,7 +54,7 @@ namespace Application.Services.OrderServices
         {
             var cacheKey = GetOrderByIdKey(orderId, userId, isAdmin);
             var tags = new[] { CACHE_ORDER, $"order:user:{userId}" };
-            _jobClient.Enqueue(()=> _cacheManager.SetAsync(cacheKey, order, expiration ?? TimeSpan.FromMinutes(30), tags));
+            _ = _cacheManager.SetAsync(cacheKey, order, expiration ?? TimeSpan.FromMinutes(30), tags);
         }
 
         public async Task<OrderDto?> GetOrderByIdCacheAsync(int orderId, string userId, bool isAdmin)
@@ -67,7 +67,7 @@ namespace Application.Services.OrderServices
         {
             var cacheKey = GetOrderByNumberKey(orderNumber, userId, isAdmin);
             var tags = new[] { CACHE_ORDER, $"order:user:{userId}" };
-            _jobClient.Enqueue(()=> _cacheManager.SetAsync(cacheKey, order, expiration ?? TimeSpan.FromMinutes(30), tags));
+            _ = _cacheManager.SetAsync(cacheKey, order, expiration ?? TimeSpan.FromMinutes(30), tags);
         }
 
         public async Task<OrderDto?> GetOrderByNumberCacheAsync(string orderNumber, string userId, bool isAdmin)
@@ -80,7 +80,7 @@ namespace Application.Services.OrderServices
         {
             var cacheKey = GetOrderCountKey(userId);
             var tags = new[] { CACHE_ORDER, $"order:user:{userId}" };
-            _jobClient.Enqueue(()=> _cacheManager.SetAsync(cacheKey, count, expiration ?? TimeSpan.FromMinutes(15), tags));
+            _ = _cacheManager.SetAsync(cacheKey, count, expiration ?? TimeSpan.FromMinutes(15), tags);
         }
 
         public async Task<int?> GetOrderCountCacheAsync(string userId)
@@ -93,7 +93,7 @@ namespace Application.Services.OrderServices
         {
             var cacheKey = GetOrderRevenueKey(userId);
             var tags = new[] { CACHE_ORDER, $"order:user:{userId}" };
-            _jobClient.Enqueue(() => _cacheManager.SetAsync(cacheKey, revenue, expiration ?? TimeSpan.FromMinutes(20), tags));
+            _ = _cacheManager.SetAsync(cacheKey, revenue, expiration ?? TimeSpan.FromMinutes(20), tags);
         }
 
         public async Task<decimal?> GetOrderRevenueCacheAsync(string userId)
@@ -106,7 +106,7 @@ namespace Application.Services.OrderServices
         {
             var cacheKey = GetOrderFilterKey(userId, deleted, page, pageSize, status, IsAdmin, startDate, endDate);
             var tags = new[] { CACHE_ORDER, $"order:user:{userId ?? "all"}" };
-            _jobClient.Enqueue(() => _cacheManager.SetAsync(cacheKey, orders, expiration ?? TimeSpan.FromMinutes(30), tags));
+            _ = _cacheManager.SetAsync(cacheKey, orders, expiration ?? TimeSpan.FromMinutes(30), tags);
         }
 
         public async Task<List<OrderListDto>?> GetOrderFilterCacheAsync(string? userId, bool? deleted, int page, int pageSize, bool IsAdmin = false, OrderStatus? status = null, DateTime? startDate = null, DateTime? endDate = null)

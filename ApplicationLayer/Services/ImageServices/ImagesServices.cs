@@ -1,8 +1,7 @@
+using Application.DtoModels.ImageDtos;
 using Application.Interfaces;
 using Application.Services.AdminOperationServices;
 using Application.Services.EmailServices;
-using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
 using Domain.Enums;
 using Domain.Models;
 using Hangfire;
@@ -10,11 +9,6 @@ using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Application.Services.ImageServices
 {
@@ -27,25 +21,16 @@ namespace Application.Services.ImageServices
         private readonly IAdminOpreationServices _adminOpreationServices;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IBackgroundJobClient _backgroundJobClient;
-        private readonly Cloudinary _cloudinary;
+        private readonly IImageStorageService _imageStorageService;
 
-        private int MaxFileSize => _configuration.GetValue<int>("Security:FileUpload:MaxFileSizeMB", 5) * 1024 * 1024;
-        private string[] AllowedContentTypes => _configuration.GetSection("Security:FileUpload:AllowedContentTypes").Get<string[]>()
-            ?? new[] { "image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp" };
+        private int MaxFileSize => _configuration.GetValue<int>("Security:FileUpload:MaxFileSizeMB", 15) * 1024 * 1024;
         private string[] AllowedExtensions => _configuration.GetSection("Security:FileUpload:AllowedExtensions").Get<string[]>()
-            ?? new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
-
-        private readonly byte[][] _fileSignatures = {
-            new byte[] { 0xFF, 0xD8, 0xFF },      // JPEG
-            new byte[] { 0x89, 0x50, 0x4E, 0x47 }, // PNG
-            new byte[] { 0x47, 0x49, 0x46, 0x38 }, // GIF
-            new byte[] { 0x52, 0x49, 0x46, 0x46 }, // WEBP
-        };
+            ?? new[] { ".jpg", ".jpeg", ".png", ".webp" };
 
         public ImagesServices(
             IErrorNotificationService errorNotificationService,
             IBackgroundJobClient backgroundJobClient,
-            Cloudinary cloudinary,
+            IImageStorageService imageStorageService,
             IHttpContextAccessor httpContextAccessor,
             ILogger<ImagesServices> logger,
             IConfiguration configuration,
@@ -54,7 +39,7 @@ namespace Application.Services.ImageServices
         {
             _errorNotificationService = errorNotificationService;
             _backgroundJobClient = backgroundJobClient;
-            _cloudinary = cloudinary;
+            _imageStorageService = imageStorageService;
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;
             _configuration = configuration;
@@ -62,25 +47,8 @@ namespace Application.Services.ImageServices
             _adminOpreationServices = adminOpreationServices;
         }
 
-        public bool IsValidExtension(string extension) => AllowedExtensions.Contains(extension.ToLower());
-        public bool IsValidContentType(string contentType) => AllowedContentTypes.Contains(contentType.ToLower());
-
-        public bool IsValidFileSignature(Stream fileStream)
-        {
-            try
-            {
-                using var reader = new BinaryReader(fileStream, System.Text.Encoding.UTF8, true);
-                var headerBytes = reader.ReadBytes(8);
-                return _fileSignatures.Any(sig => headerBytes.Take(sig.Length).SequenceEqual(sig));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error validating file signature");
-                return false;
-            }
-        }
-
-        public bool IsValidFileSize(long fileSize) => fileSize > 0 && fileSize <= MaxFileSize;
+        public bool IsValidExtension(string extension) =>
+            !string.IsNullOrWhiteSpace(extension) && AllowedExtensions.Contains(extension.ToLower());
 
         private async Task LogAdminOperationAsync(string userId, string description, int itemId)
         {
@@ -103,15 +71,11 @@ namespace Application.Services.ImageServices
         {
             _logger.LogInformation("Saving {ImageType} image to {Folder}", isMain ? "main" : "regular", folderName);
 
-            if (image == null)
-                return Result<Image>.Fail("Image is null");
+            if (image == null || image.Length == 0)
+                return Result<Image>.Fail("Image is null or empty");
 
-            // Validate file
-            if (!IsValidFileSize(image.Length))
-                return Result<Image>.Fail($"File size must be between 1 and {MaxFileSize / (1024 * 1024)}MB");
-
-            if (!IsValidContentType(image.ContentType))
-                return Result<Image>.Fail($"Invalid content type: {image.ContentType}");
+            //if (image.Length > MaxFileSize)
+            //    return Result<Image>.Fail($"File size must not exceed {MaxFileSize / (1024 * 1024)}MB");
 
             string extension = Path.GetExtension(image.FileName);
             if (!IsValidExtension(extension))
@@ -119,41 +83,22 @@ namespace Application.Services.ImageServices
 
             try
             {
-                using var stream = image.OpenReadStream();
+                await using var stream = image.OpenReadStream();
 
-                // Validate file signature
-                if (!IsValidFileSignature(stream))
-                    return Result<Image>.Fail("Invalid file format detected");
+              
+                ImageUploadResult uploadResult = await _imageStorageService.UploadAsync(stream, image.FileName, folderName);
 
-                stream.Position = 0;
-
-                // Upload to Cloudinary
-                var publicId = Guid.NewGuid().ToString();
-                var uploadParams = new ImageUploadParams
-                {
-                    File = new FileDescription(image.FileName, stream),
-                    Folder = folderName,
-                    PublicId = publicId,
-                    Overwrite = false,
-                };
-
-                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-
-                if (uploadResult?.SecureUrl == null || uploadResult.StatusCode != System.Net.HttpStatusCode.OK)
-                {
-                    _logger.LogError("Cloudinary upload failed: {Error}", uploadResult?.Error?.Message);
-                    return Result<Image>.Fail("Failed to upload image to Cloudinary");
-                }
-
-                // Create image entity
+                
                 var savedImage = new Image
                 {
-                    CloudinaryPublicId = uploadResult.PublicId, // CRITICAL: Store PublicId for deletion
-                    UploadDate = DateTime.UtcNow, // Use UTC
+                    CloudinaryPublicId = uploadResult.FileId,
+                    UploadDate = DateTime.UtcNow,
                     Folder = folderName,
-                    Url = uploadResult.SecureUrl.ToString(),
-                    FileSize = image.Length,
-                    FileType = image.ContentType,
+                    Url = uploadResult.Url,
+                    FileSize = uploadResult.SizeInBytes,
+                    FileType = "image/webp",
+                    Width = uploadResult.Width,
+                    Height = uploadResult.Height,
                     IsMain = isMain
                 };
 
@@ -248,7 +193,7 @@ namespace Application.Services.ImageServices
                     Success = savedImages.Any(),
                     Warnings = errors,
                     Data = savedImages,
-                    StatusCode = savedImages.Any() ? 207 : 400 // 207 = Multi-Status
+                    StatusCode = savedImages.Any() ? 207 : 400
                 };
             }
 
@@ -313,21 +258,16 @@ namespace Application.Services.ImageServices
         {
             _logger.LogInformation("Deleting image ID: {ImageId}", image.Id);
 
-            if (string.IsNullOrEmpty(image.CloudinaryPublicId))
-            {
-                _logger.LogWarning("Image {ImageId} has no CloudinaryPublicId, skipping Cloudinary deletion", image.Id);
-            }
-
             try
             {
                 // Delete from database first
                 _unitOfWork.Image.Remove(image);
                 await _unitOfWork.CommitAsync();
 
-                // Enqueue Cloudinary deletion in background if PublicId exists
+                // Enqueue ImageKit deletion in background if FileId exists
                 if (!string.IsNullOrEmpty(image.CloudinaryPublicId))
                 {
-                    _backgroundJobClient.Enqueue(() => DeleteFromCloudinaryAsync(image.CloudinaryPublicId));
+                    _backgroundJobClient.Enqueue(() => DeleteFromImageKitAsync(image.CloudinaryPublicId));
                 }
 
                 _logger.LogInformation("Image {ImageId} deleted from database", image.Id);
@@ -349,7 +289,7 @@ namespace Application.Services.ImageServices
             _logger.LogInformation("Deleting {Count} images", images.Count);
 
             var deletedIds = new List<string>();
-            var errors = new List<string>();
+            var fileIdsToDelete = new List<string>();
 
             try
             {
@@ -359,14 +299,19 @@ namespace Application.Services.ImageServices
 
                 _logger.LogInformation("All {Count} images removed from database", images.Count);
 
-                // Enqueue Cloudinary deletions in background
                 foreach (var image in images)
                 {
                     if (!string.IsNullOrEmpty(image.CloudinaryPublicId))
                     {
-                        _backgroundJobClient.Enqueue(() => DeleteFromCloudinaryAsync(image.CloudinaryPublicId));
+                        fileIdsToDelete.Add(image.CloudinaryPublicId);
                     }
                     deletedIds.Add(image.Id.ToString());
+                }
+
+                // Enqueue ImageKit bulk deletion in background
+                if (fileIdsToDelete.Count > 0)
+                {
+                    _backgroundJobClient.Enqueue(() => DeleteManyFromImageKitAsync(fileIdsToDelete));
                 }
 
                 return Result<List<string>>.Ok(deletedIds, "Images deleted successfully");
@@ -379,27 +324,32 @@ namespace Application.Services.ImageServices
             }
         }
 
-        // Background job method for Cloudinary deletion
-        public async Task DeleteFromCloudinaryAsync(string publicId)
+        // Background job methods for ImageKit deletion
+        public async Task DeleteFromImageKitAsync(string fileId)
         {
             try
             {
-                var deletionParams = new DeletionParams(publicId);
-                var result = await _cloudinary.DestroyAsync(deletionParams);
-
-                if (result.Result == "ok")
-                {
-                    _logger.LogInformation("Successfully deleted from Cloudinary: {PublicId}", publicId);
-                }
-                else
-                {
-                    _logger.LogWarning("Cloudinary deletion returned: {Result} for {PublicId}", result.Result, publicId);
-                }
+                await _imageStorageService.DeleteAsync(fileId, CancellationToken.None);
+                _logger.LogInformation("Successfully deleted from ImageKit: {FileId}", fileId);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to delete from Cloudinary: {PublicId}", publicId);
-                NotifyAdminOfError($"Cloudinary deletion failed for {publicId}: {ex.Message}", ex.StackTrace);
+                _logger.LogError(ex, "Failed to delete from ImageKit: {FileId}", fileId);
+                NotifyAdminOfError($"ImageKit deletion failed for {fileId}: {ex.Message}", ex.StackTrace);
+            }
+        }
+
+        public async Task DeleteManyFromImageKitAsync(List<string> fileIds)
+        {
+            try
+            {
+                await _imageStorageService.DeleteManyAsync(fileIds, CancellationToken.None);
+                _logger.LogInformation("Successfully bulk deleted {Count} files from ImageKit", fileIds.Count);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to bulk delete from ImageKit: {Message}", ex.Message);
+                NotifyAdminOfError($"ImageKit bulk deletion failed: {ex.Message}", ex.StackTrace);
             }
         }
     }

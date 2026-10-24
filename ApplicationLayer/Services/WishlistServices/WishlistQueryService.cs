@@ -21,20 +21,17 @@ namespace Application.Services.WishlistServices
         private readonly ICacheManager _cacheManager;
         private readonly ILogger<WishlistQueryService> _logger;
         private readonly IWishlistCacheHelper _cacheHelper;
-        private readonly IBackgroundJobClient _backgroundJobClient;
 
         public WishlistQueryService(
             IUnitOfWork unitOfWork, 
             ICacheManager cacheManager, 
             ILogger<WishlistQueryService> logger,
-            IWishlistCacheHelper cacheHelper,
-            IBackgroundJobClient backgroundJobClient)
+            IWishlistCacheHelper cacheHelper)
         {
             _unitOfWork = unitOfWork;
             _cacheManager = cacheManager;
             _logger = logger;
             _cacheHelper = cacheHelper;
-            _backgroundJobClient = backgroundJobClient;
         }
 
         public async Task<Result<List<WishlistItemDto>>> GetWishlistAsync(string? userId, int page = 1, int pageSize = 20)
@@ -87,7 +84,7 @@ namespace Application.Services.WishlistServices
                 
                    
 
-                _backgroundJobClient.Enqueue(() => _cacheHelper.CacheWishlistAsync(cacheKey, userId, list));
+                await _cacheHelper.CacheWishlistAsync(cacheKey, userId, list);
 
                 return Result<List<WishlistItemDto>>.Ok(list, "Wishlist retrieved successfully", 200);
             }

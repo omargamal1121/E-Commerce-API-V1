@@ -391,31 +391,29 @@ namespace Application.Services.OrderServices
         }
 
 		/// <summary>
-		/// Deactivates all variants from the given IDs whose quantity has reached zero.
-		/// Uses a single bulk ExecuteUpdateAsync — one UPDATE WHERE statement, no entity loading.
-		/// Runs as a background job so the order response is not delayed.
+		/// Called after an order to refresh product-level quantity totals and clear cache.
+		/// Variants are NOT auto-deactivated on zero stock — only an admin can deactivate them.
+		/// The method name is kept for backward-compat with existing Hangfire call sites.
 		/// </summary>
 		public async Task DeactivateZeroQuantityVariantsAsync(List<int> variantIds)
 		{
 			try
 			{
-				var affectedRows = await _unitOfWork.Repository<ProductVariant>()
+				// Identify the distinct product IDs affected by these variants
+				var productIds = await _unitOfWork.Repository<ProductVariant>()
 					.GetAll()
-					.Where(v => variantIds.Contains(v.Id)
-							 && v.DeletedAt == null
-							 && v.Quantity == 0
-							 && v.IsActive)
-					.ExecuteUpdateAsync(setters =>
-						setters.SetProperty(v => v.IsActive, false));
+					.Where(v => variantIds.Contains(v.Id) && v.DeletedAt == null)
+					.Select(v => v.ProductId)
+					.Distinct()
+					.ToListAsync();
 
-				if (affectedRows == 0)
-					return;
+				// Refresh each product's aggregate quantity (sum of variant quantities)
+				foreach (var productId in productIds)
+				{
+					await _productCatalogService.UpdateProductQuantity(productId);
+				}
 
-				_logger.LogInformation(
-					"{Count} variant(s) deactivated (zero stock) for variantIds: {Ids}",
-					affectedRows,
-					string.Join(", ", variantIds));
-
+				// Clear product caches so updated quantities are reflected immediately
 				_backgroundJobClient.Enqueue(() => _productVariantCacheHelper.RemoveProductCachesAsync());
 				_backgroundJobClient.Enqueue(() => _productCacheManger.ClearProductCache());
 			}

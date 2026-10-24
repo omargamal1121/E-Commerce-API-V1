@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260709124246_add-feilds-for-guest-users")]
-    partial class addfeildsforguestusers
+    [Migration("20261007140213_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -144,12 +144,11 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CartId");
+
                     b.HasIndex("ProductId");
 
                     b.HasIndex("ProductVariantId");
-
-                    b.HasIndex("CartId", "ProductId", "ProductVariantId")
-                        .IsUnique();
 
                     b.ToTable("CartItems");
                 });
@@ -170,8 +169,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
@@ -184,8 +182,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -468,9 +465,6 @@ namespace ECommerce.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Apartment")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Building")
                         .HasColumnType("longtext");
 
@@ -505,11 +499,14 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Floor")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Governorate")
                         .HasColumnType("longtext");
+
+                    b.Property<string>("GuestTokenHash")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsGuest")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime(6)");
@@ -526,9 +523,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("PostalCode")
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime?>("RestockedAt")
                         .HasColumnType("datetime(6)");
 
@@ -543,9 +537,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<decimal>("ShippingCost")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("State")
-                        .HasColumnType("longtext");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -570,8 +561,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasIndex("CustomerAddressId");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("Status");
 
                     b.ToTable("Orders");
                 });
@@ -929,8 +918,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("longtext");
 
                     b.Property<int?>("DiscountId")
                         .HasColumnType("int");
@@ -964,8 +952,8 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("SubCategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int>("fitType")
-                        .HasColumnType("int");
+                    b.Property<string>("fitType")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -1051,8 +1039,10 @@ namespace ECommerce.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("Chest")
+                        .HasColumnType("int");
+
                     b.Property<string>("Color")
-                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<DateTime?>("CreatedAt")
@@ -1061,7 +1051,13 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int?>("Hip")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsFreeSize")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<int?>("Length")
@@ -1081,7 +1077,10 @@ namespace ECommerce.Infrastructure.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("binary(8)");
 
-                    b.Property<int?>("Size")
+                    b.Property<string>("Size")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int?>("SleeveLength")
                         .HasColumnType("int");
 
                     b.Property<int?>("Waist")
@@ -1214,8 +1213,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
@@ -1774,8 +1772,9 @@ namespace ECommerce.Infrastructure.Migrations
             modelBuilder.Entity("Domain.Models.Payment", b =>
                 {
                     b.HasOne("Domain.Models.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId");
+                        .WithMany("Payments")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.Models.Order", "Order")
                         .WithMany("Payment")
@@ -2158,6 +2157,8 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Navigation("Addresses");
 
                     b.Navigation("Orders");
+
+                    b.Navigation("Payments");
 
                     b.Navigation("ReturnRequests");
 

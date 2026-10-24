@@ -13,7 +13,6 @@ public class UnitOfWork : IUnitOfWork
 {
 	private readonly Dictionary<Type, object> _repositories = new();
 	private readonly ILoggerFactory _loggerFactory;
-	private readonly IConnectionMultiplexer _redis;
 	public ICategoryRepository Category { get; }
 	public ISubCategoryRepository SubCategory { get;  }
 	public ICartRepository Cart { get; }
@@ -40,7 +39,6 @@ public class UnitOfWork : IUnitOfWork
 		ICollectionRepository collection,
 		IWareHouseRepository wareHouse,
 		IProductInventoryRepository productInventory,
-		IConnectionMultiplexer redis,
 		ICategoryRepository category,
 		ILoggerFactory loggerFactory,
 		IImageRepository imageRepository,
@@ -56,7 +54,6 @@ public class UnitOfWork : IUnitOfWork
 		Collection = collection;
 		WareHouse = wareHouse;
 		ProductInventory = productInventory;
-		_redis = redis;
 		Category = category;
 		_loggerFactory = loggerFactory;
 		Image = imageRepository;

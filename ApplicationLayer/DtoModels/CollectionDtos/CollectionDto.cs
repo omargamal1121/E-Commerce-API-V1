@@ -1,6 +1,7 @@
 using Application.DtoModels.ImagesDtos;
 using Application.DtoModels.ProductDtos;
 using Application.DtoModels.Shared;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.DtoModels.CollectionDtos
 {
@@ -18,8 +19,11 @@ namespace Application.DtoModels.CollectionDtos
 
     public class CreateCollectionDto
     {
+		[Required(ErrorMessage = "Name is required.")]
+		
         public string Name { get; set; } = string.Empty;
-        public string? Description { get; set; }
+		[Required(ErrorMessage = "Description is required.")]
+		public string? Description { get; set; }
         public int DisplayOrder { get; set; }
        
     }

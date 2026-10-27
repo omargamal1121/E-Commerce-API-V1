@@ -22,6 +22,7 @@ namespace Application.Services.ProductServices
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<ProductSearchService> _logger;
         private readonly IErrorNotificationService _errorNotificationService;
+        
 
         public ProductSearchService(
             IproductMapper iproductMapper,
@@ -39,6 +40,37 @@ namespace Application.Services.ProductServices
             _logger = logger;
             _errorNotificationService = errorNotificationService;
         }
+		private async Task<List<T>> AddLikedFlagAsync<T>(List<T> products, string? userId) where T : ProductDto
+        {
+            if (string.IsNullOrEmpty(userId) || products == null || !products.Any())
+                return products;
+
+            var productIds = products
+                .Select(p => p.Id != 0 ? p.Id : (p as BestSellingProductDto)?.ProductId ?? 0)
+                .Where(id => id > 0)
+                .Distinct()
+                .ToList();
+
+            if (!productIds.Any())
+                return products;
+
+            var likedProductIds = await _unitOfWork.Repository<WishlistItem>()
+                .GetAll()
+                .Where(w => w.CustomerId == userId && productIds.Contains(w.ProductId))
+                .Select(w => w.ProductId)
+                .ToListAsync();
+
+            var likedSet = likedProductIds.ToHashSet();
+
+            foreach (var product in products)
+            {
+                var id = product.Id != 0 ? product.Id : (product as BestSellingProductDto)?.ProductId ?? 0;
+                if (likedSet.Contains(id))
+                    product.IsLiked = true;
+            }
+
+            return products;
+		}
 
         private IQueryable<Product> BasicFilter(IQueryable<Product> query, bool? isActive, bool? DeletedOnly, bool IsAdmin = false)
         {
@@ -65,7 +97,7 @@ namespace Application.Services.ProductServices
             return query;
         }
 
-        public async Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+        public async Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userId = null)
         {
             if (page <= 0 || pageSize <= 0)
                 return Result<List<ProductDto>>.Fail("Invalid page or pageSize. Must be greater than 0.", 400);
@@ -80,7 +112,13 @@ namespace Application.Services.ProductServices
                 null, isActive, deletedOnly, pageSize, page, "NewArrivals", IsAdmin);
 
             if (cached != null)
+            {
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    await AddLikedFlagAsync(cached, userId);
+                }
                 return Result<List<ProductDto>>.Ok(cached, $"Found {cached.Count} new arrivals", 200);
+            }
 
             try
             {
@@ -96,9 +134,15 @@ namespace Application.Services.ProductServices
                     .ToListAsync();
 
                 if (!products.Any())
-                    return Result<List<ProductDto>>.Fail("No new arrivals found", 404);
+                    return Result<List<ProductDto>>.Fail("No new arrivals found", 200);
 
-                _productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "NewArrivals", IsAdmin, null);
+				_productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "NewArrivals", IsAdmin, null);
+
+				if (!string.IsNullOrEmpty(userId))
+				{
+					await AddLikedFlagAsync(products, userId);
+				}
+
                 return Result<List<ProductDto>>.Ok(products, $"Found {products.Count} new arrivals", 200);
             }
             catch (Exception ex)
@@ -114,7 +158,7 @@ namespace Application.Services.ProductServices
             int pageSize,
             bool? isActive = null,
             bool? deletedOnly = null,
-            bool IsAdmin = false)
+            bool IsAdmin = false, string? userId = null)
         {
             if (page <= 0 || pageSize <= 0)
                 return Result<List<ProductDto>>.Fail("Invalid page or pageSize. Must be greater than 0.", 400);
@@ -129,7 +173,13 @@ namespace Application.Services.ProductServices
                 null, isActive, deletedOnly, pageSize, page, "BestSeller", IsAdmin);
 
             if (cached != null)
+            {
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    await AddLikedFlagAsync(cached, userId);
+                }
                 return Result<List<ProductDto>>.Ok(cached, $"Found {cached.Count} best sellers", 200);
+            }
 
             try
             {
@@ -220,23 +270,31 @@ namespace Application.Services.ProductServices
                         .maptoProductDtoexpression(fallbackQuery, IsAdmin)
                         .ToListAsync();
 
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        await AddLikedFlagAsync(fallbackProducts, userId);
+                    }
+
                     return Result<List<ProductDto>>.Ok(
                         fallbackProducts,
                         "No best sellers found. Showing fallback products instead.",
                         200);
                 }
 
-                var result = Result<List<ProductDto>>.Ok(
-                    products,
-                    $"Found {products.Count} best sellers",
-                    200);
-
                 _backgroundJobClient.Enqueue(() =>
                     _productCacheManger.SetProductListCacheAsync(
                         products, null, isActive, deletedOnly,
                         pageSize, page, "BestSeller", IsAdmin, null));
 
-                return result;
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    await AddLikedFlagAsync(products, userId);
+                }
+
+                return Result<List<ProductDto>>.Ok(
+                    products,
+                    $"Found {products.Count} best sellers",
+                    200);
             }
             catch (Exception ex)
             {
@@ -247,7 +305,7 @@ namespace Application.Services.ProductServices
             }
         }
 
-        public async Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+        public async Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userId = null)
         {
             if (page <= 0 || pageSize <= 0)
                 return Result<List<ProductDto>>.Fail("Invalid page or pageSize. Must be greater than 0.", 400);
@@ -267,7 +325,13 @@ namespace Application.Services.ProductServices
                     searchKey, isActive, deletedOnly, pageSize, page, "AdvancedSearch", IsAdmin);
 
                 if (cached != null)
+                {
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        await AddLikedFlagAsync(cached, userId);
+                    }
                     return Result<List<ProductDto>>.Ok(cached, $"Found {cached.Count} products matching your search", 200);
+                }
 
                 var query = _unitOfWork.Product.GetAll();
                 query = BasicFilter(query, isActive, deletedOnly, IsAdmin);
@@ -343,9 +407,14 @@ namespace Application.Services.ProductServices
                     .ToListAsync();
 
                 if (products is null || !products.Any())
-                    return Result<List<ProductDto>>.Fail("No products found matching the search criteria", 404);
+                    return Result<List<ProductDto>>.Fail("No products found matching the search criteria", 200);
 
                 _productCacheManger.SetProductListCacheAsync<ProductDto>(products, searchKey, isActive, deletedOnly, pageSize, page, "AdvancedSearch", IsAdmin, null);
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    await AddLikedFlagAsync(products, userId);
+                }
 
                 return Result<List<ProductDto>>.Ok(products, $"Found {products.Count} products matching search criteria", 200);
             }
@@ -357,11 +426,17 @@ namespace Application.Services.ProductServices
             }
         }
 
-        public async Task<Result<List<BestSellingProductDto>>> GetBestSellerProductsWithCountAsync(bool? isDeleted, bool? isActive, int page = 1, int pagesize = 10, bool IsAdmin = false)
+        public async Task<Result<List<BestSellingProductDto>>> GetBestSellerProductsWithCountAsync(bool? isDeleted, bool? isActive, int page = 1, int pagesize = 10, bool IsAdmin = false, string? userId = null)
         {
             var cachedResult = await _productCacheManger.GetProductListCacheAsync<BestSellingProductDto>(null, isActive, isDeleted, pagesize, page, "BestSellerCount", IsAdmin);
             if (cachedResult is not null)
+            {
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    await AddLikedFlagAsync(cachedResult, userId);
+                }
                 return Result<List<BestSellingProductDto>>.Ok(cachedResult);
+            }
 
             var productsQuery = _unitOfWork.Product.GetAll().AsQueryable();
             productsQuery = BasicFilter(productsQuery, isActive, isDeleted, IsAdmin);
@@ -386,6 +461,7 @@ namespace Application.Services.ProductServices
                     p => p.Id,
                     (g, p) => new BestSellingProductDto
                     {
+                        Id = p.Id,
                         ProductId = p.Id,
                         ProductName = p.Name,
                         TotalSoldQuantity = g.TotalSold,
@@ -402,10 +478,15 @@ namespace Application.Services.ProductServices
             _backgroundJobClient.Enqueue(() =>
                 _productCacheManger.SetProductListCacheAsync(bestSellers, null, isActive, isDeleted, pagesize, page, "BestSellerCount", IsAdmin, null));
 
+            if (!string.IsNullOrEmpty(userId))
+            {
+                await AddLikedFlagAsync(bestSellers, userId);
+            }
+
             return Result<List<BestSellingProductDto>>.Ok(bestSellers);
         }
 
-        public async Task<Result<List<BestSellingProductDto>>> GetMostWishlistedProductsAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+        public async Task<Result<List<BestSellingProductDto>>> GetMostWishlistedProductsAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userId = null)
         {
             try
             {
@@ -422,7 +503,13 @@ namespace Application.Services.ProductServices
                     null, isActive, deletedOnly, pageSize, page, "MostWishlisted", IsAdmin);
 
                 if (cached != null)
+                {
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        await AddLikedFlagAsync(cached, userId);
+                    }
                     return Result<List<BestSellingProductDto>>.Ok(cached, $"Found {cached.Count} most wishlisted products", 200);
+                }
 
                 var wishCountQuery = _unitOfWork.Repository<WishlistItem>().GetAll()
                     .GroupBy(w => w.ProductId)
@@ -442,6 +529,7 @@ namespace Application.Services.ProductServices
                           p => p.Id,
                           (w, p) => new BestSellingProductDto
                           {
+                              Id = p.Id,
                               ProductId = p.Id,
                               ProductName = p.Name,
                               Image = p.Images.Where(i => i.IsMain && i.DeletedAt == null).Select(i => i.Url).FirstOrDefault() ?? "",
@@ -464,6 +552,7 @@ namespace Application.Services.ProductServices
                         .Take(pageSize)
                         .Select(p => new BestSellingProductDto
                         {
+                            Id = p.Id,
                             ProductId = p.Id,
                             ProductName = p.Name,
                             Image = p.Images.Where(i => i.IsMain && i.DeletedAt == null).Select(i => i.Url).FirstOrDefault() ?? "",
@@ -471,10 +560,21 @@ namespace Application.Services.ProductServices
                         })
                         .ToListAsync();
 
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        await AddLikedFlagAsync(fallbackProducts, userId);
+                    }
+
                     return Result<List<BestSellingProductDto>>.Ok(fallbackProducts, "No wishlisted products found. Showing random products instead.", 200);
                 }
+				
 
-                _productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "MostWishlisted", IsAdmin, null);
+				_productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "MostWishlisted", IsAdmin, null);
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    await AddLikedFlagAsync(products, userId);
+                }
 
                 return Result<List<BestSellingProductDto>>.Ok(products, $"Found {products.Count} most wishlisted products", 200);
             }

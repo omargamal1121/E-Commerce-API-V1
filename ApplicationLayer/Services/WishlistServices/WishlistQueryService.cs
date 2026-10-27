@@ -78,7 +78,7 @@ namespace Application.Services.WishlistServices
                             })
                         }
                     }).Skip((page - 1) * pageSize)
-                    .Take(pageSize)
+                    .Take(pageSize).AsSingleQuery().OrderByDescending(w=>w.CreatedAt)
                     .ToListAsync(); ;
 
                 

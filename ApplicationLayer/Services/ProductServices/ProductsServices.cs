@@ -40,10 +40,10 @@ namespace Application.Services.ProductServices
 		}
 
 		// Core Product Operations
-		public async Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+		public async Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userId = null)
 		{
-			_logger.LogInformation($"Fetching product details for Product ID: {id}, IsActive: {isActive}, DeletedOnly: {deletedOnly}, IsAdmin: {IsAdmin}");
-			return await _productCatalogService.GetProductByIdAsync(id, isActive, deletedOnly, IsAdmin);
+			_logger.LogInformation($"Fetching product details for Product ID: {id}, IsActive: {isActive}, DeletedOnly: {deletedOnly}, IsAdmin: {IsAdmin}, UserId: {userId}");
+			return await _productCatalogService.GetProductByIdAsync(id, isActive, deletedOnly, IsAdmin, userId);
 		}
 		public async Task<Result<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId)
 		{
@@ -61,25 +61,25 @@ namespace Application.Services.ProductServices
 		{
 			return await _productCatalogService.RestoreProductAsync(id, userId);
 		}
-		public async Task<Result<List<ProductDto>>> GetProductsBySubCategoryIdAsync(int subCategoryId, bool? isActive = null, bool? deletedOnly = null, int page = 1, int pageSize = 10, bool IsAdmin = false)
+		public async Task<Result<List<ProductDto>>> GetProductsBySubCategoryIdAsync(int subCategoryId, bool? isActive = null, bool? deletedOnly = null, int page = 1, int pageSize = 10, bool IsAdmin = false, string? userId = null)
 		{
-			return await _productSearchService.AdvancedSearchAsync(new AdvancedSearchDto { Subcategoryid = subCategoryId }, page, pageSize, isActive, deletedOnly, IsAdmin);
+			return await _productSearchService.AdvancedSearchAsync(new AdvancedSearchDto { Subcategoryid = subCategoryId }, page, pageSize, isActive, deletedOnly, IsAdmin, userId);
 		}
-		public async Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+		public async Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userId = null)
 		{
-			return await _productSearchService.GetNewArrivalsAsync(page, pageSize, isActive, deletedOnly, IsAdmin);
+			return await _productSearchService.GetNewArrivalsAsync(page, pageSize, isActive, deletedOnly, IsAdmin, userId);
 		}
-		public async Task<Result<List<ProductDto>>> GetProductsAsync(string? search = null, bool? isActive = null, bool? deletedOnly = null, int page = 1, int pageSize = 10, bool IsAdmin = false)
+		public async Task<Result<List<ProductDto>>> GetProductsAsync(string? search = null, bool? isActive = null, bool? deletedOnly = null, int page = 1, int pageSize = 10, bool IsAdmin = false, string? userId = null)
 		{
-			return await _productSearchService.AdvancedSearchAsync(new AdvancedSearchDto { SearchTerm = search }, page, pageSize, isActive, deletedOnly, IsAdmin);
+			return await _productSearchService.AdvancedSearchAsync(new AdvancedSearchDto { SearchTerm = search }, page, pageSize, isActive, deletedOnly, IsAdmin, userId);
 		}
-		public async Task<Result<List<BestSellingProductDto>>> GetBestSellersProductsWithCountAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null,bool IsAdmin=false)
+		public async Task<Result<List<BestSellingProductDto>>> GetBestSellersProductsWithCountAsync(int page, int pageSize, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userId = null)
 		{
-			return await _productSearchService.GetBestSellerProductsWithCountAsync(isActive,deletedOnly, page, pageSize,IsAdmin);
+			return await _productSearchService.GetBestSellerProductsWithCountAsync(deletedOnly, isActive, page, pageSize, IsAdmin, userId);
 		}
-		public async Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+		public async Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userId = null)
 		{
-			return await _productSearchService.AdvancedSearchAsync(searchCriteria, page, pageSize, isActive, deletedOnly, IsAdmin);
+			return await _productSearchService.AdvancedSearchAsync(searchCriteria, page, pageSize, isActive, deletedOnly, IsAdmin, userId);
 		}
 		// Image Operations
 		public async Task<Result<List<ImageDto>>> GetProductImagesAsync(int productId)
@@ -161,14 +161,14 @@ namespace Application.Services.ProductServices
 		}
 
 
-		public async Task<Result<List<ProductDto>>> GetBestSellersAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+		public async Task<Result<List<ProductDto>>> GetBestSellersAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userId = null)
 		{
-			return await _productSearchService.GetBestSellersAsync(page,pageSize, isActive, deletedOnly, IsAdmin);
+			return await _productSearchService.GetBestSellersAsync(page, pageSize, isActive, deletedOnly, IsAdmin, userId);
 		}
 
-		public async Task<Result<List<BestSellingProductDto>>> GetMostWishlistedProductsAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false)
+		public async Task<Result<List<BestSellingProductDto>>> GetMostWishlistedProductsAsync(int page = 1, int pageSize = 10, bool? isActive = null, bool? deletedOnly = null, bool IsAdmin = false, string? userId = null)
 		{
-			return await _productSearchService.GetMostWishlistedProductsAsync(page, pageSize, isActive, deletedOnly, IsAdmin);
+			return await _productSearchService.GetMostWishlistedProductsAsync(page, pageSize, isActive, deletedOnly, IsAdmin, userId);
 		}
 
 		public async Task<Result<int>> CountProductsAsync(bool? isActive = null, bool? isDelete = null, bool? inStock = null, bool isAdmin = false)

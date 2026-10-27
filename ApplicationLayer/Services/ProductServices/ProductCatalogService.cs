@@ -31,13 +31,13 @@ namespace Application.Services.ProductServices
 		bool? inStock = null,
 		bool isAdmin = false);
 
-        Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive, bool? deletedOnly, bool IsAdmin = false);
+        Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive, bool? deletedOnly, bool IsAdmin = false, string? userId = null);
 		public Task UpdateProductQuantity(int Productid  );
 		Task<Result<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId);
 		Task<Result<ProductDto>> UpdateProductAsync(int id, UpdateProductDto dto, string userId);
 		Task<Result<bool>> DeleteProductAsync(int id, string userId);
 		Task<Result<bool>> RestoreProductAsync(int id, string userId);
-		Task<Result<List<ProductDto>>> GetProductsBySubCategoryId(int SubCategoryid, bool? isActive, bool? deletedOnly);
+		Task<Result<List<ProductDto>>> GetProductsBySubCategoryId(int SubCategoryid, bool? isActive, bool? deletedOnly, string? userId = null);
 		Task<Result<bool>> ActivateProductAsync(int productId, string userId);
 		Task<Result<bool>> DeactivateProductAsync(int productId, string userId);
 	}
@@ -109,61 +109,69 @@ namespace Application.Services.ProductServices
 			await _productCacheManger.ClearProductCache();
 		}
 
-		public async Task<Result<ProductDetailDto>> GetProductByIdAsync(int id, bool? isActive, bool? deletedOnly, bool IsAdmin = false)
+		public async Task<Result<ProductDetailDto>> GetProductByIdAsync(
+			int id, bool? isActive, bool? deletedOnly, bool IsAdmin = false, string? userId = null)
 		{
-			_logger.LogInformation($"Retrieving product by id: {id}, isActive: {isActive}, deletedOnly: {deletedOnly}, IsAdmin: {IsAdmin}");
+			_logger.LogInformation($"Retrieving product by id: {id}, isActive: {isActive}, deletedOnly: {deletedOnly}, IsAdmin: {IsAdmin}, UserId: {userId}");
+
 			if (!IsAdmin)
 			{
-				var isexsist = await _unitOfWork.Product.IsExsistAndActiveAsync(id);
-				if(!isexsist)
-					return Result<ProductDetailDto>.Fail("Product not found", 404);
 				isActive = true;
 				deletedOnly = false;
 			}
+
 			var cached = await _productCacheManger.GetProductByIdCacheAsync<ProductDetailDto>(id, isActive, deletedOnly, IsAdmin);
 			if (cached != null)
+			{
+				if (!string.IsNullOrEmpty(userId))
+				{
+					cached.IsLiked = await _unitOfWork.Repository<WishlistItem>()
+						.GetAll()
+						.AnyAsync(w => w.CustomerId == userId && w.ProductId == id);
+				}
 				return Result<ProductDetailDto>.Ok(cached, "Product retrieved from cache", 200);
+			}
+
 			try
 			{
 				var query = _unitOfWork.Product.GetAll().AsNoTracking().Where(p => p.Id == id);
 
-				if(! await query.AnyAsync()){
-					_logger.LogWarning($"Product with id: {id} not found in database");
-					return Result<ProductDetailDto>.Fail("Product not found", 404);
-				}
-
 				if (deletedOnly.HasValue)
-				{
-					if (deletedOnly.Value)
-						query = query.Where(p => p.DeletedAt != null);
-					else
-						query = query.Where(p => p.DeletedAt == null);
-				}
+					query = deletedOnly.Value
+						? query.Where(p => p.DeletedAt != null)
+						: query.Where(p => p.DeletedAt == null);
 
 				if (isActive.HasValue)
-				{
-					query = query.Where(p => p.IsActive==isActive);
-				}
-				var product = await _productMapper.maptoProductDetailDtoexpression(query, IsAdmin)
+					query = query.Where(p => p.IsActive == isActive.Value);
+
+				var product = await _productMapper
+					.maptoProductDetailDtoexpression(query, IsAdmin)
 					.FirstOrDefaultAsync();
 
 				if (product == null)
 					return Result<ProductDetailDto>.Fail("Product not found", 404);
 
-				_logger.LogInformation($"Product found: {product.Name} (ID: {product.Id})");
+				_productCacheManger.SetProductByIdCacheAsync(id, isActive, deletedOnly, product,
+					IsAdmin: IsAdmin, expiration: TimeSpan.FromMinutes(30));
 
-				_productCacheManger.SetProductByIdCacheAsync(id, isActive, deletedOnly, product, IsAdmin: IsAdmin, expiration: TimeSpan.FromMinutes(30));
+				if (!string.IsNullOrEmpty(userId))
+				{
+					product.IsLiked = await _unitOfWork.Repository<WishlistItem>()
+						.GetAll()
+						.AnyAsync(w => w.CustomerId == userId && w.ProductId == id);
+				}
+
 				return Result<ProductDetailDto>.Ok(product, "Product retrieved successfully", 200);
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in GetProductByIdAsync for id: {id}");
-				 	_backgroundJobClient.Enqueue(()=> _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
+				_backgroundJobClient.Enqueue(() => _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace));
 				return Result<ProductDetailDto>.Fail("Error retrieving product", 500);
 			}
 		}
 
-        public async Task<Result<int>> CountProductsAsync(
+		public async Task<Result<int>> CountProductsAsync(
         bool? isActive = null,
         bool? isDelete = null,
         bool? inStock = null,
@@ -365,7 +373,7 @@ namespace Application.Services.ProductServices
 						var oldCatInfo = subCategoriesInfo.FirstOrDefault(sc => sc.Id == oldSubCategoryId);
 						if (oldCatInfo != null && !oldCatInfo.HasOtherProducts)
 						{
-							await _subCategoryServices.DeactivateSubCategoryAsync(oldSubCategoryId, userId);
+							_backgroundJobClient.Enqueue(() =>  _subCategoryServices.DeactivateSubCategoryAsync(oldSubCategoryId, userId))	;
 							await _subCategoryCacheHelper.ClearSubCategoryDataCache();
 							await _categoryCacheHelper.ClearCategoryDataCache();
 						}
@@ -533,12 +541,43 @@ namespace Application.Services.ProductServices
 			}
 		}
 
-		public async Task<Result<List<ProductDto>>> GetProductsBySubCategoryId(int SubCategoryid, bool? isActive, bool? deletedOnly)
+		private async Task<List<ProductDto>> AddLikedFlagAsync(List<ProductDto> products, string? userId)
 		{
-			
+			if (string.IsNullOrEmpty(userId) || products == null || !products.Any())
+				return products;
+
+			var productIds = products.Select(p => p.Id).Where(id => id > 0).Distinct().ToList();
+			if (!productIds.Any())
+				return products;
+
+			var likedProductIds = await _unitOfWork.Repository<WishlistItem>()
+				.GetAll()
+				.Where(w => w.CustomerId == userId && productIds.Contains(w.ProductId))
+				.Select(w => w.ProductId)
+				.ToListAsync();
+
+			var likedSet = likedProductIds.ToHashSet();
+
+			foreach (var product in products)
+			{
+				if (likedSet.Contains(product.Id))
+					product.IsLiked = true;
+			}
+
+			return products;
+		}
+
+		public async Task<Result<List<ProductDto>>> GetProductsBySubCategoryId(int SubCategoryid, bool? isActive, bool? deletedOnly, string? userId = null)
+		{
 			var cached = await _productCacheManger.GetProductListBySubcategoryidCacheAsync<ProductDto>(SubCategoryid, isActive, deletedOnly);
 			if (cached != null)
+			{
+				if (!string.IsNullOrEmpty(userId))
+				{
+					await AddLikedFlagAsync(cached, userId);
+				}
 				return Result<List<ProductDto>>.Ok(cached, "Products by Category (from cache)", 200);
+			}
 			try
 			{
 				var isfound = await _unitOfWork.SubCategory.GetByIdAsync(SubCategoryid);
@@ -566,6 +605,12 @@ namespace Application.Services.ProductServices
 				var products =await _productMapper.maptoProductDtoexpression(productsQuery)
 					.ToListAsync();
 				_productCacheManger.SetProductListBySubCategoryidCacheAsync(products, SubCategoryid, isActive, deletedOnly, IsAdmin: false, expiration: TimeSpan.FromMinutes(30));
+
+				if (!string.IsNullOrEmpty(userId))
+				{
+					await AddLikedFlagAsync(products, userId);
+				}
+
 				return Result<List<ProductDto>>.Ok(products, "Products by Category", 200);
 			}
 			catch (Exception ex)

@@ -2,6 +2,7 @@ using Application.DtoModels.DiscoutDtos;
 using Application.DtoModels.ImagesDtos;
 using Application.DtoModels.ProductDtos;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using static Application.Services.ProductServices.ProductSearchService;
 
 namespace Application.Services.ProductServices
@@ -156,7 +157,7 @@ namespace Application.Services.ProductServices
 							Quantity = v.Quantity,
 							ProductId = v.ProductId
 						})
-				});
+				}).AsSplitQuery().OrderByDescending(p=>p.CreatedAt);
 		}
 		public IQueryable<ProductDto> maptoProductDtoexpression(IQueryable<Product> query, bool IsAdmin = false)
 		{
@@ -216,7 +217,7 @@ namespace Application.Services.ProductServices
 						Url = i.Url,
 						IsMain = i.IsMain
 					})
-			});
+			}).AsSplitQuery().OrderByDescending(p=>p.CreatedAt);
 		}
 
 

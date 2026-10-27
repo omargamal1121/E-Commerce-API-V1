@@ -311,7 +311,7 @@ namespace Application.Services.CategoryServices
 					{
 						Category = c,
 						IsDeleted = c.DeletedAt != null,
-						HasSubCategories = c.SubCategories.Any()
+						HasSubCategories = c.SubCategories.Any(sc=>sc.DeletedAt==null)
 					})
 					.FirstOrDefaultAsync();
 

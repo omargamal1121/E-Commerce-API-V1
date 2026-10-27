@@ -52,6 +52,7 @@ namespace Infrastructure.Context
 
 
             base.OnModelCreating(builder);
+			
             builder.Entity<Product>().HasIndex(p => p.Name).IsUnique();
             builder.Entity<Product>().HasIndex(p => new { p.SubCategoryId, p.DiscountId });
 			builder.Entity<Customer>(entity =>

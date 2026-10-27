@@ -35,6 +35,7 @@ namespace Application.DtoModels.ProductDtos
 
 
 		public bool IsActive { get; set; }
+		public bool IsLiked { get; set; }
 		public IEnumerable<ImageDto>? images { get; set; }
 		public int TotalSold { get; set; }
 

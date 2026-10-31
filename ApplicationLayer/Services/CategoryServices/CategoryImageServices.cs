@@ -102,7 +102,7 @@ namespace Application.Services.CategoryServices
 				await transaction.CommitAsync();
 
 				var mapped = imageResult.Data.Select(i => new ImageDto { Id = i.Id, Url = i.Url, IsMain = i.IsMain }).ToList();
-				_categoryCacheHelper.ClearCategoryCache();
+				 _=	_categoryCacheHelper.ClearCategoryCache();
 
 				return Result<List<ImageDto>>.Ok(mapped, $"Added {imageResult.Data.Count} images to category", 200, warnings: imageResult.Warnings);
 			}

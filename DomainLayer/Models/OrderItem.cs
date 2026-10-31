@@ -10,12 +10,12 @@ namespace Domain.Models
         public Order Order { get; set; }
 
         [ForeignKey("Product")]
-        public int ProductId { get; set; }
-        public Product Product { get; set; }
+        public int? ProductId { get; set; }
+        public Product? Product { get; set; }
 
         [ForeignKey("ProductVariant")]
-        public int ProductVariantId { get; set; }
-        public ProductVariant ProductVariant { get; set; }
+        public int? ProductVariantId { get; set; }
+        public ProductVariant? ProductVariant { get; set; }
 
         [Required]
         [Range(1, 100, ErrorMessage = "Quantity must be between 1 and 100")]
@@ -30,5 +30,19 @@ namespace Domain.Models
         public decimal TotalPrice { get; set; }
 
         public DateTime OrderedAt { get; set; } = DateTime.UtcNow;
-    }
+
+		public string? Size { get; set; }
+		public int? Waist { get; set; }
+		public int? Length { get; set; }
+		public int? Chest { get; set; }
+		public int? Hip { get; set; }
+		public int? SleeveLength { get; set; }
+		public bool IsFreeSize { get; set; } = false;
+        [Required]
+        public string  ProductName { get; set; }
+
+		public string? ProductImageUrl { get; set; }
+
+		public string? Color { get; set; }
+	}
 } 

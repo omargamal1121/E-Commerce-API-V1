@@ -570,11 +570,26 @@ namespace ECommerce.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("Chest")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("Hip")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsFreeSize")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int?>("Length")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime(6)");
@@ -585,13 +600,26 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<DateTime>("OrderedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductVariantId")
+                    b.Property<string>("ProductImageUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("ProductVariantId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Size")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("SleeveLength")
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalPrice")
@@ -601,6 +629,9 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<decimal>("UnitPrice")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("Waist")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -931,8 +962,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
@@ -1750,14 +1780,12 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasOne("Domain.Models.Product", "Product")
                         .WithMany("OrderItems")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Domain.Models.ProductVariant", "ProductVariant")
                         .WithMany("OrderItems")
                         .HasForeignKey("ProductVariantId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Order");
 

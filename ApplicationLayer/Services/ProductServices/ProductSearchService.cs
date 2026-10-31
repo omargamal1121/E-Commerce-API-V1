@@ -263,7 +263,7 @@ namespace Application.Services.ProductServices
                 if (!products.Any())
                 {
                     var fallbackQuery = productBaseQuery
-                        .OrderBy(p => p.Id)
+                        .OrderBy(p => Guid.NewGuid())
                         .Take(pageSize);
 
                     var fallbackProducts = await _productMapper

@@ -70,7 +70,12 @@ namespace Application.Services.CartServices
 							Size = item.ProductVariant.Size,
 							Waist = item.ProductVariant.Waist,
 							Length = item.ProductVariant.Length,
-							Quantity = item.ProductVariant.Quantity
+							Quantity = item.ProductVariant.Quantity,
+                            Chest = item.ProductVariant.Chest,
+                            Hip = item.ProductVariant.Hip,
+                            IsFreeSize = item.ProductVariant.IsFreeSize,
+                            SleeveLength = item.ProductVariant.SleeveLength
+                            
 						}
 					},
 					PriceAtAddTime = item.UnitPrice,
@@ -161,7 +166,11 @@ namespace Application.Services.CartServices
                             Size = item.ProductVariant.Size,
                             Waist = item.ProductVariant.Waist,
                             Length = item.ProductVariant.Length,
-                            Quantity = item.ProductVariant.Quantity
+                            Quantity = item.ProductVariant.Quantity,
+                            Chest = item.ProductVariant.Chest,
+                            Hip = item.ProductVariant.Hip,
+                            IsFreeSize = item.ProductVariant.IsFreeSize,
+                            SleeveLength = item.ProductVariant.SleeveLength
                         }
                     },
                     PriceAtAddTime = item.UnitPrice,

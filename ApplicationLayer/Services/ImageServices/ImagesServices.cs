@@ -162,25 +162,26 @@ namespace Application.Services.ImageServices
             if (images == null || images.Count == 0)
                 return Result<List<Image>>.Fail("Images are null or empty");
 
-            var tasks = images.Select(img => SaveImageAsync(img, folderName, id, false, userId));
-            var results = await Task.WhenAll(tasks);
+			var savedImages = new List<Image>();
+			var errors = new List<string>();
+            int i = 0;
 
-            var savedImages = new List<Image>();
-            var errors = new List<string>();
-
-            for (int i = 0; i < results.Length; i++)
+			foreach (var image in images)
             {
-                var result = results[i];
-                if (!result.Success || result.Data == null)
-                {
-                    errors.Add($"Image #{i + 1}: {result.Message}");
-                    _logger.LogError("Failed to save image #{Index}: {Message}", i + 1, result.Message);
-                }
-                else
-                {
-                    savedImages.Add(result.Data);
-                }
-            }
+                var result = await SaveImageAsync(image, folderName, id, userId: userId);
+				if (!result.Success || result.Data == null)
+				{
+					errors.Add($"Image #{i + 1}: {result.Message}");
+					_logger.LogError("Failed to save image #{Index}: {Message}", i + 1, result.Message);
+				}
+				else
+				{
+					savedImages.Add(result.Data);
+				}
+                i++;
+
+			}
+
 
             if (errors.Any())
             {

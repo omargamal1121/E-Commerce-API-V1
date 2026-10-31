@@ -242,6 +242,15 @@ namespace Application.Services.OrderServices
                     CreatedAt = DateTime.UtcNow,
                     Items = activeItems.Select(item => new OrderItem
 					{
+                        Chest= item.Product.productVariantForCartDto.Chest,
+                        SleeveLength= item.Product.productVariantForCartDto.SleeveLength,
+                        Waist = item.Product.productVariantForCartDto.Waist,    
+                        Size= item.Product.productVariantForCartDto.Size,
+                        ProductName= item.Product.Name,
+                        ProductImageUrl = item.Product.MainImageUrl,
+                        Length= item.Product.productVariantForCartDto.Length,
+                        Hip =item.Product.productVariantForCartDto.Hip,
+                        Color=item.Product.productVariantForCartDto.Color,
 						ProductId = item.ProductId,
 						ProductVariantId = item.Product.productVariantForCartDto.Id,
 						Quantity = item.Quantity,
@@ -381,11 +390,14 @@ namespace Application.Services.OrderServices
         {
             foreach (var orderItem in orderItems)
             {
-                var removeResult = await _productVariantCommandService.RemoveQuntityAfterOrder(orderItem.ProductVariantId, orderItem.Quantity, orderItem.ProductId);
-                if (!removeResult.Success)
+                if (orderItem.ProductVariantId.HasValue && orderItem.ProductId.HasValue)
                 {
-                    _logger.LogError("Failed to reduce quantity for variant {VariantId}: {Message}", 
-                        orderItem.ProductVariantId, removeResult.Message);
+                    var removeResult = await _productVariantCommandService.RemoveQuntityAfterOrder(orderItem.ProductVariantId.Value, orderItem.Quantity, orderItem.ProductId.Value);
+                    if (!removeResult.Success)
+                    {
+                        _logger.LogError("Failed to reduce quantity for variant {VariantId}: {Message}", 
+                            orderItem.ProductVariantId, removeResult.Message);
+                    }
                 }
             }
         }
@@ -867,10 +879,13 @@ namespace Application.Services.OrderServices
 
                 foreach (var item in orderItems)
                 {
-                    var addResult = await _productVariantCommandService.AddQuntityAfterRestoreOrder(item.ProductVariantId, item.Quantity);
-                    if (!addResult.Success)
+                    if (item.ProductVariantId.HasValue)
                     {
-                        _logger.LogError("Failed to restock variant {VariantId}: {Message}", item.ProductVariantId, addResult.Message);
+                        var addResult = await _productVariantCommandService.AddQuntityAfterRestoreOrder(item.ProductVariantId.Value, item.Quantity);
+                        if (!addResult.Success)
+                        {
+                            _logger.LogError("Failed to restock variant {VariantId}: {Message}", item.ProductVariantId, addResult.Message);
+                        }
                     }
                 }
 
@@ -919,6 +934,22 @@ namespace Application.Services.OrderServices
                         v.Product.Price, 
                         v.Product.IsActive, 
                         v.Product.Name,
+                        v.Color,
+                        v.Size,
+                        v.Waist,
+                        v.Length,
+                        v.Chest,
+                        v.Hip,
+                        v.SleeveLength,
+                        v.IsFreeSize,
+                        MainImageUrl = v.Product.Images
+                            .Where(img => img.IsMain && img.DeletedAt == null)
+                            .Select(img => img.Url)
+                            .FirstOrDefault()
+                            ?? v.Product.Images
+                            .Where(img => img.DeletedAt == null)
+                            .Select(img => img.Url)
+                            .FirstOrDefault(),
                         Discount = v.Product.Discount != null ? new
                         {
                             v.Product.Discount.EndDate,
@@ -976,7 +1007,18 @@ namespace Application.Services.OrderServices
                         UnitPrice = calculatedPrice,
                         TotalPrice = itemTotal,
                         OrderedAt = DateTime.UtcNow,
-                        CreatedAt = DateTime.UtcNow
+                        CreatedAt = DateTime.UtcNow,
+                        // Snapshot fields
+                        ProductName = variant.Name,
+                        ProductImageUrl = variant.MainImageUrl,
+                        Color = variant.Color,
+                        Size = variant.Size,
+                        Waist = variant.Waist,
+                        Length = variant.Length,
+                        Chest = variant.Chest,
+                        Hip = variant.Hip,
+                        SleeveLength = variant.SleeveLength,
+                        IsFreeSize = variant.IsFreeSize
                     });
                 }
 
@@ -1031,9 +1073,9 @@ namespace Application.Services.OrderServices
                 foreach (var item in orderItems)
                 {
                     var removeResult = await _productVariantCommandService.RemoveQuntityAfterOrder(
-                        item.ProductVariantId,
+                        item.ProductVariantId!.Value,
                         item.Quantity,
-                        item.ProductId);
+                        item.ProductId!.Value);
 
                     if (!removeResult.Success)
                     {

@@ -299,14 +299,21 @@ namespace Infrastructure.Context
 				.HasMany(p => p.OrderItems)
 				.WithOne(oi => oi.Product)
 				.HasForeignKey(oi => oi.ProductId)
-				.OnDelete(DeleteBehavior.NoAction);
+				.IsRequired(false)
+				.OnDelete(DeleteBehavior.SetNull);
+
+			// When a product is soft-deleted, treat it as null in OrderItem navigation
+			builder.Entity<OrderItem>()
+				.Navigation(oi => oi.Product)
+				.AutoInclude(false);
 
 			// ProductVariant - OrderItem (1:M)
 			builder.Entity<ProductVariant>()
 				.HasMany(pv => pv.OrderItems)
 				.WithOne(oi => oi.ProductVariant)
 				.HasForeignKey(oi => oi.ProductVariantId)
-				.OnDelete(DeleteBehavior.NoAction);
+				.IsRequired(false)
+				.OnDelete(DeleteBehavior.SetNull);
 
 			// Customer - ReturnRequest (1:M)
 			builder.Entity<Customer>()

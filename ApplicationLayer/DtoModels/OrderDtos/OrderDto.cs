@@ -61,14 +61,19 @@ namespace Application.DtoModels.OrderDtos
 
 	public class OrderItemDto : BaseDto
     {
-
-        public ProductForCartDto Product { get; set; }
-
-      
+        // Snapshot fields — locked at order time, never change
+        public string ProductName { get; set; } = string.Empty;
+        public string? ImageUrl { get; set; }
+        public string? Color { get; set; }
+        public string? Size { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal TotalPrice { get; set; }
         public DateTime OrderedAt { get; set; }
+
+        // Live availability flags only — do NOT use for display
+        public bool IsProductAvailable { get; set; }
+        public bool IsVariantAvailable { get; set; }
     }
 
     public class PaymentDto : BaseDto

@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using Application.DtoModels.ImageDtos;
 using Application.Exceptions;
 using Application.Interfaces;
@@ -6,12 +5,18 @@ using Imagekit;
 using Imagekit.Exceptions;
 using Imagekit.Models.Files;
 using Imagekit.Models.Files.Bulk;
-using ImagekitSrcOptions = Imagekit.Models.SrcOptions;
-using ImagekitTransformation = Imagekit.Models.Transformation;
-using ImagekitFormat = Imagekit.Models.Format;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using ImagekitFormat = Imagekit.Models.Format;
+using ImagekitSrcOptions = Imagekit.Models.SrcOptions;
+using ImagekitTransformation = Imagekit.Models.Transformation;
 
 namespace Application.Services.ImageServices
 {
@@ -21,6 +26,13 @@ namespace Application.Services.ImageServices
         private readonly IImageCompressor _compressor;
         private readonly ImageKitSettings _settings;
         private readonly ILogger<ImageKitStorageService> _logger;
+        private readonly int TargetSize = 1600;
+
+        // Hard pixel limit: ~8 MP (e.g. 3264×2448) prevents decode of giant canvases
+        private const long MaxPixels = 8_000_000;
+
+        // Maximum images accepted in a single UploadManyAsync call
+        private const int MaxImagesPerBatch = 5;
 
         private static readonly HashSet<string> AllowedMimeTypes = new(StringComparer.OrdinalIgnoreCase)
         {
@@ -35,10 +47,10 @@ namespace Application.Services.ImageServices
             IOptions<ImageKitSettings> settings,
             ILogger<ImageKitStorageService> logger)
         {
-            _imageKitClient = imageKitClient ?? throw new ArgumentNullException(nameof(imageKitClient));
-            _compressor = compressor ?? throw new ArgumentNullException(nameof(compressor));
-            _settings = settings?.Value ?? throw new ArgumentNullException(nameof(settings));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _imageKitClient = imageKitClient ?? throw new System.ArgumentNullException(nameof(imageKitClient));
+            _compressor = compressor ?? throw new System.ArgumentNullException(nameof(compressor));
+            _settings = settings?.Value ?? throw new System.ArgumentNullException(nameof(settings));
+            _logger = logger ?? throw new System.ArgumentNullException(nameof(logger));
         }
 
         public async Task<ImageUploadResult> UploadAsync(
@@ -47,27 +59,28 @@ namespace Application.Services.ImageServices
             string folder,
             CancellationToken ct = default)
         {
-            ArgumentNullException.ThrowIfNull(image);
+            System.ArgumentNullException.ThrowIfNull(image);
 
-            // 1. Validation: check empty stream
-            if (image.Length == 0)
+            // 1. Reject empty streams
+            if (image.CanSeek && image.Length == 0)
             {
                 throw new ImageValidationException("Cannot upload an empty image stream.");
             }
 
-            // 2. Validation: check max size before compression
-            //if (image.Length > _settings.MaxInputFileSizeBytes)
-            //{
-            //    long maxMb = _settings.MaxInputFileSizeBytes / (1024 * 1024);
-            //    throw new ImageValidationException($"File size ({image.Length / (1024 * 1024)}MB) exceeds maximum allowed size of {maxMb}MB.");
-            //}
+            // 2. Enforce max raw upload size (safety net; frontend pre-compresses)
+            if (image.CanSeek && image.Length > _settings.MaxInputFileSizeBytes)
+            {
+                long maxMb = _settings.MaxInputFileSizeBytes / (1024 * 1024);
+                throw new ImageValidationException(
+                    $"File size ({image.Length / (1024 * 1024)} MB) exceeds the maximum allowed size of {maxMb} MB.");
+            }
 
             if (image.CanSeek)
             {
                 image.Position = 0;
             }
 
-        
+            // 3. Detect and validate image format
             var imageInfo = await SixLabors.ImageSharp.Image.IdentifyAsync(image, ct);
             if (imageInfo == null || !AllowedMimeTypes.Contains(imageInfo.Metadata.DecodedImageFormat?.DefaultMimeType ?? string.Empty))
             {
@@ -75,10 +88,29 @@ namespace Application.Services.ImageServices
                 throw new ImageValidationException($"Unsupported image format: '{detected}'. Only JPEG, PNG, and WebP are allowed.");
             }
 
-    
-            using var compressedStream = await _compressor.CompressAsync(image, ImageCompressionOptions.Default, ct);
+            // 4. Enforce pixel limit to prevent very large canvas decode
+            if ((long)imageInfo.Width * imageInfo.Height > MaxPixels)
+            {
+                throw new ImageValidationException(
+                    "Image dimensions are too large. Maximum is about 8 megapixels (e.g. 3264x2448).");
+            }
 
-             string safeFileName = $"{Guid.NewGuid():N}.webp";
+            // Reset stream position after IdentifyAsync so the compressor reads from the start
+            if (image.CanSeek)
+            {
+                image.Position = 0;
+            }
+
+            var options = new ImageCompressionOptions
+            {
+                MaxWidth = TargetSize,
+                Quality = 80,
+                RemoveMetadata = true,
+            };
+
+            using var compressedStream = await _compressor.CompressAsync(image, options, ct);
+
+            string safeFileName = $"{System.Guid.NewGuid():N}.webp";
             string targetFolder = string.IsNullOrWhiteSpace(folder)
                 ? _settings.DefaultFolder
                 : "/" + folder.Trim().Trim('/');
@@ -105,8 +137,8 @@ namespace Application.Services.ImageServices
                     FileId: response.FileID,
                     FilePath: response.FilePath,
                     SizeInBytes: (long)(response.Size ?? 0),
-                    Width: response.Width.HasValue ? (int?)Math.Round(response.Width.Value) : null,
-                    Height: response.Height.HasValue ? (int?)Math.Round(response.Height.Value) : null
+                    Width: response.Width.HasValue ? (int?)System.Math.Round(response.Width.Value) : null,
+                    Height: response.Height.HasValue ? (int?)System.Math.Round(response.Height.Value) : null
                 );
             }
             catch (ImageKitException ex)
@@ -115,7 +147,7 @@ namespace Application.Services.ImageServices
                     safeFileName, targetFolder, ex.Message);
                 throw new ImageStorageException($"ImageKit upload failed: {ex.Message}", ex);
             }
-            catch (Exception ex) when (ex is not ImageValidationException and not ImageStorageException)
+            catch (Exception ex) when (ex is not ImageValidationException and not ImageStorageException and not OperationCanceledException)
             {
                 _logger.LogError(ex, "Unexpected error uploading image to ImageKit: {Message}", ex.Message);
                 throw new ImageStorageException($"Unexpected error uploading image: {ex.Message}", ex);
@@ -127,44 +159,45 @@ namespace Application.Services.ImageServices
             string folder,
             CancellationToken ct = default)
         {
-            ArgumentNullException.ThrowIfNull(images);
+            System.ArgumentNullException.ThrowIfNull(images);
 
             var inputList = images.ToList();
             if (inputList.Count == 0)
             {
-                return Array.Empty<ImageUploadResult>();
+                return System.Array.Empty<ImageUploadResult>();
             }
 
-            var uploadedResults = new ConcurrentBag<ImageUploadResult>();
-            var semaphore = new SemaphoreSlim(3, 3);
+            // Enforce a per-call image count limit to bound memory usage
+            if (inputList.Count > MaxImagesPerBatch)
+            {
+                throw new ImageValidationException(
+                    $"Too many images in a single request. Maximum is {MaxImagesPerBatch} images per upload.");
+            }
+
+            var uploadedResults = new List<ImageUploadResult>();
 
             try
             {
-                var tasks = inputList.Select(async input =>
+                // Process sequentially: the static gate in ImageSharpCompressor already limits
+                // concurrency. Processing one-at-a-time means only one image occupies memory.
+                foreach (var input in inputList)
                 {
-                    await semaphore.WaitAsync(ct);
-                    try
-                    {
-                        var result = await UploadAsync(input.Stream, input.FileName, folder, ct);
-                        uploadedResults.Add(result);
-                        return result;
-                    }
-                    finally
-                    {
-                        semaphore.Release();
-                    }
-                });
+                    ct.ThrowIfCancellationRequested();
+                    var result = await UploadAsync(input.Stream, input.FileName, folder, ct);
+                    uploadedResults.Add(result);
+                }
 
-                var allResults = await Task.WhenAll(tasks);
-                return allResults;
+                return uploadedResults.AsReadOnly();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "One or more uploads failed in UploadManyAsync batch for folder {Folder}. Initiating best-effort cleanup of {Count} uploaded files...",
+                _logger.LogError(ex,
+                    "One or more uploads failed in UploadManyAsync batch for folder {Folder}. " +
+                    "Initiating best-effort cleanup of {Count} uploaded files...",
                     folder, uploadedResults.Count);
 
-                // Best-effort rollback/cleanup of all files successfully uploaded in this batch
-                if (!uploadedResults.IsEmpty)
+                // Best-effort rollback of files successfully uploaded before the failure
+                if (uploadedResults.Count > 0)
                 {
                     var fileIdsToDelete = uploadedResults.Select(r => r.FileId).ToList();
                     try
@@ -178,11 +211,12 @@ namespace Application.Services.ImageServices
                     }
                 }
 
+                if (ex is ImageValidationException or ImageStorageException)
+                {
+                    throw;
+                }
+
                 throw new ImageStorageException($"Batch upload failed: {ex.Message}. Rolled back uploaded images.", ex);
-            }
-            finally
-            {
-                semaphore.Dispose();
             }
         }
 
@@ -217,7 +251,7 @@ namespace Application.Services.ImageServices
 
         public async Task DeleteManyAsync(IEnumerable<string> fileIds, CancellationToken ct = default)
         {
-            ArgumentNullException.ThrowIfNull(fileIds);
+            System.ArgumentNullException.ThrowIfNull(fileIds);
 
             var idList = fileIds.Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().ToList();
             if (idList.Count == 0)
@@ -260,26 +294,26 @@ namespace Application.Services.ImageServices
             {
                 (true, true) => new ImagekitTransformation
                 {
-                    Quality = Math.Clamp(quality, 1, 100),
+                    Quality = System.Math.Clamp(quality, 1, 100),
                     Format = ImagekitFormat.Webp,
                     Width = width!.Value,
                     Height = height!.Value
                 },
                 (true, false) => new ImagekitTransformation
                 {
-                    Quality = Math.Clamp(quality, 1, 100),
+                    Quality = System.Math.Clamp(quality, 1, 100),
                     Format = ImagekitFormat.Webp,
                     Width = width!.Value
                 },
                 (false, true) => new ImagekitTransformation
                 {
-                    Quality = Math.Clamp(quality, 1, 100),
+                    Quality = System.Math.Clamp(quality, 1, 100),
                     Format = ImagekitFormat.Webp,
                     Height = height!.Value
                 },
                 _ => new ImagekitTransformation
                 {
-                    Quality = Math.Clamp(quality, 1, 100),
+                    Quality = System.Math.Clamp(quality, 1, 100),
                     Format = ImagekitFormat.Webp
                 }
             };
@@ -287,7 +321,7 @@ namespace Application.Services.ImageServices
             var transformations = new List<ImagekitTransformation> { tr };
 
             string urlEndpoint = _settings.UrlEndpoint.TrimEnd('/');
-            string src = filePath.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+            string src = filePath.StartsWith("http", System.StringComparison.OrdinalIgnoreCase)
                 ? filePath
                 : $"{urlEndpoint}/{filePath.TrimStart('/')}";
 

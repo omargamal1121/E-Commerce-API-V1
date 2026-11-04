@@ -10,6 +10,7 @@ using Application.DtoModels.SubCategorydto;
 using Application.Interfaces;
 using Application.ErrorHnadling;
 using Application.DtoModels.ImagesDtos;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace E_Commerce.Controllers
 {
@@ -135,6 +136,8 @@ namespace E_Commerce.Controllers
         [HttpPost("{id}/images")]
         [Authorize(Roles = "Admin,SuperAdmin")]
         [ActionName(nameof(AddImages))]
+        [RequestSizeLimit(27262976)] // 26 MB (5 images * 5MB + overhead)
+        [RequestFormLimits(MultipartBodyLengthLimit = 27262976)]
         public async Task<ActionResult<ApiResponse<List<ImageDto>>>> AddImages(int id, [FromForm] AddImagesDto images)
         {
             _logger.LogInformation($"Executing {nameof(AddImages)} for id: {id}");

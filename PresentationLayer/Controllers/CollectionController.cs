@@ -7,6 +7,7 @@ using Application.Interfaces;
 using E_Commerce.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace E_Commerce.Controllers
 {
@@ -263,6 +264,8 @@ namespace E_Commerce.Controllers
         /// </summary>
         [HttpPost("{id}/images")]
         [Authorize(Roles = "Admin,SuperAdmin")]
+        [RequestSizeLimit(27262976)] // 26 MB (5 images * 5MB + overhead)
+        [RequestFormLimits(MultipartBodyLengthLimit = 27262976)]
         public async Task<ActionResult<ApiResponse<List<ImageDto>>>> AddImagesToCollection(
             int id,
             [FromForm] AddImagesDto images

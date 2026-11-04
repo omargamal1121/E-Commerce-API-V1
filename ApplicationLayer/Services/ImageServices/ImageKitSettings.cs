@@ -15,6 +15,11 @@ namespace Application.Services.ImageServices
 
         public string DefaultFolder { get; set; } = "/rs/products";
 
-        public long MaxInputFileSizeBytes { get; set; } = 15 * 1024 * 1024; // 15MB
+        /// <summary>
+        /// Maximum raw input file size accepted before compression.
+        /// Keep this in sync with appsettings.json and web.config maxAllowedContentLength.
+        /// Default: 5 MB.
+        /// </summary>
+        public long MaxInputFileSizeBytes { get; set; } = 5 * 1024 * 1024; // 5 MB
     }
 }

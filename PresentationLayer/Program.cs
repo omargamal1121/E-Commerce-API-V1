@@ -1,4 +1,8 @@
 using Application.DtoModels;
+using Application.Exceptions;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Server.IIS;
+using SixLabors.ImageSharp.Memory;
 using Application.DtoModels.Responses;
 using Application.ErrorHnadling;
 using Application.Factory.CustomersFactory;
@@ -43,14 +47,36 @@ using E_Commerce.Registration.PaymentServices;
 using E_Commerce.Registration.CategoryServices;
 using Infrastructure.Interfaces;
 using E_Commerce.BackgroundJobs;
+using E_Commerce.Middleware;
 
 namespace E_Commerce
 {
 	public class Program
 	{
+		// Maximum request body size: 6 MB (matches web.config maxAllowedContentLength)
+		private const long MaxBodyBytes = 6 * 1024 * 1024;
+
 		public static async Task Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
+
+			// Configure ImageSharp memory allocator to cap memory usage (80 MB for low-RAM hosting)
+			SixLabors.ImageSharp.Configuration.Default.MemoryAllocator = MemoryAllocator.Create(
+				new MemoryAllocatorOptions { AllocationLimitMegabytes = 80 });
+
+			// Configure request body size limits for Kestrel
+			builder.WebHost.ConfigureKestrel(o => o.Limits.MaxRequestBodySize = MaxBodyBytes);
+
+			// Configure request body size limits for IIS
+			builder.Services.Configure<IISServerOptions>(o => o.MaxRequestBodySize = MaxBodyBytes);
+
+			// Configure form options (multipart uploads)
+			builder.Services.Configure<FormOptions>(o =>
+			{
+				o.MultipartBodyLengthLimit = MaxBodyBytes;
+				o.MultipartHeadersLengthLimit = 16 * 1024;
+				o.ValueCountLimit = 50;
+			});
 			builder
 				.Services.AddControllers()
 				.AddNewtonsoftJson(options =>
@@ -172,13 +198,13 @@ namespace E_Commerce
 				builder.Services.AddMemoryCache();
 				builder.Services.AddSingleton<ICacheManager, InMemoryCacheManager>();
 			}
+			var connectionString = builder.Configuration.GetConnectionString("DBbyMonster");
 			builder.Services.AddDbContext<AppDbContext>(
 				(provider, options) =>
 				{
 					options.UseMySql(
-						builder.Configuration.GetConnectionString("DBbyMonster"),
-						new MySqlServerVersion(new Version(8, 0, 21))
-					
+						connectionString,
+						ServerVersion.AutoDetect(connectionString)
 					);
 				}
 			);
@@ -372,21 +398,16 @@ namespace E_Commerce
 
 				dbContext.Database.Migrate();
 				await DataSeeder.SeedDataAsync(services);
-				var categoryCleanupService =
-					scope.ServiceProvider.GetRequiredService<CategoryCleanupService>();
-				RecurringJob.AddOrUpdate(
-					"Clean-Category",
-					() => categoryCleanupService.DeleteOldCategories(),
-					Cron.Daily
-				);
+			
 			}
 
 			app.UseRouting();
             app.UseCors("MyPolicy");
             app.UseRateLimiter();
-            app.UseAuthentication();        
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseUserAuthentication();
+            app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 			//app.UseMiddleware<SecurityStampMiddleware>();
 			app.UseStaticFiles();
 			app.UseResponseCaching();

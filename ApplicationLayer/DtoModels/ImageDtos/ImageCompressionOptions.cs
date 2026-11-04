@@ -2,21 +2,21 @@ namespace Application.DtoModels.ImageDtos
 {
     public sealed class ImageCompressionOptions
     {
-        public int MaxWidth { get; set; } = 2000;
-        public int Quality { get; set; } = 82;
+        public int MaxWidth { get; set; } = 1600;
+        public int Quality { get; set; } = 80;
         public bool RemoveMetadata { get; set; } = true;
 
         public static ImageCompressionOptions Default => new()
         {
-            MaxWidth = 2000,
-            Quality = 82,
+            MaxWidth = 1600,
+            Quality = 80,
             RemoveMetadata = true
         };
 
         public static ImageCompressionOptions Product => new()
         {
-            MaxWidth = 2000,
-            Quality = 85,
+            MaxWidth = 1600,
+            Quality = 80,
             RemoveMetadata = true
         };
 

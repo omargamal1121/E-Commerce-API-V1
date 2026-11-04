@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace E_Commerce.Controllers
 {
@@ -184,6 +185,8 @@ namespace E_Commerce.Controllers
 		[HttpPost("{id}/images")]
 		[Authorize(Roles = "Admin,SuperAdmin")]
 		[ActionName(nameof(AddImagesToCategoryAsync))]
+		[RequestSizeLimit(27262976)] // 26 MB (5 images * 5MB + overhead)
+		[RequestFormLimits(MultipartBodyLengthLimit = 27262976)]
 		public async Task<ActionResult<ApiResponse<List<ImageDto>>>> AddImagesToCategoryAsync(int id, [FromForm] AddImagesDto images)
 		{
 			_logger.LogInformation($"Executing {nameof(AddImagesToCategoryAsync)} for id: {id}");

@@ -110,7 +110,7 @@ namespace Application.Services.AccountServices.Registration
 					var baseUrl = $"{request.Scheme}://{request.Host}"; 
 			    	BackgroundJob.Enqueue<IAccountEmailService>(e => e.SendValidationEmailAsync(customer.Email,customer.Id,encodedToken,baseUrl));
 				}
-                BackgroundJob.Enqueue<IAccountEmailService>(e => e.SendWelcomeEmailAsync(customer.UserName,customer.Email));
+                BackgroundJob.Enqueue<IAccountEmailService>(e => e.SendWelcomeEmailAsync(customer.Email, customer.UserName));
                 return Result<RegisterResponse>.Ok(response, "Created", 201);
             }
             catch (Exception ex)

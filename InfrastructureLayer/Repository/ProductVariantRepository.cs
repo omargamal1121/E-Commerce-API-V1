@@ -58,7 +58,8 @@ namespace Infrastructure.Repository
 		int? length,
 		int? chest,
 		int? sleeveLength = null,
-		bool? isFreeSize = null)
+		bool? isFreeSize = null,
+		int? hip = null)
 		{
 			var query = _entity.AsNoTracking().Where(v => v.ProductId == productId && v.DeletedAt == null);
 

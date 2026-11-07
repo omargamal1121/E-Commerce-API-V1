@@ -63,7 +63,6 @@ namespace Application.Services.OrderServices
             Payment = order.Payment
                 .OrderByDescending(p => p.CreatedAt)
                 .ThenByDescending(p => p.Id)
-                .Take(1)
                 .Select(p => new PaymentDto
                 {
                     Status = p.Status.ToString(),
@@ -102,8 +101,8 @@ namespace Application.Services.OrderServices
                     customerAddress = order.CustomerAddress == null ? null : new CustomerAddressDto
                     {
                         Id = order.CustomerAddress.Id,
-                        AdditionalNotes = order.CustomerAddress.AdditionalNotes,
-                        AddressType = order.CustomerAddress.AddressType,
+						AdditionalNotes = order.CustomerAddress.AdditionalNotes,
+						AddressType = order.CustomerAddress.AddressType,
                         City = order.CustomerAddress.City,
                         Country = order.CustomerAddress.Country,
                         CreatedAt = order.CustomerAddress.CreatedAt,

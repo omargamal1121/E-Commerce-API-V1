@@ -198,8 +198,8 @@ namespace Application.Services.ProductVariantServices
             if (dto.Quantity < 0)
                 return Result<ProductVariantDto>.Fail("Quantity cannot be negative", 400);
 
-            _logger.LogInformation($"Checking if variant with color={dto.Color}, size={dto.Size}, waist={dto.Waist}, length={dto.Length}, chest={dto.Chest}, sleeveLength={dto.SleeveLength}, isFreeSize={dto.IsFreeSize} already exists for product {productId}");
-            var existingVariant = await _unitOfWork.ProductVariant.IsExsistBySizeandColor(productId, dto.Color, dto.Size, dto.Waist, dto.Length, dto.Chest, dto.SleeveLength, dto.IsFreeSize);
+            _logger.LogInformation($"Checking if variant with color={dto.Color}, size={dto.Size}, waist={dto.Waist}, length={dto.Length}, chest={dto.Chest}, hip={dto.Hip}, sleeveLength={dto.SleeveLength}, isFreeSize={dto.IsFreeSize} already exists for product {productId}");
+            var existingVariant = await _unitOfWork.ProductVariant.IsExsistBySizeandColor(productId, dto.Color, dto.Size, dto.Waist, dto.Length, dto.Chest, dto.SleeveLength, dto.IsFreeSize, dto.Hip);
 
             if (existingVariant)
             {
@@ -302,7 +302,7 @@ namespace Application.Services.ProductVariantServices
 					dto.Color, dto.Size, dto.Waist, dto.Length, productId);
 
 				var exists = await _unitOfWork.ProductVariant.IsExsistBySizeandColor(
-				productId, dto.Color, dto.Size, dto.Waist, dto.Length, dto.Chest, dto.SleeveLength, dto.IsFreeSize);
+				productId, dto.Color, dto.Size, dto.Waist, dto.Length, dto.Chest, dto.SleeveLength, dto.IsFreeSize, dto.Hip);
 
 				if (exists)
 				{
@@ -391,18 +391,19 @@ namespace Application.Services.ProductVariantServices
                 if (variant == null)
                     return Result<ProductVariantDto>.Fail("Variant not found", 404);
 
-                _logger.LogInformation($"Checking if variant with color={dto.Color}, size={dto.Size}, waist={dto.Waist}, length={dto.Length}, chest={dto.Chest} already exists for product {variant.ProductId}");
+                _logger.LogInformation($"Checking if variant with color={dto.Color}, size={dto.Size}, waist={dto.Waist}, length={dto.Length}, chest={dto.Chest}, hip={dto.Hip}, sleeveLength={dto.SleeveLength}, isFreeSize={dto.IsFreeSize} already exists for product {variant.ProductId}");
                 var targetColor = dto.Color ?? variant.Color;
                 var targetSize = dto.Size ?? variant.Size;
                 var targetWaist = dto.Waist ?? variant.Waist;
                 var targetLength = dto.Length ?? variant.Length;
                 var targetChest = dto.Chest ?? variant.Chest;
+                var targetHip = dto.Hip ?? variant.Hip;
                 var targetSleeveLength = dto.SleeveLength ?? variant.SleeveLength;
                 var targetIsFreeSize = dto.IsFreeSize ?? variant.IsFreeSize;
 
-                if (targetColor != variant.Color || targetSize != variant.Size || targetWaist != variant.Waist || targetLength != variant.Length || targetChest != variant.Chest || targetSleeveLength != variant.SleeveLength || targetIsFreeSize != variant.IsFreeSize)
+                if (targetColor != variant.Color || targetSize != variant.Size || targetWaist != variant.Waist || targetLength != variant.Length || targetChest != variant.Chest || targetHip != variant.Hip || targetSleeveLength != variant.SleeveLength || targetIsFreeSize != variant.IsFreeSize)
                 {
-                    var isexsist = await _unitOfWork.ProductVariant.IsExsistBySizeandColor(variant.ProductId, targetColor, targetSize, targetWaist, targetLength, targetChest, targetSleeveLength, targetIsFreeSize);
+                    var isexsist = await _unitOfWork.ProductVariant.IsExsistBySizeandColor(variant.ProductId, targetColor, targetSize, targetWaist, targetLength, targetChest, targetSleeveLength, targetIsFreeSize, targetHip);
                     if (isexsist)
                     {
                         _logger.LogWarning($"Attempt to update variant {id} with duplicate attributes for product {variant.ProductId}");
@@ -413,36 +414,56 @@ namespace Application.Services.ProductVariantServices
                 _logger.LogInformation($"Starting to update variant {id} properties");
                 string updates = string.Empty;
 
-                if (dto.Color != variant.Color)
+                if (dto.Color != null && dto.Color != variant.Color)
                 {
                     _logger.LogInformation($"Updating variant {id} color from {variant.Color} to {dto.Color}");
-                    updates += $"from {variant.Color} to {dto.Color}";
+                    updates += $" color from {variant.Color} to {dto.Color};";
                     variant.Color = dto.Color;
                 }
                 if (dto.Size != null && dto.Size != variant.Size)
                 {
                     _logger.LogInformation($"Updating variant {id} size from {variant.Size} to {dto.Size}");
-                    updates += $"from {variant.Size} to {dto.Size}";
+                    updates += $" size from {variant.Size} to {dto.Size};";
                     variant.Size = dto.Size;
                 }
                 if (dto.Waist.HasValue && dto.Waist != variant.Waist)
                 {
                     _logger.LogInformation($"Updating variant {id} waist from {variant.Waist} to {dto.Waist}");
-                    updates += $"from {variant.Waist} to {dto.Waist}";
+                    updates += $" waist from {variant.Waist} to {dto.Waist};";
                     variant.Waist = dto.Waist;
                 }
                 if (dto.Length.HasValue && dto.Length != variant.Length)
                 {
                     _logger.LogInformation($"Updating variant {id} length from {variant.Length} to {dto.Length}");
-                    updates += $"from {variant.Length} to {dto.Length}";
+                    updates += $" length from {variant.Length} to {dto.Length};";
                     variant.Length = dto.Length;
                 }
                 if (dto.Chest.HasValue && dto.Chest != variant.Chest)
                 {
                     _logger.LogInformation($"Updating variant {id} chest from {variant.Chest} to {dto.Chest}");
-                    updates += $"from {variant.Chest} to {dto.Chest}";
+                    updates += $" chest from {variant.Chest} to {dto.Chest};";
                     variant.Chest = dto.Chest;
                 }
+                if (dto.Hip.HasValue && dto.Hip != variant.Hip)
+                {
+                    _logger.LogInformation($"Updating variant {id} hip from {variant.Hip} to {dto.Hip}");
+                    updates += $" hip from {variant.Hip} to {dto.Hip};";
+                    variant.Hip = dto.Hip;
+                }
+                if (dto.SleeveLength.HasValue && dto.SleeveLength != variant.SleeveLength)
+                {
+                    _logger.LogInformation($"Updating variant {id} sleeve length from {variant.SleeveLength} to {dto.SleeveLength}");
+                    updates += $" sleeve length from {variant.SleeveLength} to {dto.SleeveLength};";
+                    variant.SleeveLength = dto.SleeveLength;
+                }
+                if (dto.IsFreeSize.HasValue && dto.IsFreeSize != variant.IsFreeSize)
+                {
+                    _logger.LogInformation($"Updating variant {id} isFreeSize from {variant.IsFreeSize} to {dto.IsFreeSize}");
+                    updates += $" isFreeSize from {variant.IsFreeSize} to {dto.IsFreeSize};";
+                    variant.IsFreeSize = dto.IsFreeSize.Value;
+                }
+
+                variant.ModifiedAt = DateTime.UtcNow;
 
                 // Log admin operation
                 _logger.LogInformation($"Recording admin operation for updating variant {id} by user {userId}");
@@ -467,7 +488,7 @@ namespace Application.Services.ProductVariantServices
                 // Update cache and map to DTO
                 var variantDto = _mapper.MapToProductVariantDto(variant);
                  _cacheHelper.CacheVariantAsync(id, variantDto);
-               RemoveCacheAndRelatedCaches();
+                await RemoveCacheAndRelatedCaches();
 
                 return Result<ProductVariantDto>.Ok(variantDto, "Variant updated successfully", 200);
             }

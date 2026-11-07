@@ -105,15 +105,11 @@ namespace Application.Services.DiscountServices
 
                 var discounts = await query
                     .OrderBy(d => d.CreatedAt)
+                    .ThenBy(d => d.Id)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .Select(_mapper.DiscountsDtoSelector)
                     .ToListAsync();
-
-
-                if (!discounts.Any())
-                    return Result<List<DiscountDto>>.Fail("No discounts found matching criteria", 404);
-
 
                 _cacheHelper.SetCache(discounts, isActive, isDeleted, search, isAdmin, page, pageSize);
                 return Result<List<DiscountDto>>.Ok(discounts, $"Found {discounts.Count} discounts out of {totalCount}", 200);
@@ -138,12 +134,12 @@ namespace Application.Services.DiscountServices
                     .Where(d => d.DeletedAt == null &&
                         d.IsActive &&
                         d.StartDate <= now &&
-                        d.EndDate >= now).Skip((page-1) * pagesize).Take(pagesize)
+                        d.EndDate >= now)
+                    .OrderBy(d => d.CreatedAt)
+                    .ThenBy(d => d.Id)
+                    .Skip((page-1) * pagesize).Take(pagesize)
                     .Select(_mapper.DiscountsDtoSelector)
                     .ToListAsync();
-
-                if (!discounts.Any())
-                    return Result<List<DiscountDto>>.Fail("No active discounts found", 404);
 
                 _cacheHelper.SetCache(discounts, isActive: true, isDeleted: false, IsAdmin: false, page: page, PageSize: pagesize);
 
@@ -224,9 +220,6 @@ namespace Application.Services.DiscountServices
                     .Where(d => d.DeletedAt == null && d.CategoryId == categoryId)
                     .Select(_mapper.DiscountsDtoSelector)
                     .ToListAsync();
-
-                if (!discounts.Any())
-                    return Result<List<DiscountDto>>.Fail($"No discounts found for category {categoryId}", 404);
 
                 return Result<List<DiscountDto>>.Ok(discounts, "Category discounts retrieved successfully", 200);
             }

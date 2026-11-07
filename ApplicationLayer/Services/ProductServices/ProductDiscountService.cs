@@ -625,8 +625,8 @@ namespace Application.Services.ProductServices
 				var productDtos = await _productMapper.maptoProductDtoexpression(products).ToListAsync();
 
 
-				if (!products.Any())
-					return Result<List<ProductDto>>.Fail("No products with active discounts found", 404);
+				if (!productDtos.Any())
+					return Result<List<ProductDto>>.Ok(productDtos, "No products with active discounts found", 200);
 
 				return Result<List<ProductDto>>.Ok(productDtos, "Products with active discounts retrieved successfully", 200);
 			}

@@ -1,12 +1,13 @@
 using Domain.Enums;
 using Domain.Models;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
 namespace Infrastructure.Context
 {
-	public class AppDbContext : IdentityDbContext
+	public class AppDbContext : IdentityDbContext, IDataProtectionKeyContext
 	{
 
 
@@ -20,6 +21,7 @@ namespace Infrastructure.Context
 			configurationBuilder.Properties<decimal>().HavePrecision(18, 2);
 			base.ConfigureConventions(configurationBuilder);
 		}
+		public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
 		public DbSet<Customer> customers { get; set; }
 		public DbSet<UserOperationsLog>   userOperationsLogs { get; set; }
 		public DbSet<AdminOperationsLog>  adminOperationsLogs { get; set; }

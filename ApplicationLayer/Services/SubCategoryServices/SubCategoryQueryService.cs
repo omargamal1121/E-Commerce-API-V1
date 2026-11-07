@@ -95,9 +95,6 @@ namespace Application.Services.SubCategoryServices
 				.Take(pageSize)
 				.ToListAsync();
 
-			if (!subCategoryDtos.Any())
-				return Result<List<SubCategoryDto>>.Fail("No subcategories found", 404);
-
 			_subCategoryCacheHelper.SetSubCategoryListCacheAsync(subCategoryDtos, search, isActive, isDeleted, page, pageSize, IsAdmin, TimeSpan.FromMinutes(30));
             
             return Result<List<SubCategoryDto>>.Ok(subCategoryDtos, "Filtered subcategories retrieved", 200);

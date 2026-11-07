@@ -1,5 +1,6 @@
 using Application.DtoModels;
 using Application.Exceptions;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.IIS;
 using SixLabors.ImageSharp.Memory;
@@ -58,7 +59,11 @@ namespace E_Commerce
 
 		public static async Task Main(string[] args)
 		{
-			var builder = WebApplication.CreateBuilder(args);
+			var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+			{
+				Args = args,
+				WebRootPath = "wwwroot"
+			});
 
 			// Configure ImageSharp memory allocator to cap memory usage (80 MB for low-RAM hosting)
 			SixLabors.ImageSharp.Configuration.Default.MemoryAllocator = MemoryAllocator.Create(
@@ -157,6 +162,10 @@ namespace E_Commerce
 			builder.Services.AddResponseCaching();
 			// Cloudinary registration removed — superseded by AddImageStorage()
 
+			builder.Services.AddDataProtection()
+				.SetApplicationName("RandS-API")
+				.PersistKeysToDbContext<AppDbContext>();
+
 			var cacheProvider = builder.Configuration.GetValue<string>("Cache:Provider") ?? "Memory";
 
 			if (string.Equals(cacheProvider, "Redis", StringComparison.OrdinalIgnoreCase))
@@ -204,7 +213,8 @@ namespace E_Commerce
 				{
 					options.UseMySql(
 						connectionString,
-						ServerVersion.AutoDetect(connectionString)
+						ServerVersion.AutoDetect(connectionString),
+						mySqlOptions => mySqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
 					);
 				}
 			);
@@ -409,7 +419,26 @@ namespace E_Commerce
             app.UseUserAuthentication();
             app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 			//app.UseMiddleware<SecurityStampMiddleware>();
-			app.UseStaticFiles();
+			var webRoot = app.Environment.WebRootPath;
+			if (!string.IsNullOrEmpty(webRoot))
+			{
+				if (!Directory.Exists(webRoot))
+				{
+					try
+					{
+						Directory.CreateDirectory(webRoot);
+					}
+					catch
+					{
+						// Ignore if permissions prevent creation
+					}
+				}
+
+				if (Directory.Exists(webRoot))
+				{
+					app.UseStaticFiles();
+				}
+			}
 			app.UseResponseCaching();
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {

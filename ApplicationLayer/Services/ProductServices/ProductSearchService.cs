@@ -134,7 +134,7 @@ namespace Application.Services.ProductServices
                     .ToListAsync();
 
                 if (!products.Any())
-                    return Result<List<ProductDto>>.Fail("No new arrivals found", 200);
+                    return Result<List<ProductDto>>.Ok(new List<ProductDto>(), "No new arrivals found", 200);
 
 				_productCacheManger.SetProductListCacheAsync(products, null, isActive, deletedOnly, pageSize, page, "NewArrivals", IsAdmin, null);
 
@@ -394,10 +394,10 @@ namespace Application.Services.ProductServices
 
                 query = searchCriteria.SortBy?.ToLower() switch
                 {
-                    "name" => searchCriteria.SortDescending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name),
-                    "price" => searchCriteria.SortDescending ? query.OrderByDescending(p => p.Price) : query.OrderBy(p => p.Price),
-                    "newest" => searchCriteria.SortDescending ? query.OrderByDescending(p => p.CreatedAt) : query.OrderBy(p => p.CreatedAt),
-                    _ => query.OrderBy(p => p.Name)
+                    "name" => searchCriteria.SortDescending ? query.OrderByDescending(p => p.Name).ThenBy(p => p.Id) : query.OrderBy(p => p.Name).ThenBy(p => p.Id),
+                    "price" => searchCriteria.SortDescending ? query.OrderByDescending(p => p.Price).ThenBy(p => p.Id) : query.OrderBy(p => p.Price).ThenBy(p => p.Id),
+                    "newest" => searchCriteria.SortDescending ? query.OrderByDescending(p => p.CreatedAt).ThenBy(p => p.Id) : query.OrderBy(p => p.CreatedAt).ThenBy(p => p.Id),
+                    _ => query.OrderByDescending(p => p.CreatedAt).ThenBy(p => p.Id)
                 };
                 query = query
                     .Skip((page - 1) * pageSize)
@@ -407,7 +407,7 @@ namespace Application.Services.ProductServices
                     .ToListAsync();
 
                 if (products is null || !products.Any())
-                    return Result<List<ProductDto>>.Fail("No products found matching the search criteria", 200);
+                    return Result<List<ProductDto>>.Ok(new List<ProductDto>(), "No products found matching the search criteria", 200);
 
                 _productCacheManger.SetProductListCacheAsync<ProductDto>(products, searchKey, isActive, deletedOnly, pageSize, page, "AdvancedSearch", IsAdmin, null);
 
@@ -471,6 +471,7 @@ namespace Application.Services.ProductServices
                             .FirstOrDefault()
                     })
                 .OrderByDescending(x => x.TotalSoldQuantity)
+                .ThenBy(x => x.ProductId)
                 .Skip((page - 1) * pagesize)
                 .Take(pagesize)
                 .ToListAsync();
@@ -533,11 +534,13 @@ namespace Application.Services.ProductServices
                               ProductId = p.Id,
                               ProductName = p.Name,
                               Image = p.Images.Where(i => i.IsMain && i.DeletedAt == null).Select(i => i.Url).FirstOrDefault() ?? "",
-                              TotalSoldQuantity = w.Count
+                              TotalSoldQuantity = w.Count,
+                              WishlistCount = w.Count
                           });
 
                 var products = await joinedQuery
                     .OrderByDescending(x => x.TotalSoldQuantity)
+                .ThenBy(x => x.ProductId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -556,7 +559,8 @@ namespace Application.Services.ProductServices
                             ProductId = p.Id,
                             ProductName = p.Name,
                             Image = p.Images.Where(i => i.IsMain && i.DeletedAt == null).Select(i => i.Url).FirstOrDefault() ?? "",
-                            TotalSoldQuantity = 0
+                            TotalSoldQuantity = 0,
+                            WishlistCount = 0
                         })
                         .ToListAsync();
 

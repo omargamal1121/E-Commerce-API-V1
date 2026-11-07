@@ -599,10 +599,9 @@ namespace Application.Services.ProductServices
 					productsQuery = productsQuery.Where(p => p.IsActive == isActive);
 				}
 
-				if (productsQuery == null)
-					return Result<List<ProductDto>>.Fail("No Products Found", 404);
+				productsQuery = productsQuery.OrderByDescending(p => p.CreatedAt).ThenBy(p => p.Id);
 
-				var products =await _productMapper.maptoProductDtoexpression(productsQuery)
+				var products = await _productMapper.maptoProductDtoexpression(productsQuery)
 					.ToListAsync();
 				_productCacheManger.SetProductListBySubCategoryidCacheAsync(products, SubCategoryid, isActive, deletedOnly, IsAdmin: false, expiration: TimeSpan.FromMinutes(30));
 

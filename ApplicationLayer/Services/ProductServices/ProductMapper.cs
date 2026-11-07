@@ -157,7 +157,7 @@ namespace Application.Services.ProductServices
 							Quantity = v.Quantity,
 							ProductId = v.ProductId
 						})
-				}).AsSplitQuery().OrderByDescending(p=>p.CreatedAt);
+				}).AsSplitQuery();
 		}
 		public IQueryable<ProductDto> maptoProductDtoexpression(IQueryable<Product> query, bool IsAdmin = false)
 		{
@@ -217,7 +217,7 @@ namespace Application.Services.ProductServices
 						Url = i.Url,
 						IsMain = i.IsMain
 					})
-			}).AsSplitQuery().OrderByDescending(p=>p.CreatedAt);
+			}).AsSplitQuery();
 		}
 
 

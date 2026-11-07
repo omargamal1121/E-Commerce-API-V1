@@ -18,5 +18,9 @@ namespace Application.Exceptions
         public ImageValidationException(string message) : base(message)
         {
         }
+
+        public ImageValidationException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }

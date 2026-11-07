@@ -99,8 +99,8 @@ namespace Application.Services.ProductServices
 
 				if (!images.Any())
 				{
-					_logger.LogWarning("GetProductImagesAsync: No images found for productId: {ProductId}", productId);
-					return Result<List<ImageDto>>.Fail("No images found for this product", 404);
+					_logger.LogInformation("GetProductImagesAsync: No images found for productId: {ProductId}", productId);
+					return Result<List<ImageDto>>.Ok(images, "No images found for this product", 200);
 				}
 
 				_logger.LogInformation("GetProductImagesAsync: Successfully retrieved {Count} images for productId: {ProductId}", images.Count, productId);

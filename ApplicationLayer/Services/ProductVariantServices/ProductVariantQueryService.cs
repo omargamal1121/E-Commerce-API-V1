@@ -83,7 +83,7 @@ namespace Application.Services.ProductVariantServices
                 var variants = await query.ToListAsync();
 
                 if (!variants.Any())
-                    return Result<List<ProductVariantDto>>.Fail("No variants found for this product", 404);
+                    return Result<List<ProductVariantDto>>.Ok(new List<ProductVariantDto>(), "No variants found for this product", 200);
 
                 // Use mapper to convert to DTOs
                 var variantDtos = _mapper.MapToProductVariantDtoList(variants);
@@ -176,8 +176,8 @@ namespace Application.Services.ProductVariantServices
                     
                 if (!variants.Any())
                 {
-                    _logger.LogWarning($"No variants found matching the search criteria for product {productId}");
-                    return Result<List<ProductVariantDto>>.Fail("No variants found matching the search criteria", 404);
+                    _logger.LogInformation($"No variants found matching the search criteria for product {productId}");
+                    return Result<List<ProductVariantDto>>.Ok(new List<ProductVariantDto>(), "No variants found matching the search criteria", 200);
                 }
 
                 // Use mapper to convert to DTOs

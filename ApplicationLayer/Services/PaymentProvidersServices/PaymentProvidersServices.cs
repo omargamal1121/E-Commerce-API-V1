@@ -62,12 +62,24 @@ namespace Application.Services.PaymentProvidersServices
 
 			// Case-insensitive name check
 			var existing = await _unitOfWork.Repository<PaymentProvider>().GetAll()
-				.AnyAsync(m => m.Name.ToLower() == dto.Name.ToLower() && m.DeletedAt == null);
+				.FirstOrDefaultAsync(m => m.Name.ToLower() == dto.Name.ToLower() && m.DeletedAt == null);
 			
-			if (existing)
+			if (existing != null)
 			{
-				_logger.LogWarning("Payment provider with name '{Name}' already exists", dto.Name);
-				return Result<PaymentProviderDto>.Fail("Payment provider with this name already exists.");
+				_logger.LogInformation("Payment provider with name '{Name}' already exists; skipping creation.", dto.Name);
+				return Result<PaymentProviderDto>.Ok(new PaymentProviderDto
+				{
+					Id = existing.Id,
+					Name = existing.Name,
+					CreatedAt = existing.CreatedAt ?? DateTime.MinValue,
+					IsDeleted = false,
+					ApiEndpoint = existing.ApiEndpoint,
+					Hmac = existing.Hmac,
+					IframeId = existing.IframeId,
+					PaymentProvider = existing.Provider,
+					PrivateKey = existing.PrivateKey,
+					PublicKey = existing.PublicKey
+				}, "Payment provider already exists.", 200);
 			}
 
 			return await CreatePaymentProvider(dto, userId);

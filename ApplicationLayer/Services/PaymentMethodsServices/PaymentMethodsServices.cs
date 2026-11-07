@@ -48,10 +48,21 @@ namespace Application.Services.PaymentMethodsServices
 		}
 		public async Task<Result<PaymentMethodDto>> AddIfNotExistsAsync(Createpaymentmethoddto dto, string userId)
 		{
-			var existing = await  _unitOfWork.Repository<PaymentMethod>().GetAll()
-										 .AnyAsync(m => m.Name == dto.Name && m.PaymentProviderId == dto.PaymentProviderid);
-			if (existing)
-				return Result<PaymentMethodDto>.Fail("Is Already exsist");
+			var existing = await _unitOfWork.Repository<PaymentMethod>().GetAll()
+										 .FirstOrDefaultAsync(m => m.Name == dto.Name && m.PaymentProviderId == dto.PaymentProviderid && m.DeletedAt == null);
+			if (existing != null)
+			{
+				_logger.LogInformation("Payment method with name '{Name}' already exists; skipping creation.", dto.Name);
+				return Result<PaymentMethodDto>.Ok(new PaymentMethodDto
+				{
+					Id = existing.Id,
+					Name = existing.Name,
+					IsActive = existing.IsActive,
+					PaymentProviderid = existing.PaymentProviderId,
+					paymentMethod = existing.Method.ToString(),
+					Integrationid = existing.IntegrationId
+				}, "Payment method already exists.", 200);
+			}
 
 			return await CreatePaymentMethod(dto, userId);
 		}

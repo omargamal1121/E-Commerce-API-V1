@@ -6,6 +6,7 @@ namespace Application.DtoModels.ProductDtos
         public string ProductName { get; set; } = string.Empty;
         public string? Image { get; set; }
         public int TotalSoldQuantity { get; set; }
+        public int WishlistCount { get; set; }
     }
 }
 

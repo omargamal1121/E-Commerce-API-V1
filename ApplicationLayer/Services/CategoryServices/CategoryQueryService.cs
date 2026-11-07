@@ -50,8 +50,12 @@ namespace Application.Services.CategoryServices
 			{
 				query = query.Where(c => c.Name.Contains(word));
 			}
-			 query =  query.Skip((page - 1) * pageSize)
-			.Take(pageSize).OrderByDescending(c=>c.CreatedAt);
+			query = query
+				.OrderBy(c => c.DisplayOrder)
+				.ThenByDescending(c => c.CreatedAt)
+				.ThenBy(c => c.Id)
+				.Skip((page - 1) * pageSize)
+				.Take(pageSize);
 			var result = await _categoryMapper.CategorySelector(query).ToListAsync();
 			_categoryCacheHelper.SetCategoryListCacheAsync(result, word, isActive, isDeleted, page, pageSize, IsAdmin);
 			return Result<List<CategoryDto>>.Ok(result, "Categories fetched", 200);

@@ -50,7 +50,6 @@ namespace Application.Services.ImageServices
                 // can correct phone portrait photos. Metadata is wiped explicitly after AutoOrient.
                 var decoderOptions = new DecoderOptions
                 {
-                    TargetSize = new Size(options.MaxWidth, options.MaxWidth),
                     MaxFrames = 1,
                 };
 

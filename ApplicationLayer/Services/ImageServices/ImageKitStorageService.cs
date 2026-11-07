@@ -81,7 +81,20 @@ namespace Application.Services.ImageServices
             }
 
             // 3. Detect and validate image format
-            var imageInfo = await SixLabors.ImageSharp.Image.IdentifyAsync(image, ct);
+            SixLabors.ImageSharp.ImageInfo? imageInfo;
+            try
+            {
+                imageInfo = await SixLabors.ImageSharp.Image.IdentifyAsync(image, ct);
+            }
+            catch (SixLabors.ImageSharp.UnknownImageFormatException ex)
+            {
+                throw new ImageValidationException("Unsupported image format. The file is not a valid image.", ex);
+            }
+            catch (SixLabors.ImageSharp.InvalidImageContentException ex)
+            {
+                throw new ImageValidationException("The file contains invalid image data.", ex);
+            }
+
             if (imageInfo == null || !AllowedMimeTypes.Contains(imageInfo.Metadata.DecodedImageFormat?.DefaultMimeType ?? string.Empty))
             {
                 string detected = imageInfo?.Metadata.DecodedImageFormat?.Name ?? "Unknown";
@@ -211,7 +224,7 @@ namespace Application.Services.ImageServices
                     }
                 }
 
-                if (ex is ImageValidationException or ImageStorageException)
+                if (ex is ImageValidationException)
                 {
                     throw;
                 }

@@ -53,7 +53,7 @@ namespace ApplicationLayer.Tests.Services.ImageServices
             Assert.NotNull(info);
             Assert.Equal(2000, info.Width);
             Assert.Equal(1000, info.Height);
-            Assert.Equal("WEBP", info.Metadata.DecodedImageFormat?.Name);
+            Assert.Equal("Webp", info.Metadata.DecodedImageFormat?.Name, ignoreCase: true);
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace ApplicationLayer.Tests.Services.ImageServices
             Assert.NotNull(info);
             Assert.Equal(800, info.Width);
             Assert.Equal(600, info.Height);
-            Assert.Equal("WEBP", info.Metadata.DecodedImageFormat?.Name);
+            Assert.Equal("Webp", info.Metadata.DecodedImageFormat?.Name, ignoreCase: true);
         }
 
         [Fact]

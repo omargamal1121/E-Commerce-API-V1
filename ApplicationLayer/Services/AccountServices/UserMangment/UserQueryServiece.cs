@@ -25,7 +25,7 @@ namespace Application.Services.AccountServices.UserMangment
 
 		public async Task<Result<UserwithAddressdto>> GetUserByIdAsnyc(string  id)
 		{
-			var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+			var user = await _userManager.Users.Include(u => u.Addresses).FirstOrDefaultAsync(u => u.Id == id);
 			if (user == null)
 				return Result<UserwithAddressdto>.Fail("No User With this id",404);
 			var userDto = await _userMangerMapping.ToUserDto(user);
@@ -49,9 +49,9 @@ namespace Application.Services.AccountServices.UserMangment
 				query=query.Where(u=>u.PhoneNumber!=null&&u.PhoneNumber.Contains(phonenumber));
 			if(IsActive!=null){
 				if (IsActive.Value)
-					query = query.Where(u => !u.LockoutEnd.HasValue || u.LockoutEnd <= DateTime.Now);
+					query = query.Where(u => !u.LockoutEnd.HasValue || u.LockoutEnd <= DateTimeOffset.UtcNow);
                 else
-                    query = query.Where(u => u.LockoutEnd.HasValue);
+                    query = query.Where(u => u.LockoutEnd.HasValue && u.LockoutEnd > DateTimeOffset.UtcNow);
 
             }
 			if (isDeleted != null)

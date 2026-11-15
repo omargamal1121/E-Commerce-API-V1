@@ -207,6 +207,12 @@ namespace Application.Services.AccountServices.UserMangment
                 return validation;
             }
 
+            if (string.Equals(role, "SuperAdmin", StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.LogWarning("Admin {AdminId} attempted to remove 'SuperAdmin' role from user {UserId}. SuperAdmin role cannot be removed.", adminId, userId);
+                return Result<bool>.Fail("The SuperAdmin role cannot be removed", 403);
+            }
+
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null || user.DeletedAt != null)
             {

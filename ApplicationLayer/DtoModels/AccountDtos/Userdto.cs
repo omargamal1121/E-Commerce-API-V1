@@ -31,6 +31,7 @@ namespace Application.DtoModels.AccountDtos
 			public bool IsActive { get; set; }
 			public bool IsDeleted { get; set; }
 			public DateTime? LastVisit { get; set; }
+			public DateTime CreateAt { get; set; }
 			public bool IsLock { get; set; }
 			public List<string> Roles { get; set; }
 			public List<CustomerAddressDto> customerAddresses { get; set; }

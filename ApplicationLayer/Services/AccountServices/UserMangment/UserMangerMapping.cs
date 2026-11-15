@@ -29,15 +29,16 @@ namespace Application.Services.AccountServices.UserMangment
             foreach (var u in users)
             {
                 var roles = await _userManager.GetRolesAsync(u);
+                var isLocked = u.LockoutEnd.HasValue && u.LockoutEnd > DateTimeOffset.UtcNow;
                 userDtos.Add(new Userdto
                 {
                     Id = u.Id,
                     Name = u.Name,
                     Email = u.Email,
-                    IsLock = u.LockoutEnd.HasValue && u.LockoutEnd > DateTimeOffset.UtcNow,
+                    IsLock = isLocked,
                     UserName = u.UserName,
                     PhoneNumber = u.PhoneNumber,
-                    IsActive = !u.LockoutEnd.HasValue || u.LockoutEnd <= DateTime.Now,
+                    IsActive = !isLocked,
                     IsDeleted = u.DeletedAt != null,
                     CreateAt = u.CreateAt,
                     LastVisit = u.LastVisit.HasValue ? u.LastVisit.Value : (DateTime?)null,
@@ -50,21 +51,23 @@ namespace Application.Services.AccountServices.UserMangment
 		public async Task<UserwithAddressdto> ToUserDto(Customer  customer)
         {
             var roles = await _userManager.GetRolesAsync(customer);
+            var isLocked = customer.LockoutEnd.HasValue && customer.LockoutEnd > DateTimeOffset.UtcNow;
             var userDto = new UserwithAddressdto
             {
                 Email = customer.Email,
                 PhoneNumber = customer.PhoneNumber,
                 UserName = customer.UserName,
                 Name = customer.Name,
-                IsLock = customer.LockoutEnd.HasValue && customer.LockoutEnd > DateTimeOffset.UtcNow,
+                IsLock = isLocked,
 
                 Id = customer.Id,
-                IsActive = customer.LockoutEnd.HasValue || customer.LockoutEnd <= DateTime.Now,
+                IsActive = !isLocked,
                 IsDeleted = customer.DeletedAt != null,
+                CreateAt = customer.CreateAt,
                 LastVisit = customer.LastVisit.HasValue ? customer.LastVisit.Value : (DateTime?)null,
                 Roles = roles.ToList(),
 
-                customerAddresses = customer.Addresses.Select(addr => new CustomerAddressDto
+                customerAddresses = customer.Addresses?.Select(addr => new CustomerAddressDto
                 {
                     Id = addr.Id,
                     City = addr.City,
@@ -75,7 +78,7 @@ namespace Application.Services.AccountServices.UserMangment
                     PhoneNumber = addr.PhoneNumber,
                     Country = addr.Country,
                     IsDefault = addr.IsDefault
-                }).ToList()
+                }).ToList() ?? new List<CustomerAddressDto>()
             
             };
 

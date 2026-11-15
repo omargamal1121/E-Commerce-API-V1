@@ -424,5 +424,63 @@ namespace Application.Tests.Services.AccountServices.UserMangment
             uow.Verify(x => x.CommitAsync(), Times.Once);
             tx.Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
+
+        [Fact]
+        public async Task RemoveRoleFromUserAsync_CannotRemoveSuperAdminRole_Returns403()
+        {
+            var uow = new Mock<IUnitOfWork>();
+            var adminOps = new Mock<IAdminOpreationServices>();
+            var userManager = CreateUserManagerMock();
+            var roleManager = CreateRoleManagerMock();
+            var logger = new Mock<ILogger<UserRoleMangementService>>();
+
+            var admin = new Customer { Id = "admin" };
+            var targetUser = new Customer { Id = "targetUser" };
+
+            userManager.Setup(x => x.FindByIdAsync(admin.Id)).ReturnsAsync(admin);
+            userManager.Setup(x => x.IsInRoleAsync(admin, "SuperAdmin")).ReturnsAsync(true);
+            roleManager.Setup(x => x.RoleExistsAsync("SuperAdmin")).ReturnsAsync(true);
+
+            var sut = CreateSut(uow, adminOps, userManager, roleManager, logger);
+            var result = await sut.RemoveRoleFromUserAsync(targetUser.Id, "SuperAdmin", admin.Id);
+
+            Assert.False(result.Success);
+            Assert.Equal(403, result.StatusCode);
+            Assert.Contains("SuperAdmin", result.Message);
+            userManager.Verify(x => x.RemoveFromRoleAsync(It.IsAny<Customer>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task RemoveRoleFromUserAsync_SuperAdminCanRemoveAdminRoleFromAnyUser_Returns200()
+        {
+            var uow = new Mock<IUnitOfWork>();
+            var adminOps = new Mock<IAdminOpreationServices>();
+            var userManager = CreateUserManagerMock();
+            var roleManager = CreateRoleManagerMock();
+            var logger = new Mock<ILogger<UserRoleMangementService>>();
+            var tx = new Mock<IDbContextTransaction>();
+
+            var admin = new Customer { Id = "superAdmin" };
+            var targetUser = new Customer { Id = "adminUser" };
+
+            userManager.Setup(x => x.FindByIdAsync(admin.Id)).ReturnsAsync(admin);
+            userManager.Setup(x => x.IsInRoleAsync(admin, "SuperAdmin")).ReturnsAsync(true);
+            roleManager.Setup(x => x.RoleExistsAsync("Admin")).ReturnsAsync(true);
+            userManager.Setup(x => x.FindByIdAsync(targetUser.Id)).ReturnsAsync(targetUser);
+            userManager.Setup(x => x.IsInRoleAsync(targetUser, "Admin")).ReturnsAsync(true);
+            userManager.Setup(x => x.RemoveFromRoleAsync(targetUser, "Admin")).ReturnsAsync(IdentityResult.Success);
+            adminOps.Setup(x => x.AddAdminOpreationAsync(It.IsAny<string>(), It.IsAny<Opreations>(), targetUser.Id, It.IsAny<List<int>>()))
+                .ReturnsAsync(Result<AdminOperationsLog>.Ok(new AdminOperationsLog()));
+            uow.Setup(x => x.BeginTransactionAsync()).ReturnsAsync(tx.Object);
+
+            var sut = CreateSut(uow, adminOps, userManager, roleManager, logger);
+            var result = await sut.RemoveRoleFromUserAsync(targetUser.Id, "Admin", admin.Id);
+
+            Assert.True(result.Success);
+            Assert.Equal(200, result.StatusCode);
+            userManager.Verify(x => x.RemoveFromRoleAsync(targetUser, "Admin"), Times.Once);
+            uow.Verify(x => x.CommitAsync(), Times.Once);
+            tx.Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        }
     }
 }

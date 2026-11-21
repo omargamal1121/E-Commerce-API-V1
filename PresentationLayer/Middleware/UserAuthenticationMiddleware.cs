@@ -16,7 +16,7 @@ namespace E_Commerce.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            _logger.LogInformation("Executing UserAuthenticationMiddleware");
+          
 
            
             if (!context.User.Identity?.IsAuthenticated ?? true)
@@ -31,11 +31,11 @@ namespace E_Commerce.Middleware
                 _logger.LogWarning("Authenticated user without UserId claim");
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 await context.Response.WriteAsJsonAsync(
-       ApiResponse<object>.CreateErrorResponse(
-           "Authentication Failed",
-           new Application.ErrorHnadling.ErrorResponse("Authentication", "User not properly authenticated")
-       )
-   );
+                   ApiResponse<object>.CreateErrorResponse(
+                       "Authentication Failed",
+                       new Application.ErrorHnadling.ErrorResponse("Authentication", "User not properly authenticated")
+                   )
+               );
 
                 return;
             }

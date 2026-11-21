@@ -1,54 +1,45 @@
-using Application.DtoModels;
-using Application.Exceptions;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Server.IIS;
-using SixLabors.ImageSharp.Memory;
 using Application.DtoModels.Responses;
 using Application.ErrorHnadling;
 using Application.Factory.CustomersFactory;
 using Application.Interfaces;
-using Application.Services;
 using Application.Services.BackgroundServices;
 using Application.Services.CacheServices;
 using Application.Services.CustomerAddressServices;
 using Application.Services.Externallogin;
 using Application.Services.HangFireAuth;
 using Application.Services.ImageServices;
-using CloudinaryDotNet;
-
-using E_Commerce.Middleware;
-
+using Domain.Models;
 using E_Commerce.LinkBuilders;
+using E_Commerce.Middleware;
 using E_Commerce.Registration.AccountServices;
+using E_Commerce.Registration.CartServices;
+using E_Commerce.Registration.CategoryServices;
 using E_Commerce.Registration.DiscountServices;
 using E_Commerce.Registration.Infrastructure;
+using E_Commerce.Registration.OrderServices;
+using E_Commerce.Registration.PaymentServices;
 using E_Commerce.Registration.ProductServices;
+using E_Commerce.Registration.WareHouseServices;
 using Hangfire;
 using Hangfire.MySql;
 using Infrastructure.Context;
+using Infrastructure.Interfaces;
 using Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Serilog;
+using Serilog.Events;
+using SixLabors.ImageSharp.Memory;
 using StackExchange.Redis;
 using System.Text;
 using System.Threading.RateLimiting;
-using Domain.Models;
-using E_Commerce.Registration.WareHouseServices;
-using E_Commerce.Registration.OrderServices;
-using E_Commerce.Registration.CartServices;
-using E_Commerce.Registration.PaymentServices;
-using E_Commerce.Registration.CategoryServices;
-using Infrastructure.Interfaces;
-using E_Commerce.BackgroundJobs;
-using E_Commerce.Middleware;
 
 namespace E_Commerce
 {
@@ -99,7 +90,13 @@ namespace E_Commerce
 				options.SerializerOptions.Converters.Clear(); 
 			});
 			Log.Logger = new LoggerConfiguration()
-				.WriteTo.Console()
+			.MinimumLevel.Information()
+			.MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+			.MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", Serilog.Events.LogEventLevel.Warning)
+			.MinimumLevel.Override("System.Net.Http.HttpClient", Serilog.Events.LogEventLevel.Warning)
+			.MinimumLevel.Override("Hangfire", Serilog.Events.LogEventLevel.Warning)
+			.Enrich.FromLogContext()
+			 .WriteTo.Console()
 			 .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
 			 .CreateLogger();
 
@@ -394,11 +391,25 @@ namespace E_Commerce
 			var app = builder.Build();
 		
 
+			app.UseHttpsRedirection();
+			app.UseSerilogRequestLogging(options =>
+			{
+				options.GetLevel = (httpContext, elapsed, ex) =>
+				{
+					if ((httpContext.Request.Path.StartsWithSegments("/swagger") || httpContext.Request.Path == "/health"))
+						return LogEventLevel.Verbose;
+
+					if (ex != null || httpContext.Response.StatusCode >= 500)
+						return Serilog.Events.LogEventLevel.Error;
+					if (httpContext.Response.StatusCode >= 400)
+						return Serilog.Events.LogEventLevel.Warning;
+					return Serilog.Events.LogEventLevel.Information;
+				};
+			});
 			app.UseSwagger();
 			app.UseSwaggerUI();
 
 
-			app.UseHttpsRedirection();
 
 
 			using (var scope = app.Services.CreateScope())

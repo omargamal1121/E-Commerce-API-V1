@@ -11,6 +11,7 @@ using Application.Services.ProductServices;
 using Application.Services.ProductVariantServices;
 using Application.Services.SubCategoryServices;
 using Application.Services.UserOperationServices;
+using Application.Services.PromoCodeServices;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,7 @@ namespace Application.Services.OrderServices
         private readonly IOrderCacheHelper _cacheHelper;
         private readonly IProductVariantCommandService _productVariantCommandService;
         private readonly ICartMapper _cartmapper;
+        private readonly IPromoCodeService _promoCodeService;
         
 
         private static readonly ConcurrentDictionary<int, SemaphoreSlim> _variantLocks = new();
@@ -63,7 +65,8 @@ namespace Application.Services.OrderServices
             ICartServices cartServices,
             IAdminOpreationServices adminOperationServices,
             IOrderCacheHelper cacheHelper,
-            IProductVariantCommandService productVariantCommandService)
+            IProductVariantCommandService productVariantCommandService,
+            IPromoCodeService promoCodeService)
         {
             _cartmapper = cartMapper;
             _cartRepository = cartRepository;
@@ -83,6 +86,7 @@ namespace Application.Services.OrderServices
             _adminOperationServices = adminOperationServices;
             _cacheHelper = cacheHelper;
             _productVariantCommandService = productVariantCommandService;
+            _promoCodeService = promoCodeService;
         }
 
         public void Dispose()
@@ -226,7 +230,31 @@ namespace Application.Services.OrderServices
 
 				#region Create Order + Items (Using strictly active items)
 				var subtotal = activeItems.Sum(i => i.Quantity * i.CurrentPrice);
-                var total = subtotal;
+                decimal promoDiscountAmount = 0m;
+                int? promoCodeId = null;
+                string? promoCodeSnapshot = null;
+                decimal? promoDiscountPercent = null;
+
+                if (!string.IsNullOrWhiteSpace(orderDto.PromoCode))
+                {
+                    var promoValidation = await _promoCodeService.ValidatePromoCodeAsync(orderDto.PromoCode);
+                    if (!promoValidation.IsValid)
+                    {
+                        await transaction.RollbackAsync();
+                        return Result<OrderAfterCreatedto>.Fail($"Promo code is invalid: {promoValidation.Reason}", 400);
+                    }
+
+                    promoCodeId = promoValidation.PromoCodeId;
+                    promoCodeSnapshot = promoValidation.Code;
+                    promoDiscountPercent = promoValidation.DiscountPercent;
+                    promoDiscountAmount = Math.Round(subtotal * promoValidation.DiscountPercent!.Value / 100m, 2, MidpointRounding.AwayFromZero);
+                    if (promoDiscountAmount > subtotal)
+                    {
+                        promoDiscountAmount = subtotal;
+                    }
+                }
+
+                var total = Math.Max(0m, subtotal - promoDiscountAmount);
 
                 var orderNumber = await _orderRepository.GenerateOrderNumberAsync();
 
@@ -236,7 +264,13 @@ namespace Application.Services.OrderServices
                     OrderNumber = orderNumber,
                     CustomerAddressId = orderDto.AddressId,
                     Status = OrderStatus.PendingPayment,
+                    SubtotalBeforeDiscount = subtotal,
                     Subtotal = subtotal,
+                    DiscountAmount = promoDiscountAmount,
+                    PromoCodeId = promoCodeId,
+                    PromoCodeSnapshot = promoCodeSnapshot,
+                    PromoDiscountPercent = promoDiscountPercent,
+                    PromoDiscountAmount = promoDiscountAmount,
                     Total = total,
                     Notes = orderDto.Notes,
                     CreatedAt = DateTime.UtcNow,
@@ -322,7 +356,13 @@ namespace Application.Services.OrderServices
                 var response = new OrderAfterCreatedto 
                 { 
                     OrderId = createdOrder.Id,
-                    OrderNumber = order.OrderNumber
+                    OrderNumber = order.OrderNumber,
+                    Subtotal = order.Subtotal,
+                    DiscountAmount = order.DiscountAmount,
+                    PromoDiscountPercent = order.PromoDiscountPercent,
+                    PromoDiscountAmount = order.PromoDiscountAmount,
+                    PromoCodeSnapshot = order.PromoCodeSnapshot,
+                    Total = order.Total
                 };
 
                 return Result<OrderAfterCreatedto>.Ok(response, "Order created successfully", 201);
@@ -1037,14 +1077,46 @@ namespace Application.Services.OrderServices
                     tokenToReturn = newToken;
                 }
 
+                decimal promoDiscountAmount = 0m;
+                int? promoCodeId = null;
+                string? promoCodeSnapshot = null;
+                decimal? promoDiscountPercent = null;
+
+                if (!string.IsNullOrWhiteSpace(orderDto.PromoCode))
+                {
+                    var promoValidation = await _promoCodeService.ValidatePromoCodeAsync(orderDto.PromoCode);
+                    if (!promoValidation.IsValid)
+                    {
+                        await transaction.RollbackAsync();
+                        return Result<OrderAfterCreatedto>.Fail($"Promo code is invalid: {promoValidation.Reason}", 400);
+                    }
+
+                    promoCodeId = promoValidation.PromoCodeId;
+                    promoCodeSnapshot = promoValidation.Code;
+                    promoDiscountPercent = promoValidation.DiscountPercent;
+                    promoDiscountAmount = Math.Round(subtotal * promoValidation.DiscountPercent!.Value / 100m, 2, MidpointRounding.AwayFromZero);
+                    if (promoDiscountAmount > subtotal)
+                    {
+                        promoDiscountAmount = subtotal;
+                    }
+                }
+
+                var total = Math.Max(0m, subtotal - promoDiscountAmount);
+
                 var order = new Domain.Models.Order
                 {
                     CustomerId = null,
                     CustomerAddressId = null,
                     OrderNumber = orderNumber,
                     Status = OrderStatus.PendingPayment,
+                    SubtotalBeforeDiscount = subtotal,
                     Subtotal = subtotal,
-                    Total = subtotal,
+                    DiscountAmount = promoDiscountAmount,
+                    PromoCodeId = promoCodeId,
+                    PromoCodeSnapshot = promoCodeSnapshot,
+                    PromoDiscountPercent = promoDiscountPercent,
+                    PromoDiscountAmount = promoDiscountAmount,
+                    Total = total,
                     Notes = orderDto.Notes,
                     CreatedAt = DateTime.UtcNow,
                     Items = orderItems,
@@ -1100,7 +1172,13 @@ namespace Application.Services.OrderServices
                 { 
                     OrderId = createdOrder.Id,
                     OrderNumber = order.OrderNumber,
-                    GuestToken = tokenToReturn
+                    GuestToken = tokenToReturn,
+                    Subtotal = order.Subtotal,
+                    DiscountAmount = order.DiscountAmount,
+                    PromoDiscountPercent = order.PromoDiscountPercent,
+                    PromoDiscountAmount = order.PromoDiscountAmount,
+                    PromoCodeSnapshot = order.PromoCodeSnapshot,
+                    Total = order.Total
                 };
 
                 return Result<OrderAfterCreatedto>.Ok(response, "Guest order created successfully", 201);

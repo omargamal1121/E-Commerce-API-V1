@@ -20,6 +20,11 @@ namespace Application.DtoModels.OrderDtos
         public decimal ShippingCost { get; set; }
         public decimal DiscountAmount { get; set; }
         public decimal Total { get; set; }
+        public int? PromoCodeId { get; set; }
+        public string? PromoCodeSnapshot { get; set; }
+        public decimal? PromoDiscountPercent { get; set; }
+        public decimal PromoDiscountAmount { get; set; }
+        public decimal? SubtotalBeforeDiscount { get; set; }
         public string? Notes { get; set; }
         public DateTime? ShippedAt { get; set; }
         public DateTime? DeliveredAt { get; set; }
@@ -45,7 +50,12 @@ namespace Application.DtoModels.OrderDtos
         public string OrderNumber { get; set; } = string.Empty;
 		public int OrderId { get; set; }
         public string? GuestToken { get; set; }
-
+        public decimal Subtotal { get; set; }
+        public decimal DiscountAmount { get; set; }
+        public decimal? PromoDiscountPercent { get; set; }
+        public decimal PromoDiscountAmount { get; set; }
+        public string? PromoCodeSnapshot { get; set; }
+        public decimal Total { get; set; }
 	}
 	public class CustomerDto
 	{

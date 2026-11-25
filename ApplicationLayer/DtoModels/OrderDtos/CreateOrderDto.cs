@@ -12,6 +12,7 @@ namespace Application.DtoModels.OrderDtos
 		[StringLength(500, ErrorMessage = "Notes cannot exceed 500 characters")]
 		public string? Notes { get; set; }
 
+		public string? PromoCode { get; set; }
 	}
 
 	public class UpdateOrderStatusDto

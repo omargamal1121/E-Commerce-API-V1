@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using Application.DtoModels.CustomerAddressDtos;
 using Application.DtoModels.OrderDtos;
 using Application.DtoModels.ProductDtos;
@@ -53,6 +53,11 @@ namespace Application.Services.OrderServices
             ShippingCost = order.ShippingCost,
             DiscountAmount = order.DiscountAmount,
             Total = order.Total,
+            PromoCodeId = order.PromoCodeId,
+            PromoCodeSnapshot = order.PromoCodeSnapshot,
+            PromoDiscountPercent = order.PromoDiscountPercent,
+            PromoDiscountAmount = order.PromoDiscountAmount,
+            SubtotalBeforeDiscount = order.SubtotalBeforeDiscount ?? order.Subtotal,
             Notes = order.Notes,
             DeletedAt = order.DeletedAt,
             ShippedAt = order.ShippedAt,

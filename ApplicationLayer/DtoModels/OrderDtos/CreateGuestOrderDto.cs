@@ -41,6 +41,8 @@ namespace Application.DtoModels.OrderDtos
         [StringLength(500, ErrorMessage = "Notes cannot exceed 500 characters")]
         public string? Notes { get; set; }
 
+        public string? PromoCode { get; set; }
+
         [Required]
         [MinLength(1, ErrorMessage = "Guest order must contain at least one item.")]
         public List<GuestOrderItemDto> Items { get; set; } = new();

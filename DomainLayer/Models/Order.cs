@@ -61,6 +61,21 @@ namespace Domain.Models
         public string? Building { get; set; }
         public bool IsGuest { get; set; }
         public string? GuestTokenHash { get; set; }
+
+		[ForeignKey("PromoCode")]
+		public int? PromoCodeId { get; set; }
+		public PromoCode? PromoCode { get; set; }
+
+		[StringLength(50)]
+		public string? PromoCodeSnapshot { get; set; }
+
+		[Range(0, 100)]
+		public decimal? PromoDiscountPercent { get; set; }
+
+		[Range(0, double.MaxValue)]
+		public decimal PromoDiscountAmount { get; set; } = 0;
+
+		public decimal? SubtotalBeforeDiscount { get; set; }
 		
 	
 

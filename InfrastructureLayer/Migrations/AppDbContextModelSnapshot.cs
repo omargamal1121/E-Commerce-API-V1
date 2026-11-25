@@ -520,6 +520,21 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("PromoCodeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PromoCodeSnapshot")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<decimal>("PromoDiscountAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("PromoDiscountPercent")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime?>("RestockedAt")
                         .HasColumnType("datetime(6)");
 
@@ -545,6 +560,10 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal?>("SubtotalBeforeDiscount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal>("TaxAmount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -558,6 +577,8 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasIndex("CustomerAddressId");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("PromoCodeId");
 
                     b.ToTable("Orders");
                 });
@@ -1121,6 +1142,49 @@ namespace ECommerce.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("ProductVariants");
+                });
+
+            modelBuilder.Entity("Domain.Models.PromoCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("DiscountPercent")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("EndsAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("StartsAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("PromoCodes");
                 });
 
             modelBuilder.Entity("Domain.Models.ReturnRequest", b =>
@@ -1783,9 +1847,16 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Domain.Models.PromoCode", "PromoCode")
+                        .WithMany("Orders")
+                        .HasForeignKey("PromoCodeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Customer");
 
                     b.Navigation("CustomerAddress");
+
+                    b.Navigation("PromoCode");
                 });
 
             modelBuilder.Entity("Domain.Models.OrderItem", b =>
@@ -2177,6 +2248,11 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Navigation("CartItems");
 
                     b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("Domain.Models.PromoCode", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Domain.Models.ReturnRequest", b =>

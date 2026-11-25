@@ -47,6 +47,7 @@ namespace Infrastructure.Context
 		public DbSet<WishlistItem> WishlistItems { get; set; }
 		public DbSet<CustomerAddress> CustomerAddresses { get; set; }
 		public DbSet<CartItem> CartItems { get; set; }
+		public DbSet<PromoCode> PromoCodes { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
@@ -390,6 +391,22 @@ namespace Infrastructure.Context
 		  .HasForeignKey(p => p.CustomerId)
 		  .IsRequired(false)
 		  .OnDelete(DeleteBehavior.Restrict);
+
+			// PromoCode configuration
+			builder.Entity<PromoCode>()
+				.HasIndex(p => p.Code)
+				.IsUnique();
+
+			builder.Entity<PromoCode>()
+				.Property(p => p.Code)
+				.HasMaxLength(20)
+				.IsRequired();
+
+			builder.Entity<Order>()
+				.HasOne(o => o.PromoCode)
+				.WithMany(p => p.Orders)
+				.HasForeignKey(o => o.PromoCodeId)
+				.OnDelete(DeleteBehavior.Restrict);
 
 		}
     }

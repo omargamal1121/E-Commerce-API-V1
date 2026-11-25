@@ -19,6 +19,7 @@ using E_Commerce.Registration.Infrastructure;
 using E_Commerce.Registration.OrderServices;
 using E_Commerce.Registration.PaymentServices;
 using E_Commerce.Registration.ProductServices;
+using E_Commerce.Registration.PromoCodeServices;
 using E_Commerce.Registration.WareHouseServices;
 using Hangfire;
 using Hangfire.MySql;
@@ -117,6 +118,7 @@ namespace E_Commerce
 			builder.Services.AddAccountServices();
 			builder.Services.AddOrderServices();
 			builder.Services.AddWareHouseServices();
+			builder.Services.AddPromoCodeServices();
             builder.Services.AddScoped<IExtrenalLoginService,ExtrenalLoginService>();
 
             // Add Link Builders
@@ -307,6 +309,17 @@ namespace E_Commerce
 							Window = TimeSpan.FromMinutes(1),
 							AutoReplenishment = true
 						}));
+
+				options.AddPolicy("promo-validate", context =>
+					RateLimitPartition.GetSlidingWindowLimiter(
+						partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+						factory: _ => new SlidingWindowRateLimiterOptions
+						{
+							PermitLimit = 10,
+							SegmentsPerWindow = 2,
+							Window = TimeSpan.FromMinutes(1),
+							AutoReplenishment = true
+						}));
 				options.OnRejected = async (context, token) =>
 				{
 					context.HttpContext.Response.StatusCode = 429;
@@ -424,7 +437,7 @@ namespace E_Commerce
 
 			app.UseRouting();
             app.UseCors("MyPolicy");
-            app.UseRateLimiter();
+         //   app.UseRateLimiter();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseUserAuthentication();

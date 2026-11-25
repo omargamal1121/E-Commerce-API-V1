@@ -25,6 +25,7 @@ public class UnitOfWork : IUnitOfWork
 	public IImageRepository Image { get; }
 	public ICustomerAddressRepository CustomerAddress { get; }
 	public IPaymentRepository  Payment { get; }
+	public IPromoCodeRepository PromoCode { get; }
 
 	public AppDbContext context { get; }
 
@@ -42,7 +43,8 @@ public class UnitOfWork : IUnitOfWork
 		ICategoryRepository category,
 		ILoggerFactory loggerFactory,
 		IImageRepository imageRepository,
-		ICustomerAddressRepository customerAddressRepository)
+		ICustomerAddressRepository customerAddressRepository,
+		IPromoCodeRepository? promoCodeRepository = null)
 	{ 
 		context = dbContext;
 		Payment = paymentRepository;
@@ -58,6 +60,7 @@ public class UnitOfWork : IUnitOfWork
 		_loggerFactory = loggerFactory;
 		Image = imageRepository;
 		CustomerAddress = customerAddressRepository;
+		PromoCode = promoCodeRepository ?? new PromoCodeRepository(dbContext, loggerFactory.CreateLogger<PromoCodeRepository>());
 	}
 
 	public async Task<int> CommitAsync()

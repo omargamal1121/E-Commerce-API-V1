@@ -19,6 +19,7 @@ namespace Infrastructure.Interfaces
 		IProductInventoryRepository ProductInventory { get; }
 		IImageRepository Image { get; }
 		ICustomerAddressRepository CustomerAddress { get; }
+		IPromoCodeRepository PromoCode { get; }
 		public Task<IDbContextTransaction> BeginTransactionAsync();
 		IRepository<T> Repository<T>() where T : BaseEntity;
 		public Task<int> CommitAsync();

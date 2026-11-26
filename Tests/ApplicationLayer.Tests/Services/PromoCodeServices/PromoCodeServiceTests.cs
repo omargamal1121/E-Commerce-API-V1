@@ -443,5 +443,87 @@ namespace Application.Tests.Services.PromoCodeServices
             Assert.Equal(PromoCodeStatus.Active, result.Data!.Status);
             Assert.Equal(5, result.Data.OrdersCount);
         }
+
+        [Fact]
+        public async Task UpdateAsync_DatesUnchanged_DoesNotScheduleAnyHangfireJobs()
+        {
+            var startsAt = DateTime.UtcNow.AddHours(2);
+            var endsAt = DateTime.UtcNow.AddDays(5);
+
+            var promo = new PromoCode
+            {
+                Id = 1,
+                Code = "UNCHANGED_DATES",
+                DiscountPercent = 20m,
+                StartsAt = startsAt,
+                EndsAt = endsAt,
+                IsActive = false
+            };
+
+            var dto = new UpdatePromoCodeDto
+            {
+                Code = "UNCHANGED_DATES",
+                DiscountPercent = 25m, // only discount changed
+                StartsAt = startsAt,
+                EndsAt = endsAt,
+                IsActive = true
+            };
+
+            _mockRepo.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(promo);
+            _mockRepo.Setup(r => r.GetOrderCountForPromoCodeAsync(1)).ReturnsAsync(0);
+            _mockUow.Setup(u => u.CommitAsync()).ReturnsAsync(1);
+
+            var result = await _sut.UpdateAsync(1, dto);
+
+            Assert.True(result.Success);
+            Assert.Equal(25m, promo.DiscountPercent);
+            Assert.True(promo.IsActive);
+
+            // Verify no Hangfire jobs were scheduled since dates did not change
+            _mockBackgroundJobClient.Verify(
+                x => x.Create(It.IsAny<Job>(), It.IsAny<ScheduledState>()),
+                Times.Never);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_OnlyEndsAtChanged_SchedulesDeactivationJobOnly()
+        {
+            var startsAt = DateTime.UtcNow.AddHours(-1); // already started
+            var oldEndsAt = DateTime.UtcNow.AddDays(2);
+            var newEndsAt = DateTime.UtcNow.AddDays(7);
+
+            var promo = new PromoCode
+            {
+                Id = 2,
+                Code = "EXTEND_END",
+                DiscountPercent = 20m,
+                StartsAt = startsAt,
+                EndsAt = oldEndsAt,
+                IsActive = true
+            };
+
+            var dto = new UpdatePromoCodeDto
+            {
+                Code = "EXTEND_END",
+                DiscountPercent = 20m,
+                StartsAt = startsAt,
+                EndsAt = newEndsAt, // extended end date
+                IsActive = true
+            };
+
+            _mockRepo.Setup(r => r.GetByIdAsync(2)).ReturnsAsync(promo);
+            _mockRepo.Setup(r => r.GetOrderCountForPromoCodeAsync(2)).ReturnsAsync(0);
+            _mockUow.Setup(u => u.CommitAsync()).ReturnsAsync(1);
+
+            var result = await _sut.UpdateAsync(2, dto);
+
+            Assert.True(result.Success);
+            Assert.Equal(newEndsAt, promo.EndsAt);
+
+            // Exactly 1 job (deactivation) scheduled
+            _mockBackgroundJobClient.Verify(
+                x => x.Create(It.IsAny<Job>(), It.IsAny<ScheduledState>()),
+                Times.Once);
+        }
     }
 }

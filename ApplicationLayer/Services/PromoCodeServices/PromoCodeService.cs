@@ -141,7 +141,8 @@ namespace Application.Services.PromoCodeServices
             _logger.LogInformation("Promo code {Code} created by admin", promoCode.Code);
 
             // Schedule Hangfire background jobs for automatic activation and deactivation
-            ScheduleHangfireJobs(promoCode, startsAtUtc, endsAtUtc, now);
+            ScheduleActivationJob(promoCode, startsAtUtc, now);
+            ScheduleDeactivationJob(promoCode, endsAtUtc, now);
 
             return Result<PromoCodeDto>.Ok(MapToDto(promoCode, 0), "Promo code created successfully", 201);
         }
@@ -203,6 +204,10 @@ namespace Application.Services.PromoCodeServices
                 return Result<PromoCodeDto>.Fail("Discount percent must be greater than 0 and less than or equal to 100.", 400);
             }
 
+            // Track whether dates actually changed to prevent duplicate Hangfire jobs
+            var startsAtChanged = Math.Abs((promoCode.StartsAt - startsAtUtc).TotalSeconds) >= 1;
+            var endsAtChanged = Math.Abs((promoCode.EndsAt - endsAtUtc).TotalSeconds) >= 1;
+
             promoCode.DiscountPercent = dto.DiscountPercent;
             promoCode.StartsAt = startsAtUtc;
             promoCode.EndsAt = endsAtUtc;
@@ -214,8 +219,16 @@ namespace Application.Services.PromoCodeServices
 
             _logger.LogInformation("Promo code {Code} (ID: {Id}) updated by admin", promoCode.Code, id);
 
-            // Reschedule/schedule Hangfire jobs if dates updated
-            ScheduleHangfireJobs(promoCode, startsAtUtc, endsAtUtc, now);
+            // Only reschedule/schedule Hangfire jobs if the dates were actually changed
+            if (startsAtChanged)
+            {
+                ScheduleActivationJob(promoCode, startsAtUtc, now);
+            }
+
+            if (endsAtChanged)
+            {
+                ScheduleDeactivationJob(promoCode, endsAtUtc, now);
+            }
 
             return Result<PromoCodeDto>.Ok(MapToDto(promoCode, ordersCount), "Promo code updated successfully", 200);
         }
@@ -386,7 +399,7 @@ namespace Application.Services.PromoCodeServices
             return Result<string>.Ok(code, "Generated unique promo code", 200);
         }
 
-        private void ScheduleHangfireJobs(PromoCode promoCode, DateTime startsAtUtc, DateTime endsAtUtc, DateTime now)
+        private void ScheduleActivationJob(PromoCode promoCode, DateTime startsAtUtc, DateTime now)
         {
             if (_backgroundJobClient == null)
             {
@@ -395,7 +408,6 @@ namespace Application.Services.PromoCodeServices
 
             try
             {
-                // 1. Job responsible for activating the promo code at StartsAt
                 if (startsAtUtc > now)
                 {
                     var activateDelay = startsAtUtc - now;
@@ -405,8 +417,22 @@ namespace Application.Services.PromoCodeServices
 
                     _logger.LogInformation("Scheduled Hangfire activation job for promo code {Code} (ID: {Id}) in {Delay}", promoCode.Code, promoCode.Id, activateDelay);
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to schedule Hangfire activation job for promo code {Code} (ID: {Id})", promoCode.Code, promoCode.Id);
+            }
+        }
 
-                // 2. Job responsible for deactivating the promo code at EndsAt
+        private void ScheduleDeactivationJob(PromoCode promoCode, DateTime endsAtUtc, DateTime now)
+        {
+            if (_backgroundJobClient == null)
+            {
+                return;
+            }
+
+            try
+            {
                 if (endsAtUtc > now)
                 {
                     var deactivateDelay = endsAtUtc - now;
@@ -419,7 +445,7 @@ namespace Application.Services.PromoCodeServices
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to schedule Hangfire jobs for promo code {Code} (ID: {Id})", promoCode.Code, promoCode.Id);
+                _logger.LogError(ex, "Failed to schedule Hangfire deactivation job for promo code {Code} (ID: {Id})", promoCode.Code, promoCode.Id);
             }
         }
 

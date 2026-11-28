@@ -2,28 +2,30 @@
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/omargamal1121/E-Commerce-API-V1/main.yml?branch=main)](https://github.com/omargamal1121/E-Commerce-API-V1/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tech: C#, MySQL, Redis, JWT](https://img.shields.io/badge/Tech-C%23%2C%20MySQL%2C%20Redis%2C%20JWT%2C%20Docker-blue)](#technologies)
+[![Tech: .NET 9, MySQL, Redis, Hangfire, Docker](https://img.shields.io/badge/Tech-.NET%209%20%7C%20MySQL%20%7C%20Redis%20%7C%20Hangfire%20%7C%20Docker-blue)](#technologies)
 
-A robust, modular, and extensible API for e-commerce platforms built using **C# (.NET Core)**.  
-This repository provides scalable solutions for managing products, categories, inventories, carts, orders, payment integrations, and more. It leverages **Clean Architecture** for maintainability and **JWT authentication** for secure API access.
+A high-performance, modular, and extensible enterprise e-commerce API built with **ASP.NET Core (.NET 9)** and **Clean Architecture**.  
+Designed for reliability, thread-safety, and horizontal scalability—featuring atomic inventory concurrency control, background job orchestration with **Hangfire**, distributed caching with **Redis**, **Paymob** payment gateway integration, dynamic promo code engine, and comprehensive JWT security.
 
 ---
 
 ## Table of Contents
 
 - [Features](#features)
-- [Badges & Tech Stack](#badges--tech-stack)
-- [Architecture Diagram](#architecture-diagram)
+- [Tech Stack](#tech-stack)
+- [Architecture & Design Patterns](#architecture--design-patterns)
+- [Key Systems & Highlights](#key-systems--highlights)
+  - [1. High-Concurrency Stock & Order Processing](#1-high-concurrency-stock--order-processing)
+  - [2. Promo Code & Dynamic Discount Engine](#2-promo-code--dynamic-discount-engine)
+  - [3. Background Jobs & Resilience (Hangfire)](#3-background-jobs--resilience-hangfire)
+  - [4. Payment Integrations & Webhooks](#4-payment-integrations--webhooks)
+  - [5. Caching Strategy (Redis)](#5-caching-strategy-redis)
+  - [6. Security & Rate Limiting](#6-security--rate-limiting)
 - [Modules Overview](#modules-overview)
-- [Security](#security)
-- [Caching Strategy](#caching-strategy)
 - [Getting Started](#getting-started)
+- [Docker Setup & Deployment](#docker-setup--deployment)
+- [Testing Suite](#testing-suite)
 - [API Documentation](#api-documentation)
-- [Example API Requests](#example-api-requests)
-- [CI/CD & Deployment](#cicd--deployment)
-- [Clean Architecture](#clean-architecture)
-- [SOLID Principles](#solid-principles)
-- [Testing](#testing)
 - [Contributing](#contributing)
 - [License](#license)
 - [Author](#author)
@@ -32,411 +34,225 @@ This repository provides scalable solutions for managing products, categories, i
 
 ## Features
 
-- Efficient **Generic Repository Pattern** for CRUD, soft delete, restore, batch updates.
-- **Category & Subcategory Management:** Status toggling, image checking, product relationships.
-- **Shopping Cart System:** User-centric, supports add/remove/clear/count.
-- **Payment Integration:** Easily connect and manage payment gateways.
-- **Order Services:** Place, update, and track orders; extendable service architecture.
-- **Redis Caching** for performance optimization and scalability.
-- **JWT Authentication & Authorization** for secure API access and token-based authentication.
-- **Entity Soft Delete & Restore:** Data integrity by reversible deletes.
-- **Structured Logging** for debugging and operational clarity.
-- Adheres strictly to **SOLID** and **Clean Architecture** principles for reliability.
+- **Clean Architecture & SOLID:** Clear decoupling across Domain, Application, Infrastructure, and Presentation layers.
+- **Atomic Stock Management:** Atomic database queries preventing overselling and race conditions under heavy concurrent checkout traffic.
+- **Pessimistic & Optimistic Concurrency:** Row-level locks (`SELECT ... FOR UPDATE`) and EF Core concurrency tokens (`RowVersion`) inside atomic ACID transactions.
+- **Promo Code Engine:** Percentage discounts stacking with product sales, order snapshotting, rate-limited public validation, and auto-activation/deactivation via background jobs.
+- **Background Job Orchestration:** Background processing via Hangfire (auto-expiration of unpaid orders, async restocking, image processing, error alert dispatching).
+- **Payment Gateway Integration:** Integrated Paymob checkout (cards, digital wallets), Cash on Delivery (COD), and HMAC-secured webhook callbacks.
+- **Distributed Redis Caching:** Cache-aside pattern for product catalogs, categories, variants, and shopping carts with automatic cascade invalidation.
+- **Security & Auth:** ASP.NET Core Identity, JWT authentication with refresh token rotation, OAuth2 external login (Google), and role-based access control (Admin / SuperAdmin / Customer).
+- **Rate Limiting:** Built-in fixed-window rate limiters protecting public endpoints against brute-force and DDoS attempts.
+- **Automated Testing:** Comprehensive xUnit and Moq test suite verifying business use cases, transactional rollback consistency, and job scheduling.
 
 ---
 
-## Badges & Tech Stack
+## Tech Stack
 
-- Build: [![Build Status](https://img.shields.io/github/actions/workflow/status/omargamal1121/E-Commerce-API-V1/main.yml?branch=main)](https://github.com/omargamal1121/E-Commerce-API-V1/actions)
-- License: [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-- Tech Stack: [![Tech: C#, MySQL, Redis, JWT, Docker](https://img.shields.io/badge/Tech-C%23%2C%20MySQL%2C%20Redis%2C%20JWT%2C%20Docker-blue)](#technologies)
-
-**Primary Technologies:**
-- **Language:** C#
-- **Database:** MySQL via Entity Framework Core
-- **Cache:** Redis
-- **Authentication:** JWT (JSON Web Tokens)
-- **Other:** Dapper, StackExchange.Redis, Microsoft.Extensions.Logging, Newtonsoft.Json
-- **Containerization:** Docker
+| Category | Technology |
+|---|---|
+| **Framework** | .NET 9.0 (C# 13) |
+| **Database & ORM** | MySQL 8.0, Entity Framework Core 9 (Pomelo), Dapper |
+| **Caching** | Redis (StackExchange.Redis) |
+| **Background Jobs** | Hangfire (with MySQL Storage & basic auth dashboard) |
+| **Authentication** | ASP.NET Core Identity, JWT (Bearer Tokens), Google OAuth |
+| **Logging** | Serilog (Structured Console & Rolling File Sinks) |
+| **Containerization** | Docker, Docker Compose |
+| **Unit Testing** | xUnit, Moq, FluentAssertions |
 
 ---
 
-## Architecture Diagram
-
+## Architecture & Design Patterns
 
 ```mermaid
 graph TD
-    PresentationLayer["Presentation Layer (Controllers)"] --> ApplicationLayer["Application Layer (Services & Use Cases)"]
-    ApplicationLayer --> DomainLayer["Domain Layer (Entities & Business Rules)"]
-    DomainLayer --> InfrastructureLayer["Infrastructure Layer (Repositories, Persistence, Integrations)"]
-    InfrastructureLayer --> ExternalSystems["External Systems"]
-    PresentationLayer -.->|JWT Validation| SecurityMiddleware["Security Middleware"]
-    ApplicationLayer -.->|Cache Operations| RedisCache["Redis Cache"]
+    PresentationLayer["Presentation Layer\n(API Controllers, Middleware, Rate Limiters)"] --> ApplicationLayer["Application Layer\n(DTOs, Commands/Queries, Use Cases, Mappers)"]
+    ApplicationLayer --> DomainLayer["Domain Layer\n(Entities, Enums, Domain Rules)"]
+    ApplicationLayer --> InfrastructureLayer["Infrastructure Layer\n(Repositories, UnitOfWork, EF Core, Redis, Hangfire, Paymob)"]
+    InfrastructureLayer --> ExternalSystems["External Providers\n(MySQL, Redis, Paymob, ImageKit, SMTP)"]
+    PresentationLayer -.->|JWT & Rate Limiting| SecurityMiddleware["Security & Auth Middleware"]
+    ApplicationLayer -.->|Async Tasks| HangfireServer["Hangfire Background Server"]
+    ApplicationLayer -.->|Cache-Aside| RedisCache["Redis Cache"]
 ```
+
+### Architectural Principles Applied:
+- **Generic Repository & Unit of Work:** Unified commit and transactional consistency across all aggregate roots.
+- **Result Pattern (`Result<T>`):** Eliminates unhandled exceptions for expected business logic results, returning standardized status codes and failure reasons.
+- **Consistent API Response (`ApiResponse<T>`):** Unified response format for success, errors, pagination, and HATEOAS links.
+
+---
+
+## Key Systems & Highlights
+
+### 1. High-Concurrency Stock & Order Processing
+To eliminate race conditions and overselling without locking the entire table:
+- **Two-Phase Checkout Guard:**
+  1. **Pre-check:** Rapid no-tracking check against cached/DB quantities.
+  2. **Atomic SQL Deduction:**
+     ```sql
+     UPDATE ProductVariants 
+     SET Quantity = Quantity - @qty 
+     WHERE Id = @id AND Quantity >= @qty
+     ```
+  3. **Transactional Rollback (ACID):** If any item in the cart fails the atomic deduction, the database rolls back the entire transaction. All previously deducted items are restored instantly, and the customer's cart is preserved.
+- **Pessimistic Order Row Locks:** Order status modifications utilize `SELECT Id FROM Orders WHERE Id = {0} FOR UPDATE` within active database transactions, preventing race conditions between payment webhooks, user cancellations, and auto-expiration jobs.
+
+### 2. Promo Code & Dynamic Discount Engine
+- **Discount Stacking:** Applies percentage discount directly onto product subtotal (after product-level sales), strictly before shipping calculations.
+- **Snapshot Immutability:** Orders save permanent immutable snapshots (`PromoCodeSnapshot`, `PromoDiscountPercent`, `PromoDiscountAmount`) so subsequent promo code edits never alter historic order totals.
+- **Typed Lifecycle Enum:** Promo codes follow a strongly-typed lifecycle: `Upcoming`, `Active`, `Expired`, `Inactive`.
+- **Public Rate-Limited Validation:** `POST /api/promo-codes/validate` is protected by a fixed-window rate limiter (10 requests/minute per client IP) to prevent code enumeration attacks.
+
+### 3. Background Jobs & Resilience (Hangfire)
+- **Auto-Activation & Deactivation:** Promo codes automatically schedule two timed Hangfire jobs on creation/date update:
+  - Activation job scheduled for `StartsAt`
+  - Deactivation job scheduled for `EndsAt`
+- **Auto-Expiring Unpaid Orders:** Unpaid pending orders automatically expire after their configured TTL and trigger automated stock restocking in the background.
+- **Dashboard Security:** Authenticated Hangfire Dashboard at `/hangfire` protected by `HangfireAuthFilter` (Basic HTTP Auth).
+
+### 4. Payment Integrations & Webhooks
+- **Paymob Gateway:** Integrates card checkout and mobile wallets with transaction reference tracking.
+- **Cash on Delivery (COD):** Direct order placement flow with delivery verification workflows.
+- **HMAC Webhook Verification:** Verifies payment provider callback signatures to prevent tampering and forged payment notifications.
+
+### 5. Caching Strategy (Redis)
+- **Cache-Aside Pattern:** High-read entities (Products, Categories, Subcategories, Collections) are cached in Redis with configurable TTLs.
+- **Cascade Invalidation:** Updates to variants or products trigger targeted cache purging to guarantee eventual consistency.
+
+### 6. Security & Rate Limiting
+- **Identity & Tokens:** ASP.NET Core Identity with password hashing, account lockout after failed attempts, access tokens (JWT), and refresh tokens.
+- **Rate Limiting Policies:** ASP.NET Core built-in rate limiters protecting against brute-force attacks on sensitive public endpoints.
 
 ---
 
 ## Modules Overview
 
-| Module           | Description                                                                                  |
-|------------------|---------------------------------------------------------------------------------------------|
-| **Domain**       | Contains business models and core rules, representing products, users, categories, etc.     |
-| **Application**  | Defines service interfaces, use cases, data transfer objects, and orchestrates workflows.    |
-| **Infrastructure** | Handles data persistence, repository implementation, payment APIs, and cache strategies.   |
-| **Presentation** | Hosts API controllers/endpoints, managing HTTP requests and responses via RESTful patterns.  |
-
----
-
-## Security
-
-### JWT Authentication
-
-The API implements **JSON Web Token (JWT)** authentication for secure API access:
-
-- **Token Generation:** Users receive JWT tokens upon successful login
-- **Token Validation:** All protected endpoints validate JWT tokens in the Authorization header
-- **Token Expiration:** Configurable token expiration times for enhanced security
-- **Claim-based Authorization:** Role-based access control (RBAC) using JWT claims
-
-**Bearer Token Format:**
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
-
-### Security Features
-
-- Secure password hashing with industry standards
-- Protected sensitive endpoints requiring authentication
-- Support for role-based access control (Admin, User)
-- Token refresh mechanism for session management
-- External login integration support (OAuth providers)
-
----
-
-## Caching Strategy
-
-### Redis Implementation
-
-The API leverages **Redis** for high-performance caching:
-
-**Cached Data:**
-- Product listings and details
-- Category information
-- User shopping carts
-- Order history summaries
-- User sessions and authentication tokens
-
-**Cache Benefits:**
-- Reduced database load
-- Faster response times for frequently accessed data
-- Improved scalability during peak traffic
-- Session management and token blacklisting support
-
-**Configuration:**
-```json
-{
-  "Redis": {
-    "Connection": "localhost:6379",
-    "DefaultExpiration": 3600
-  }
-}
-```
-
-**Cache Invalidation:**
-- Automatic expiration based on TTL (Time To Live)
-- Manual invalidation on data updates
-- Cascade invalidation for dependent data
+| Project | Namespace | Responsibility |
+|---|---|---|
+| **Domain** | `Domain` | Business models, domain entities (`Order`, `Product`, `PromoCode`, `Cart`), enums (`OrderStatus`, `PromoCodeStatus`, `PaymentStatus`). Zero external dependencies. |
+| **Application** | `Application` | Service interfaces, command/query services, DTOs, FluentValidation rules, mappers, business workflows. |
+| **Infrastructure** | `Infrastructure` | EF Core `AppDbContext`, repository implementations, MySQL configurations, migrations, external integrations (Paymob, Redis, Hangfire). |
+| **Presentation** | `E_Commerce` | REST Controllers, DI registrations, Middleware, Swagger/OpenAPI configurations, Rate limiter policies. |
+| **Tests** | `Application.Tests` | xUnit test suite with Moq covering application services and core business rules. |
 
 ---
 
 ## Getting Started
 
 ### Prerequisites
-
-- .NET SDK (latest stable)
-- MySQL database
-- Redis server
-- Docker (recommended for full stack setup)
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- [MySQL 8.0+](https://dev.mysql.com/downloads/)
+- [Redis](https://redis.io/download/)
+- [Docker](https://www.docker.com/products/docker-desktop/) (optional, for full-stack containerization)
 
 ### Local Development Setup
 
-1. **Clone the repository**
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/omargamal1121/E-Commerce-API-V1.git
    cd E-Commerce-API-V1
    ```
 
-2. **Configure environment**
-   - Update `appsettings.json` with your MySQL and Redis details.
-   - Configure JWT secret key in `appsettings.json`:
-     ```json
-     {
-       "Jwt": {
-         "SecretKey": "your-secret-key-min-32-characters",
-         "Issuer": "YourAppName",
-         "Audience": "YourAppUsers",
-         "ExpirationMinutes": 60
-       },
-       "Redis": {
-         "Connection": "localhost:6379"
-       }
+2. **Configure `appsettings.json`:**
+   Set your database connection string and secret keys in `PresentationLayer/appsettings.json`:
+   ```json
+   {
+     "ConnectionStrings": {
+       "DBbyMonster": "Server=localhost;Database=ecommerce_db;User=root;Password=yourpassword;"
+     },
+     "Jwt": {
+       "Key": "your-256-bit-secret-key-here-min-32-chars",
+       "Issuer": "ECommerceAPI",
+       "Audience": "ECommerceUsers"
+     },
+     "Redis": {
+       "Connection": "localhost:6379"
      }
-     ```
-   - Optionally, set environment variables as needed.
+   }
+   ```
 
-3. **Restore & Build**
+3. **Restore Dependencies & Build:**
    ```bash
    dotnet restore
-   dotnet build
+   dotnet build PresentationLayer/E-Commerce.sln
    ```
 
-4. **Database Migration**
+4. **Apply EF Core Migrations:**
    ```bash
-   dotnet ef database update
+   dotnet ef database update --project InfrastructureLayer --startup-project PresentationLayer
    ```
-   > Make sure [dotnet-ef](https://docs.microsoft.com/en-us/ef/core/cli/dotnet) is installed:  
-   > `dotnet tool install --global dotnet-ef`
 
-5. **Run Locally**
+5. **Run the API:**
    ```bash
-   dotnet run --project src/Presentation
+   dotnet run --project PresentationLayer/E-Commerce.API.csproj
    ```
-   API will be accessible at [http://localhost:5000/swagger](http://localhost:5000/swagger).
+   Explore Swagger at `https://localhost:7288/swagger` or `http://localhost:5000/swagger`.
 
-### Docker Setup & Configuration
+---
 
-This project is fully containerized using **Docker** and orchestrated via **Docker Compose**. It spins up three services:
-1. **API:** The C# ASP.NET Core Web API container (`e-commerce-api`).
-2. **Database:** A MySQL 8.0 container (`mysql`) with persistent data volumes.
-3. **Cache:** A Redis container (`redis`) for caching.
+## Docker Setup & Deployment
 
-#### 1. Configure Environment Variables
+The stack includes a production-ready `Docker-Compose.yml` orchestrating API, MySQL, and Redis:
 
-Before running Docker Compose, you must set up your environment variables. 
-
-1. Copy the `.env.example` file to create a `.env` file in the project root:
+1. **Configure Environment:**
    ```bash
    cp .env.example .env
+   # Edit .env with your production credentials
    ```
-2. Open `.env` and fill in your actual settings (passwords, JWT keys, Cloudinary credentials, SMTP secrets, etc.).
 
-> [!IMPORTANT]
-> The `.env` file is excluded from git version control via `.gitignore` and from the Docker image context via `.dockerignore` to ensure your production secrets remain safe.
+2. **Build and Run:**
+   ```bash
+   docker compose up --build -d
+   ```
 
-#### 2. ASP.NET Core Configuration Naming Convention
+3. **Verify Containers:**
+   ```bash
+   docker compose ps
+   docker compose logs -f api
+   ```
 
-This setup utilizes environment variables to override values in `appsettings.json`. ASP.NET Core uses a **double underscore (`__`)** as a separator to map to nested JSON hierarchy.
-For example:
-* `ConnectionStrings__DBbyMonster` maps to `ConnectionStrings:DBbyMonster`
-* `Jwt__Key` maps to `Jwt:Key`
-* `CloudinarySettings__CloudName` maps to `CloudinarySettings:CloudName`
+---
 
-These environment variables are declared in `.env` and passed to the API container via `Docker-Compose.yml`.
+## Testing Suite
 
-#### 3. Run the Entire Stack
+The repository includes a dedicated test suite using **xUnit** and **Moq**:
 
-To build the API image and start all containers in detached mode, run:
 ```bash
-docker compose up --build -d
+# Run all unit tests
+dotnet test Tests/ApplicationLayer.Tests/E-Commerce.Application.Tests.csproj
+
+# Run promo code and stock concurrency tests specifically
+dotnet test Tests/ApplicationLayer.Tests/E-Commerce.Application.Tests.csproj --filter "PromoCode"
 ```
-
-* **MySQL Healthchecks:** The API container uses advanced `depends_on` rules. It will wait to start until the MySQL container is fully ready and healthy (verified via `mysqladmin ping`).
-* **Automatic Migrations:** On startup, the API container automatically applies any pending Entity Framework Core migrations to the MySQL database via `dbContext.Database.Migrate()` inside `Program.cs`.
-
-#### 4. Managing the Containers
-
-* **Stop the stack:**
-  ```bash
-  docker compose down
-  ```
-* **Stop and delete persistent volumes:**
-  ```bash
-  docker compose down -v
-  ```
-* **View logs:**
-  ```bash
-  docker compose logs -f api
-  ```
-* **Check container status:**
-  ```bash
-  docker compose ps
-  ```
-
-API Swagger documentation will be accessible locally at `http://localhost:7288/swagger` (HTTP) or `http://localhost:7289/swagger` (HTTPS / if configured).
 
 ---
 
 ## API Documentation
 
-Explore the API endpoints interactively:
-
-- **Local:** [http://localhost:5000/swagger](http://localhost:5000/swagger)
-- **Hosted:** [Live Swagger UI](https://e-commerce-api-v1-p515.onrender.com/swagger/index.html)
-
----
-
-## Example API Requests
-
-#### User Login (Obtain JWT Token)
-
-```bash
-curl -X POST "http://localhost:5000/api/auth/login" \
-     -H "Content-Type: application/json" \
-     -d '{
-           "email": "user@example.com",
-           "password": "securePassword123"
-         }'
-```
-
-**Sample Response**
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "expiresIn": 3600,
-  "userId": 1,
-  "email": "user@example.com"
-}
-```
-
-#### Add a Product (Requires JWT)
-
-```bash
-curl -X POST "http://localhost:5000/api/products" \
-     -H "Content-Type: application/json" \
-     -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-     -d '{
-           "name": "New Product",
-           "price": 49.99,
-           "categoryId": 1,
-           "description": "A sample product"
-         }'
-```
-
-**Sample Response**
-```json
-{
-  "id": 123,
-  "name": "New Product",
-  "price": 49.99,
-  "categoryId": 1,
-  "description": "A sample product",
-  "createdAt": "2025-09-01T12:00:00Z"
-}
-```
-
-#### Get a Product (Cached Response)
-
-```bash
-curl "http://localhost:5000/api/products/123" \
-     -H "Authorization: Bearer YOUR_JWT_TOKEN"
-```
-
-**Sample Response** (served from Redis cache)
-```json
-{
-  "id": 123,
-  "name": "New Product",
-  "price": 49.99,
-  "categoryId": 1,
-  "description": "A sample product",
-  "createdAt": "2025-09-01T12:00:00Z"
-}
-```
-
----
-
-## CI/CD & Deployment
-
-- **CI:** GitHub Actions validates commits with build & test workflows.
-- **CD:** Deployment can leverage staging environments and blue/green strategies for zero-downtime upgrades.
-- **Safety:** All changes go through automated tests; production releases require approval to minimize risk.
-
-**Example Workflow:**
-- PR opened → Build/Test → Deployed to Staging (auto/preview)
-- Manual approval → Blue/Green deployment → Traffic switched to new release after health checks
-
----
-
-## Clean Architecture
-
-> Decoupling for Scale & Quality
-
-The project is organized into four distinct layers:
-
-- **Domain:** Core business logic, entities, and rules.
-- **Application:** Application workflows, services, use case orchestration.
-- **Infrastructure:** Data access, external integrations, and technical details.
-- **Presentation:** Web API controllers and HTTP endpoints.
-
-**Benefits:** Testable code, easy maintenance, flexible technology adoption, and clear separation of concerns.
-
----
-
-## SOLID Principles
-
-The entire codebase is structured with SOLID in mind:
-- **S:** Each class or module has a single responsibility.
-- **O:** All entities are open for extension, closed for modification.
-- **L:** Subtypes substitute their base types without breaking logic.
-- **I:** Interfaces segregated for focused implementation.
-- **D:** High-level logic is built on abstractions, not concrete classes.
-
----
-
-## Testing
-
-The solution is ready for unit and integration tests via xUnit or NUnit.  
-Coverage of business rules, data access, and controller contracts is recommended for quality assurance.
+Interactive OpenAPI/Swagger documentation is available upon launching the application:
+- **Swagger UI:** `https://localhost:7288/swagger`
+- **Hangfire Dashboard:** `https://localhost:7288/hangfire` (requires admin basic auth)
 
 ---
 
 ## Contributing
 
-Contributions are welcome! Please follow these guidelines:
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/YourFeature`)
-3. Commit your changes (`git commit -m 'Add YourFeature'`)
-4. Push to the branch (`git push origin feature/YourFeature`)
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'feat: Add AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
 ---
 
 ## License
 
-MIT License
-
-```
-MIT License
-
-Copyright (c) 2025 omargamal1121
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+Distributed under the MIT License. See `LICENSE` for details.
 
 ---
 
 ## Author
 
-- **Omar Gamal**
-  - [GitHub](https://github.com/omargamal1121)
-  - [LinkedIn](https://www.linkedin.com/in/omar-gamal-226232292/)
-
----
-
-> For details, see source code, documentation, or reach out via issues.
+**Omar Gamal**  
+- GitHub: [@omargamal1121](https://github.com/omargamal1121)  
+- LinkedIn: [Omar Gamal](https://www.linkedin.com/in/omar-gamal-226232292/)

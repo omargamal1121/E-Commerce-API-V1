@@ -388,6 +388,7 @@ namespace Application.Services.OrderServices
 			_logger.LogInformation("Execute {Method}_id:{OrderId}_to status:{Status}",
 				nameof(UpdateOrderAfterPaid), orderId, orderStatus);
 
+			await using var transaction = await _unitOfWork.BeginTransactionAsync();
 			try
 			{
 				await _unitOfWork.Order.LockOrderForUpdateAsync(orderId);
@@ -399,27 +400,36 @@ namespace Application.Services.OrderServices
 				if (order == null)
 				{
 					_logger.LogWarning("Can't find order {OrderId}", orderId);
+					await transaction.RollbackAsync();
 					return Result<bool>.Fail("Can't find order", 404);
 				}
 
                 if (!IsValidTransition(order.Status, orderStatus))
 				{
 					_logger.LogWarning("Invalid status transition from {Old} to {New}", order.Status, orderStatus);
+					await transaction.RollbackAsync();
 					return Result<bool>.Fail($"Invalid status transition from {order.Status} to {orderStatus}", 400);
 				}
 
 				order.Status = orderStatus;
+
+				await _unitOfWork.CommitAsync();
+				await transaction.CommitAsync();
+
+				await RemoveCacheAndRelated();
 
 				_logger.LogInformation("Updated order {OrderId} to {Status} after payment", orderId, order.Status);
 				return Result<bool>.Ok(true, "Order updated after payment", 200);
 			}
 			catch (DbUpdateConcurrencyException e)
 			{
+				await transaction.RollbackAsync();
 				_logger.LogWarning(e, "Concurrency conflict while updating order {OrderId} after payment", orderId);
 				return Result<bool>.Fail("Order was modified by another process.", 409);
 			}
 			catch (Exception ex)
 			{
+				await transaction.RollbackAsync();
 				_logger.LogError(ex, "Error updating order {OrderId} after payment", orderId);
 				_cacheHelper.NotifyAdminError($"Error updating order {orderId} after payment: {ex.Message}", ex.StackTrace);
 				return Result<bool>.Fail("An error occurred while updating the order after payment", 500);

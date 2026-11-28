@@ -46,6 +46,13 @@ PresentationLayer/wwwroot/dist/
 .DS_Store
 Thumbs.db
 
+# Diagnostics, Memory Dumps & Traces
+*.gcdump
+*.nettrace
+*.dmp
+*.report
+report.text
+
 # Rider / ReSharper
 .idea/
 _ReSharper*/
